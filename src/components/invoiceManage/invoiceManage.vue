@@ -1,0 +1,22 @@
+<template>
+  <div>
+    <h2>续费管理</h2>
+  </div>
+</template>
+
+<script>
+export default {
+  data () {
+    return {
+
+    }
+  },
+  components: {
+
+  }
+}
+</script>
+
+<style>
+
+</style>

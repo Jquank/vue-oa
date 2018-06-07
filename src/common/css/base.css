@@ -1,0 +1,36 @@
+@import './nomalize.css';
+@import './font-awesome.min.css';
+ul {
+    margin: 0;
+    padding: 0;
+}
+
+li {
+    list-style: none;
+}
+
+body {
+    /* font:14px "microsoft yahei",Arial,Helvetica,sans-serif; */
+    font:14px "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+}
+a{
+    text-decoration: none;
+    color:#666;
+}
+.img-responsive {
+    width:100%;
+    height:auto;
+    display: block;
+}
+
+div.el-table{
+    font-size:12px;
+    min-height: 500px;
+}
+/* 表头背景色 */
+.el-table thead th{
+    background: #E2E5EC;
+} 
+.nav-aside .el-submenu__icon-arrow{
+      right:50px;
+}
