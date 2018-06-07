@@ -32,6 +32,3 @@ new Vue({
   components: { App },
   template: '<App/>'
 })
-
-// 123test
-// 456456test
