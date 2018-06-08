@@ -19,6 +19,10 @@ npm run build --report
 ```
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+123456test
+5566
+git test
+git test2
 hahaha
 0608test01
 0608test02
