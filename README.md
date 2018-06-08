@@ -22,3 +22,4 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 hahaha
 0608test01
 0608test02
+0608test03
