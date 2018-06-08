@@ -19,4 +19,8 @@ npm run build --report
 ```
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
-123456test
+hahaha
+0608test01
+0608test02
+0608test03
+0608test04
