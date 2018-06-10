@@ -22,12 +22,13 @@ import MyCusDetail from 'components/customerManage/myCustomer/myCusDetail'
 import CustomerCheck from 'components/customerCheck/customerCheck'
 import CustomerSearch from 'components/customerSearch/customerSearch'
 import Contract from 'components/contract/contract'
-import Order from 'components/order/order'
 import Renew from 'components/renew/renew'
 import InvoiceManage from 'components/invoiceManage/invoiceManage'
 import Salary from 'components/salary/salary'
 // 到款管理
 import BankflowList from 'components/moneyManage/bankflowList/bankflowList'
+// 订单管理
+import AddBaiduOrder from 'components/order/addBaiduOrder/addBaiduOrder'
 
 import store from '../store'
 Vue.use(Router)
@@ -107,6 +108,12 @@ const router = new Router({
           path: 'bankflowList',
           name: 'bankflowList',
           component: BankflowList
+        },
+        // 订单管理
+        {
+          path: 'addBaiduOrder',
+          name: 'addBaiduOrder',
+          component: AddBaiduOrder
         }
       ]
     }
