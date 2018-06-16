@@ -45,7 +45,7 @@
           @check-change="checkChange">
         </el-tree>
         <div style="width:90%;text-align:right;margin-top:10px;">
-          <el-button type="primary" size="small" @click.native="savePermission">保存</el-button>
+          <el-button type="primary"   @click.native="savePermission">保存</el-button>
         </div>
       </el-dialog>
     </div>

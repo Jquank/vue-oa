@@ -6,7 +6,7 @@
     <div class="detail-main">
       <div class="detail-title">
         <h4>客户详情</h4>
-        <el-button size="small" type="warning" height="10px">返回</el-button>
+        <el-button   type="warning" height="10px">返回</el-button>
       </div>
       <div class="detail-content">
         <el-table
@@ -22,10 +22,10 @@
             <template slot-scope="scope">
               <el-date-picker v-model="scope.row.content" type="datetime" placeholder="选择日期时间"
                 style="width:100%"
-                v-if="scope.row.title==='成立日期'" size="small"></el-date-picker>
+                v-if="scope.row.title==='成立日期'"  ></el-date-picker>
               <el-input type="textarea" :row="3" v-model="scope.row.content" size="medium"
                 v-else-if="scope.row.title==='经营范围'"></el-input>
-              <el-input size="small" v-model="scope.row.content" v-else></el-input>
+              <el-input   v-model="scope.row.content" v-else></el-input>
             </template>
           </el-table-column>
           <el-table-column
@@ -37,16 +37,16 @@
             prop=""
             label="">
             <template slot-scope="scope">
-              <el-cascader v-if="scope.row.title1==='所属行业'" size="small" style="width:100%"
+              <el-cascader v-if="scope.row.title1==='所属行业'"   style="width:100%"
                 :options="tradeOptions" :props="tradeProps" @active-item-change="handleTradeChange"
                 v-model="selTradeOption">
               </el-cascader>
-              <el-cascader v-else-if="scope.row.title1==='所属地区'" size="small" style="width:100%"
+              <el-cascader v-else-if="scope.row.title1==='所属地区'"   style="width:100%"
                 :options="areaOptions"
                 v-model="selAreaOption">
               </el-cascader>
               <el-select v-model="selSourceOption" placeholder="请选择" style="width:100%"
-                v-else-if="scope.row.title1==='客户来源'" size="small">
+                v-else-if="scope.row.title1==='客户来源'"  >
                 <el-option
                   v-for="item in cusSource"
                   :key="item.id"
@@ -54,7 +54,7 @@
                   :value="item.id">
                 </el-option>
               </el-select>
-              <el-input v-else size="small" v-model="scope.row.content1"></el-input>
+              <el-input v-else   v-model="scope.row.content1"></el-input>
             </template>
           </el-table-column>
         </el-table>

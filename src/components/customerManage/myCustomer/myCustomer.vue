@@ -8,7 +8,7 @@
         <!-- 搜索条件之 客户名称 -->
         <el-col :span="5">
           <div style="width:90%">
-          <el-input size="small" placeholder="请输入客户名称搜索" v-model="cusName">
+          <el-input   placeholder="请输入客户名称搜索" v-model="cusName">
             <template slot="prepend">客户名称</template>
           </el-input>
           </div>
@@ -16,7 +16,7 @@
         <!-- 搜索条件之 录入人 -->
         <el-col :span="6">
           <div style="width:90%">
-            <el-input size="small" placeholder="请输入录入人搜索" v-model="inputPerson">
+            <el-input   placeholder="请输入录入人搜索" v-model="inputPerson">
               <template slot="prepend">录入人</template>
             </el-input>
           </div>
@@ -24,14 +24,14 @@
         <!-- 搜索条件之 所属商务 -->
         <el-col :span="6">
           <div style="width:90%">
-          <el-input size="small" placeholder="请输入所属商务搜索" v-model="shangWu">
+          <el-input   placeholder="请输入所属商务搜索" v-model="shangWu">
             <template slot="prepend">所属商务</template>
           </el-input>
           </div>
         </el-col>
         <!-- 搜索条件之 我的客户类型 -->
         <el-col :span="6">
-          <el-select style="width:80%" v-model="cusType" size="small" placeholder="请选择客户类型">
+          <el-select style="width:80%" v-model="cusType"   placeholder="请选择客户类型">
             <el-option
               v-for="item in myCusType"
               :key="item.value"
@@ -55,8 +55,8 @@
         </el-col>
         <el-col :span="8">
           <div style="margin-top:10px;">
-          <el-button size="small" type="primary">查询</el-button>
-          <el-button size="small" type="warning">重置</el-button>
+          <el-button   type="primary">查询</el-button>
+          <el-button   type="warning">重置</el-button>
           </div>
         </el-col>
       </el-row>

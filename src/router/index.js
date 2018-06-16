@@ -37,7 +37,7 @@ const router = new Router({
   routes: [
     {
       path: '/',
-      redirect: '/login'
+      redirect: '/IndexPage'
     },
     {
       path: '*',
@@ -98,10 +98,12 @@ const router = new Router({
           path: 'myCustomer',
           name: 'myCustomer',
           component: MyCustomer,
-          children: [{
-            path: ':id',
-            component: MyCusDetail
-          }]
+          children: [
+            {
+              path: ':id',
+              component: MyCusDetail
+            }
+          ]
         },
         // 到款管理
         {
@@ -120,26 +122,27 @@ const router = new Router({
   ]
 })
 
-router.beforeResolve((to, from, next) => {
-  store.commit('GET_USERNAME')
-  const isLogin = store.state.userName
-  if (to.name !== 'login') {
-    if (!isLogin) {
-      next({
-        path: '/login'
-      })
-    } else {
-      if (to.name === from.name) { // 防止刷新的时候加载两次组件
-        next(false)
-      } else {
-        next()
-      }
-    }
-  } else {
-    sessionStorage.clear()
-    store.commit('GET_USERNAME')
-    next()
-  }
-})
+// router.beforeResolve((to, from, next) => {
+//   store.commit('GET_USERNAME')
+//   const isLogin = store.state.userName
+//   if (to.name !== 'login') {
+//     if (!isLogin) {
+//       next({
+//         path: '/login'
+//       })
+//     } else {
+//       if (to.name === from.name) {
+//         // 防止刷新的时候加载两次组件
+//         next(false)
+//       } else {
+//         next()
+//       }
+//     }
+//   } else {
+//     sessionStorage.clear()
+//     store.commit('GET_USERNAME')
+//     next()
+//   }
+// })
 
 export default router

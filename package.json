@@ -17,6 +17,7 @@
     "element-ui": "^2.3.6",
     "less": "^3.0.2",
     "less-loader": "^4.1.0",
+    "mockjs": "^1.0.1-beta3",
     "vue": "^2.5.2",
     "vue-area-linkage": "^5.0.0",
     "vue-router": "^3.0.1",

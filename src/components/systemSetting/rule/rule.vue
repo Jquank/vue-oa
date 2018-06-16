@@ -8,10 +8,8 @@
       <el-table-column prop="name" label="权限名称" width="200"></el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button size="mini" type="success"
-            @click="handleCheckNext(tableData[scope.$index].id)">查看下级权限</el-button>
-          <el-button size="mini" type="primary"
-            @click="handleEdit(tableData[scope.$index].id,tableData[scope.$index].name)">编辑</el-button>
+          <el-button size="mini" type="success" @click="handleCheckNext(tableData[scope.$index].id)">查看下级权限</el-button>
+          <el-button size="mini" type="primary" @click="handleEdit(tableData[scope.$index].id,tableData[scope.$index].name)">编辑</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -65,6 +63,6 @@ export default {
 
 <style scoped>
 /* .rule { */
-  /* background: #E2E5EC; */
+/* background: #E2E5EC; */
 /* } */
 </style>

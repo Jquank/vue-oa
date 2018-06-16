@@ -4,7 +4,7 @@
       <span>订单管理 / 新增百度订单</span>
     </p>
     <div class="order-content">
-      <el-form ref="form" :model="form" label-width="180px" size="small">
+      <el-form ref="form" :model="form" label-width="180px"  >
         <el-form-item label="公司名称" required>
           <el-input v-model="form.cName" :disabled="true" style="width:300px;" placeholder="点击选择按钮选择公司"></el-input>
           <el-button type="primary" @click.native="selCompany">选择</el-button>
@@ -101,8 +101,8 @@
                     <template slot-scope="scope">
                       <!-- <el-button type="primary">上传</el-button> -->
                       <el-upload class="upload-demo" ref="upload" action="https://jsonplaceholder.typicode.com/posts/" :on-preview="handlePreview" :on-remove="handleRemove" :file-list="fileList" :auto-upload="false">
-                        <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-                        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+                        <el-button slot="trigger"   type="primary">选取文件</el-button>
+                        <el-button style="margin-left: 10px;"   type="success" @click="submitUpload">上传到服务器</el-button>
                       </el-upload>
                     </template>
                   </el-table-column>

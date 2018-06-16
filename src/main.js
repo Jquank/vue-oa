@@ -14,11 +14,11 @@ import 'vue-area-linkage/dist/index.css'
 import VueAreaLinkage from 'vue-area-linkage'
 
 import * as filters from '@/common/js/filters'
-
+require('./api/mock.js')
 Vue.config.productionTip = false
 
 Vue.use(VueAreaLinkage)
-Vue.use(ElementUI)
+Vue.use(ElementUI, { size: 'small' })
 // 全局注册所有过滤器
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
