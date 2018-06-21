@@ -6,6 +6,8 @@ import App from './App'
 import router from './router'
 import store from './store'
 
+import './api/mock.js'
+
 import './common/css/base.css'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
@@ -14,7 +16,6 @@ import 'vue-area-linkage/dist/index.css'
 import VueAreaLinkage from 'vue-area-linkage'
 
 import * as filters from '@/common/js/filters'
-require('./api/mock.js')
 Vue.config.productionTip = false
 
 Vue.use(VueAreaLinkage)

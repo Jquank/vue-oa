@@ -39,10 +39,10 @@ const router = new Router({
       path: '/',
       redirect: '/IndexPage'
     },
-    {
-      path: '*',
-      redirect: '/login'
-    },
+    // {
+    //   path: '*',
+    //   redirect: '/login'
+    // },
     {
       path: '/login',
       name: 'login',
