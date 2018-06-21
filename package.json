@@ -15,6 +15,7 @@
     "axios": "^0.18.0",
     "babel-polyfill": "^6.26.0",
     "element-ui": "^2.3.6",
+    "good-storage": "^1.0.1",
     "less": "^3.0.2",
     "less-loader": "^4.1.0",
     "vue": "^2.5.2",

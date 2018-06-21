@@ -122,16 +122,23 @@
           </el-row>
         </el-form-item>
       </el-form>
+
       <!-- 选择公司弹窗 -->
-      <el-dialog title="选择下单客户" :visible.sync="selCompanyDialog">
-        <el-input placeholder="请输入公司名进行搜索" v-model="handleCompanyName">
+      <el-dialog title="选择下单客户" :visible.sync="comDialog.selCompanyDialog" width="650px">
+        <el-input placeholder="请输入公司名进行搜索" v-model="comDialog.handleCompanyName">
           <el-button slot="append" icon="el-icon-search"></el-button>
         </el-input>
-        <el-table :data="companyList" class="mt10px">
-          <el-table-column property="date" label="日期" width="150"></el-table-column>
-          <el-table-column property="name" label="姓名" width="200"></el-table-column>
-          <el-table-column property="address" label="地址"></el-table-column>
+        <el-table :data=comDialog.myCompany class="mt10px">
+          <el-table-column property="name" label="客户名称" width="300"></el-table-column>
+          <el-table-column property="" label="客户类型" width="100">
+            <span slot-scope="scope">{{scope.row.producttype | cusStatus}}</span>
+          </el-table-column>
+          <el-table-column property="username" label="所属商务" width="100"></el-table-column>
+          <el-table-column property="username" label="操作"></el-table-column>
         </el-table>
+        <page class="pagination" :url="comDialog.url" :sendparams="comDialog.params"
+          @updateList="updateMyCompanyList" :key="key">
+        </page>
       </el-dialog>
 
     </div>
@@ -139,6 +146,11 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import { serverUrl } from '@/api/config'
+import Page from '@/base/page/page'
+
+const ORDER_TYPE = 'BAITUI'
 export default {
   data () {
     return {
@@ -171,13 +183,30 @@ export default {
       fileList: [],
       isPlusIcon: 'el-icon-plus',
       isMinusIcon: 'el-icon-minus',
-      selCompanyDialog: false,
-      handleCompanyName: ''
+      comDialog: {
+        selCompanyDialog: false,
+        handleCompanyName: '',
+        myCompany: [],
+        url: serverUrl + '/order.do?Add',
+        params: {pid: ORDER_TYPE}
+      }
     }
+  },
+  computed: {
+    key () {
+      return '' + new Date()
+    },
+    ...mapGetters([
+      'productType'
+    ])
+  },
+  mounted () {
+    console.log(this.productType)
+    console.log(this.key)
   },
   methods: {
     selCompany () {
-      this.selCompanyDialog = true
+      this.comDialog.selCompanyDialog = true
     },
     addContact (index) {
       if (index === 0) {
@@ -194,9 +223,12 @@ export default {
     },
     handlePreview (file) {
       console.log(file)
+    },
+    updateMyCompanyList (data) {
+      this.comDialog.myCompany = data
     }
   },
-  components: {}
+  components: {Page}
 }
 </script>
 
@@ -207,6 +239,11 @@ export default {
   .card-tips {
     color: red;
     background: wheat;
+  }
+  .pagination {
+    padding-top: 10px;
+    display: flex;
+    justify-content: flex-end;
   }
 }
 </style>

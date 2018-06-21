@@ -5,6 +5,7 @@
 </template>
 
 <script>
+
 import Navbar from './components/navbar/navbar'
 import MHeader from './components/m-header/m-header'
 export default {

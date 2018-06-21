@@ -11,20 +11,10 @@
           <img src="../../common/img/cloud2.jpg" alt="">
           <div class="login">
             <div>
-              <el-input
-              v-model="myName"
-              size="medium"
-              placeholder=" 请输入用户名"
-              prefix-icon="fa fa-user"></el-input>
+              <el-input v-model="myName" size="medium" placeholder=" 请输入用户名" prefix-icon="fa fa-user"></el-input>
             </div>
             <div class="in-password">
-              <el-input
-              @keyup.native.enter="login"
-              v-model="myPassword"
-              type="password"
-              size="medium"
-              placeholder=" 请输入密码"
-              prefix-icon="fa fa-lock"></el-input>
+              <el-input @keyup.native.enter="login" v-model="myPassword" type="password" size="medium" placeholder=" 请输入密码" prefix-icon="fa fa-lock"></el-input>
             </div>
             <div class="btn-login">
               <el-button @click="login" type="primary" style="width:100%;">登 录</el-button>
@@ -42,18 +32,25 @@
 <script>
 import { $post } from '@/api/http'
 import { serverUrl } from '@/api/config'
-import { mapMutations } from 'vuex'
-
+import { mapMutations, mapActions } from 'vuex'
+import { getCode } from 'api/getOptions'
+import storage from 'good-storage'
 const LOGIN_URL = serverUrl + '/User.do?login'
 export default {
   data () {
     return {
       myName: 'admin',
-      myPassword: 'bjoa'
+      myPassword: '1234rfv'
       // userName: ""
     }
   },
+  mounted () {
+    storage.remove('productType')
+  },
   methods: {
+    ...mapActions([
+      'getProductType'
+    ]),
     login () {
       let params = {
         username: this.myName,
@@ -67,8 +64,11 @@ export default {
             sessionStorage.setItem('permissions', res.data.data.permissions)
             sessionStorage.setItem('token', res.data.data.tk)
 
+            getCode(38).then(res => {
+              this.getProductType(res)
+            })
+            this.getUserName()
             setTimeout(() => {
-              this.getUserName()
               this.$router.push('/indexPage')
             })
           } else {
@@ -87,8 +87,10 @@ export default {
         })
     },
     ...mapMutations({
-      getUserName: 'GET_USERNAME'
+      getUserName: 'GET_USERNAME',
+      getProductType: 'GET_PRODUCT_TYPE'
     })
+
   }
 }
 </script>

@@ -121,7 +121,6 @@ const router = new Router({
 })
 
 router.beforeResolve((to, from, next) => {
-  store.commit('GET_USERNAME')
   const isLogin = store.state.userName
   if (to.name !== 'login') {
     if (!isLogin) {
@@ -137,7 +136,6 @@ router.beforeResolve((to, from, next) => {
     }
   } else {
     sessionStorage.clear()
-    store.commit('GET_USERNAME')
     next()
   }
 })
