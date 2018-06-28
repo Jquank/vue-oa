@@ -33,8 +33,18 @@ export default {
       handleList: [],
       pageCount: 0,
       pageval: 10
+      // currentParams: this.sendparams
     }
   },
+  // watch: {
+  //   currentParams: {
+  //     handler (val, oldVal) {
+  //       console.log(123)
+  //       console.log(val)
+  //     },
+  //     deep: true
+  //   }
+  // },
   created () {
     this._getFirstList()
   },

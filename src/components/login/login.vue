@@ -65,7 +65,7 @@ export default {
             sessionStorage.setItem('token', res.data.data.tk)
 
             getCode(38).then(res => {
-              this.getProductType(res)
+              this.getProductType(res.data.data)
             })
             this.getUserName()
             setTimeout(() => {

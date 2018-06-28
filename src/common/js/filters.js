@@ -1,3 +1,5 @@
+
+import storage from 'good-storage'
 export function comType (num) {
   switch (num) {
     case -10:
@@ -22,6 +24,18 @@ export function cusStatus (num) {
       return '新'
   }
 }
+
+export function productType (num) {
+  let productTypes = storage.get('productType')
+  productTypes.forEach((val, key) => {
+    console.log(num == val.code_val)//eslint-disable-line
+    if (num == val.code_val) { //eslint-disable-line
+      // return '123'
+      return val.code_desc
+    }
+  })
+}
+
 export function businessStatus (num) {
   switch (num) {
     case '010':

@@ -9,7 +9,7 @@
       <div class="content">
         <!-- 银行类型按钮 -->
         <el-row class="bank-btn">
-          <el-radio-group v-model="selBank" size="small">
+          <el-radio-group v-model="selBank" >
             <el-radio-button v-for="item in bankList" :key="item.id" :label="item.code_val">
               {{item.code_desc}}
             </el-radio-button>
@@ -17,7 +17,7 @@
         </el-row>
         <!-- 分配状态按钮 -->
         <el-row class="status-btn">
-          <el-radio-group v-model="selStatus" size="small" @change="changeStatus">
+          <el-radio-group v-model="selStatus"  @change="changeStatus">
             <el-radio-button v-for="item in statusList" :key="item.id" :label="item.val">
               {{item.text}}
             </el-radio-button>
@@ -25,7 +25,7 @@
         </el-row>
         <!-- 按条件搜索 -->
         <el-row>
-          <el-select v-model="searchTitle" size="small" placeholder="请选择" style="width:120px;">
+          <el-select v-model="searchTitle"  placeholder="请选择" style="width:120px;">
             <el-option
               v-for="item in searchOptions"
               :key="item.value"
@@ -34,30 +34,30 @@
             </el-option>
           </el-select>
           <el-date-picker
-            v-model="dateVal" size="small"
+            v-model="dateVal"
             type="date"
             placeholder="选择日期时间">
           </el-date-picker>
-          <el-input placeholder="请输入摘要" v-model="zhaiYao" size="small" style="max-width:300px;">
+          <el-input placeholder="请输入摘要" v-model="zhaiYao"  style="max-width:300px;">
             <template slot="prepend">摘要:</template>
           </el-input>
-          <el-input placeholder="请输入参考号" v-model="cankaoNum" size="small" style="max-width:300px;">
+          <el-input placeholder="请输入参考号" v-model="cankaoNum"  style="max-width:300px;">
             <template slot="prepend">参考号:</template>
           </el-input>
         </el-row>
         <el-row>
           <el-col :span="14">
-            <el-input placeholder="请输入收(付)账号" v-model="shoufuAccount" size="small" style="max-width:300px;">
+            <el-input placeholder="请输入收(付)账号" v-model="shoufuAccount"  style="max-width:300px;">
               <template slot="prepend">收(付)账号:</template>
             </el-input>
-            <el-button type="primary" size="small">查询</el-button>
-            <el-button type="warning" size="small" style="margin-right:50px;">重置</el-button>
+            <el-button type="primary" >查询</el-button>
+            <el-button type="warning"  style="margin-right:50px;">重置</el-button>
           </el-col>
           <el-col :span="9" style="text-align:right;">
-            <el-button type="danger" size="small">批量删除</el-button>
-            <el-button type="success" size="small">批量分配</el-button>
-            <el-button type="info" size="small">导入流水</el-button>
-            <el-button type="warning" size="small">导出流水</el-button>
+            <el-button type="danger" >批量删除</el-button>
+            <el-button type="success" >批量分配</el-button>
+            <el-button type="info" >导入流水</el-button>
+            <el-button type="warning" >导出流水</el-button>
           </el-col>
         </el-row>
         <el-row>
@@ -261,9 +261,8 @@ export default {
     },
     _getBankType () {
       getCode(42).then(res => {
-        this.bankList = res
-        console.log(res)
-        this.selBank = res[0].code_val// 设置银行类型初始值
+        this.bankList = res.data.data
+        this.selBank = this.bankList[0].code_val// 设置银行类型初始值
         this.selStatus = this.statusList[0].val// 设置分配状态初始值
       })
     },
