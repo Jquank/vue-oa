@@ -2,8 +2,8 @@
   <div>
     <p><span>系统配置 / 角色设置</span></p>
     <div class="auth">
-      <el-row style="margin-bottom:10px;" @click.native="addNewRole">
-        <el-button type="primary" size="mini">
+      <el-row style="margin-bottom:10px;">
+        <el-button type="primary" size="mini" @click.native="addNewRole">
           <i class="fa fa-plus"></i> 新增角色
         </el-button>
       </el-row>

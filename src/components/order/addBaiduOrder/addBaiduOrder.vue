@@ -6,7 +6,7 @@
     <div class="order-content">
       <el-form ref="form" :model="form" label-width="180px" >
         <el-form-item label="公司名称" required>
-          <el-input v-model="form.cName" :disabled="true" style="width:300px;" placeholder="点击选择按钮选择公司"></el-input>
+          <el-input v-model="form.cName" :disabled="true" style="width:300px" placeholder="点击选择按钮选择公司"></el-input>
           <el-button type="primary" @click.native="selCompany">选择</el-button>
         </el-form-item>
 
@@ -66,15 +66,20 @@
 
         <el-form-item label="合同编号">
           <el-select v-model="form.bdOrderNumber" placeholder="百度推广服务订单编号" style="width:198px;">
+            <el-option label="无合同" value="0"></el-option>
             <el-option v-for="contract1 in contract.bdOrderNumber" :key="contract1.id"
               :label="contract1.number" :value="contract1.id"></el-option>
           </el-select>
-          <el-select v-model="form.bdProxy" placeholder="百度推广首消授权书" style="width:198px;">
+          <el-select v-model="form.bdProxy"  @change="selProxy(form.bdProxy)"
+              placeholder="百度推广首消授权书" style="width:198px;">
+            <el-option label="无合同" value="0"></el-option>
+            <!-- <el-option label="无首消授权书" value="no_proxy20180625160112"></el-option> -->
             <el-option label="无首消授权书" value="no_proxy20180625160112"></el-option>
             <el-option  v-for="contract2 in contract.bdProxy" :key="contract2.id"
               :label="contract2.number" :value="contract2.id"></el-option>
           </el-select>
           <el-select v-model="form.bdServiceProtocol" placeholder="百度推广服务协议" style="width:198px;">
+            <el-option label="无合同" value="0"></el-option>
             <el-option  v-for="contract3 in contract.bdServiceProtocol" :key="contract3.id"
               :label="contract3.number" :value="contract3.id"></el-option>
           </el-select>
@@ -89,15 +94,19 @@
         </el-form-item>
         <el-form-item label="订单详情" required>
           <el-tabs type="border-card" style="max-width:750px;">
+            <!-- 企业资质 -->
             <el-tab-pane label="企业资质">
               <el-card shadow="always" class="card-tips">
                 [说明]：根据订单业务类型，上传需要的资质，图片格式为：jpg、png、jpeg，图片大小在3M以下。
               </el-card>
-              <el-row style="margin-top:10px;">
-                <el-col :span="3">对公账户：</el-col>
-                <el-col :span="21">
-                  <el-input v-model="form.receiveAccount" placeholder="对公账户" style="width:55%"></el-input>
-                  <el-input v-model="form.receiveBank" placeholder="开户行" style="width:35%">
+              <el-row style="margin-top:10px;" :gutter="15">
+                <el-col :sm="16">
+                  <el-input placeholder="对公账户" v-model="form.receiveAccount" style="width:100%">
+                    <template slot="prepend">对公账户 :</template>
+                  </el-input>
+                </el-col>
+                <el-col :sm="8">
+                  <el-input v-model="form.receiveBank" placeholder="开户行" style="width:100%">
                     <el-select slot="append" v-model="form.receiveBank">
                       <el-option v-for="bank in form.receiveBanks" :key="bank.id"
                         :label="bank.code_desc" :value="bank.code_desc">
@@ -106,15 +115,19 @@
                   </el-input>
                 </el-col>
               </el-row>
-              <el-row style="margin-top:10px;">
-                <el-select v-model="form.zizhiName" style="width:80%;" placeholder="请选择上传资质类型">
-                  <el-option v-for="qualify in qualifyType" :key="qualify.id"
-                    :label="qualify.code_desc" :value="qualify.code_desc"></el-option>
-                </el-select>
-                <el-button type="primary" @click.native="addQualify(form.zizhiName)">添加资质</el-button>
+              <el-row style="margin-top:10px;" :gutter="15">
+                <el-col :sm="20">
+                  <el-select v-model="form.zizhiName" placeholder="请选择上传资质类型" style="width:100%">
+                    <el-option v-for="qualify in qualifyType" :key="qualify.id"
+                      :label="qualify.code_desc" :value="qualify.code_desc"></el-option>
+                  </el-select>
+                </el-col>
+                <el-col :sm="4">
+                  <el-button type="primary" @click.native="addQualify(form.zizhiName)">添加资质</el-button>
+                </el-col>
               </el-row>
               <el-row style="margin-top:10px;">
-                <el-table border :data="form.zizhiList" style="width: 100%;min-height:200px;">
+                <el-table border :data="form.zizhiList" :key="form.zizhiList.zizhiType" style="width: 100%;min-height:200px;">
                   <el-table-column prop="zizhiType" label="资质类型">
                   </el-table-column>
                   <el-table-column label="操作">
@@ -124,7 +137,7 @@
                         :on-preview="handlePreview" :on-remove="handleRemove" :file-list="fileList" :auto-upload="false">
                         <el-button slot="trigger"  type="primary">选取文件</el-button>
                         <el-button style="margin-left: 10px;"  type="success" @click="submitUpload">上传到服务器</el-button>
-                        <el-button style="margin-left: 30px;" circle :icon="isMinusIcon" size="mini" v-if="scope.$index>3"
+                        <el-button style="margin-left: 30px;" circle :icon="isMinusIcon" size="mini"
                           type="danger" @click.native="removeQualify(scope.$index)"></el-button>
                       </el-upload>
                     </template>
@@ -132,6 +145,7 @@
                 </el-table>
               </el-row>
             </el-tab-pane>
+            <!-- 到款记录 -->
             <el-tab-pane label="到款记录">
               <el-card shadow="always" class="card-tips" v-if="form.record.length===0">
                 [说明]：请选择到款记录。
@@ -192,10 +206,11 @@ import { $post } from 'api/http'
 import { getCode, getMyContract } from 'api/getOptions'
 
 const ORDER_TYPE = 'BAITUI'
-const USER_ID = sessionStorage.getItem('userId')
+
 export default {
   data () {
     return {
+      USER_ID: '',
       qualifyType: [],
       form: {
         cName: '',
@@ -236,7 +251,7 @@ export default {
             zizhiType: '百度推广服务订单'
           },
           {
-            zizhiType: '百度推广首销授权书'
+            zizhiType: '百度推广首消授权书'
           }
         ]
       },
@@ -275,6 +290,7 @@ export default {
     // ])
   },
   created () {
+    this.USER_ID = sessionStorage.getItem('userId')
     this._getwjType()
   },
   mounted () {
@@ -283,7 +299,10 @@ export default {
     this._getReceiveBanks()
     // console.log(this.productType)
   },
+  destroyed () {
+  },
   methods: {
+    // 选择公司
     selCompany () {
       this.comDialog.selCompanyDialog = true
       this.comDialog.key = '' + new Date()
@@ -293,7 +312,7 @@ export default {
       this.moneyRecord.cid = company.id
       this.moneyRecord.companylogid = company.companylogid
       // this.moneyRecord.uid = company.userid
-      this.moneyRecord.uid = USER_ID
+      this.moneyRecord.uid = this.USER_ID
       this.form.cName = company.name
       this.comDialog.selCompanyDialog = false
       this.$message({
@@ -329,10 +348,12 @@ export default {
         this.form.contactList = res.data[1].data
       })
     },
+    // 搜索公司
     searchCompany (companyName) {
       this.comDialog.params.companyname = companyName
       this.comDialog.key = '' + new Date()
     },
+    // 添加联系人
     addContact (index) {
       if (index === 0) {
         this.form.contactList.push({})
@@ -340,6 +361,31 @@ export default {
         this.form.contactList.splice(index, 1)
       }
     },
+    selProxy (value) {
+      let indexArr = []
+      let isProxy = false
+      this.form.zizhiList.forEach((val, key) => {
+        if (val.zizhiType === '百度推广首消授权书') {
+          indexArr.push(key)
+          isProxy = true
+        }
+      })
+      if (value === 'no_proxy20180625160112') {
+        let len = this.form.zizhiList.length - 1
+        for (let i = len; i >= 0; i--) {
+          if (indexArr.indexOf(i) > -1) {
+            this.form.zizhiList.splice(i, 1)
+          }
+        }
+      } else {
+        if (!isProxy) {
+          this.form.zizhiList.push({
+            zizhiType: '百度推广首消授权书'
+          })
+        }
+      }
+    },
+    // 添加资质
     addQualify (type) {
       if (this.form.zizhiName === '') {
         this.$message({
@@ -373,16 +419,16 @@ export default {
       })
     },
     _getMyContract () {
-      getMyContract('CONTRACT_BTDD', USER_ID).then(res => {
+      getMyContract('CONTRACT_BTDD', this.USER_ID).then(res => {
         this.contract.bdOrderNumber = res.data[0].data
       })
-      getMyContract('CONTRACT_BTSQ', USER_ID).then(res => {
+      getMyContract('CONTRACT_BTSQ', this.USER_ID).then(res => {
         this.contract.bdProxy = res.data[0].data
       })
-      getMyContract('CONTRACT_BTXY', USER_ID).then(res => {
+      getMyContract('CONTRACT_BTXY', this.USER_ID).then(res => {
         this.contract.bdServiceProtocol = res.data[0].data
       })
-      getMyContract('CONTRACT_BDXXL', USER_ID).then(res => {
+      getMyContract('CONTRACT_BDXXL', this.USER_ID).then(res => {
         this.contract.bdXXLProtocol = res.data[0].data
       })
     },
