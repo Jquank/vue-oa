@@ -133,10 +133,11 @@
                   <el-table-column label="操作">
                     <template slot-scope="scope">
                       <!-- <el-button type="primary">上传</el-button> -->
-                      <el-upload class="upload-demo" ref="upload" action="https://jsonplaceholder.typicode.com/posts/"
+                      <el-upload class="upload-demo" ref="upload" :action="uploadUrl" :before-upload="beforeUpload"
+                        :on-change="aaa"
                         :on-preview="handlePreview" :on-remove="handleRemove" :file-list="fileList" :auto-upload="false">
                         <el-button slot="trigger"  type="primary">选取文件</el-button>
-                        <el-button style="margin-left: 10px;"  type="success" @click="submitUpload">上传到服务器</el-button>
+                        <el-button style="margin-left: 10px;" type="success" @click="submitUpload">上传到服务器</el-button>
                         <el-button style="margin-left: 30px;" circle :icon="isMinusIcon" size="mini"
                           type="danger" @click.native="removeQualify(scope.$index)"></el-button>
                       </el-upload>
@@ -152,11 +153,11 @@
               </el-card>
               <el-card shadow="always" class="card-money-record" v-if="form.record.length!==0">
                 <el-row><b>公司名称（法人）：</b><span>{{form.record[0].companyname}}</span></el-row>
-                <el-row><b>到款金额 ：</b><span>{{form.record[0].sum | currency}}</span></el-row>
-                <el-row><b>服务费 ：</b><span>{{form.record[0].service | currency}}</span></el-row>
+                <el-row><b>到款金额 ：</b><span>{{form.record[0].sum | currency1}}</span></el-row>
+                <el-row><b>服务费 ：</b><span>{{form.record[0].service | currency1}}</span></el-row>
                 <!-- <el-row><b>到款时间 ：</b><span>{{222}}</span></el-row> -->
                 <el-row v-for="rec in recordDetail" :key="rec.type">
-                  <b>{{rec.type | productType}} ：</b><span>{{rec.value}}</span>
+                  <b>{{rec.type | productType}} ：</b><span>{{rec.value | currency1}}</span>
                 </el-row>
               </el-card>
             </el-tab-pane>
@@ -165,8 +166,8 @@
 
         <el-form-item label="">
           <el-row style="max-width:750px;text-align:right;">
-            <el-button type="warning">仅降E</el-button>
-            <el-button type="primary">降E并提单</el-button>
+            <el-button type="warning" @click.native="subOrder(ONLY_E)">仅降E</el-button>
+            <el-button type="primary" @click.native="subOrder(!ONLY_E)">降E并提单</el-button>
           </el-row>
         </el-form-item>
       </el-form>
@@ -200,7 +201,7 @@
 
 <script>
 // import { mapGetters } from 'vuex'
-import { serverUrl } from 'api/config'
+import { serverUrl, uploadUrl } from 'api/config' //eslint-disable-line
 import Page from 'base/page/page'
 import { $post } from 'api/http'
 import { getCode, getMyContract } from 'api/getOptions'
@@ -210,6 +211,10 @@ const ORDER_TYPE = 'BAITUI'
 export default {
   data () {
     return {
+      ONLY_E: true,
+      uploadUrl: uploadUrl,
+      headers: '',
+      fileList: [],
       USER_ID: '',
       qualifyType: [],
       form: {
@@ -255,7 +260,6 @@ export default {
           }
         ]
       },
-      fileList: [],
       isPlusIcon: 'el-icon-plus',
       isMinusIcon: 'el-icon-minus',
       comDialog: {
@@ -299,9 +303,20 @@ export default {
     this._getReceiveBanks()
     // console.log(this.productType)
   },
-  destroyed () {
-  },
   methods: {
+    subOrder (onlyE) {
+      // let params = {
+      //   cpid: 123,
+      //   companyid: 123,
+      //   companylogid: 123,
+      //   yn: 123,
+      //   sn: 123,
+      //   pid: ORDER_TYPE,
+      //   receiptid: 123,
+      //   companycontact: 123,
+      //   con_id: 123
+      // }
+    },
     // 选择公司
     selCompany () {
       this.comDialog.selCompanyDialog = true
@@ -402,7 +417,14 @@ export default {
       this.form.zizhiList.splice(index, 1)
     },
     submitUpload () {
+      console.log(888)
       this.$refs.upload.submit()
+    },
+    aaa (file) {
+      console.log(file)
+    },
+    beforeUpload (file) {
+      console.log(file)
     },
     handleRemove (file, fileList) {
       console.log(file, fileList)
@@ -411,7 +433,7 @@ export default {
       console.log(file)
     },
     updateMyCompanyList (data) {
-      this.comDialog.myCompany = data
+      this.comDialog.myCompany = data.data[0].data
     },
     _getwjType () {
       getCode(28).then(res => {

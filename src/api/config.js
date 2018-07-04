@@ -161,7 +161,7 @@ export const navList = [
     fontIcon: 'fa fa-clipboard',
     text: '订单管理',
     cList: [
-      // { cid: 100, to: '/indexPage/rule', text: '待处理订单' },
+      { cid: 100, to: '/indexPage/orderPending', text: '待处理订单' },
       // { cid: 101, to: '/indexPage/auth', text: '已处理订单' },
       // { cid: 102, to: '/indexPage/systemCycle', text: '订单列表' },
       // { cid: 103, to: '/indexPage/departSetNum', text: '资金表' },

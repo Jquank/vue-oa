@@ -29,6 +29,8 @@ import Salary from 'components/salary/salary'
 import BankflowList from 'components/moneyManage/bankflowList/bankflowList'
 // 订单管理
 import AddBaiduOrder from 'components/order/addBaiduOrder/addBaiduOrder'
+import OrderPending from 'components/order/orderPending/orderPending'
+import PendingDetail from 'components/order/orderPending/pendingDetail'
 
 import store from '../store'
 Vue.use(Router)
@@ -114,13 +116,23 @@ const router = new Router({
           path: 'addBaiduOrder',
           name: 'addBaiduOrder',
           component: AddBaiduOrder
-        }
+        },
+        {
+          path: 'orderPending',
+          name: 'orderPending',
+          component: OrderPending,
+          children: [{
+            path: ':id',
+            component: PendingDetail
+          }]
+        },
       ]
     }
   ]
 })
 
-router.beforeResolve((to, from, next) => {
+// router.beforeResolve((to, from, next) => {
+router.beforeEach((to, from, next) => {
   const isLogin = store.state.userName
   if (to.name !== 'login') {
     if (!isLogin) {

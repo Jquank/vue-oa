@@ -4,7 +4,7 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="currentPage"
-      :page-sizes="[10,20,30,40]"
+      :page-sizes="[10,30,50,100]"
       :page-size="10"
       layout="total, sizes, prev, pager, next, jumper"
       :total="pageCount">
@@ -33,18 +33,8 @@ export default {
       handleList: [],
       pageCount: 0,
       pageval: 10
-      // currentParams: this.sendparams
     }
   },
-  // watch: {
-  //   currentParams: {
-  //     handler (val, oldVal) {
-  //       console.log(123)
-  //       console.log(val)
-  //     },
-  //     deep: true
-  //   }
-  // },
   created () {
     this._getFirstList()
   },
@@ -58,8 +48,8 @@ export default {
       }, this.sendparams)
       $post(this.url, params)
         .then(res => {
-          let res0 = res.data[0].data
-          this.handleList = res0
+          // let res0 = res.data[0].data
+          this.handleList = res
           this._updateList()
         })
         .catch(err => {
@@ -77,8 +67,8 @@ export default {
       }, this.sendparams)
       $post(this.url, params)
         .then(res => {
-          let res0 = res.data[0].data
-          this.handleList = res0
+          // let res0 = res.data[0].data
+          this.handleList = res
           this._updateList()
         })
         .catch(err => {
@@ -94,9 +84,9 @@ export default {
 
       $post(this.url, params)
         .then(res => {
-          let res0 = res.data[0].data
+          // let res0 = res.data[0].data
           let res1 = res.data[1].data
-          this.handleList = res0
+          this.handleList = res
           this.pageCount = res1.pagecount
           this._updateList()
         })

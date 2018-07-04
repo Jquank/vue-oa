@@ -27,13 +27,13 @@ export function cusStatus (num) {
 
 export function productType (num) {
   let productTypes = storage.get('productType')
+  let type = ''
   productTypes.forEach(val => {
     if (num == val.code_val) { //eslint-disable-line
-      let type = val.code_desc
-      console.log(type)
-      return type
+      type = val.code_desc
     }
   })
+  return type
 }
 
 export function businessStatus (num) {
@@ -88,6 +88,14 @@ export function timeFormat1 (num) {
 export function currency (num) {
   num = +num
   if (num && !isNaN(num)) {
+    return '¥ ' + parseFloat(num).toFixed(2)
+  } else {
+    return ''
+  }
+}
+export function currency1 (num) {
+  num = +num
+  if (!isNaN(num)) {
     return '¥ ' + parseFloat(num).toFixed(2)
   } else {
     return ''

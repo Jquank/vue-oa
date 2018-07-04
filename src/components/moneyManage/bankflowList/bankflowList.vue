@@ -267,8 +267,7 @@ export default {
       })
     },
     updateBankList (data) {
-      this.bankFlowList = data
-      console.log(data)
+      this.bankFlowList = data.data[0].data
     }
   },
   components: {
