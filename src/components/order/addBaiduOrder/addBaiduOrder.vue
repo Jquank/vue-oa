@@ -1,23 +1,24 @@
 <template>
   <div class="addbaidu-order">
-    <p>
+    <!-- TODO: 此处v-if未起作用 -->
+    <p v-if="isShow">
       <span>订单管理 / 新增百度订单</span>
     </p>
     <div class="order-content">
       <el-form ref="form" :model="form" label-width="180px" >
         <el-form-item label="公司名称" required>
-          <el-input v-model="form.cName" :disabled="true" style="width:300px" placeholder="点击选择按钮选择公司"></el-input>
-          <el-button type="primary" @click.native="selCompany">选择</el-button>
+          <el-input v-model="form.cName" readonly style="width:300px" placeholder="点击选择按钮选择公司"></el-input>
+          <el-button type="primary" @click.native="selCompany" v-if="isShow">选择</el-button>
         </el-form-item>
 
-        <el-form-item label="到款记录" required>
+        <el-form-item label="到款记录" required v-if="isShow">
           <el-select v-model="form.record" placeholder="请选择到款记录" style="width:300px;">
             <el-option v-for="record in moneyRecord.recordList" :key="record[0].id"
               :label="record[0].companyname" :value="record"></el-option>
           </el-select>
         </el-form-item>
 
-        <el-form-item label="客户网站信息">
+        <el-form-item label="客户网站信息" required>
           <el-input v-model="form.pcWeb" style="width:300px;" placeholder="pc端网址"></el-input>
           <el-input v-model="form.phoneWeb" style="width:300px;" placeholder="手机端网址"></el-input>
         </el-form-item>
@@ -43,43 +44,50 @@
           <el-input v-model="form.cusAddress" style="width:600px;" placeholder="客户地址"></el-input>
         </el-form-item>
 
+        <!-- <el-form-item label="PC站订单金额" required v-if="!isShow">
+          <el-input v-model="form.pcMoney" style="width:300px;"></el-input>
+        </el-form-item> -->
+
+        <!-- <el-form-item label="手机站订单金额" required v-if="!isShow">
+          <el-input v-model="form.mobileMoney" style="width:300px;"></el-input>
+        </el-form-item> -->
+
         <el-form-item label="网建类型" required>
           <el-radio-group v-model="form.wjType">
-            <el-radio v-for="type in form.wjTypeList" :key="type.id" :label="type.code_desc"></el-radio>
+            <el-radio v-for="type in form.wjTypeList" :key="type.id" :label="type.code_val">{{type.code_desc}}</el-radio>
           </el-radio-group>
         </el-form-item>
 
         <el-form-item label="客户类型" required>
           <el-radio-group v-model="form.cusType">
-            <el-radio label="新客户"></el-radio>
-            <el-radio label="老客户"></el-radio>
+            <el-radio label="0">新客户</el-radio>
+            <el-radio label="1">老客户</el-radio>
           </el-radio-group>
         </el-form-item>
 
         <el-form-item label="是否需要发票" required>
           <el-radio-group v-model="form.isInvoice">
-            <el-radio label="不需要"></el-radio>
-            <el-radio label="暂不需要"></el-radio>
-            <el-radio label="需要"></el-radio>
+            <el-radio label="10">不需要</el-radio>
+            <el-radio label="20">暂不需要</el-radio>
+            <el-radio label="30">需要</el-radio>
           </el-radio-group>
         </el-form-item>
 
         <el-form-item label="合同编号">
           <el-select v-model="form.bdOrderNumber" placeholder="百度推广服务订单编号" style="width:198px;">
-            <el-option label="无合同" value="0"></el-option>
+            <el-option label="百度推广服务订单编号" value="0"></el-option>
             <el-option v-for="contract1 in contract.bdOrderNumber" :key="contract1.id"
               :label="contract1.number" :value="contract1.id"></el-option>
           </el-select>
           <el-select v-model="form.bdProxy"  @change="selProxy(form.bdProxy)"
               placeholder="百度推广首消授权书" style="width:198px;">
-            <el-option label="无合同" value="0"></el-option>
-            <!-- <el-option label="无首消授权书" value="no_proxy20180625160112"></el-option> -->
+            <el-option label="百度推广首消授权书" value="0"></el-option>
             <el-option label="无首消授权书" value="no_proxy20180625160112"></el-option>
             <el-option  v-for="contract2 in contract.bdProxy" :key="contract2.id"
               :label="contract2.number" :value="contract2.id"></el-option>
           </el-select>
           <el-select v-model="form.bdServiceProtocol" placeholder="百度推广服务协议" style="width:198px;">
-            <el-option label="无合同" value="0"></el-option>
+            <el-option label="百度推广服务协议" value="0"></el-option>
             <el-option  v-for="contract3 in contract.bdServiceProtocol" :key="contract3.id"
               :label="contract3.number" :value="contract3.id"></el-option>
           </el-select>
@@ -90,14 +98,31 @@
         </el-form-item>
 
         <el-form-item label="商务信息" required>
-          <el-input v-model="form.shangWuName" :disabled="true" style="width:300px;"></el-input>
+          <el-input v-model="form.shangWuName" readonly style="width:300px;"></el-input>
         </el-form-item>
         <el-form-item label="订单详情" required>
           <el-tabs type="border-card" style="max-width:750px;">
             <!-- 企业资质 -->
             <el-tab-pane label="企业资质">
-              <el-card shadow="always" class="card-tips">
+              <!-- 编辑页回显企业资质照片 -->
+              <el-row v-if="!isShow" :gutter="10">
+                <el-col :md="6" v-for="(s,index) in showQualify" :key="s.id">
+                  <dl>
+                    <dt>&nbsp;{{s.val.split('#')[1]}}</dt>
+                    <dd style="margin:0 auto">
+                      <img style="width:150px;height:auto" @click="imgClick(s.val)" :src="s.val.split('#')[0]">
+                    </dd>
+                    <dd>
+                      <el-button type="danger" size="mini" @click="delImg(index)">删除</el-button>
+                    </dd>
+                  </dl>
+                </el-col>
+              </el-row>
+              <el-card v-if="isShow" shadow="always" class="card-tips">
                 [说明]：根据订单业务类型，上传需要的资质，图片格式为：jpg、png、jpeg，图片大小在3M以下。
+              </el-card>
+              <el-card v-if="!isShow" shadow="always" class="card-tips">
+                [说明]：点击删除可移除不符合要求的资质，在下方重新添加并上传正确的资质。
               </el-card>
               <el-row style="margin-top:10px;" :gutter="15">
                 <el-col :sm="16">
@@ -148,7 +173,7 @@
             </el-tab-pane>
             <!-- 到款记录 -->
             <el-tab-pane label="到款记录">
-              <el-card shadow="always" class="card-tips" v-if="form.record.length===0">
+              <el-card shadow="always" class="card-tips" v-if="form.record.length===0 && isShow">
                 [说明]：请选择到款记录。
               </el-card>
               <el-card shadow="always" class="card-money-record" v-if="form.record.length!==0">
@@ -157,7 +182,9 @@
                 <el-row><b>服务费 ：</b><span>{{form.record[0].service | currency1}}</span></el-row>
                 <!-- <el-row><b>到款时间 ：</b><span>{{222}}</span></el-row> -->
                 <el-row v-for="rec in recordDetail" :key="rec.type">
-                  <b>{{rec.type | productType}} ：</b><span>{{rec.value | currency1}}</span>
+                  <template v-if="rec.type!=500">
+                    <b>{{rec.type | productType}} ：</b><span>{{rec.value | currency1}}</span>
+                  </template>
                 </el-row>
               </el-card>
             </el-tab-pane>
@@ -195,6 +222,11 @@
         </page>
       </el-dialog>
 
+      <!-- 点击图片查看大图 -->
+      <el-dialog :title="bigImgUrl.split('#')[1]" :visible.sync="isBigImg" :modal-append-to-body="false" top="5px" width="750px">
+        <img :src="bigImgUrl.split('#')[0]" style="width:100%;">
+      </el-dialog>
+
     </div>
   </div>
 </template>
@@ -209,8 +241,63 @@ import { getCode, getMyContract } from 'api/getOptions'
 const ORDER_TYPE = 'BAITUI'
 
 export default {
+  props: {
+    isShow: { // false表示跳转编辑订单页
+      type: Boolean,
+      default: true
+    },
+    editData: { // 编辑页传过来的回显数据
+      type: Object,
+      default: function () {
+        return {}
+      }
+    }
+  },
+  watch: {
+    editData (newval) {
+      if (!this.isShow) {
+        this.form.zizhiList = []
+        this.form.cName = newval.cusName
+        this.form.pcWeb = newval.pcsite
+        this.form.phoneWeb = newval.wapsite
+        this.form.cusAddress = newval.addr
+        this.form.wjType = newval.wjType
+        this.form.cusType = newval.cusType.toString()
+        this.form.isInvoice = newval.isInvoice.toString()
+        this.form.bdOrderNumber = newval.bdOrderNumber || '0'
+        this.form.bdProxy = newval.bdProxy || '0'
+        this.form.bdServiceProtocol = newval.bdServiceProtocol || '0'
+        this.form.shangWuName = newval.user_name
+        this.showQualify = newval.qualifyList
+        this.form.receiveAccount = newval.receiveAccount
+        this.form.receiveBank = newval.receiveBank
+        this.form.record = newval.record
+        this.record_detail = newval.recordDetail
+        this.form.contactList = JSON.parse(JSON.stringify(newval.contacts))
+        // 更改contactList中对象的key
+        let keyMap = {
+          companylogid: 'contactid',
+          contactname: 'name',
+          contactnumber: 'contact',
+          telphone: 'fixedNumber',
+          mailnumber: 'email'
+        }
+        this.form.contactList.forEach(val => {
+          for (let key in val) {
+            val[keyMap[key]] = val[key] || ''
+            delete val[key]
+          }
+        })
+        console.log(newval)
+      }
+    }
+  },
   data () {
     return {
+      record_detail: [], // 回显到款记录
+      bigImgUrl: '',
+      isBigImg: false,
+      showQualify: [],
       ONLY_E: true,
       uploadUrl: uploadUrl,
       headers: '',
@@ -218,6 +305,8 @@ export default {
       USER_ID: '',
       qualifyType: [],
       form: {
+        pcMoney: 0,
+        mobileMoney: 0,
         cName: '',
         record: [],
         pcWeb: '',
@@ -232,14 +321,13 @@ export default {
           }
         ],
         cusAddress: '',
-        wjType: '',
+        wjType: -1,
         wjTypeList: [],
         cusType: '',
         isInvoice: '',
-        bdOrderNumber: '',
-        bdProxy: '',
-        bdServiceProtocol: '',
-        bdXXLProtocol: '',
+        bdOrderNumber: '0',
+        bdProxy: '0',
+        bdServiceProtocol: '0',
         shangWuName: '',
         receiveAccount: '', // 对公账户
         receiveBank: '', // 开户行
@@ -286,8 +374,12 @@ export default {
   },
   computed: {
     recordDetail () {
-      let x = this.form.record.slice(1)
-      return x
+      if (this.isShow) {
+        let x = this.form.record.slice(1)
+        return x
+      } else {
+        return this.record_detail
+      }
     }
     // ...mapGetters([
     //   'productType'
@@ -337,7 +429,16 @@ export default {
       this._getMoneyRecord()
       this._getContactName()
     },
-    _getMoneyRecord () { // 获取到款记录 和 客户地址
+    imgClick (url) {
+      this.isBigImg = true
+      // this.bigImgUrl = 'http://bg.baijiegroup.com/upload//70/03/700303f2843e44f68b08cf2e1b4d64c7.jpg#123456'
+      this.bigImgUrl = url
+    },
+    delImg (index) {
+      this.showQualify.splice(index, 1)
+    },
+    // 获取到款记录 和 客户地址
+    _getMoneyRecord () {
       let moneyRecordUrl = serverUrl + '/wf.do?set'
       let moneyRecordParams = {
         cid: this.moneyRecord.cid,
@@ -353,7 +454,8 @@ export default {
         this.form.cusAddress = res.data[1].data[0].address
       })
     },
-    _getContactName () { // 获取联系人信息
+    // 获取联系人信息
+    _getContactName () {
       let contactUrl = serverUrl + '/CustomerCheck.do?customlist'
       let contactParams = {
         cid: this.moneyRecord.cid,
@@ -376,6 +478,7 @@ export default {
         this.form.contactList.splice(index, 1)
       }
     },
+    // 判断是否选择无首消授权书
     selProxy (value) {
       let indexArr = []
       let isProxy = false

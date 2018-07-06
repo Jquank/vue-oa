@@ -4,8 +4,15 @@
       <span>订单管理 / 待处理订单</span>
     </p>
     <div class="pending-content">
+      <div class="tab">
+        <el-radio-group v-model="tabStatus" @change="tab(tabStatus)">
+          <el-radio-button label="0">全部</el-radio-button>
+          <el-radio-button label="100">未加款</el-radio-button>
+          <el-radio-button label="300">已加款</el-radio-button>
+        </el-radio-group>
+      </div>
       <!-- 搜索 -->
-      <div class="search">
+      <div class="search" style="margin-top:15px;">
         <el-row :gutter="10">
           <el-col :sm="7">
             <el-input  placeholder="请输入客户名称搜索" v-model="cusName">
@@ -96,7 +103,7 @@
             <el-table-column prop="" label="操作" width="180">
               <template slot-scope="scope">
                 <el-button type="primary" size="mini" @click.native="viewOrder(scope.row)">查看</el-button>
-                <el-button type="warning" size="mini" @click.native="updateOrder(scope.row)">修改订单</el-button>
+                <el-button v-if="scope.row.sn == 10" type="warning" size="mini" @click.native="updateOrder(scope.row)">修改订单</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -116,6 +123,7 @@ import { serverUrl } from 'api/config'
 export default {
   data () {
     return {
+      tabStatus: '0',
       key: '',
       permission: sessionStorage.getItem('permissions'),
       cusName: '',
@@ -153,12 +161,16 @@ export default {
       url: serverUrl + '/Check.do?pendding',
       params: {
         status: 100,
-        addmoney: 0
+        addmoney: '0'
       }
 
     }
   },
   methods: {
+    tab (tabStatus) {
+      this.params.addmoney = tabStatus
+      this.key = '' + new Date()
+    },
     search () {
       this.params = {
         status: 100,
@@ -184,15 +196,17 @@ export default {
     updatePendingList (data) {
       this.pendingList = data.data[0].data
     },
-    viewOrder (data) {
-      console.log(data)
+    viewOrder (data, btn) {
       this.$router.push({
-        path: `orderPending/${data.cpid}`,
+        path: `orderPending/view/${data.cpid}`,
         query: {data: data}
       })
     },
-    updateOrder () {
-
+    updateOrder (data, btn) {
+      this.$router.push({
+        path: `orderPending/edit/${data.cpid}`,
+        query: {data: data}
+      })
     }
   },
   components: {

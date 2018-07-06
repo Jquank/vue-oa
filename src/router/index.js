@@ -30,7 +30,8 @@ import BankflowList from 'components/moneyManage/bankflowList/bankflowList'
 // 订单管理
 import AddBaiduOrder from 'components/order/addBaiduOrder/addBaiduOrder'
 import OrderPending from 'components/order/orderPending/orderPending'
-import PendingDetail from 'components/order/orderPending/pendingDetail'
+import ViewDetail from 'components/order/orderPending/viewDetail'
+import EditOrder from 'components/order/orderPending/editOrder'
 
 import store from '../store'
 Vue.use(Router)
@@ -121,10 +122,16 @@ const router = new Router({
           path: 'orderPending',
           name: 'orderPending',
           component: OrderPending,
-          children: [{
-            path: ':id',
-            component: PendingDetail
-          }]
+          children: [
+            {
+            path: 'view/:id',
+            component: ViewDetail
+            },
+            {
+            path:'edit/:id',
+            component:EditOrder
+            }
+          ]
         },
       ]
     }
