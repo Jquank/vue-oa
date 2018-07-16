@@ -1,16 +1,16 @@
 <template>
   <div class="addbaidu-order">
-    <p v-if="showEditBD" class="bread-title">
+    <p v-if="showEditWJ" class="bread-title">
       <span>订单管理 / 新增百度订单</span>
     </p>
     <div class="order-content">
       <el-form ref="form" :model="form" label-width="180px" >
         <el-form-item label="公司名称" required>
           <el-input v-model="form.cName" readonly style="width:300px" placeholder="点击选择按钮选择公司"></el-input>
-          <el-button type="primary" @click.native="selCompany" v-if="showEditBD">选择</el-button>
+          <el-button type="primary" @click.native="selCompany" v-if="showEditWJ">选择</el-button>
         </el-form-item>
 
-        <el-form-item label="到款记录" required v-if="showEditBD">
+        <el-form-item label="到款记录" required v-if="showEditWJ">
           <el-select v-model="form.record" placeholder="请选择到款记录" style="width:300px;">
             <el-option v-for="(record,index) in moneyRecord.recordList" :key="index"
               :label="record[0].companyname" :value="record"></el-option>
@@ -42,6 +42,14 @@
         <el-form-item label="客户地址" required>
           <el-input v-model="form.cusAddress" style="width:600px;" placeholder="客户地址"></el-input>
         </el-form-item>
+
+        <!-- <el-form-item v-if="!showEditWJ" label="PC站订单金额" required>
+          <el-input v-model="form.pcMoney" style="width:300px;"></el-input>
+        </el-form-item>
+
+        <el-form-item v-if="!showEditWJ" label="手机站订单金额" required>
+          <el-input v-model="form.mobileMoney" style="width:300px;"></el-input>
+        </el-form-item> -->
 
         <el-form-item label="网建类型" required>
           <el-radio-group v-model="form.wjType">
@@ -82,24 +90,39 @@
             <el-option  v-for="(contract3,index) in contract.bdServiceProtocol" :key="index"
               :label="contract3.number" :value="contract3.id"></el-option>
           </el-select>
+          <!-- <el-select v-if="!showEditWJ" v-model="form.siteContract" placeholder="网站商务合同书" style="width:198px;">
+            <el-option label="网站商务合同书" value="0"></el-option>
+            <el-option  v-for="(contract4,index) in contract.wjContract" :key="index"
+              :label="contract4.number" :value="contract4.id"></el-option>
+          </el-select> -->
         </el-form-item>
 
         <el-form-item label="商务信息" required>
           <el-input v-model="form.shangWuName" readonly style="width:300px;"></el-input>
         </el-form-item>
+
+        <!-- <el-form-item label="网建类型" required>
+          <el-radio-group v-model="form.wjType">
+            <el-radio  label="">模板双站</el-radio>
+            <el-radio  label="">定制站</el-radio>
+            <el-radio  label="">纯移动站</el-radio>
+            <el-radio  label="">feed站</el-radio>
+          </el-radio-group>
+        </el-form-item> -->
         <!-- 百度订单详情   -->
         <el-form-item label="订单详情" required>
           <el-tabs type="border-card" style="max-width:750px;">
             <!-- 企业资质 -->
             <el-tab-pane label="企业资质">
-              <el-card v-if="showEditBD" shadow="always" class="card-tips">
+              <el-card v-if="showEditWJ" shadow="always" class="card-tips">
                 [说明]：根据订单业务类型，上传需要的资质，图片格式为：jpg、png、jpeg，图片大小在3M以下。
               </el-card>
-              <el-card v-if="!showEditBD" shadow="always" class="card-tips">
+              <el-card v-if="!showEditWJ" shadow="always" class="card-tips">
                 [说明]：点击删除可移除不符合要求的资质，在下方重新添加并上传正确的资质。
               </el-card>
               <!-- 编辑页回显企业资质照片 -->
               <slot></slot>
+              <!-- <show-qualify v-if="!showEditWJ" :showQualify="showQualify"></show-qualify> -->
               <el-row style="margin-top:10px;" :gutter="15">
                 <el-col :sm="16">
                   <el-input placeholder="对公账户" v-model="form.receiveAccount" style="width:100%">
@@ -149,7 +172,7 @@
             </el-tab-pane>
             <!-- 到款记录 -->
             <el-tab-pane label="到款记录">
-              <el-card shadow="always" class="card-tips" v-if="form.record.length===0 && showEditBD">
+              <el-card shadow="always" class="card-tips" v-if="form.record.length===0 && showEditWJ">
                 [说明]：请选择到款记录。
               </el-card>
               <el-card shadow="always" class="card-money-record" v-if="form.record.length!==0">
@@ -206,6 +229,7 @@
 // import { mapGetters } from 'vuex'
 import { serverUrl, uploadUrl } from 'api/config' //eslint-disable-line
 import Page from 'base/page/page'
+// import ShowQualify from 'base/showQualify/showQualify'
 import { $post } from 'api/http'
 import { getCode, getMyContract } from 'api/getOptions'//eslint-disable-line
 
@@ -213,7 +237,7 @@ const ORDER_TYPE = 'BAITUI'
 
 export default {
   props: {
-    showEditBD: { // false表示跳转编辑订单页
+    showEditWJ: { // false表示跳转编辑订单页
       type: Boolean,
       default: true
     },
@@ -234,6 +258,8 @@ export default {
       USER_ID: '',
       qualifyType: [],
       form: {
+        pcMoney: 0,
+        mobileMoney: 0,
         cName: '',
         record: [],
         pcWeb: '',
@@ -255,6 +281,7 @@ export default {
         bdOrderNumber: '0',
         bdProxy: '0',
         bdServiceProtocol: '0',
+        siteContract: '0',
         shangWuName: '',
         receiveAccount: '', // 对公账户
         receiveBank: '', // 开户行
@@ -302,7 +329,7 @@ export default {
   },
   computed: {
     recordDetail () {
-      if (this.showEditBD || this.showEditBD) {
+      if (this.showEditWJ || this.showEditWJ) {
         let x = this.form.record.slice(1)
         return x
       } else {
@@ -315,7 +342,7 @@ export default {
   },
   watch: {
     editData (newval) {
-      if (!this.showEditBD) {
+      if (!this.showEditWJ) {
         this.form.cName = newval.cusName
         this.form.pcWeb = newval.pcsite
         this.form.phoneWeb = newval.wapsite

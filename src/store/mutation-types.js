@@ -1,2 +1,1 @@
 export const GET_USERNAME = 'GET_USERNAME'
-export const GET_PRODUCT_TYPE = 'GET_PRODUCT_TYPE'

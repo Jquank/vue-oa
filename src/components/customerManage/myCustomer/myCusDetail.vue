@@ -1,6 +1,6 @@
 <template>
   <div class="mycus-detail">
-    <p>
+    <p class="bread-title">
       <span>我的客户 / 客户详情</span>
     </p>
     <div class="detail-main">

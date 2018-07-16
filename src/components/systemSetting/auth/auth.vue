@@ -148,7 +148,8 @@ export default {
     _getAllRolePermission () {
       $post(getAllRulePermissionUrl).then(res => {
         let allData = res.data.data
-        this.roleData = this._transTree(allData)
+        console.log(allData)
+        // this.roleData = this._transTree(allData)
       })
     },
     _transTree (arr) {

@@ -185,15 +185,15 @@ export const navList = [
   {
     id: 10,
     fontIcon: 'fa fa-newspaper-o',
-    text: '发票管理'
-  //           cList: [
-  //   { cid: 120, to: "/indexPage/rule", text: "权限设置" },
-  //   { cid: 121, to: "/indexPage/auth", text: "角色设置" },
-  //   { cid: 122, to: "/indexPage/systemCycle", text: "时长设置" },
-  //   { cid: 123, to: "/indexPage/departSetNum", text: "部门配额" },
-  //   { cid: 124, to: "/indexPage/accountManage", text: "账号管理" },
-  //   { cid: 125, to: "/indexPage/news", text: "公告管理" },
-  // ],
+    text: '发票管理',
+    cList: [
+      { cid: 120, to: '/indexPage/invoicePending', text: '待开发票' }
+    // { cid: 121, to: "/indexPage/auth", text: "角色设置" },
+    // { cid: 122, to: "/indexPage/systemCycle", text: "时长设置" },
+    // { cid: 123, to: "/indexPage/departSetNum", text: "部门配额" },
+    // { cid: 124, to: "/indexPage/accountManage", text: "账号管理" },
+    // { cid: 125, to: "/indexPage/news", text: "公告管理" },
+    ]
   },
   {
     id: 11,

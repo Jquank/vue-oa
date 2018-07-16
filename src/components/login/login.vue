@@ -32,10 +32,11 @@
 <script>
 import { $post } from '@/api/http'
 import { serverUrl } from '@/api/config'
-import { mapMutations, mapActions } from 'vuex'
+import { mapMutations } from 'vuex'
 import { getCode } from 'api/getOptions'
 import storage from 'good-storage'
 const LOGIN_URL = serverUrl + '/User.do?login'
+const DEPARTMENT_URL = serverUrl + '/Search.do?DeptTree'
 export default {
   data () {
     return {
@@ -44,13 +45,20 @@ export default {
       // userName: ""
     }
   },
-  mounted () {
+  created () {
     storage.remove('productType')
+    storage.remove('department')
+  },
+  mounted () {
+    getCode(38).then(res => {
+      storage.set('productType', res.data.data)
+    })
+    $post(DEPARTMENT_URL).then(res => {
+      let data = this._transTree(res.data.data)
+      storage.set('department', data)
+    })
   },
   methods: {
-    ...mapActions([
-      'getProductType'
-    ]),
     login () {
       let params = {
         username: this.myName,
@@ -59,15 +67,13 @@ export default {
       $post(LOGIN_URL, params)
         .then(res => {
           if (res.data.success === true) {
-            sessionStorage.setItem('userName', res.data.data.name)
-            sessionStorage.setItem('userId', res.data.data.id)
-            sessionStorage.setItem('permissions', res.data.data.permissions)
-            sessionStorage.setItem('token', res.data.data.tk)
+            storage.session.set('userName', res.data.data.name)
+            storage.session.set('userId', res.data.data.id)
+            storage.session.set('permissions', res.data.data.permissions)
+            storage.session.set('token', res.data.data.tk)
 
-            getCode(38).then(res => {
-              this.getProductType(res.data.data)
-            })
             this.getUserName()
+
             setTimeout(() => {
               this.$router.push('/indexPage')
             })
@@ -86,9 +92,27 @@ export default {
           console.log(err)
         })
     },
+    _transTree (arr) {
+      let r = []
+      let hash = {}
+      arr.forEach((val, key) => {
+        hash[val.code] = val
+      })
+      for (let i = 0; i < arr.length; i++) {
+        let oneData = arr[i]
+        let parentcode = oneData.parentcode
+        let hashVP = hash[parentcode]
+        if (hashVP) {
+          !hashVP['children'] && (hashVP['children'] = [])
+          hashVP['children'].push(oneData)
+        } else {
+          r.push(oneData)
+        }
+      }
+      return r
+    },
     ...mapMutations({
-      getUserName: 'GET_USERNAME',
-      getProductType: 'GET_PRODUCT_TYPE'
+      getUserName: 'GET_USERNAME'
     })
 
   }

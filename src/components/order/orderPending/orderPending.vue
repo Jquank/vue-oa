@@ -1,6 +1,6 @@
 <template>
   <div class="order-pending">
-    <p>
+    <p v-if="showBread" class="bread-title">
       <span>订单管理 / 待处理订单</span>
     </p>
     <div class="pending-content">
@@ -123,6 +123,7 @@ import { serverUrl } from 'api/config'
 export default {
   data () {
     return {
+      showBread: true,
       tabStatus: '0',
       key: '',
       permission: sessionStorage.getItem('permissions'),
@@ -196,13 +197,14 @@ export default {
     updatePendingList (data) {
       this.pendingList = data.data[0].data
     },
-    viewOrder (data, btn) {
+    viewOrder (data) {
       this.$router.push({
         path: `orderPending/view/${data.cpid}`,
         query: {data: data}
       })
+      // this.showBread = false
     },
-    updateOrder (data, btn) {
+    updateOrder (data) {
       this.$router.push({
         path: `orderPending/edit/${data.cpid}`,
         query: {data: data}

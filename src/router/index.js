@@ -23,7 +23,6 @@ import CustomerCheck from 'components/customerCheck/customerCheck'
 import CustomerSearch from 'components/customerSearch/customerSearch'
 import Contract from 'components/contract/contract'
 import Renew from 'components/renew/renew'
-import InvoiceManage from 'components/invoiceManage/invoiceManage'
 import Salary from 'components/salary/salary'
 // 到款管理
 import BankflowList from 'components/moneyManage/bankflowList/bankflowList'
@@ -32,6 +31,9 @@ import AddBaiduOrder from 'components/order/addBaiduOrder/addBaiduOrder'
 import OrderPending from 'components/order/orderPending/orderPending'
 import ViewDetail from 'components/order/orderPending/viewDetail'
 import EditOrder from 'components/order/orderPending/editOrder'
+
+// 发票管理
+import InvoicePending from 'components/invoiceManage/invoicePending/invoicePending'
 
 import store from '../store'
 Vue.use(Router)
@@ -133,6 +135,12 @@ const router = new Router({
             }
           ]
         },
+        // 发票管理
+        {
+          path: 'invoicePending',
+          name: 'invoicePending',
+          component:InvoicePending
+        }
       ]
     }
   ]

@@ -101,3 +101,47 @@ export function currency1 (num) {
     return ''
   }
 }
+export function bankType (num) {
+  switch (num) {
+    case 0:
+      return '阳光快付'
+    case 1:
+      return '现金'
+    case 2:
+      return '糯米现金'
+    case 3:
+      return '招行'
+    case 4:
+      return '糯米招行'
+    case 5:
+      return '银联'
+    case 6:
+      return '银联2'
+    case 7:
+      return '银联3'
+    case 8:
+      return '糯米银联'
+    case 9:
+      return '黄华中行'
+    case 10:
+      return '中行1'
+    case 'c5b2159eb53c11e7a1f900e066be4002':
+      return '阳光快付'
+    case 'd05ac8afb53c11e7a1f900e066be4002':
+      return '现金'
+    case 'e7b2be2bb53c11e7a1f900e066be4002':
+      return '糯米现金'
+    case 'efa7f660b53c11e7a1f900e066be4002':
+      return '招行'
+    case 'f778a6ceb53c11e7a1f900e066be4002':
+      return '糯米招行'
+    case 'ff631b32b53c11e7a1f900e066be4002':
+      return '银联'
+    case '10db32e0b53d11e7a1f900e066be4002':
+      return '糯米银联'
+    case '1bbe9160b53d11e7a1f900e066be4002':
+      return '黄华中行'
+    case '22e098e7b53d11e7a1f900e066be4002':
+      return '中行1'
+  }
+}

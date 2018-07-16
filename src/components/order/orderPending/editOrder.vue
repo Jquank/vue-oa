@@ -1,24 +1,36 @@
 <template>
   <div>
     <div class="edit-detail">
-      <p>
+      <p v-if="pid=='BAITUI'" class="bread-title">
         <span>订单管理 / 待处理订单 / 编辑百度订单</span>
       </p>
+      <p v-if="pid=='WEBSITE'" class="bread-title">
+        <span>订单管理 / 待处理订单 / 编辑网建订单</span>
+      </p>
       <div class="detail-content">
-        <add-baidu-order :isShow="false" :editData="editData"></add-baidu-order>
+        <add-baidu-order v-if="pid=='BAITUI'" :showEditBD="false" :editData="editData">
+          <show-qualify :showQualify="showQualify"></show-qualify>
+        </add-baidu-order>
+        <add-wj-order v-if="pid=='WEBSITE'" :showEditWJ="false" :editData="editData">
+          <show-qualify :showQualify="showQualify"></show-qualify>
+        </add-wj-order>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import ShowQualify from 'base/showQualify/showQualify'
 import addBaiduOrder from 'components/order/addBaiduOrder/addBaiduOrder'
+import addWjOrder from 'components/order/addWjOrder/addWjOrder'
 import { serverUrl, uploadUrl } from 'api/config' //eslint-disable-line
 import { $post } from 'api/http'
 export default {
   data () {
     return {
-      editData: {}
+      pid: 'BAITUI',
+      editData: {},
+      showQualify: []
     }
   },
   created () {
@@ -33,17 +45,19 @@ export default {
         })
         return
       }
+      this.pid = routerData.pid
+      let companylogid = routerData.companylogid
       let cpid = routerData.cpid
       let uid = routerData.uid
       let orderid = routerData.orderid
-      let pid = routerData.pid
       let url = serverUrl + '/wf.do?ndget'
       let params = {
+        companylogid: companylogid,
         cpid: cpid,
         uid: uid,
         sn: 10,
         orderid: orderid,
-        pid: pid
+        pid: this.pid
       }
       $post(url, params).then(res => {
         if (res.data.success === true) {
@@ -58,7 +72,7 @@ export default {
           this.editData.bdServiceProtocol = orderInfo.con_id3
           this.editData.receiveAccount = orderInfo.receiveaccount
           this.editData.receiveBank = orderInfo.receivebank
-          this.editData.qualifyList = res.data.data[5]
+          this.showQualify = res.data.data[5]
           this.editData.record = res.data.data[8]
           this.editData.recordDetail = res.data.data[9]
         }
@@ -68,7 +82,7 @@ export default {
     }
   },
   components: {
-    addBaiduOrder
+    addBaiduOrder, addWjOrder, ShowQualify
   }
 }
 </script>

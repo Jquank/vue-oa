@@ -48,7 +48,6 @@ export default {
       }, this.sendparams)
       $post(this.url, params)
         .then(res => {
-          // let res0 = res.data[0].data
           this.handleList = res
           this._updateList()
         })
@@ -67,7 +66,6 @@ export default {
       }, this.sendparams)
       $post(this.url, params)
         .then(res => {
-          // let res0 = res.data[0].data
           this.handleList = res
           this._updateList()
         })
@@ -84,10 +82,12 @@ export default {
 
       $post(this.url, params)
         .then(res => {
-          // let res0 = res.data[0].data
-          let res1 = res.data[1].data
+          try {
+            this.pageCount = res.data[1].data.pagecount
+          } catch (e) {
+            this.pageCount = 0
+          }
           this.handleList = res
-          this.pageCount = res1.pagecount
           this._updateList()
         })
         .catch(err => {
