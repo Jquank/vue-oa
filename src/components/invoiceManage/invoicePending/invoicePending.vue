@@ -29,6 +29,7 @@
         </page>
       </el-row>
       <el-button @click.native="bbb">456</el-button>
+      <select-department></select-department>
       <select-user :isShow="vvv"></select-user>
     </div>
   </div>
@@ -38,6 +39,7 @@
 import { serverUrl } from 'api/config'
 import Page from 'base/page/page'
 import selectUser from 'base/selectUser/selectUser'
+import selectDepartment from 'base/selectDepartment/selectDepartment'
 export default {
   data () {
     return {
@@ -103,7 +105,7 @@ export default {
       }
     }
   },
-  components: {Page, selectUser}
+  components: {Page, selectUser, selectDepartment}
 }
 </script>
 

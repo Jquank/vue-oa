@@ -1,6 +1,5 @@
 <template>
   <div>
-    <p><span>系统配置 / 角色设置</span></p>
     <div class="auth">
       <el-row style="margin-bottom:10px;">
         <el-button type="primary" size="mini" @click.native="addNewRole">
@@ -149,7 +148,7 @@ export default {
       $post(getAllRulePermissionUrl).then(res => {
         let allData = res.data.data
         console.log(allData)
-        // this.roleData = this._transTree(allData)
+        this.roleData = this._transTree(allData)
       })
     },
     _transTree (arr) {

@@ -1,8 +1,5 @@
 <template>
   <div class="order-pending">
-    <p v-if="showBread" class="bread-title">
-      <span>订单管理 / 待处理订单</span>
-    </p>
     <div class="pending-content">
       <div class="tab">
         <el-radio-group v-model="tabStatus" @change="tab(tabStatus)">
@@ -25,7 +22,7 @@
             </el-input>
           </el-col>
           <el-col :sm="4">
-            <el-select v-model="productType" placeholder="请选择产品类型" style="width:100%">
+            <el-select v-model="productType" placeholder="请选择产品类型" style="width:100%;">
               <el-option label="全部" value="-1"></el-option>
               <el-option label="百度推广" value="BAITUI"></el-option>
               <el-option label="网建" value="WEBSITE"></el-option>
@@ -67,6 +64,7 @@
       <div class="content" style="margin-top:15px;">
         <el-row v-if="permission.indexOf('6n')<0 || permission.indexOf('5p')<0">
           <el-table
+            v-loading="isLoading"
             :data="pendingList"
             style="width: 100%">
             <el-table-column prop="ordernum" label="订单ID" width="180">
@@ -163,14 +161,15 @@ export default {
       params: {
         status: 100,
         addmoney: '0'
-      }
+      },
+      isLoading: true
 
     }
   },
   methods: {
     tab (tabStatus) {
-      this.params.addmoney = tabStatus
-      this.key = '' + new Date()
+      // 使用obj.key = value的方式，子组件无法监听到对象的变化
+      this.params = Object.assign({}, this.params, {addmoney: tabStatus})
     },
     search () {
       this.params = {
@@ -183,7 +182,6 @@ export default {
         opentime: this.achievement === '-1' || this.achievement === '' ? undefined : this.achievement, // 业绩
         audittype: this.orderStatus === '-1' || this.orderStatus === '' ? undefined : this.orderStatus // 订单类型
       }
-      this.key = '' + new Date()
     },
     reset () {
       this.cusName = ''
@@ -194,8 +192,11 @@ export default {
       this.achievement = ''
       this.orderStatus = ''
     },
-    updatePendingList (data) {
-      this.pendingList = data.data[0].data
+    updatePendingList (data, load) {
+      this.isLoading = load
+      if (!load) {
+        this.pendingList = data.data[0].data
+      }
     },
     viewOrder (data) {
       this.$router.push({

@@ -27,12 +27,18 @@ export default {
       }
     }
   },
+  watch: {
+    sendparams () {
+      this._getFirstList()
+    }
+  },
   data () {
     return {
       currentPage: 1,
       handleList: [],
       pageCount: 0,
-      pageval: 10
+      pageval: 10,
+      isLoading: true
     }
   },
   created () {
@@ -41,6 +47,9 @@ export default {
   methods: {
     // page-size改变的回调，默认为10
     handleSizeChange (val) {
+      this.isLoading = true
+      this._updateList() // 派发loading状态
+
       this.pageval = val
       let params = Object.assign({}, {
         pagesize: this.pageval,
@@ -49,7 +58,8 @@ export default {
       $post(this.url, params)
         .then(res => {
           this.handleList = res
-          this._updateList()
+          this.isLoading = false
+          this._updateList() // this.isLoading为false时，this.handleList才有值
         })
         .catch(err => {
           console.log(err)
@@ -57,6 +67,9 @@ export default {
     },
     // 当前页改变的回调
     handleCurrentChange (page) {
+      this.isLoading = true
+      this._updateList()
+
       if (!this.pageval) {
         this.pageval = 10
       }
@@ -67,6 +80,7 @@ export default {
       $post(this.url, params)
         .then(res => {
           this.handleList = res
+          this.isLoading = false
           this._updateList()
         })
         .catch(err => {
@@ -75,6 +89,9 @@ export default {
     },
     // 获取列表的第一页
     _getFirstList () {
+      this.isLoading = true
+      this._updateList()
+
       let params = Object.assign({}, {
         pagesize: 10,
         currentpage: 1
@@ -88,6 +105,7 @@ export default {
             this.pageCount = 0
           }
           this.handleList = res
+          this.isLoading = false
           this._updateList()
         })
         .catch(err => {
@@ -96,7 +114,7 @@ export default {
     },
     // 触发自定义事件
     _updateList () {
-      this.$emit('updateList', this.handleList)
+      this.$emit('updateList', this.handleList, this.isLoading)
     }
   }
 }

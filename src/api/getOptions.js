@@ -6,6 +6,7 @@ const areaUrl = serverUrl + '/Area.do?comparea'
 const sourceUrl = serverUrl + '/cd.do?get&code=27'
 const codeUrl = serverUrl + '/cd.do?get&code='
 const contractUrl = serverUrl + '/Contract.do?SearchByCatId'
+const departmentUrl = serverUrl + '/Search.do?DeptTree'
 
 // 获取地区
 export function getArea (params = {}) {
@@ -17,6 +18,13 @@ export function getArea (params = {}) {
 // 获取行业
 export function getTrade (params = {}) {
   return $post(tradeUrl, params).then(res => {
+    return res
+  })
+}
+
+// 获取部门
+export function getDepartment (params = {}) {
+  return $post(departmentUrl, params).then(res => {
     return res
   })
 }

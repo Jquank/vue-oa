@@ -1,15 +1,18 @@
 <template>
-  <el-dialog title="人员选择" :visible.sync="show" id="user-select" width="620px">
-    <el-tree :data="departmentList" :props="depProps" accordion node-key="id" ref="tree"
-      @node-click="nodeClick" :default-expanded-keys="defaultExpanded"></el-tree>
-    <el-row class="name" :gutter="10">
-      <el-input placeholder="搜索姓名" v-model="name" @keydown.enter.native="searchName">
-         <el-button @click="searchName" slot="append" icon="el-icon-search"></el-button>
+  <el-dialog :title="title" :visible.sync="show" :modal-append-to-body="false" id="user-select" width="620px">
+    <el-tree :data="departmentList" :props="depProps" accordion node-key="id" ref="tree" @node-click="nodeClick" :default-expanded-keys="defaultExpanded"></el-tree>
+    <el-row class="name">
+      <el-input v-if="showSearch" placeholder="搜索姓名" v-model="name" @keydown.enter.native="searchName">
+        <el-button @click="searchName" slot="append" icon="el-icon-search"></el-button>
       </el-input>
-      <el-col @click.native="clickName(index,item.name)" :sm="6" :class="'x'+index"
-        v-for="(item,index) in nameList" :key="index">{{item.true_name}}</el-col>
+      <div class="name-container">
+        <div @click="clickName(index,item.name)" class="name-item" :class="'x'+index" v-for="(item,index) in nameList" :key="index">
+          {{item.true_name}}
+        </div>
+      </div>
       <div class="btn-save">
-        <el-button @click="save" type="primary">保存</el-button>
+        <el-button @click="save" v-if="showSaveBtn" type="primary">保存</el-button>
+        <el-button @click="confirm" v-if="!showSaveBtn" type="primary">确定</el-button>
       </div>
     </el-row>
 
@@ -28,11 +31,23 @@ export default {
     isShow: {
       type: Number,
       default: 0
+    },
+    showSaveBtn: {
+      type: Boolean,
+      default: true
+    },
+    showSearch: {
+      type: Boolean,
+      default: true
+    },
+    title: {
+      type: String,
+      default: '人员选择'
     }
   },
   watch: {
     isShow (newVal) {
-      this.show = !!newVal
+      this.show = !!newVal // 此处从父组件传一个随机数即可
     }
   },
   data () {
@@ -64,15 +79,17 @@ export default {
       })
     },
     searchName () {
-      $get(SEARCH_URL, {name: this.name}).then(res => {
+      $get(SEARCH_URL, { name: this.name }).then(res => {
         this.nameList = res.data.data
       })
     },
     clickName (index) {
       let div = document.getElementsByClassName('x' + index)[0]
+      console.log(div)
       toggleClass(div, 'bgcolor')
     },
-    save () {
+    save () {},
+    confirm () {
 
     }
   },
@@ -82,24 +99,31 @@ export default {
 
 <style lang="less">
 #user-select {
+  z-index:30000;
   .el-dialog__body {
     display: flex;
     justify-content: space-around;
   }
-  .name{
+  .name {
     width: 250px;
     min-height: 150px;
-    .el-col{
-      margin-top:10px;
-      cursor: pointer;
+    .name-container{
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      .name-item {
+        margin-top: 10px;
+        padding-right: 10px;
+        cursor: pointer;
+      }
     }
-    .btn-save{
+    .btn-save {
       clear: both;
-      padding-top: 10px;
+      padding-top: 20px;
       text-align: right;
     }
-    .bgcolor{
-      background-color: skyblue
+    .bgcolor {
+      background-color: skyblue;
     }
   }
 }

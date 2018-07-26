@@ -33,10 +33,10 @@
 import { $post } from '@/api/http'
 import { serverUrl } from '@/api/config'
 import { mapMutations } from 'vuex'
-import { getCode } from 'api/getOptions'
+import { getCode, getArea, getTrade, getDepartment } from 'api/getOptions'
 import storage from 'good-storage'
 const LOGIN_URL = serverUrl + '/User.do?login'
-const DEPARTMENT_URL = serverUrl + '/Search.do?DeptTree'
+
 export default {
   data () {
     return {
@@ -47,16 +47,13 @@ export default {
   },
   created () {
     storage.remove('productType')
+    storage.remove('wjType')
     storage.remove('department')
+    storage.remove('province')
+    storage.remove('trade')
   },
   mounted () {
-    getCode(38).then(res => {
-      storage.set('productType', res.data.data)
-    })
-    $post(DEPARTMENT_URL).then(res => {
-      let data = this._transTree(res.data.data)
-      storage.set('department', data)
-    })
+
   },
   methods: {
     login () {
@@ -73,6 +70,41 @@ export default {
             storage.session.set('token', res.data.data.tk)
 
             this.getUserName()
+
+            getCode(38).then(res => {
+              let data = res.data.data || []
+              storage.set('productType', data)
+            })
+
+            getCode(28).then(res => {
+              let data = res.data.data || []
+              storage.set('wjType', data)
+            })
+
+            getArea({parentid: 1}).then(res => {
+              let data = res.data.data || []
+              // let data = this._transTree(res.data.data, 'id', 'parentid')
+              data.forEach(val => {
+                val.children = []
+                val.label = val.AREANAME
+              })
+              storage.set('province', data)
+            })
+
+            getTrade().then(res => {
+              let data = res.data.data || []
+              data.forEach(val => {
+                val.children = []
+                val.label = val.name
+              })
+              storage.set('trade', data)
+            })
+
+            getDepartment().then(res => {
+              let data = res.data.data || []
+              let department = this._transTree(data)
+              storage.set('department', department)
+            })
 
             setTimeout(() => {
               this.$router.push('/indexPage')

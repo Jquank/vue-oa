@@ -3,7 +3,7 @@
   <div id="app">
     <el-container>
       <!-- 1左侧边栏 -->
-      <el-aside class="nav-aside" width="180px">
+      <el-aside id="nav-aside" class="nav-aside" width="180px">
         <navbar></navbar>
       </el-aside>
       <!-- 2右侧头部和主体内容 -->
@@ -14,6 +14,9 @@
         </el-header>
         <!-- 主体内容 -->
         <el-main>
+          <div id="call-center">
+            <iframe ref="iframecall" id="iframe-call" src="http://gccp.baidu.com/gaiamgmt/fe-communication/communications/index.html#/" frameborder="0"></iframe>
+          </div>
           <router-view></router-view>
         </el-main>
       </el-container>
@@ -22,18 +25,16 @@
 </template>
 
 <script>
-import Navbar from '../../components/navbar/navbar'
-import MHeader from '../../components/m-header/m-header'
+import { loadCallIframe } from 'api/call'
+import Navbar from 'components/navbar/navbar'
+import MHeader from 'components/m-header/m-header'
 // import { getArea, getSource, getTrade } from '@/api/getOptions'
 export default {
-
   data () {
-    return {
-
-    }
+    return {}
   },
-  created () {
-
+  mounted () {
+    loadCallIframe('iframe-call')
   },
   components: {
     Navbar,
@@ -43,26 +44,33 @@ export default {
 </script>
 
 <style scoped lang="less">
-  #app {
-    padding: 0;
-    .nav-aside {
-      background: #19233c;
-      height: 100%;
-      overflow: hidden;
-    }
-    .con-right{
-      height:100vh;
-      .el-header{
-        padding:0;
-        background: #FFF;
-        border-bottom: 1px solid #e2e5ec;
-      }
-      .el-main{
-        padding:10px;
-        background: #e2e5ec;
-      }
-    }
-
+@import '../../common/css/media.css';
+#app {
+  padding: 0;
+  .nav-aside {
+    background: #19233c;
+    height: 100%;
+    overflow: hidden;
+    transition: all 0.5s;
   }
-
+  .con-right {
+    height: 100vh;
+    #call-center {
+      width: 100%;
+      #iframe-call {
+        width:100%;
+        max-height: 95px;
+      }
+    }
+    .el-header {
+      padding: 0;
+      background: #fff;
+      border-bottom: 1px solid #e2e5ec;
+    }
+    .el-main {
+      padding: 5px 10px;
+      background: #e2e5ec;
+    }
+  }
+}
 </style>

@@ -1,11 +1,13 @@
 <template>
   <div class="control-scroll">
     <div ref="navbar" class="nav-bar">
-      <img class="logo-img" src="../../common/img/logo.jpg" alt="">
+      <div ref="nested" class="nested">
+        <a @click="nested" class="fa" :class="collapseIcon"></a>
+      </div>
+      <img ref="loginimg" class="logo-img" src="../../common/img/logo.jpg" alt="">
       <el-menu
+      :collapse="myCollapse"
       router
-      @open="handleOpen"
-      @close="handleClose"
       background-color="#19233C"
       text-color="#fff"
       active-text-color="#fff"
@@ -37,23 +39,48 @@ import { navList } from '@/api/config'
 export default {
   data () {
     return {
-      navList: navList
+      navList: navList,
+      myCollapse: false,
+      collapseIcon: 'fa-outdent'
     }
   },
-  computed: {
-
-  },
   mounted () {
+    let that = this
+    window.onresize = function () {
+      let width = document.body.clientWidth
+      if (width < 960 && !that.myCollapse) {
+        that.nested()
+      }
+      if (width >= 960 && that.myCollapse) {
+        that.nested()
+      }
+    }
   },
   methods: {
-    handleOpen (key, keyPath) {},
-    handleClose (key, keyPath) {}
+    nested () {
+      let aside = document.getElementById('nav-aside')
+      if (this.myCollapse) {
+        this.myCollapse = false
+        aside.style.width = '180px'
+        this.$refs.navbar.style.width = '197px'
+        this.$refs.nested.style.left = '190px'
+        this.$refs.loginimg.style.left = '-10px'
+        this.collapseIcon = 'fa-outdent'
+      } else {
+        this.myCollapse = true
+        aside.style.width = '63px'
+        this.$refs.navbar.style.width = '63px'
+        this.$refs.nested.style.left = '73px'
+        this.$refs.loginimg.style.left = '-26px'
+        this.collapseIcon = 'fa-indent'
+      }
+    }
   }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="less">
+
 @bgcolor: darken(#121a2c, 20%);
 .control-scroll{
   height:100vh;
@@ -62,9 +89,21 @@ export default {
   overflow-y: auto;
   .nav-bar {
     width: 197px;
+    .nested{
+      font-size: 16px;
+      position: fixed;
+      top: 17px;
+      left: 190px;
+      transition: all 0.5s;
+      cursor: pointer;
+    }
     .logo-img {
-      width: 100%;
+      width: 197px;
       height: 50px;
+      position: relative;
+      top:0;
+      left:-10px;
+      transition: all 0.5s;
     }
     .el-menu {
       width: 100%;

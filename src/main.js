@@ -6,10 +6,10 @@ import App from './App'
 import router from './router'
 import store from './store'
 
-import './common/css/base.css'
-
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+
+import './common/css/base.css'
 
 import 'vue-area-linkage/dist/index.css'
 import VueAreaLinkage from 'vue-area-linkage'
@@ -18,6 +18,11 @@ import * as filters from '@/common/js/filters'
 
 Vue.config.productionTip = false
 
+Vue.config.errorHandler = function (err, vm, info) {
+  if (err === 'ignore') {
+    return true
+  }
+}
 Vue.use(VueAreaLinkage)
 Vue.use(ElementUI, {size: 'small'})
 // 全局注册所有过滤器

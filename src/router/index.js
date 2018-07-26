@@ -13,6 +13,7 @@ import SystemCycle from 'components/systemSetting/systemCycle/systemCycle'
 import DepartSetNum from 'components/systemSetting/departSetNum/departSetNum'
 import AccountManage from 'components/systemSetting/accountManage/accountManage'
 import News from 'components/systemSetting/news/news'
+import Editor from 'components/systemSetting/news/editor'
 // 人员管理
 import UserManage from 'components/userManage/userManage'
 // 客户管理
@@ -96,7 +97,14 @@ const router = new Router({
         {
           path: 'news',
           name: 'news',
-          component: News
+          component: News,
+          children: [
+            {
+              path: 'editor/:id',
+              // name: 'editor',
+              component: Editor
+            }
+          ]
         },
         // 客户管理
         {
@@ -118,19 +126,23 @@ const router = new Router({
         {
           path: 'addBaiduOrder',
           name: 'addBaiduOrder',
+          meta: { text: '订单管理/新增百度订单' },
           component: AddBaiduOrder
         },
         {
           path: 'orderPending',
           name: 'orderPending',
+          meta: { text: '订单管理/待处理订单' },
           component: OrderPending,
           children: [
             {
             path: 'view/:id',
+            meta: { text: '订单管理/待处理订单/查看订单详情' },
             component: ViewDetail
             },
             {
             path:'edit/:id',
+            meta: { text: '订单管理/待处理订单/编辑订单' },
             component:EditOrder
             }
           ]

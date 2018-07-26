@@ -22,14 +22,26 @@ export function cusStatus (num) {
       return '多项目'
     case 40:
       return '新'
+    case 50:
+      return '信息流'
   }
+}
+export function wjType (num) {
+  let wjTypes = storage.get('wjType')
+  let type = ''
+  wjTypes.forEach(val => {
+    if (num === val.code_val) {
+      type = val.code_desc
+    }
+  })
+  return type
 }
 
 export function productType (num) {
   let productTypes = storage.get('productType')
   let type = ''
   productTypes.forEach(val => {
-    if (num == val.code_val) { //eslint-disable-line
+    if (num === val.code_val) {
       type = val.code_desc
     }
   })

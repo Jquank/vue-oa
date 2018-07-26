@@ -1,5 +1,5 @@
-export const serverUrl = 'http://172.16.12.87:8080/BaiJieOA'
-export const uploadUrl = 'http://172.16.12.87:8080/upload/c'
+export const serverUrl = 'http://172.16.11.78:8080/BaiJieOA'
+export const uploadUrl = 'http://172.16.11.78:8080/upload/c'
 export const navList = [
   {
     id: 1,
@@ -40,15 +40,9 @@ export const navList = [
   {
     id: 2,
     fontIcon: 'fa fa-street-view',
-    text: '人员管理'
-  // cList: [
-  //   { cid: 40, to: "/indexPage/rule", text: "权限设置" },
-  //   { cid: 41, to: "/indexPage/auth", text: "角色设置" },
-  //   { cid: 42, to: "/indexPage/systemCycle", text: "时长设置" },
-  //   { cid: 43, to: "/indexPage/departSetNum", text: "部门配额" },
-  //   { cid: 44, to: "/indexPage/accountManage", text: "账号管理" },
-  //   { cid: 45, to: "/indexPage/news", text: "公告管理" },
-  // ],
+    text: '人员管理',
+    cList: [
+    ]
   },
   {
     id: 3,
@@ -89,41 +83,23 @@ export const navList = [
   {
     id: 4,
     fontIcon: 'fa fa-calendar-check-o',
-    text: '客户审核'
-  //           cList: [
-  //   { cid: 60, to: "/indexPage/rule", text: "权限设置" },
-  //   { cid: 61, to: "/indexPage/auth", text: "角色设置" },
-  //   { cid: 62, to: "/indexPage/systemCycle", text: "时长设置" },
-  //   { cid: 63, to: "/indexPage/departSetNum", text: "部门配额" },
-  //   { cid: 64, to: "/indexPage/accountManage", text: "账号管理" },
-  //   { cid: 65, to: "/indexPage/news", text: "公告管理" },
-  // ],
+    text: '客户审核',
+    cList: [
+    ]
   },
   {
     id: 5,
     fontIcon: 'fa fa-search-plus',
-    text: '客户搜索'
-  //           cList: [
-  //   { cid: 70, to: "/indexPage/rule", text: "权限设置" },
-  //   { cid: 71, to: "/indexPage/auth", text: "角色设置" },
-  //   { cid: 72, to: "/indexPage/systemCycle", text: "时长设置" },
-  //   { cid: 73, to: "/indexPage/departSetNum", text: "部门配额" },
-  //   { cid: 74, to: "/indexPage/accountManage", text: "账号管理" },
-  //   { cid: 75, to: "/indexPage/news", text: "公告管理" },
-  // ],
+    text: '客户搜索',
+    cList: [
+    ]
   },
   {
     id: 6,
     fontIcon: 'fa fa-file',
-    text: '合同管理'
-  //           cList: [
-  //   { cid: 80, to: "/indexPage/rule", text: "权限设置" },
-  //   { cid: 81, to: "/indexPage/auth", text: "角色设置" },
-  //   { cid: 82, to: "/indexPage/systemCycle", text: "时长设置" },
-  //   { cid: 83, to: "/indexPage/departSetNum", text: "部门配额" },
-  //   { cid: 84, to: "/indexPage/accountManage", text: "账号管理" },
-  //   { cid: 85, to: "/indexPage/news", text: "公告管理" },
-  // ],
+    text: '合同管理',
+    cList: [
+    ]
   },
   {
     id: 7,
@@ -172,15 +148,9 @@ export const navList = [
   {
     id: 9,
     fontIcon: 'fa fa-credit-card',
-    text: '续费管理'
-  //           cList: [
-  //   { cid: 110, to: "/indexPage/rule", text: "权限设置" },
-  //   { cid: 111, to: "/indexPage/auth", text: "角色设置" },
-  //   { cid: 112, to: "/indexPage/systemCycle", text: "时长设置" },
-  //   { cid: 113, to: "/indexPage/departSetNum", text: "部门配额" },
-  //   { cid: 114, to: "/indexPage/accountManage", text: "账号管理" },
-  //   { cid: 115, to: "/indexPage/news", text: "公告管理" },
-  // ],
+    text: '续费管理',
+    cList: [
+    ]
   },
   {
     id: 10,
@@ -198,14 +168,8 @@ export const navList = [
   {
     id: 11,
     fontIcon: 'fa fa-money',
-    text: '工资管理'
-  //           cList: [
-  //   { cid: 130, to: "/indexPage/rule", text: "权限设置" },
-  //   { cid: 131, to: "/indexPage/auth", text: "角色设置" },
-  //   { cid: 132, to: "/indexPage/systemCycle", text: "时长设置" },
-  //   { cid: 133, to: "/indexPage/departSetNum", text: "部门配额" },
-  //   { cid: 134, to: "/indexPage/accountManage", text: "账号管理" },
-  //   { cid: 135, to: "/indexPage/news", text: "公告管理" },
-  // ],
+    text: '工资管理',
+    cList: [
+    ]
   }
 ]
