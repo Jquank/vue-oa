@@ -62,7 +62,7 @@ a {
 
 div.el-table {
   font-size: 12px;
-  min-height: 200px;
+  min-height: 100px;
 }
 
 /* 表头背景色 */
@@ -89,3 +89,9 @@ div.el-dialog__body {
   padding-top: 2px;
   margin-bottom: 5px;
 }
+
+.check-title{
+  margin:2px 0 15px;
+  color:#E6A23C;
+}
+

@@ -51,6 +51,7 @@ export default {
     storage.remove('department')
     storage.remove('province')
     storage.remove('trade')
+    storage.remove('bankType')
   },
   mounted () {
 
@@ -79,6 +80,11 @@ export default {
             getCode(28).then(res => {
               let data = res.data.data || []
               storage.set('wjType', data)
+            })
+
+            getCode(42).then(res => {
+              let data = res.data.data || []
+              storage.set('bankType', data)
             })
 
             getArea({parentid: 1}).then(res => {

@@ -30,7 +30,7 @@ export function wjType (num) {
   let wjTypes = storage.get('wjType')
   let type = ''
   wjTypes.forEach(val => {
-    if (num === val.code_val) {
+    if (num == val.code_val) { //eslint-disable-line
       type = val.code_desc
     }
   })
@@ -41,7 +41,7 @@ export function productType (num) {
   let productTypes = storage.get('productType')
   let type = ''
   productTypes.forEach(val => {
-    if (num === val.code_val) {
+    if (num == val.code_val) { //eslint-disable-line
       type = val.code_desc
     }
   })

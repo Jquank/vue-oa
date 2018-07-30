@@ -2,7 +2,7 @@
   <div class="view-detail">
     <div class="detail-content">
       <el-tabs type="border-card" @tab-click="tab">
-        <el-tab-pane label="百度订单基本信息">
+        <el-tab-pane v-if="pid==='BAITUI'" label="百度订单基本信息">
           <el-row style="text-align:right;margin-bottom:10px;">
             <el-button type="warning" @click.native="changeInfo">修改基本信息</el-button>
           </el-row>
@@ -77,7 +77,7 @@
                   <div class="row-container">
                     <div>
                       <b>百度订单金额：</b>
-                      <span>{{orderInfo.amount_real | currency}}</span>
+                      <span>{{orderInfo.amount_real | currency1}}</span>
                     </div>
                     <div>
                       <b>客户类型：</b>
@@ -129,10 +129,121 @@
             </el-table-column>
           </el-table>
         </el-tab-pane>
+        <el-tab-pane v-if="pid==='WEBSITE'" label="网建订单基本信息">
+          <el-table :data="basicInfo" border style="width: 100%">
+            <el-table-column prop="type" label="信息分类" width="150">
+            </el-table-column>
+            <el-table-column prop="" label="详细信息">
+              <div slot-scope="scope">
+                <div v-if="scope.$index===0">
+                  <div class="row-container">
+                    <div>
+                      <b>公司名称：</b>
+                      <span>{{contactInfoList[0].name}}</span>
+                    </div>
+                    <div>
+                      <b>PC网址：</b>
+                      <span>{{orderInfo.pcwebsite}}</span>
+                    </div>
+                    <div>
+                      <b>手机网址：</b>
+                      <span>{{orderInfo.mobilewebsite}}</span>
+                    </div>
+                  </div>
+                  <div v-for="(c,index) in contactInfoList" :key="index" class="mt10px row-container">
+                    <div>
+                      <b>联系人{{index?index:''}}：姓名{{index?index:''}}：</b>
+                      <span>{{c.contactname}}</span>
+                    </div>
+                    <div>
+                      <b>手机{{index?index:''}}：</b>
+                      <span>{{c.contactnumber}}</span>
+                    </div>
+                    <div>
+                      <b>座机{{index?index:''}}：</b>
+                      <span>{{c.telphone}}</span>
+                    </div>
+                    <div>
+                      <b>邮箱{{index?index:''}}：</b>
+                      <span>{{c.mailnumber}}</span>
+                    </div>
+                  </div>
+                  <div class="mt10px row-container">
+                    <div>
+                      <b>客户类型：</b>
+                      <span>{{contactInfoList[0].producttype | cusStatus}}{{contactInfoList[0].productnumber}}</span>
+                    </div>
+                    <div>
+                      <b>对公账号：</b>
+                      <span>{{orderInfo.receiveaccount}}</span>
+                    </div>
+                    <div>
+                      <b>开户行：</b>
+                      <span>{{orderInfo.receivebank}}</span>
+                    </div>
+                  </div>
+                  <div class="mt10px row-container">
+                    <div>
+                      <b>公司地址：</b>
+                      <span>{{orderInfo.companyaddress}}</span>
+                    </div>
+                  </div>
+                </div>
+                <div v-if="scope.$index===1">
+                  <div class="row-container">
+                    <div>
+                      <b>PC站订单金额：</b>
+                      <span>{{productInfo[0].pcmoney | currency1}}</span>
+                    </div>
+                  </div>
+                  <div class="mt10px row-container">
+                    <div>
+                      <b>手机站订单金额：</b>
+                      <span>{{productInfo[0].appmoney | currency1}}</span>
+                    </div>
+                  </div>
+                  <div class="mt10px row-container">
+                    <div>
+                      <b>网建合同编号：</b>
+                      <span>{{orderInfo.ordernumber}}</span>
+                    </div>
+                  </div>
+                </div>
+                <div v-if="scope.$index===2">
+                  <div class="row-container">
+                    <div>
+                      <b>姓名：</b>
+                      <span>{{originUser.name}}</span>
+                    </div>
+                    <div>
+                      <b>部门：</b>
+                      <span>{{originUser.fullname}}</span>
+                    </div>
+                  </div>
+                  <div class="mt10px row-container">
+                    <div>
+                      <b>Hi号：</b>
+                      <span>{{originUser.hi}}</span>
+                    </div>
+                    <div>
+                      <b> 手机号：</b>
+                      <span>{{originUser.mobile}}</span>
+                    </div>
+                    <div>
+                      <b> 下单日期：</b>
+                      <span>{{orderInfo.insert_time | timeFormat}}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </el-table-column>
+          </el-table>
+        </el-tab-pane>
 
-        <el-tab-pane label="配置管理">配置管理</el-tab-pane>
-        <el-tab-pane label="角色管理">角色管理</el-tab-pane>
-
+        <el-tab-pane label="企业资质">
+          <show-qualify :showQualify="showQualify"></show-qualify>
+        </el-tab-pane>
+        <el-tab-pane label="PC/WAP信息"></el-tab-pane>
         <el-tab-pane label="审核记录">
           <el-steps :active="isChecked" space="14%" finish-status="success">
             <el-step v-for="step in stepList.slice(0,8)" :key="step.id" :title="step.name" style="margin-top:15px">
@@ -155,6 +266,21 @@
             </el-table-column>
           </el-table>
         </el-tab-pane>
+        <el-tab-pane v-if="sn!==10" label="订单处理">
+          <!-- 理单员审核 -->
+          <order-keeper v-if="sn===20" title="理单员审核"></order-keeper>
+          <!-- 综合部初审 -->
+          <init-finance v-if="sn===100 && moneyInfo.length" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord"
+            :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :sn="sn" :pid="pid"></init-finance>
+          <!-- 质检外审 -->
+          <order-keeper v-if="sn===200" title="质检外审"></order-keeper>
+          <!-- 质检内审派单 -->
+          <in-quality-order v-if="sn===210"></in-quality-order>
+          <!-- 质检内审 -->
+          <in-quality v-if="sn===220"></in-quality>
+        </el-tab-pane>
+        <el-tab-pane label="日志"></el-tab-pane>
+        <el-tab-pane label="记业绩"></el-tab-pane>
       </el-tabs>
     </div>
 
@@ -246,6 +372,11 @@
 import { serverUrl } from 'api/config'
 import { $get, $post } from 'api/http'
 import { cusStatus } from 'common/js/filters'
+import ShowQualify from 'base/showQualify/showQualify'
+import OrderKeeper from 'checkSteps/orderKeeper'
+import InitFinance from 'checkSteps/initFinance'
+import InQualityOrder from 'checkSteps/inQualityOrder'
+import InQuality from 'checkSteps/inQuality'
 export default {
   data () {
     return {
@@ -284,18 +415,30 @@ export default {
       formLabelWidth: '120px',
       addIcon: 'fa fa-plus',
       minusIcon: 'fa fa-minus',
-      subParams: {}
+      subParams: {},
+      pid: 'BAITUI',
+      showQualify: [],
+      cusAttrList: [],
+      sn: 10,
+      moneyInfo: [],
+      moneyRecord: {},
+      orderFlowDatas: []
     }
   },
   created () {
+    let receiveData = this.$route.query.data
+    this.sn = receiveData.sn
+    if (receiveData.pid === 'WEBSITE') {
+      this.basicInfo.splice(1, 1)
+      this.pid = 'WEBSITE'
+    }
     this._getBasicInfo()
+  },
+  mounted () {
+    this._getRecord()
   },
   methods: {
     tab (val) {
-      console.log(val)
-      if (val.label === '审核记录') {
-        this._getRecord()
-      }
     },
     // 修改基本信息按钮
     changeInfo () {
@@ -393,6 +536,11 @@ export default {
           this.orderInfo = res.data.data[1]
           this.productInfo = res.data.data[4]
           this.originUser = res.data.data[10]
+          this.cusAttrList = res.data.data[5]
+          this.showQualify = res.data.data[5]
+          this.moneyInfo = res.data.data[9]
+          this.moneyRecord = res.data.data[8][0]
+          this.orderFlowDatas = res.data.data[13]
         }
       })
     },
@@ -421,7 +569,13 @@ export default {
       })
     }
   },
-  components: {}
+  components: {
+    ShowQualify,
+    OrderKeeper,
+    InitFinance,
+    InQualityOrder,
+    InQuality
+  }
 }
 </script>
 
