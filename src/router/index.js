@@ -158,7 +158,6 @@ const router = new Router({
   ]
 })
 
-// router.beforeResolve((to, from, ne
 router.beforeEach((to, from, next) => {
   const isLogin = store.state.userName
   if (to.name !== 'login') {

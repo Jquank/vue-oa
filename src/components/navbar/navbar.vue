@@ -9,7 +9,7 @@
       :collapse="myCollapse"
       router
       background-color="#19233C"
-      text-color="#fff"
+      text-color="#bfcbd9"
       active-text-color="#fff"
       :unique-opened="true"
       :default-active="$router.currentRoute.fullPath">
@@ -23,11 +23,9 @@
             <i :class="item.fontIcon"></i>&nbsp;
             <span>{{item.text}}</span>
           </template>
-          <el-menu-item-group>
-            <el-menu-item class="item-active" ref="item"
-              v-for="child in item.cList" :key="child.cid" :index="child.to">
-              {{child.text}}</el-menu-item>
-          </el-menu-item-group>
+            <el-menu-item class="item-active" ref="item" v-for="child in item.cList" :key="child.cid"
+              :index="child.to">{{child.text}}
+            </el-menu-item>
         </el-submenu>
       </el-menu>
     </div>
@@ -81,7 +79,6 @@ export default {
 
 <style scoped lang="less">
 
-@bgcolor: darken(#121a2c, 20%);
 .control-scroll{
   height:100vh;
   width:197px;
@@ -120,11 +117,8 @@ export default {
       color: #fff;
       cursor: pointer;
     }
-    .el-menu-item-group {
-      background: @bgcolor;
-    }
     .item-active {
-      background: @bgcolor !important;
+      background: #121a2c !important;
     }
   }
 
