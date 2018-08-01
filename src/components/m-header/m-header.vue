@@ -109,7 +109,6 @@ export default {
     }
   },
   created () {
-    console.log(this.$router)
     this._findBread()
   },
   methods: {

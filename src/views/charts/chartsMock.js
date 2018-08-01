@@ -1,17 +1,34 @@
 import Mock from 'mockjs'
 const Random = Mock.Random
 const lineData = function () {
-  let Data = []
-  for (let i = 0; i < 10; i++) {
-    let data = {
-      name: Random.cname(), // Random.cname() 随机生成一个常见的中文姓名
-      date: Random.date() // Random.date()指示生成的日期字符串的格式,默认为yyyy-MM-dd
-    }
-    Data.push(data)
+  let Data = {
+    code: 0,
+    expected: [],
+    done: []
   }
-  return {
-    data: Data
+  for (let i = 0; i < 8; i++) {
+    let expected = Random.natural(50, 100)
+    let done = Random.natural(50, 100)
+
+    Data.expected.push(expected)
+    Data.done.push(done)
   }
+  return Data
 }
-// Mock.mock( url, post/get , 返回的数据)
-Mock.mock('lineChart', 'post', lineData)
+Mock.mock('/lineChart', 'post', lineData)
+
+const pieData = function () {
+  let Data = {
+    code: 0,
+    data: []
+  }
+  for (let i = 0; i < 6; i++) {
+    let data = {
+      value: Random.natural(100, 450),
+      name: Random.string(5)
+    }
+    Data.data.push(data)
+  }
+  return Data
+}
+Mock.mock('/pieChart', 'post', pieData)

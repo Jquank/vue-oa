@@ -1,8 +1,5 @@
 <template>
   <div class="addbaidu-order">
-    <p v-if="showEditBD" class="bread-title">
-      <span>订单管理 / 新增百度订单</span>
-    </p>
     <div class="order-content">
       <el-form ref="form" :model="form" label-width="180px" >
         <el-form-item label="公司名称" required>

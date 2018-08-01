@@ -17,7 +17,9 @@
           <!-- <div id="call-center">
             <iframe ref="iframecall" id="iframe-call" src="http://gccp.baidu.com/gaiamgmt/fe-communication/communications/index.html#/" frameborder="0"></iframe>
           </div> -->
-          <router-view></router-view>
+          <transition name="fade">
+            <router-view></router-view>
+          </transition>
         </el-main>
       </el-container>
     </el-container>
@@ -71,6 +73,13 @@ export default {
       padding: 5px 10px;
       background: #e2e5ec;
     }
+  }
+  .fade-enter-active{
+    transition: all .5s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+  }
+  .fade-enter{
+    opacity: 0;
+    transform: translate3d(100%,0,0)
   }
 }
 </style>

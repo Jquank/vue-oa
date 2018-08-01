@@ -179,6 +179,7 @@ const router = new Router({
   ]
 })
 
+import Progress from 'nprogress'
 router.beforeEach((to, from, next) => {
   const isLogin = store.state.userName
   if (to.name !== 'login') {
@@ -186,17 +187,23 @@ router.beforeEach((to, from, next) => {
       next({
         path: '/login'
       })
+      Progress.done()
     } else {
       if (to.name === from.name) { // 防止刷新的时候加载两次组件
         next(false)
       } else {
+        Progress.start()
         next()
       }
     }
   } else {
     sessionStorage.clear()
     next()
+    Progress.done()
   }
+})
+router.afterEach((to, from)=>{
+  Progress.done()
 })
 
 export default router

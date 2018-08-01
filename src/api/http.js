@@ -1,9 +1,10 @@
 import axios from 'axios'
 import storage from 'good-storage'
 export function $post (url, params = {}) {
-  const tk = storage.session.get('token')
+  // const tk = storage.session.get('token')
   return new Promise((resolve, reject) => {
-    axios.post(url + '&tk=' + tk, params)
+    // axios.post(url + '&tk=' + tk, params)
+    axios.post(url, params)
       .then(res => {
         resolve(res)
       })
