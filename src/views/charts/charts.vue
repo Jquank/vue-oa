@@ -7,6 +7,8 @@
 </template>
 
 <script>
+import { $post } from 'api/http'
+// import  from './chartsMock'
 const Echarts = require('echarts/lib/echarts')
 require('echarts/lib/chart/line')
 require('echarts/lib/component/tooltip')
@@ -26,6 +28,11 @@ export default {
     return {
 
     }
+  },
+  created () {
+    $post('lineChart').then(res => {
+      console.log(res)
+    })
   },
   mounted () {
     let lineChart = Echarts.init(document.getElementById('line-chart'))
