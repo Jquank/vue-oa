@@ -36,6 +36,9 @@ import EditOrder from 'components/order/orderPending/editOrder'
 // 发票管理
 import InvoicePending from 'components/invoiceManage/invoicePending/invoicePending'
 
+// 图表
+import Charts from 'views/charts/charts'
+
 import store from '../store'
 Vue.use(Router)
 
@@ -66,42 +69,49 @@ const router = new Router({
         {
           path: 'indexContent',
           name: 'indexContent',
+          meta: { text: '首页' },
           component: IndexContent
         },
         // 系统配置
         {
           path: 'rule',
           name: 'rule',
+          meta: { text: '权限设置' },
           component: Rule
         },
         {
           path: 'auth',
           name: 'auth',
+          meta: { text: '角色设置' },
           component: Auth
         },
         {
           path: 'systemCycle',
           name: 'systemCycle',
+          meta: { text: '时长设置' },
           component: SystemCycle
         },
         {
           path: 'departSetNum',
           name: 'departSetNum',
+          meta: { text: '部门配额' },
           component: DepartSetNum
         },
         {
           path: 'accountManage',
           name: 'accountManage',
+          meta: { text: '账号管理' },
           component: AccountManage
         },
         {
           path: 'news',
           name: 'news',
+          meta: { text: '公告管理' },
           component: News,
           children: [
             {
               path: 'editor/:id',
-              // name: 'editor',
+              meta: { text: '编辑公告' },
               component: Editor
             }
           ]
@@ -110,9 +120,11 @@ const router = new Router({
         {
           path: 'myCustomer',
           name: 'myCustomer',
+          meta: { text: '我的客户' },
           component: MyCustomer,
           children: [{
             path: ':id',
+            meta: { text: '我的客户/客户详情' },
             component: MyCusDetail
           }]
         },
@@ -120,29 +132,30 @@ const router = new Router({
         {
           path: 'bankflowList',
           name: 'bankflowList',
+          meta: { text: '银行流水列表' },
           component: BankflowList
         },
         // 订单管理
         {
           path: 'addBaiduOrder',
           name: 'addBaiduOrder',
-          meta: { text: '订单管理/新增百度订单' },
+          meta: { text: '新增百度订单' },
           component: AddBaiduOrder
         },
         {
           path: 'orderPending',
           name: 'orderPending',
-          meta: { text: '订单管理/待处理订单' },
+          meta: { text: '待处理订单' },
           component: OrderPending,
           children: [
             {
             path: 'view/:id',
-            meta: { text: '订单管理/待处理订单/查看订单详情' },
+            meta: { text: '待处理订单/查看订单详情' },
             component: ViewDetail
             },
             {
             path:'edit/:id',
-            meta: { text: '订单管理/待处理订单/编辑订单' },
+            meta: { text: '待处理订单/编辑订单' },
             component:EditOrder
             }
           ]
@@ -151,7 +164,15 @@ const router = new Router({
         {
           path: 'invoicePending',
           name: 'invoicePending',
+          meta: { text: '待开发票' },
           component:InvoicePending
+        },
+        // 图表
+        {
+          path: 'charts',
+          name: 'charts',
+          meta: { text: '图表' },
+          component:Charts
         }
       ]
     }

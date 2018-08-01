@@ -14,9 +14,9 @@
         </el-header>
         <!-- 主体内容 -->
         <el-main>
-          <div id="call-center">
+          <!-- <div id="call-center">
             <iframe ref="iframecall" id="iframe-call" src="http://gccp.baidu.com/gaiamgmt/fe-communication/communications/index.html#/" frameborder="0"></iframe>
-          </div>
+          </div> -->
           <router-view></router-view>
         </el-main>
       </el-container>

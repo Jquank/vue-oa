@@ -171,5 +171,13 @@ export const navList = [
     text: '工资管理',
     cList: [
     ]
+  },
+  {
+    id: 12,
+    fontIcon: 'fa fa-line-chart',
+    text: '图表',
+    cList: [
+      { cid: 140, to: '/indexPage/charts', text: '图表实例' }
+    ]
   }
 ]

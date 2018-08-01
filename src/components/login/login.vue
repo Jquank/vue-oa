@@ -58,6 +58,7 @@ export default {
   },
   methods: {
     login () {
+      this.$router.push('/indexPage')
       let params = {
         username: this.myName,
         password: this.myPassword

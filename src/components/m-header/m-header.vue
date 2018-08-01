@@ -3,7 +3,7 @@
     <div class="m-bread">
       <span>{{firstTitle}}</span>
       <span v-show="secondTitle">&nbsp;/&nbsp;</span>
-      <span ref="secondTitle" @click="clickBread">{{secondTitle}}</span>
+      <span ref="secondTitle">{{secondTitle}}</span>
       <span v-show="thirdTitle">&nbsp;/&nbsp;</span>
       <span>{{thirdTitle}}</span>
     </div>
@@ -53,6 +53,7 @@
         </a>
       </li>
     </ul>
+
     <!-- 修改个人信息弹窗 start-->
     <el-dialog @open="open" title="修改密码" :visible.sync="dialogFormVisible">
       <el-form :model="form">
@@ -95,7 +96,7 @@ export default {
       },
       formLabelWidth: '60px',
       count: 0,
-      firstTitle: '',
+      firstTitle: '首页',
       secondTitle: '',
       thirdTitle: '',
       lastRoutePath: ''
@@ -108,16 +109,10 @@ export default {
     }
   },
   created () {
+    console.log(this.$router)
     this._findBread()
   },
   methods: {
-    clickBread () {
-      if (this.thirdTitle) {
-        this.$router.push({
-          path: this.lastRoutePath
-        })
-      }
-    },
     fullScreen () {
       this.count++
       this.count % 2 === 1 ? enterfullscreen() : exitfullscreen()
@@ -163,12 +158,8 @@ export default {
     _findBread () {
       let text = this.$router.currentRoute.meta.text || ''
       let bread = text.split('/')
-      this.firstTitle = bread[0]
-      if (!this.firstTitle) {
-        this.firstTitle = '首页'
-      }
-      this.secondTitle = bread[1]
-      this.thirdTitle = bread[2]
+      this.secondTitle = bread[0] === '首页' ? '' : bread[0]
+      this.thirdTitle = bread[1]
     },
     ...mapMutations({
       getUserName: 'GET_USERNAME'

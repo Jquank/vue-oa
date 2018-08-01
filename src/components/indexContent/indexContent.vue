@@ -1,7 +1,5 @@
 <template>
   <div class="index-content">
-    <el-row>
-    </el-row>
   </div>
 </template>
 

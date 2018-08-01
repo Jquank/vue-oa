@@ -118,7 +118,10 @@ export default {
       cursor: pointer;
     }
     .item-active {
-      background: #121a2c !important;
+      background: #121929 !important;
+    }
+    .item-active:hover {
+      background: darken(#121929,20%) !important;
     }
   }
 

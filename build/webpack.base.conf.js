@@ -41,6 +41,7 @@ module.exports = {
       'common': resolve('src/common'),
       'api': resolve('src/api'),
       'checkSteps': resolve('src/checkSteps'),
+      'views': resolve('src/views')
     }
   },
   module: {
