@@ -13,7 +13,7 @@
           <m-header></m-header>
         </el-header>
         <!-- 主体内容 -->
-        <el-main>
+        <el-main id="main">
           <!-- <div id="call-center">
             <iframe ref="iframecall" id="iframe-call" src="http://gccp.baidu.com/gaiamgmt/fe-communication/communications/index.html#/" frameborder="0"></iframe>
           </div> -->

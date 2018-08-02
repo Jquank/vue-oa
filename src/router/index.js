@@ -38,6 +38,7 @@ import InvoicePending from 'components/invoiceManage/invoicePending/invoicePendi
 
 // 图表
 import Charts from 'views/charts/charts'
+import EditTable from 'views/editTable/editTable'
 
 import store from '../store'
 Vue.use(Router)
@@ -173,13 +174,29 @@ const router = new Router({
           name: 'charts',
           meta: { text: '图表' },
           component:Charts
+        },
+        {
+          path: 'editTable',
+          name: 'editTable',
+          meta: { text: '可编辑的表格' },
+          component:EditTable
         }
       ]
     }
-  ]
+  ],
+  scrollBehavior (to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      let main = document.getElementById('main') //定位滚动条
+      main.scrollLeft = 0
+      main.scrollTop = 0
+    }
+  }
 })
 
 import Progress from 'nprogress'
+Progress.configure({ showSpinner: false })
 router.beforeEach((to, from, next) => {
   const isLogin = store.state.userName
   if (to.name !== 'login') {
