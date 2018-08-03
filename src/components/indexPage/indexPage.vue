@@ -14,10 +14,7 @@
         </el-header>
         <!-- 主体内容 -->
         <el-main id="main">
-          <!-- <div id="call-center">
-            <iframe ref="iframecall" id="iframe-call" src="http://gccp.baidu.com/gaiamgmt/fe-communication/communications/index.html#/" frameborder="0"></iframe>
-          </div> -->
-          <transition name="fade">
+          <transition>
             <router-view></router-view>
           </transition>
         </el-main>
@@ -27,16 +24,13 @@
 </template>
 
 <script>
-import { loadCallIframe } from 'api/call'
 import Navbar from 'components/navbar/navbar'
 import MHeader from 'components/m-header/m-header'
-// import { getArea, getSource, getTrade } from '@/api/getOptions'
 export default {
   data () {
     return {}
   },
   mounted () {
-    loadCallIframe('iframe-call')
   },
   components: {
     Navbar,

@@ -15,8 +15,8 @@
       :default-active="$router.currentRoute.fullPath">
         <el-menu-item
           index="/indexPage/indexContent">
-          <i class="el-icon-document"></i>
-          <span slot="title">首页</span>
+          <i class="fa fa-home"></i>
+          <span slot="title">home</span>
         </el-menu-item>
         <el-submenu v-for="item in navList" :key="item.id" :index="item.id+''">
           <template slot="title">
