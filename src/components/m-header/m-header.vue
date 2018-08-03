@@ -1,11 +1,22 @@
 <template>
  <div class="m-header">
+    <div class="m-bread">
+      <span>{{firstTitle}}</span>
+      <span v-show="secondTitle">&nbsp;/&nbsp;</span>
+      <span ref="secondTitle">{{secondTitle}}</span>
+      <span v-show="thirdTitle">&nbsp;/&nbsp;</span>
+      <span>{{thirdTitle}}</span>
+    </div>
     <ul>
       <li>
-        <a href="http://bg.baijiegroup.com/BaiJieOA/bj_crm_oa.zip">下载客户端</a>
+        <a href="http://bg.baijiegroup.com/BaiJieOA/bj_crm_oa.zip" title="下载客户端">
+          <span class="fa fa-download"></span>
+        </a>
       </li>
       <li>
-        <a href="http://bg.baijiegroup.com/hlp/index.html" target="_blank">帮助文档</a>
+        <a href="http://bg.baijiegroup.com/hlp/index.html" target="_blank" title="帮助文档">
+          <span class="fa fa-file"></span>
+        </a>
       </li>
       <li>
         <a href="javascript:void (0)" title="刷新" @click="refresh">
@@ -13,13 +24,18 @@
         </a>
       </li>
       <li>
-        <a href="javascript:void (0)">
-          <span>{{uName}}</span>
+        <a href="javascript:void (0)" title="未读消息">
+          <span class="fa fa-bell"></span>
         </a>
       </li>
       <li>
-        <a href="javascript:void (0)" title="未读消息">
-          <span class="fa fa-bell"></span>
+        <a href="javascript:void (0)" title="全屏" @click="fullScreen">
+          <span class="fa fa-arrows-alt"></span>
+        </a>
+      </li>
+      <li>
+        <a href="javascript:void (0)">
+          <span>{{uName}}</span>
         </a>
       </li>
       <li>
@@ -37,6 +53,7 @@
         </a>
       </li>
     </ul>
+
     <!-- 修改个人信息弹窗 start-->
     <el-dialog @open="open" title="修改密码" :visible.sync="dialogFormVisible">
       <el-form :model="form">
@@ -57,8 +74,9 @@
 </template>
 
 <script>
-import { serverUrl } from '@/api/config'
-import { $post } from '@/api/http'
+import { enterfullscreen, exitfullscreen } from 'api/myHeader'
+import { serverUrl } from 'api/config'
+import { $post } from 'api/http'
 import { mapMutations, mapGetters } from 'vuex'
 export default {
   computed: {
@@ -76,10 +94,28 @@ export default {
         name: '',
         mima: ''
       },
-      formLabelWidth: '60px'
+      formLabelWidth: '60px',
+      count: 0,
+      firstTitle: '首页',
+      secondTitle: '',
+      thirdTitle: '',
+      lastRoutePath: ''
     }
   },
+  watch: {
+    '$route' (to, from) {
+      this._findBread()
+      this.lastRoutePath = from.path
+    }
+  },
+  created () {
+    this._findBread()
+  },
   methods: {
+    fullScreen () {
+      this.count++
+      this.count % 2 === 1 ? enterfullscreen() : exitfullscreen()
+    },
     open () {
       this.form.name = this.uName
     },
@@ -118,16 +154,33 @@ export default {
     refresh () {
       this.$router.go(0)
     },
+    _findBread () {
+      let text = this.$router.currentRoute.meta.text || ''
+      let bread = text.split('/')
+      this.secondTitle = bread[0] === '首页' ? '' : bread[0]
+      this.thirdTitle = bread[1]
+    },
     ...mapMutations({
       getUserName: 'GET_USERNAME'
     })
-  },
-  components: {}
+  }
 }
 </script>
 
 <style scoped lang="less">
 .m-header {
+  display: flex;
+  justify-content: space-between;
+  .m-bread{
+    height:50px;
+    min-width: 260px;
+    line-height: 50px;
+    padding-left: 40px;
+    color:gray;
+    &>span:nth-child(2n-1){
+      cursor: pointer;
+    }
+  }
   ul {
     width: 100%;
     height: 50px;
@@ -143,6 +196,7 @@ export default {
         height: 100%;
         display: inline-block;
         padding: 0 5px;
+        text-align: center;
       }
       & > a:hover {
         background: #eeeeee;

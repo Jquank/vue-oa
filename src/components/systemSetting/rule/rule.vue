@@ -1,5 +1,6 @@
 <template>
   <div class="rule">
+<<<<<<< HEAD
     <p>
       <span>系统配置 / 权限设置</span>
     </p>
@@ -13,6 +14,21 @@
         </template>
       </el-table-column>
     </el-table>
+=======
+    <div class="rule-content">
+      <el-table :data="tableData" style="width: 100%">
+        <el-table-column type="index" width="100"></el-table-column>
+        <el-table-column prop="name" label="权限名称" width="200"></el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button size="mini" type="success" @click="handleCheckNext(tableData[scope.$index].id)">查看下级权限</el-button>
+            <el-button size="mini" type="primary" @click="handleEdit(tableData[scope.$index].id,tableData[scope.$index].name)">编辑</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+
+>>>>>>> dev
   </div>
 </template>
 
@@ -33,13 +49,13 @@ export default {
   },
   methods: {
     _getRuleList () {
-      $post(ruleUrl).then((res) => {
+      $post(ruleUrl).then(res => {
         this.tableData = res.data.data
       })
     },
     handleCheckNext (pid) {
       let ruleParams = { permission: pid }
-      $post(ruleUrl, ruleParams).then((res) => {
+      $post(ruleUrl, ruleParams).then(res => {
         this.tableData = res.data.data
       })
     },
@@ -61,8 +77,18 @@ export default {
 }
 </script>
 
+<<<<<<< HEAD
 <style scoped>
 /* .rule { */
 /* background: #E2E5EC; */
 /* } */
+=======
+<style scoped lang="less">
+.rule {
+  .rule-content{
+    background: #fff;
+    padding: 20px;
+  }
+}
+>>>>>>> dev
 </style>

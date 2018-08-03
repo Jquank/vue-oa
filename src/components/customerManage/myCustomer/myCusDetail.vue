@@ -1,12 +1,16 @@
 <template>
   <div class="mycus-detail">
-    <p>
+    <p class="bread-title">
       <span>我的客户 / 客户详情</span>
     </p>
     <div class="detail-main">
       <div class="detail-title">
         <h4>客户详情</h4>
+<<<<<<< HEAD
         <el-button   type="warning" height="10px">返回</el-button>
+=======
+        <el-button  type="warning" height="10px">返回</el-button>
+>>>>>>> dev
       </div>
       <div class="detail-content">
         <el-table
@@ -22,10 +26,17 @@
             <template slot-scope="scope">
               <el-date-picker v-model="scope.row.content" type="datetime" placeholder="选择日期时间"
                 style="width:100%"
+<<<<<<< HEAD
                 v-if="scope.row.title==='成立日期'"  ></el-date-picker>
               <el-input type="textarea" :row="3" v-model="scope.row.content" size="medium"
                 v-else-if="scope.row.title==='经营范围'"></el-input>
               <el-input   v-model="scope.row.content" v-else></el-input>
+=======
+                v-if="scope.row.title==='成立日期'" ></el-date-picker>
+              <el-input type="textarea" :row="3" v-model="scope.row.content" size="medium"
+                v-else-if="scope.row.title==='经营范围'"></el-input>
+              <el-input  v-model="scope.row.content" v-else></el-input>
+>>>>>>> dev
             </template>
           </el-table-column>
           <el-table-column
@@ -37,16 +48,28 @@
             prop=""
             label="">
             <template slot-scope="scope">
+<<<<<<< HEAD
               <el-cascader v-if="scope.row.title1==='所属行业'"   style="width:100%"
                 :options="tradeOptions" :props="tradeProps" @active-item-change="handleTradeChange"
                 v-model="selTradeOption">
               </el-cascader>
               <el-cascader v-else-if="scope.row.title1==='所属地区'"   style="width:100%"
+=======
+              <el-cascader v-if="scope.row.title1==='所属行业'"  style="width:100%"
+                :options="tradeOptions" :props="tradeProps" @active-item-change="handleTradeChange"
+                v-model="selTradeOption">
+              </el-cascader>
+              <el-cascader v-else-if="scope.row.title1==='所属地区'"  style="width:100%"
+>>>>>>> dev
                 :options="areaOptions"
                 v-model="selAreaOption">
               </el-cascader>
               <el-select v-model="selSourceOption" placeholder="请选择" style="width:100%"
+<<<<<<< HEAD
                 v-else-if="scope.row.title1==='客户来源'"  >
+=======
+                v-else-if="scope.row.title1==='客户来源'" >
+>>>>>>> dev
                 <el-option
                   v-for="item in cusSource"
                   :key="item.id"
@@ -54,7 +77,11 @@
                   :value="item.id">
                 </el-option>
               </el-select>
+<<<<<<< HEAD
               <el-input v-else   v-model="scope.row.content1"></el-input>
+=======
+              <el-input v-else  v-model="scope.row.content1"></el-input>
+>>>>>>> dev
             </template>
           </el-table-column>
         </el-table>

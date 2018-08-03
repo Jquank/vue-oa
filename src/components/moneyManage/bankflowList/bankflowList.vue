@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
    <div>
       <p>
          <span>到款管理 / 银行流水列表</span>
@@ -88,6 +89,82 @@
                            </el-table-column>
                         </el-table>
                      </template>
+=======
+  <div>
+    <p>
+      <span>到款管理 / 银行流水列表</span>
+    </p>
+    <div class="bankflow">
+      <div class="title">
+      </div>
+      <div class="content">
+        <!-- 银行类型按钮 -->
+        <el-row class="bank-btn">
+          <el-radio-group v-model="selBank" >
+            <el-radio-button v-for="item in bankList" :key="item.id" :label="item.code_val">
+              {{item.code_desc}}
+            </el-radio-button>
+          </el-radio-group>
+        </el-row>
+        <!-- 分配状态按钮 -->
+        <el-row class="status-btn">
+          <el-radio-group v-model="selStatus"  @change="changeStatus">
+            <el-radio-button v-for="item in statusList" :key="item.id" :label="item.val">
+              {{item.text}}
+            </el-radio-button>
+          </el-radio-group>
+        </el-row>
+        <!-- 按条件搜索 -->
+        <el-row>
+          <el-select v-model="searchTitle"  placeholder="请选择" style="width:120px;">
+            <el-option
+              v-for="item in searchOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+          <el-date-picker
+            v-model="dateVal"
+            type="date"
+            placeholder="选择日期时间">
+          </el-date-picker>
+          <el-input placeholder="请输入摘要" v-model="zhaiYao"  style="max-width:300px;">
+            <template slot="prepend">摘要:</template>
+          </el-input>
+          <el-input placeholder="请输入参考号" v-model="cankaoNum"  style="max-width:300px;">
+            <template slot="prepend">参考号:</template>
+          </el-input>
+        </el-row>
+        <el-row>
+          <el-col :span="14">
+            <el-input placeholder="请输入收(付)账号" v-model="shoufuAccount"  style="max-width:300px;">
+              <template slot="prepend">收(付)账号:</template>
+            </el-input>
+            <el-button type="primary" >查询</el-button>
+            <el-button type="warning"  style="margin-right:50px;">重置</el-button>
+          </el-col>
+          <el-col :span="9" style="text-align:right;">
+            <el-button type="danger" >批量删除</el-button>
+            <el-button type="success" >批量分配</el-button>
+            <el-button type="info" >导入流水</el-button>
+            <el-button type="warning" >导出流水</el-button>
+          </el-col>
+        </el-row>
+        <el-row>
+          <!-- 表格-start -->
+          <el-table
+            :data="bankFlowList"
+            @expand-change="rowCollapse"
+            style="width: 100%" stripe>
+            <!-- 展开内容 -->
+            <el-table-column type="expand">
+              <template slot-scope="props">
+                <el-table :data="expandTest" :show-header="false">
+                  <el-table-column prop="" width="48">
+                  </el-table-column>
+                  <el-table-column prop="" width="35">
+>>>>>>> dev
                   </el-table-column>
                   <!-- 复选框 -->
                   <el-table-column type="selection" width="35"></el-table-column>
@@ -223,15 +300,13 @@ export default {
     },
     _getBankType () {
       getCode(42).then(res => {
-        this.bankList = res
-        console.log(res)
-        this.selBank = res[0].code_val// 设置银行类型初始值
+        this.bankList = res.data.data
+        this.selBank = this.bankList[0].code_val// 设置银行类型初始值
         this.selStatus = this.statusList[0].val// 设置分配状态初始值
       })
     },
     updateBankList (data) {
-      this.bankFlowList = data
-      console.log(data)
+      this.bankFlowList = data.data[0].data
     }
   },
   components: {

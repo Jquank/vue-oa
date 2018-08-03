@@ -11,20 +11,10 @@
           <img src="../../common/img/cloud2.jpg" alt="">
           <div class="login">
             <div>
-              <el-input
-              v-model="myName"
-              size="medium"
-              placeholder=" 请输入用户名"
-              prefix-icon="fa fa-user"></el-input>
+              <el-input v-model="myName" size="medium" placeholder=" 请输入用户名" prefix-icon="fa fa-user"></el-input>
             </div>
             <div class="in-password">
-              <el-input
-              @keyup.native.enter="login"
-              v-model="myPassword"
-              type="password"
-              size="medium"
-              placeholder=" 请输入密码"
-              prefix-icon="fa fa-lock"></el-input>
+              <el-input @keyup.native.enter="login" v-model="myPassword" type="password" size="medium" placeholder=" 请输入密码" prefix-icon="fa fa-lock"></el-input>
             </div>
             <div class="btn-login">
               <el-button @click="login" type="primary" style="width:100%;">登 录</el-button>
@@ -43,18 +33,32 @@
 import { $post } from '@/api/http'
 import { serverUrl } from '@/api/config'
 import { mapMutations } from 'vuex'
-
+import { getCode, getArea, getTrade, getDepartment } from 'api/getOptions'
+import storage from 'good-storage'
 const LOGIN_URL = serverUrl + '/User.do?login'
+
 export default {
   data () {
     return {
       myName: 'admin',
-      myPassword: 'bjoa'
+      myPassword: '1234rfv'
       // userName: ""
     }
   },
+  created () {
+    storage.remove('productType')
+    storage.remove('wjType')
+    storage.remove('department')
+    storage.remove('province')
+    storage.remove('trade')
+    storage.remove('bankType')
+  },
+  mounted () {
+
+  },
   methods: {
     login () {
+      // this.$router.push('/indexPage')
       let params = {
         username: this.myName,
         password: this.myPassword
@@ -62,13 +66,54 @@ export default {
       $post(LOGIN_URL, params)
         .then(res => {
           if (res.data.success === true) {
-            sessionStorage.setItem('userName', res.data.data.name)
-            sessionStorage.setItem('userId', res.data.data.id)
-            sessionStorage.setItem('permissions', res.data.data.permissions)
-            sessionStorage.setItem('token', res.data.data.tk)
+            storage.session.set('userName', res.data.data.name)
+            storage.session.set('userId', res.data.data.id)
+            storage.session.set('permissions', res.data.data.permissions)
+            storage.session.set('token', res.data.data.tk)
+
+            this.getUserName()
+
+            getCode(38).then(res => {
+              let data = res.data.data || []
+              storage.set('productType', data)
+            })
+
+            getCode(28).then(res => {
+              let data = res.data.data || []
+              storage.set('wjType', data)
+            })
+
+            getCode(42).then(res => {
+              let data = res.data.data || []
+              storage.set('bankType', data)
+            })
+
+            getArea({parentid: 1}).then(res => {
+              let data = res.data.data || []
+              // let data = this._transTree(res.data.data, 'id', 'parentid')
+              data.forEach(val => {
+                val.children = []
+                val.label = val.AREANAME
+              })
+              storage.set('province', data)
+            })
+
+            getTrade().then(res => {
+              let data = res.data.data || []
+              data.forEach(val => {
+                val.children = []
+                val.label = val.name
+              })
+              storage.set('trade', data)
+            })
+
+            getDepartment().then(res => {
+              let data = res.data.data || []
+              let department = this._transTree(data)
+              storage.set('department', department)
+            })
 
             setTimeout(() => {
-              this.getUserName()
               this.$router.push('/indexPage')
             })
           } else {
@@ -86,9 +131,29 @@ export default {
           console.log(err)
         })
     },
+    _transTree (arr) {
+      let r = []
+      let hash = {}
+      arr.forEach((val, key) => {
+        hash[val.code] = val
+      })
+      for (let i = 0; i < arr.length; i++) {
+        let oneData = arr[i]
+        let parentcode = oneData.parentcode
+        let hashVP = hash[parentcode]
+        if (hashVP) {
+          !hashVP['children'] && (hashVP['children'] = [])
+          hashVP['children'].push(oneData)
+        } else {
+          r.push(oneData)
+        }
+      }
+      return r
+    },
     ...mapMutations({
       getUserName: 'GET_USERNAME'
     })
+
   }
 }
 </script>

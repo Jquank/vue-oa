@@ -1,9 +1,8 @@
 <template>
   <div>
-    <p><span>系统配置 / 角色设置</span></p>
     <div class="auth">
-      <el-row style="margin-bottom:10px;" @click.native="addNewRole">
-        <el-button type="primary" size="mini">
+      <el-row style="margin-bottom:10px;">
+        <el-button type="primary" size="mini" @click.native="addNewRole">
           <i class="fa fa-plus"></i> 新增角色
         </el-button>
       </el-row>
@@ -45,7 +44,11 @@
           @check-change="checkChange">
         </el-tree>
         <div style="width:90%;text-align:right;margin-top:10px;">
+<<<<<<< HEAD
           <el-button type="primary"   @click.native="savePermission">保存</el-button>
+=======
+          <el-button type="primary"  @click.native="savePermission">保存</el-button>
+>>>>>>> dev
         </div>
       </el-dialog>
     </div>
@@ -148,6 +151,7 @@ export default {
     _getAllRolePermission () {
       $post(getAllRulePermissionUrl).then(res => {
         let allData = res.data.data
+        console.log(allData)
         this.roleData = this._transTree(allData)
       })
     },

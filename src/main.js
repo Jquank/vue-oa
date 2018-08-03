@@ -6,11 +6,20 @@ import App from './App'
 import router from './router'
 import store from './store'
 
+<<<<<<< HEAD
 import './api/mock.js'
 
 import './common/css/base.css'
+=======
+import 'views/charts/chartsMock.js'
+
+>>>>>>> dev
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+
+import './common/css/base.css'
+
+import 'nprogress/nprogress.css'
 
 import 'vue-area-linkage/dist/index.css'
 import VueAreaLinkage from 'vue-area-linkage'
@@ -18,8 +27,17 @@ import VueAreaLinkage from 'vue-area-linkage'
 import * as filters from '@/common/js/filters'
 Vue.config.productionTip = false
 
+Vue.config.errorHandler = function (err, vm, info) {
+  if (err === 'ignore') {
+    return true
+  }
+}
 Vue.use(VueAreaLinkage)
+<<<<<<< HEAD
 Vue.use(ElementUI, { size: 'small' })
+=======
+Vue.use(ElementUI, {size: 'small'})
+>>>>>>> dev
 // 全局注册所有过滤器
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])

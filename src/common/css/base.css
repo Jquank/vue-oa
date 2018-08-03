@@ -10,42 +10,88 @@ li {
 }
 
 body {
-  font:14px "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
-}
-a{
-  text-decoration: none;
-  color:#666;
-}
-.img-responsive {
-  width:100%;
-  height:auto;
-  display: block;
-}
-.red{
-  color:red;
-}
-.ml10px{
-  margin-left:10px !important;
-}
-.mr10px{
-  margin-right:10px;
-}
-.mt10px{
-  margin-top:10px;
+  font: 14px "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
 }
 
-div.el-table{
-  font-size:12px;
-  min-height: 200px;
+a {
+  text-decoration: none;
+  color: #666;
 }
+
+::-webkit-input-placeholder {
+  /* WebKit browsers */
+  color: #b5b7bb !important;
+}
+
+:-moz-placeholder {
+  /* Mozilla Firefox 4 to 18 */
+  color: #b5b7bb !important;
+}
+
+::-moz-placeholder {
+  /* Mozilla Firefox 19+ */
+  color: #b5b7bb !important;
+}
+
+:-ms-input-placeholder {
+  /* Internet Explorer 10+ */
+  color:#b5b7bb !important;
+}
+
+.img-responsive {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.red {
+  color: red;
+}
+
+.ml10px {
+  margin-left: 10px !important;
+}
+
+.mr10px {
+  margin-right: 10px;
+}
+
+.mt10px {
+  margin-top: 10px;
+}
+
+div.el-table {
+  font-size: 12px;
+  min-height: 100px;
+}
+
 /* 表头背景色 */
-.el-table thead th{
+
+.el-table thead th {
   background: #E2E5EC;
 }
+
 /* 侧边栏剪头  */
-.nav-aside .el-submenu__icon-arrow{
-  right:50px;
+
+.nav-aside .el-submenu__icon-arrow {
+  right: 50px;
 }
-div.el-dialog__body{
-  padding-top:5px;
+
+div.el-dialog__body {
+  padding-top: 5px;
 }
+
+/* 面包屑title */
+
+.bread-title {
+  text-indent: 1em;
+  margin-top: 0;
+  padding-top: 2px;
+  margin-bottom: 5px;
+}
+
+.check-title{
+  margin:2px 0 15px;
+  color:#E6A23C;
+}
+
