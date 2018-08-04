@@ -1,4 +1,4 @@
-/* eslint-disable */
+
 import Vue from 'vue'
 import Router from 'vue-router'
 
@@ -9,15 +9,18 @@ import IndexContent from 'components/indexContent/indexContent'
 
 import Charts from 'views/charts/charts'
 import EditTable from 'views/editTable/editTable'
+import DragTable from 'views/dragTable/dragTable'
 
-import store from '../store'
+// import store from '../store'
+
+import Progress from 'nprogress'
 Vue.use(Router)
 
 const router = new Router({
   routes: [
     {
       path: '/',
-      redirect: '/IndexPage'
+      redirect: '/login'
     },
     // {
     //   path: '*',
@@ -47,13 +50,19 @@ const router = new Router({
           path: 'charts',
           name: 'charts',
           meta: { text: '图表' },
-          component:Charts
+          component: Charts
         },
         {
           path: 'editTable',
           name: 'editTable',
           meta: { text: '可编辑的表格' },
-          component:EditTable
+          component: EditTable
+        },
+        {
+          path: 'dragTable',
+          name: 'dragTable',
+          meta: { text: '可拖拽的表格' },
+          component: DragTable
         }
       ]
     }
@@ -62,14 +71,12 @@ const router = new Router({
     if (savedPosition) {
       return savedPosition
     } else {
-      let main = document.getElementById('main') //定位滚动条
+      let main = document.getElementById('main') // 定位滚动条
       main.scrollLeft = 0
       main.scrollTop = 0
     }
   }
 })
-
-import Progress from 'nprogress'
 Progress.configure({ showSpinner: false })
 router.beforeEach((to, from, next) => {
   const isLogin = true
@@ -93,7 +100,7 @@ router.beforeEach((to, from, next) => {
     Progress.done()
   }
 })
-router.afterEach((to, from)=>{
+router.afterEach((to, from) => {
   Progress.done()
 })
 
