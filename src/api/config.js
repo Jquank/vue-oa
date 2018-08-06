@@ -1,4 +1,4 @@
-export const serverUrl = 'http://172.16.11.78:8080/BaiJieOA'
+export const serverUrl = 'https://www.easy-mock.com/mock/5b2602e50f6ae915edc0fbb5/api'
 export const uploadUrl = 'http://172.16.11.78:8080/upload/c'
 export const navList = [
   {

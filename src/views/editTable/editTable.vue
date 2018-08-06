@@ -36,8 +36,7 @@ export default {
     }
   },
   created () {
-    console.log(123)
-    $post('/editTable').then(res => {
+    $post(this.serverUrl + '/editTable').then(res => {
       if (res.data.code === 0) {
         this.tableData = res.data.data
       }
@@ -49,7 +48,7 @@ export default {
     },
     confirmEdit (row) {
       row.isEdit = true
-      $post('/changeAddr', { addr: row.address }).then(res => {
+      $post(this.serverUrl + '/changeAddr', { addr: row.address }).then(res => {
         if (res.data.code === 0) {
           this.$message({
             message: '修改成功',
