@@ -67,7 +67,12 @@ export default {
             this.getUserName()
             Cookies.set('token1', res.data.data.token)
             Cookies.set('permission1', res.data.data.permission)
-
+            this.getAsyncRouter({
+              path: 'dragTable',
+              name: 'dragTable',
+              meta: { text: '可拖拽的表格' },
+              component: require('views/dragTable/dragTable')
+            })
             setTimeout(() => {
               this.$router.push('/indexPage')
             })
@@ -87,7 +92,8 @@ export default {
         })
     },
     ...mapMutations({
-      getUserName: 'GET_USERNAME'
+      getUserName: 'GET_USERNAME',
+      getAsyncRouter: 'GET_ASYNC_ROUTER'
     })
 
   }

@@ -16,11 +16,11 @@
         <el-menu-item
           index="/indexPage/indexContent">
           <i class="fa fa-home"></i>
-          <div slot="title">home</div>
+          <span slot="title">home</span>
         </el-menu-item>
         <el-submenu v-for="item in navList" :key="item.id" :index="item.id+''">
           <template slot="title">
-            <i class="fa fa-home"></i>&nbsp;
+            <i :class="item.fontIcon"></i>&nbsp;
             <span>{{item.text}}</span>
           </template>
           <el-menu-item class="item-active" ref="item" v-for="child in item.cList" :key="child.cid"

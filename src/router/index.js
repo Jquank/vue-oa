@@ -8,7 +8,9 @@ import IndexPage from 'components/indexPage/indexPage'
 import IndexContent from 'components/indexContent/indexContent'
 
 import Charts from 'views/charts/charts'
-import EditTable from 'views/editTable/editTable'
+// import EditTable from 'views/editTable/editTable'
+const EditTable = () => import('views/editTable/editTable')
+
 import DragTable from 'views/dragTable/dragTable'
 
 // import store from '../store'
@@ -61,10 +63,16 @@ const router = new Router({
 })
 const asyncRouterMap = [
   {
-    path: 'dragTable',
-    name: 'dragTable',
-    meta: { text: '可拖拽的表格' },
-    component: DragTable
+    path: '/indexPage',
+    component: IndexPage,
+    children: [
+      {
+        path: 'dragTable',
+        name: 'dragTable',
+        meta: { text: '可拖拽的表格' },
+        component: DragTable
+      }
+    ]
   }
 ]
 
@@ -81,6 +89,7 @@ router.beforeEach((to, from, next) => {
       if (to.name === from.name) { // 防止刷新的时候加载两次组件
         next(false)
       } else {
+        router.addRoutes(asyncRouterMap)
         Progress.start()
         next()
       }
