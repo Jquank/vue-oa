@@ -16,16 +16,16 @@
         <el-menu-item
           index="/indexPage/indexContent">
           <i class="fa fa-home"></i>
-          <span slot="title">home</span>
+          <div slot="title">home</div>
         </el-menu-item>
         <el-submenu v-for="item in navList" :key="item.id" :index="item.id+''">
           <template slot="title">
-            <i :class="item.fontIcon"></i>&nbsp;
+            <i class="fa fa-home"></i>&nbsp;
             <span>{{item.text}}</span>
           </template>
-            <el-menu-item class="item-active" ref="item" v-for="child in item.cList" :key="child.cid"
-              :index="child.to">{{child.text}}
-            </el-menu-item>
+          <el-menu-item class="item-active" ref="item" v-for="child in item.cList" :key="child.cid"
+            :index="child.to">{{child.text}}
+          </el-menu-item>
         </el-submenu>
       </el-menu>
     </div>
@@ -43,6 +43,7 @@ export default {
     }
   },
   mounted () {
+    console.log(this.baseRouterMap)
     let that = this
     window.onresize = function () {
       let width = document.body.clientWidth

@@ -1,22 +1,22 @@
-// eslint-disabled
+/* eslint-disable */
 import Vue from 'vue'
 import Router from 'vue-router'
 
 import Login from 'components/login/login'
 // 首页
-// import IndexPage from 'components/indexPage/indexPage'
+import IndexPage from 'components/indexPage/indexPage'
 import IndexContent from 'components/indexContent/indexContent'
 
 import Charts from 'views/charts/charts'
 import EditTable from 'views/editTable/editTable'
-// import DragTable from 'views/dragTable/dragTable'
+import DragTable from 'views/dragTable/dragTable'
 
 // import store from '../store'
 
 import Progress from 'nprogress'
 Vue.use(Router)
 
-const baseRouterMap = [
+export const baseRouterMap = [
   {
     path: '/',
     redirect: '/login'
@@ -28,7 +28,7 @@ const baseRouterMap = [
   },
   {
     path: '/indexPage',
-    name: 'indexPage',
+    component: IndexPage, 
     children: [
       {
         path: '',
@@ -50,7 +50,7 @@ const baseRouterMap = [
       {
         path: 'editTable',
         name: 'editTable',
-        meta: { text: '可编辑的表格' },
+        meta: { text: '编辑表格' },
         component: EditTable
       }
     ]
@@ -59,14 +59,14 @@ const baseRouterMap = [
 const router = new Router({
   routes: baseRouterMap
 })
-// const asyncRouterMap = [
-//   {
-//     path: 'dragTable',
-//     name: 'dragTable',
-//     meta: { text: '可拖拽的表格' },
-//     component: DragTable
-//   }
-// ]
+const asyncRouterMap = [
+  {
+    path: 'dragTable',
+    name: 'dragTable',
+    meta: { text: '可拖拽的表格' },
+    component: DragTable
+  }
+]
 
 Progress.configure({ showSpinner: false })
 router.beforeEach((to, from, next) => {

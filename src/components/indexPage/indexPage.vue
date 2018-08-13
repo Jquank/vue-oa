@@ -4,7 +4,7 @@
     <el-container>
       <!-- 1左侧边栏 -->
       <el-aside id="nav-aside" class="nav-aside" width="180px">
-        <navbar></navbar>
+        <nav-bar></nav-bar>
       </el-aside>
       <!-- 2右侧头部和主体内容 -->
       <el-container class="con-right">
@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import Navbar from 'components/navbar/navbar'
+import NavBar from 'components/navbar/navbar'
 import MHeader from 'components/m-header/m-header'
 export default {
   data () {
@@ -33,7 +33,7 @@ export default {
   mounted () {
   },
   components: {
-    Navbar,
+    NavBar,
     MHeader
   }
 }
