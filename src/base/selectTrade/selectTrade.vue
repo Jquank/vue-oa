@@ -3,7 +3,6 @@
 </template>
 
 <script>
-import storage from 'good-storage'
 import { getTrade } from 'api/getOptions'
 export default {
   data () {
@@ -19,31 +18,17 @@ export default {
     }
   },
   mounted () {
-    this.options = storage.get('trade')
+    getTrade().then(res => {
+      console.log(res.data.data)
+      if (res.data.status === 1) {
+        this.options = res.data.data
+      }
+    })
   },
   methods: {
     change (val) {
-      console.log(val)
-      this.$emit('tradeSelect', val)
     },
     handleItemChange (val) {
-      let idArr = []
-      let value = val[0]
-      getTrade({parentid: value}).then(res => {
-        this.tradeList = res.data.data || []
-        console.log(this.tradeList)
-        this.options.forEach(val => {
-          idArr.push(val.id)
-        })
-        this.index = idArr.indexOf(value)
-        this.tradeList.forEach(val => {
-          this.options[this.index].children.push({
-            label: val.name,
-            name: val.name,
-            id: val.id
-          })
-        })
-      })
     }
   }
 }

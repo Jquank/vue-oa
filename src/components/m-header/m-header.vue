@@ -60,6 +60,9 @@
         <el-form-item label="用户名" :label-width="formLabelWidth">
           <el-input v-model="form.name" auto-complete="off" disabled></el-input>
         </el-form-item>
+        <el-form-item label="真实姓名" :label-width="formLabelWidth">
+          <el-input v-model="form.trueName" auto-complete="off"></el-input>
+        </el-form-item>
         <el-form-item label="密码" :label-width="formLabelWidth">
           <el-input @keyup.enter.native="editPwd" type="password" v-model="form.mima" auto-complete="off"></el-input>
         </el-form-item>
@@ -77,24 +80,22 @@
 import { enterfullscreen, exitfullscreen } from 'api/myHeader'
 import { serverUrl } from 'api/config'
 import { $post } from 'api/http'
-import { mapMutations, mapGetters } from 'vuex'
+import cookie from 'js-cookie'
 export default {
   computed: {
     uName () {
-      return this.userName
-    },
-    ...mapGetters([
-      'userName'
-    ])
+      return cookie.get('userName')
+    }
   },
   data () {
     return {
       dialogFormVisible: false,
       form: {
         name: '',
+        trueName: '',
         mima: ''
       },
-      formLabelWidth: '60px',
+      formLabelWidth: '75px',
       count: 0,
       firstTitle: '首页',
       secondTitle: '',
@@ -121,22 +122,20 @@ export default {
     },
     editPwd () {
       let userUrl = serverUrl + '/Oper.do?EditPwd'
-      let userId = sessionStorage.getItem('userId')
       let reg = /^[0-9A-Za-z_]{4,10}$/
       let myPassword = '' + this.form.mima
       if (reg.test(myPassword)) {
-        $post(userUrl, {'id': userId, 'pwd': myPassword}).then((res) => {
-          if (res.data[0].success === true) {
+        $post(userUrl, {username: this.uName}).then((res) => {
+          if (res.data.status === 1) {
             this.$message({
               message: '修改成功,请重新登录',
               type: 'success'
             })
             this.dialogFormVisible = false
             setTimeout(() => {
-              sessionStorage.clear()
-              this.getUserName()
+              cookie.remove('userName')
               this.$router.push('/login')
-            }, 800)
+            }, 100)
           }
         })
       } else {
@@ -147,9 +146,12 @@ export default {
       }
     },
     exitLogin () {
-      sessionStorage.clear()
-      this.getUserName()
-      this.$router.push('/login')
+      $post('/logout').then(res => {
+        if (res.data.status === -1) {
+          cookie.remove('userName')
+          this.$router.push('/login')
+        }
+      })
     },
     refresh () {
       this.$router.go(0)
@@ -159,10 +161,7 @@ export default {
       let bread = text.split('/')
       this.secondTitle = bread[0] === '首页' ? '' : bread[0]
       this.thirdTitle = bread[1]
-    },
-    ...mapMutations({
-      getUserName: 'GET_USERNAME'
-    })
+    }
   }
 }
 </script>

@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { loadCallIframe } from 'api/call'
+// import { loadCallIframe } from 'api/call'
 import Navbar from 'components/navbar/navbar'
 import MHeader from 'components/m-header/m-header'
 // import { getArea, getSource, getTrade } from '@/api/getOptions'
@@ -36,7 +36,7 @@ export default {
     return {}
   },
   mounted () {
-    loadCallIframe('iframe-call')
+    // loadCallIframe('iframe-call')
   },
   components: {
     Navbar,

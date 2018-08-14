@@ -40,7 +40,8 @@ import InvoicePending from 'components/invoiceManage/invoicePending/invoicePendi
 import Charts from 'views/charts/charts'
 import EditTable from 'views/editTable/editTable'
 
-import store from '../store'
+// import store from '../store'
+import cookie from 'js-cookie'
 Vue.use(Router)
 
 const router = new Router({
@@ -198,7 +199,7 @@ const router = new Router({
 import Progress from 'nprogress'
 Progress.configure({ showSpinner: false })
 router.beforeEach((to, from, next) => {
-  const isLogin = store.state.userName
+  const isLogin = cookie.get('userName')
   if (to.name !== 'login') {
     if (!isLogin) {
       next({

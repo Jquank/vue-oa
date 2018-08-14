@@ -31,11 +31,9 @@
 
 <script>
 import { $post } from '@/api/http'
-import { serverUrl } from '@/api/config'
-import { mapMutations } from 'vuex'
-import { getCode, getArea, getTrade, getDepartment } from 'api/getOptions'
-import storage from 'good-storage'
-const LOGIN_URL = serverUrl + '/User.do?login'
+// import { getArea } from 'api/getOptions'
+// import storage from 'good-storage'
+import cookie from 'js-cookie'
 
 export default {
   data () {
@@ -46,12 +44,12 @@ export default {
     }
   },
   created () {
-    storage.remove('productType')
-    storage.remove('wjType')
-    storage.remove('department')
-    storage.remove('province')
-    storage.remove('trade')
-    storage.remove('bankType')
+    // storage.remove('productType')
+    // storage.remove('wjType')
+    // storage.remove('department')
+    // storage.remove('province')
+    // storage.remove('trade')
+    // storage.remove('bankType')
   },
   mounted () {
 
@@ -63,59 +61,54 @@ export default {
         username: this.myName,
         password: this.myPassword
       }
-      $post(LOGIN_URL, params)
+      $post('/login', params)
         .then(res => {
-          if (res.data.success === true) {
-            storage.session.set('userName', res.data.data.name)
-            storage.session.set('userId', res.data.data.id)
-            storage.session.set('permissions', res.data.data.permissions)
-            storage.session.set('token', res.data.data.tk)
+          console.log(res.data.status)
+          if (res.data.status === 1) {
+            // storage.session.set('userId', res.data.data.id)
+            // storage.session.set('permissions', res.data.data.permissions)
+            // storage.session.set('token', res.data.data.tk)
+            cookie.set('userName', this.myName)
+            this.$router.push('/indexPage')
+            // getCode(38).then(res => {
+            //   let data = res.data.data || []
+            //   storage.set('productType', data)
+            // })
 
-            this.getUserName()
+            // getCode(28).then(res => {
+            //   let data = res.data.data || []
+            //   storage.set('wjType', data)
+            // })
 
-            getCode(38).then(res => {
-              let data = res.data.data || []
-              storage.set('productType', data)
-            })
+            // getCode(42).then(res => {
+            //   let data = res.data.data || []
+            //   storage.set('bankType', data)
+            // })
 
-            getCode(28).then(res => {
-              let data = res.data.data || []
-              storage.set('wjType', data)
-            })
+            // getArea({parentid: 1}).then(res => {
+            //   let data = res.data.data || []
+            //   // let data = this._transTree(res.data.data, 'id', 'parentid')
+            //   data.forEach(val => {
+            //     val.children = []
+            //     val.label = val.AREANAME
+            //   })
+            //   storage.set('province', data)
+            // })
 
-            getCode(42).then(res => {
-              let data = res.data.data || []
-              storage.set('bankType', data)
-            })
+            // getTrade().then(res => {
+            //   let data = res.data.data || []
+            //   data.forEach(val => {
+            //     val.children = []
+            //     val.label = val.name
+            //   })
+            //   storage.set('trade', data)
+            // })
 
-            getArea({parentid: 1}).then(res => {
-              let data = res.data.data || []
-              // let data = this._transTree(res.data.data, 'id', 'parentid')
-              data.forEach(val => {
-                val.children = []
-                val.label = val.AREANAME
-              })
-              storage.set('province', data)
-            })
-
-            getTrade().then(res => {
-              let data = res.data.data || []
-              data.forEach(val => {
-                val.children = []
-                val.label = val.name
-              })
-              storage.set('trade', data)
-            })
-
-            getDepartment().then(res => {
-              let data = res.data.data || []
-              let department = this._transTree(data)
-              storage.set('department', department)
-            })
-
-            setTimeout(() => {
-              this.$router.push('/indexPage')
-            })
+            // getDepartment().then(res => {
+            //   let data = res.data.data || []
+            //   let department = this._transTree(data)
+            //   storage.set('department', department)
+            // })
           } else {
             this.$message({
               message: '账号或密码错误！',
@@ -149,11 +142,7 @@ export default {
         }
       }
       return r
-    },
-    ...mapMutations({
-      getUserName: 'GET_USERNAME'
-    })
-
+    }
   }
 }
 </script>

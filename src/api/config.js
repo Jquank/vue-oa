@@ -1,5 +1,5 @@
-export const serverUrl = 'http://172.16.11.78:8080/BaiJieOA'
-export const uploadUrl = 'http://172.16.11.78:8080/upload/c'
+export const serverUrl = 'http://172.16.11.72:88'
+export const uploadUrl = 'http://172.16.11.72:88/upload/c'
 export const navList = [
   {
     id: 1,

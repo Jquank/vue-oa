@@ -20,6 +20,9 @@ import VueAreaLinkage from 'vue-area-linkage'
 
 import * as filters from '@/common/js/filters'
 
+// import axios from 'axios'
+// axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
+
 Vue.config.productionTip = false
 
 Vue.config.errorHandler = function (err, vm, info) {

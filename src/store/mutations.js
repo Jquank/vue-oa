@@ -1,9 +1,10 @@
 import * as types from './mutation-types'
-import storage from 'good-storage'
+// import storage from 'good-storage'
+import cookie from 'js-cookie'
 
 const mutations = {
   [types.GET_USERNAME] (state) {
-    state.userName = storage.session.get('userName')
+    state.userName = cookie.get('userName')
   }
 }
 export default mutations
