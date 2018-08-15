@@ -7,7 +7,8 @@ export const navList = [
     text: 'some',
     cList: [
       { cid: 140, to: '/indexPage/charts', text: 'charts' },
-      { cid: 150, to: '/indexPage/editTable', text: 'editTable' }
+      { cid: 150, to: '/indexPage/editTable', text: 'editTable' },
+      { cid: 160, to: '/indexPage/dragTable', text: 'dragTable' }
     ]
   }
 ]

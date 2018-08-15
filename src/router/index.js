@@ -75,7 +75,6 @@ const asyncRouterMap = [
     ]
   }
 ]
-
 Progress.configure({ showSpinner: false })
 router.beforeEach((to, from, next) => {
   const isLogin = true

@@ -33,7 +33,7 @@
 import { $post } from '@/api/http'
 import { mapMutations } from 'vuex'
 import Cookies from 'js-cookie'
-
+// import router from '@/router/index'
 export default {
   data () {
     return {
