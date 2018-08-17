@@ -15,8 +15,9 @@ import AccountManage from 'components/systemSetting/accountManage/accountManage'
 import News from 'components/systemSetting/news/news'
 import Editor from 'components/systemSetting/news/editor'
 // 人员管理
-import UserManage from 'components/userManage/userManage'
+import AddUser from 'components/userManage/addUser/addUser'
 // 客户管理
+import AddCus from 'components/customerManage/addCus/addCus'
 import MyCustomer from 'components/customerManage/myCustomer/myCustomer'
 import MyCusDetail from 'components/customerManage/myCustomer/myCusDetail'
 // 客户审核
@@ -118,7 +119,20 @@ const router = new Router({
             }
           ]
         },
+        // 人员管理
+        {
+          path: 'addUser',
+          name: 'addUser',
+          meta: { text: '新增人员' },
+          component: AddUser,
+        },
         // 客户管理
+        {
+          path: 'addCus',
+          name: 'addCus',
+          meta: { text: '新增客户' },
+          component: AddCus,
+        },
         {
           path: 'myCustomer',
           name: 'myCustomer',

@@ -5,6 +5,7 @@
 <script>
 // import { getArea } from 'api/getOptions'
 import { $post } from 'api/http'
+import storage from 'good-storage'
 export default {
   data () {
     return {
@@ -17,15 +18,24 @@ export default {
     }
   },
   mounted () {
-    $post('/Area/HomeAreaTreeGet').then(res => {
-      if (res.data.status === 1) {
-        let area = res.data.data
-        this.clearChildren(area)
-        this.options = area
-      }
-    })
+    let areaList = storage.get('area')
+    if (!areaList) {
+      this._getAreaList()
+    } else {
+      this.options = areaList
+    }
   },
   methods: {
+    _getAreaList () {
+      $post('/Area/HomeAreaTreeGet').then(res => {
+        if (res.data.status === 1) {
+          let area = res.data.data
+          this.clearChildren(area)
+          this.options = area
+          storage.set('area', area)
+        }
+      })
+    },
     change (val) {
     },
     handleItemChange (val) {

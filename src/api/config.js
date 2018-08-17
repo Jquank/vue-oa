@@ -42,6 +42,11 @@ export const navList = [
     fontIcon: 'fa fa-street-view',
     text: '人员管理',
     cList: [
+      {
+        cid: 40,
+        to: '/indexPage/addUser',
+        text: '新增人员'
+      }
     ]
   },
   {
@@ -50,7 +55,7 @@ export const navList = [
     text: '客户管理',
     cList: [{
       cid: 50,
-      to: '/indexPage',
+      to: '/indexPage/addCus',
       text: '新增客户'
     },
     {

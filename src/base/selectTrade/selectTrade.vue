@@ -4,6 +4,7 @@
 
 <script>
 import { getTrade } from 'api/getOptions'
+import storage from 'good-storage'
 export default {
   data () {
     return {
@@ -18,14 +19,22 @@ export default {
     }
   },
   mounted () {
-    getTrade().then(res => {
-      console.log(res.data.data)
-      if (res.data.status === 1) {
-        this.options = res.data.data
-      }
-    })
+    let tradeList = storage.get('trade')
+    if (!tradeList) {
+      this._getTradeList()
+    } else {
+      this.options = tradeList
+    }
   },
   methods: {
+    _getTradeList () {
+      getTrade().then(res => {
+        if (res.data.status === 1) {
+          this.options = res.data.data
+          storage.set('trade', this.options)
+        }
+      })
+    },
     change (val) {
     },
     handleItemChange (val) {
