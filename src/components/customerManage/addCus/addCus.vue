@@ -76,7 +76,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-form-item label-width="0" style="text-align:left">
+      <el-form-item label-width="0" class="btns">
         <el-button type="primary" @click="submit">添加为公共客户</el-button>
         <el-button type="primary" @click="submit">添加为我的跟踪客户</el-button>
         <el-button type="primary" @click="submit">添加并申请保A</el-button>
@@ -119,6 +119,10 @@ export default {
   padding: 20px;
   .contact-phone{
     width:calc(~"(100% - 30px)");
+  }
+  .btns .el-form-item__content{
+    display: flex;
+    justify-content: space-between;
   }
 }
 </style>
