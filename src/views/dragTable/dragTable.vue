@@ -31,7 +31,8 @@ export default {
     }
   },
   created () {
-    $post('/dragTable').then(res => {
+    $post(this.serverUrl + '/dragTable').then(res => {
+      console.log(res.data.data.data)
       if (res.data.code === 0) {
         this.tableData = res.data.data
         this.oldList = this.tableData.map(v => v.id)

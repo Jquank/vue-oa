@@ -6,7 +6,7 @@ import App from './App'
 import router from './router'
 import store from './store'
 
-import 'api/mock'
+// import 'api/mock'
 
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
@@ -16,6 +16,8 @@ import './common/css/base.css'
 import 'nprogress/nprogress.css'
 
 import * as filters from '@/common/js/filters'
+
+Vue.prototype.serverUrl = 'https://www.easy-mock.com/mock/5b2602e50f6ae915edc0fbb5/api'
 
 Vue.config.productionTip = false
 

@@ -30,13 +30,10 @@
 </template>
 
 <script>
-// import { $post } from '@/api/http'
-// import { serverUrl } from '@/api/config'
+import { $post } from '@/api/http'
 import { mapMutations } from 'vuex'
-// import { getCode, getArea, getTrade, getDepartment } from 'api/getOptions'
-import storage from 'good-storage'
-// const LOGIN_URL = serverUrl + '/User.do?login'
-
+import Cookies from 'js-cookie'
+// import router from '@/router/index'
 export default {
   data () {
     return {
@@ -46,112 +43,57 @@ export default {
     }
   },
   created () {
-    storage.remove('productType')
-    storage.remove('wjType')
-    storage.remove('department')
-    storage.remove('province')
-    storage.remove('trade')
-    storage.remove('bankType')
+    // storage.remove('productType')
+    // storage.remove('wjType')
+    // storage.remove('department')
+    // storage.remove('province')
+    // storage.remove('trade')
+    // storage.remove('bankType')
   },
   mounted () {
 
   },
   methods: {
     login () {
-      this.$router.push('/indexPage')
-      // let params = {
-      //   username: this.myName,
-      //   password: this.myPassword
-      // }
-      // $post(LOGIN_URL, params)
-      //   .then(res => {
-      //     if (res.data.success === true) {
-      //       storage.session.set('userName', res.data.data.name)
-      //       storage.session.set('userId', res.data.data.id)
-      //       storage.session.set('permissions', res.data.data.permissions)
-      //       storage.session.set('token', res.data.data.tk)
-
-      //       this.getUserName()
-
-      //       getCode(38).then(res => {
-      //         let data = res.data.data || []
-      //         storage.set('productType', data)
-      //       })
-
-      //       getCode(28).then(res => {
-      //         let data = res.data.data || []
-      //         storage.set('wjType', data)
-      //       })
-
-      //       getCode(42).then(res => {
-      //         let data = res.data.data || []
-      //         storage.set('bankType', data)
-      //       })
-
-      //       getArea({parentid: 1}).then(res => {
-      //         let data = res.data.data || []
-      //         // let data = this._transTree(res.data.data, 'id', 'parentid')
-      //         data.forEach(val => {
-      //           val.children = []
-      //           val.label = val.AREANAME
-      //         })
-      //         storage.set('province', data)
-      //       })
-
-      //       getTrade().then(res => {
-      //         let data = res.data.data || []
-      //         data.forEach(val => {
-      //           val.children = []
-      //           val.label = val.name
-      //         })
-      //         storage.set('trade', data)
-      //       })
-
-      //       getDepartment().then(res => {
-      //         let data = res.data.data || []
-      //         let department = this._transTree(data)
-      //         storage.set('department', department)
-      //       })
-
-      //       setTimeout(() => {
-      //         this.$router.push('/indexPage')
-      //       })
-      //     } else {
-      //       this.$message({
-      //         message: '账号或密码错误！',
-      //         type: 'error'
-      //       })
-      //     }
-      //   })
-      //   .catch(err => {
-      //     this.$message({
-      //       message: '网络错误，请检查！',
-      //       type: 'error'
-      //     })
-      //     console.log(err)
-      //   })
-    },
-    _transTree (arr) {
-      let r = []
-      let hash = {}
-      arr.forEach((val, key) => {
-        hash[val.code] = val
-      })
-      for (let i = 0; i < arr.length; i++) {
-        let oneData = arr[i]
-        let parentcode = oneData.parentcode
-        let hashVP = hash[parentcode]
-        if (hashVP) {
-          !hashVP['children'] && (hashVP['children'] = [])
-          hashVP['children'].push(oneData)
-        } else {
-          r.push(oneData)
-        }
+      // this.$router.push('/indexPage')
+      let params = {
+        username: this.myName,
+        password: this.myPassword
       }
-      return r
+      $post(this.serverUrl + '/login', params)
+
+        .then(res => {
+          if (this.myName === 'admin') {
+            this.getUserName()
+            Cookies.set('token1', res.data.data.token)
+            Cookies.set('permission1', res.data.data.permission)
+            this.getAsyncRouter({
+              path: 'dragTable',
+              name: 'dragTable',
+              meta: { text: '可拖拽的表格' },
+              component: require('views/dragTable/dragTable')
+            })
+            setTimeout(() => {
+              this.$router.push('/indexPage')
+            })
+          } else {
+            this.$message({
+              message: '账号或密码错误！',
+              type: 'error'
+            })
+          }
+        })
+        .catch(err => {
+          this.$message({
+            message: '网络错误，请检查！',
+            type: 'error'
+          })
+          console.log(err)
+        })
     },
     ...mapMutations({
-      getUserName: 'GET_USERNAME'
+      getUserName: 'GET_USERNAME',
+      getAsyncRouter: 'GET_ASYNC_ROUTER'
     })
 
   }

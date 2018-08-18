@@ -10,7 +10,6 @@ import { $post } from 'api/http'
 const Echarts = require('echarts/lib/echarts')
 require('echarts/lib/component/tooltip')
 require('echarts/lib/component/title')
-
 require('echarts/lib/chart/line')
 require('echarts/lib/chart/pie')
 export default {
@@ -35,7 +34,7 @@ export default {
     let that = this
     let lineChart = Echarts.init(document.getElementById('line-chart'))
     let pieChart = Echarts.init(document.getElementById('pie-chart'))
-    $post('/lineChart').then(res => {
+    $post(this.serverUrl + '/lineChart').then(res => {
       if (res.data.code === 0) {
         console.log(res.data)
         this.expected = res.data.expected
@@ -93,7 +92,7 @@ export default {
       }
     })
 
-    $post('/pieChart').then(res => {
+    $post(this.serverUrl + '/pieChart').then(res => {
       if (res.data.code === 0) {
         console.log(res.data.data)
         this.pieData = res.data.data.sort(function (a, b) { return a.value - b.value })
