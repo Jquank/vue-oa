@@ -95,7 +95,7 @@ div.el-dialog__body {
   margin:2px 0 15px;
   color:#E6A23C;
 }
-
+/* input的apend或prepend文字pandding */
 .el-input-group__append, .el-input-group__prepend{
   padding:0 10px;
 }
