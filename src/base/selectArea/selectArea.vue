@@ -1,5 +1,6 @@
 <template>
-  <el-cascader @active-item-change="handleItemChange" @change="change" placeholder="请选择地区" :options="options" :change-on-select="false" :props="props"></el-cascader>
+  <el-cascader v-model="selArea" @change="$emit('input', selArea)"
+  :options="options" :change-on-select="false" :props="props" placeholder="请选择地区"></el-cascader>
 </template>
 
 <script>
@@ -9,6 +10,7 @@ import storage from 'good-storage'
 export default {
   data () {
     return {
+      selArea: [],
       options: [],
       props: {
         value: 'id',
@@ -35,11 +37,6 @@ export default {
           storage.set('area', area)
         }
       })
-    },
-    change (val) {
-    },
-    handleItemChange (val) {
-
     },
     clearChildren (arr) {
       arr.forEach(val => {

@@ -3,3 +3,9 @@
     height: 90px;
   }
 }
+
+@media screen and (max-width: 600px) {
+  #m-bread, #down-client, #help-doc, #full-screen {
+    display: none;
+  }
+}

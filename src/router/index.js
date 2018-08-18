@@ -19,8 +19,12 @@ import AddUser from 'components/userManage/addUser/addUser'
 import UserList from 'components/userManage/userList/userList'
 // 客户管理
 import AddCus from 'components/customerManage/addCus/addCus'
+import ApplyCus from 'components/customerManage/applyCus/applyCus'
 import MyCustomer from 'components/customerManage/myCustomer/myCustomer'
 import MyCusDetail from 'components/customerManage/myCustomer/myCusDetail'
+import VisitRecord from 'components/customerManage/visitRecord/visitRecord'
+import FollowRecord from 'components/customerManage/followRecord/followRecord'
+import ImportCus from 'components/customerManage/importCus/importCus'
 // 客户审核
 import CustomerCheck from 'components/customerCheck/customerCheck'
 import CustomerSearch from 'components/customerSearch/customerSearch'
@@ -142,6 +146,12 @@ const router = new Router({
           component: AddCus,
         },
         {
+          path: 'applyCus',
+          name: 'applyCus',
+          meta: { text: '申领客户' },
+          component: ApplyCus,
+        },
+        {
           path: 'myCustomer',
           name: 'myCustomer',
           meta: { text: '我的客户' },
@@ -151,6 +161,24 @@ const router = new Router({
             meta: { text: '我的客户/客户详情' },
             component: MyCusDetail
           }]
+        },
+        {
+          path: 'visitRecord',
+          name: 'visitRecord',
+          meta: { text: '出访记录' },
+          component: VisitRecord,
+        },
+        {
+          path: 'followRecord',
+          name: 'followRecord',
+          meta: { text: '跟进记录' },
+          component: FollowRecord,
+        },
+        {
+          path: 'importCus',
+          name: 'importCus',
+          meta: { text: '市场部导入客户' },
+          component: ImportCus,
         },
         // 到款管理
         {

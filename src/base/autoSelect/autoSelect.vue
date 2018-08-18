@@ -1,13 +1,13 @@
 // 对element-ui的select组件的再封装，用于带前置文字的select，slot="prefix"
+// 用法：<auto-select title="司龄" v-model="workAge">
+//         <el-option label="3个月以上" value="3"></el-option>
+//         <el-option label="6个月以上" value="6"></el-option>
+//       </auto-select>
 <template>
-<div>
-  <el-select v-model="sel" class="auto-sel">
+  <el-select @change="$emit('input',sel)" v-model="sel" class="auto-sel" :placeholder="placeholder">
     <span slot="prefix" class="prefix">{{title}}:</span>
     <slot></slot>
   </el-select>
-  <p>嗯{{sel}}</p>
-</div>
-
 </template>
 
 <script>
@@ -16,6 +16,10 @@ export default {
     title: {
       type: String,
       default: '选择'
+    },
+    placeholder: {
+      type: String,
+      default: '请选择'
     }
   },
   data () {
@@ -25,7 +29,7 @@ export default {
   },
   mounted () {
     let len = this.title.length
-    let width = len * 13 + 4 + 57 + 'px' // 字体宽度+冒号宽度+padding及其他
+    let width = len * 13 + 4 + 36 + 'px' // 字体宽度+冒号宽度+padding及其他
     let input = document.querySelector('.auto-sel input.el-input__inner')
     input.style.paddingLeft = width
   }
@@ -40,8 +44,8 @@ export default {
       left:-4px;
       top:1px;
       height: 30px;
-      padding:0 20px;
-      line-height: 32px;
+      padding:0 10px;
+      line-height: 30px;
       background: #f5f7fa;
       color:#909399;
       border-right: 1px solid #dcdfe6;

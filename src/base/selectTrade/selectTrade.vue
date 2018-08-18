@@ -1,5 +1,5 @@
 <template>
-  <el-cascader @active-item-change="handleItemChange" @change="change" placeholder="请选择行业" :options="options" :change-on-select="false" :props="props"></el-cascader>
+  <el-cascader v-model="trade" @change="$emit('input', trade)" placeholder="请选择行业" :options="options" :change-on-select="false" :props="props"></el-cascader>
 </template>
 
 <script>
@@ -8,6 +8,7 @@ import storage from 'good-storage'
 export default {
   data () {
     return {
+      trade: [],
       options: [],
       props: {
         value: 'id',
@@ -34,10 +35,6 @@ export default {
           storage.set('trade', this.options)
         }
       })
-    },
-    change (val) {
-    },
-    handleItemChange (val) {
     }
   }
 }

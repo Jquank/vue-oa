@@ -1,5 +1,6 @@
 @import './nomalize.css';
 @import './font-awesome.min.css';
+@import './media.css';
 ul {
   margin: 0;
   padding: 0;
@@ -95,3 +96,6 @@ div.el-dialog__body {
   color:#E6A23C;
 }
 
+.el-input-group__append, .el-input-group__prepend{
+  padding:0 10px;
+}

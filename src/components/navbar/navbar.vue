@@ -78,7 +78,6 @@ export default {
 </script>
 
 <style scoped lang="less">
-
 .control-scroll{
   height:100vh;
   width:197px;

@@ -65,7 +65,7 @@ export const navList = [
     },
     {
       cid: 51,
-      to: '/indexPage',
+      to: '/indexPage/applyCus',
       text: '申领客户'
     },
     {
@@ -75,18 +75,18 @@ export const navList = [
     },
     {
       cid: 53,
-      to: '/indexPage',
+      to: '/indexPage/visitRecord',
       text: '出访记录'
     },
     {
       cid: 54,
-      to: '/indexPage',
+      to: '/indexPage/followRecord',
       text: '跟进记录'
     },
     {
       cid: 55,
-      to: '/indexPage',
-      text: '导入客户'
+      to: '/indexPage/importCus',
+      text: '市场部导入客户'
     }
     ]
   },
