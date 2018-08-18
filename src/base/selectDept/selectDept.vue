@@ -1,3 +1,4 @@
+// 部门树
 <template>
   <el-dialog title="编辑部门" :visible.sync="isShow" width="350px">
       <el-tree :data="departmentList" :props="depProps" accordion node-key="id" ref="tree" :expand-on-click-node="true" show-checkbox @check-change="handleCheckChange" id="department" :default-expanded-keys="defaultExpanded"></el-tree>

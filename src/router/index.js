@@ -60,7 +60,7 @@ const router = new Router({
     {
       path: '/login',
       name: 'login',
-      component: Login
+      component: IndexPage
     },
     {
       path: '/indexPage',
@@ -228,7 +228,8 @@ const router = new Router({
 import Progress from 'nprogress'
 Progress.configure({ showSpinner: false })
 router.beforeEach((to, from, next) => {
-  const isLogin = cookie.get('userName')
+  // const isLogin = cookie.get('userName')
+  const isLogin = true
   if (to.name !== 'login') {
     if (!isLogin) {
       next({

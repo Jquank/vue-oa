@@ -1,4 +1,3 @@
-import { $post } from '@/api/http'
 /*
 带提交的弹窗，接受两个参数，1、vue实例（this），2、配置对象（{}）。回调用来刷新列表，修改成功res为true
 ex：submitBox(that, {
@@ -13,6 +12,7 @@ ex：submitBox(that, {
 
       })
 */
+import { $post } from '@/api/http'
 export default function submitBox (that, obj = {}) {
   return new Promise((resolve, reject) => {
     that.$prompt(obj.title || '', {

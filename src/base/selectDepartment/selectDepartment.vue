@@ -1,3 +1,4 @@
+// 带input的部门树
 <template>
   <div class="sel-department"  style="width:300px">
     <el-input placeholder="点击选择部门" v-model="department" @focus="showDepartment">

@@ -1,6 +1,19 @@
 <template>
   <div class="user-list">
-    <el-table v-loading="isLoading" ref="multipleTable" :data="tableData" style="width: 100%"        @selection-change="handleSelectionChange">
+    <div class="search">
+      <select-department></select-department>
+      <el-input placeholder="搜索员工姓名" v-model="staffName" @focus="showDepartment">
+        <template slot="prepend">员工姓名:</template>
+      </el-input>
+      <auto-select title="司龄" v-model="workAge" class="sel-age">
+        <el-option label="3个月以上" value="3"></el-option>
+        <el-option label="6个月以上" value="6"></el-option>
+        <el-option label="12个月以上" value="12"></el-option>
+        <el-option label="24个月以上" value="24"></el-option>
+      </auto-select>
+      <p>哇{{workAge}}</p>
+    </div>
+    <el-table v-loading="isLoading" ref="multipleTable" :data="tableData" style="width: 100%" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55">
       </el-table-column>
       <el-table-column prop="loginName" label="账户名" width="100">
@@ -38,9 +51,13 @@
 // import { $post } from 'api/http'
 import Page from 'base/page/page'
 import SelectDept from 'base/selectDept/selectDept'
+import SelectDepartment from 'base/selectDepartment/selectDepartment'
+import AutoSelect from 'base/autoSelect/autoSelect'
 export default {
   data () {
     return {
+      staffName: '',
+      workAge: '',
       url: '/User/search',
       sendParams: {
         name: '',
@@ -52,9 +69,7 @@ export default {
       showDeptTree: 0
     }
   },
-  created () {
-
-  },
+  created () {},
   methods: {
     updateList (data, load) {
       this.isLoading = load
@@ -62,22 +77,42 @@ export default {
         this.tableData = data.data.data.list
       }
     },
-    handleSelectionChange () {
-
-    },
+    handleSelectionChange () {},
     editDept () {
       this.showDeptTree = Math.random()
     }
   },
-  components: {Page, SelectDept}
+  components: { Page, SelectDept, SelectDepartment, AutoSelect }
 }
 </script>
+
+<style lang="less">
+.sel-age {
+  margin:10px 0;
+  input.el-input__inner {
+    padding-left: 85px;
+  }
+  .prefix{
+    display: inline-block;
+    position: relative;
+    left:-4px;
+    top:1px;
+    height: 30px;
+    padding:0 20px;
+    line-height: 32px;
+    background: #f5f7fa;
+    color:#909399;
+    border-right: 1px solid #dcdfe6;
+    border-radius: 4px;
+  }
+}
+</style>
 
 <style lang="less" scoped>
 .user-list {
   background: #fff;
   padding: 20px;
-  .page{
+  .page {
     padding-top: 10px;
     display: flex;
     justify-content: flex-end;

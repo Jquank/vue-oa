@@ -1,3 +1,11 @@
+// 分页组件：
+// 用法：<page @updateList="updateList" :url="url" :sendParams="sendParams" class="page"></page>
+// 接受数据：
+//   updateList (data, load) {
+//     if (!load) {
+//       this.tableData = data.data.list
+//     }
+//   }
 <template>
  <div class="block">
     <el-pagination
@@ -45,57 +53,10 @@ export default {
     this._getFirstList()
   },
   methods: {
-    // page-size改变的回调，默认为10
-    handleSizeChange (val) {
-      this.isLoading = true
-      this._updateList() // 派发loading状态
-
-      this.pageval = val
-      let params = Object.assign({}, {
-        pageSize: this.pageval,
-        pageNum: 1
-      }, this.sendparams)
-      $post(this.url, params)
-        .then(res => {
-          if (res.data.status === 1) {
-            this.handleList = res
-            this.isLoading = false
-            this._updateList() // this.isLoading为false时，this.handleList才有值
-          }
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    },
-    // 当前页改变的回调
-    handleCurrentChange (page) {
-      this.isLoading = true
-      this._updateList()
-
-      if (!this.pageval) {
-        this.pageval = 10
-      }
-      let params = Object.assign({}, {
-        pageSize: this.pageval,
-        pageNum: page
-      }, this.sendparams)
-      $post(this.url, params)
-        .then(res => {
-          if (res.data.status === 1) {
-            this.handleList = res
-            this.isLoading = false
-            this._updateList()
-          }
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    },
     // 获取列表的第一页
     _getFirstList () {
-      this.isLoading = true
+      this.isLoading = true // 默认派发loading效果
       this._updateList()
-
       let params = Object.assign({}, {
         pageSize: 10,
         pageNum: 1
@@ -110,12 +71,70 @@ export default {
               this.pageCount = 0
             }
             this.handleList = res
-            console.log(res)
+            this.isLoading = false // 成功请求到数据后取消loading效果
+            this._updateList()
+          } else {
+            this.isLoading = false // 请求失败取消loading状态
+            this._updateList()
+          }
+        })
+        .catch(err => {
+          this.isLoading = false // 请求失败取消loading状态
+          this._updateList()
+          console.log(err)
+        })
+    },
+    // page-size改变的回调，默认为10
+    handleSizeChange (val) {
+      this.isLoading = true
+      this._updateList()
+      this.pageval = val
+      let params = Object.assign({}, {
+        pageSize: this.pageval,
+        pageNum: 1
+      }, this.sendparams)
+      $post(this.url, params)
+        .then(res => {
+          if (res.data.status === 1) {
+            this.handleList = res
+            this.isLoading = false
+            this._updateList()
+          } else {
             this.isLoading = false
             this._updateList()
           }
         })
         .catch(err => {
+          this.isLoading = false
+          this._updateList()
+          console.log(err)
+        })
+    },
+    // 当前页改变的回调
+    handleCurrentChange (page) {
+      this.isLoading = true
+      this._updateList()
+      if (!this.pageval) {
+        this.pageval = 10
+      }
+      let params = Object.assign({}, {
+        pageSize: this.pageval,
+        pageNum: page
+      }, this.sendparams)
+      $post(this.url, params)
+        .then(res => {
+          if (res.data.status === 1) {
+            this.handleList = res
+            this.isLoading = false
+            this._updateList()
+          } else {
+            this.isLoading = false
+            this._updateList()
+          }
+        })
+        .catch(err => {
+          this.isLoading = false
+          this._updateList()
           console.log(err)
         })
     },
