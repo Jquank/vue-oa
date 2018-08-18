@@ -2,12 +2,14 @@
   <div class="index-content">
     <select-area></select-area>
     <select-trade></select-trade>
+    <make-invoice></make-invoice>
   </div>
 </template>
 
 <script>
 import SelectArea from 'base/selectArea/selectArea'
 import SelectTrade from 'base/selectTrade/selectTrade'
+import MakeInvoice from 'base/makeInvoice/makeInvoice'
 export default {
   data () {
     return {
@@ -15,7 +17,8 @@ export default {
   },
   components: {
     SelectArea,
-    SelectTrade
+    SelectTrade,
+    MakeInvoice
   }
 }
 </script>

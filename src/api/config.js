@@ -46,6 +46,11 @@ export const navList = [
         cid: 40,
         to: '/indexPage/addUser',
         text: '新增人员'
+      },
+      {
+        cid: 41,
+        to: '/indexPage/userList',
+        text: '人员列表'
       }
     ]
   },
@@ -155,6 +160,7 @@ export const navList = [
     fontIcon: 'fa fa-credit-card',
     text: '续费管理',
     cList: [
+      { cid: 110, to: '/indexPage/renewApply', text: '续费申请' }
     ]
   },
   {

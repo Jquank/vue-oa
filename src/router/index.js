@@ -16,6 +16,7 @@ import News from 'components/systemSetting/news/news'
 import Editor from 'components/systemSetting/news/editor'
 // 人员管理
 import AddUser from 'components/userManage/addUser/addUser'
+import UserList from 'components/userManage/userList/userList'
 // 客户管理
 import AddCus from 'components/customerManage/addCus/addCus'
 import MyCustomer from 'components/customerManage/myCustomer/myCustomer'
@@ -24,7 +25,8 @@ import MyCusDetail from 'components/customerManage/myCustomer/myCusDetail'
 import CustomerCheck from 'components/customerCheck/customerCheck'
 import CustomerSearch from 'components/customerSearch/customerSearch'
 import Contract from 'components/contract/contract'
-import Renew from 'components/renew/renew'
+// 续费管理
+import RenewApply from 'components/renew/renewApply/renewApply'
 import Salary from 'components/salary/salary'
 // 到款管理
 import BankflowList from 'components/moneyManage/bankflowList/bankflowList'
@@ -126,6 +128,12 @@ const router = new Router({
           meta: { text: '新增人员' },
           component: AddUser,
         },
+        {
+          path: 'userList',
+          name: 'userList',
+          meta: { text: '人员列表' },
+          component: UserList,
+        },
         // 客户管理
         {
           path: 'addCus',
@@ -175,6 +183,13 @@ const router = new Router({
             component:EditOrder
             }
           ]
+        },
+        // 续费管理
+        {
+          path: 'renewApply',
+          name: 'renewApply',
+          meta: { text: '续费申请' },
+          component: RenewApply
         },
         // 发票管理
         {

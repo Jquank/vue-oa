@@ -52,14 +52,16 @@ export default {
 
       this.pageval = val
       let params = Object.assign({}, {
-        pagesize: this.pageval,
-        currentpage: 1
+        pageSize: this.pageval,
+        pageNum: 1
       }, this.sendparams)
       $post(this.url, params)
         .then(res => {
-          this.handleList = res
-          this.isLoading = false
-          this._updateList() // this.isLoading为false时，this.handleList才有值
+          if (res.data.status === 1) {
+            this.handleList = res
+            this.isLoading = false
+            this._updateList() // this.isLoading为false时，this.handleList才有值
+          }
         })
         .catch(err => {
           console.log(err)
@@ -74,14 +76,16 @@ export default {
         this.pageval = 10
       }
       let params = Object.assign({}, {
-        pagesize: this.pageval,
-        currentpage: page
+        pageSize: this.pageval,
+        pageNum: page
       }, this.sendparams)
       $post(this.url, params)
         .then(res => {
-          this.handleList = res
-          this.isLoading = false
-          this._updateList()
+          if (res.data.status === 1) {
+            this.handleList = res
+            this.isLoading = false
+            this._updateList()
+          }
         })
         .catch(err => {
           console.log(err)
@@ -93,20 +97,23 @@ export default {
       this._updateList()
 
       let params = Object.assign({}, {
-        pagesize: 10,
-        currentpage: 1
+        pageSize: 10,
+        pageNum: 1
       }, this.sendparams)
 
       $post(this.url, params)
         .then(res => {
-          try {
-            this.pageCount = res.data[1].data.pagecount
-          } catch (e) {
-            this.pageCount = 0
+          if (res.data.status === 1) {
+            try {
+              this.pageCount = res.data.data.total
+            } catch (e) {
+              this.pageCount = 0
+            }
+            this.handleList = res
+            console.log(res)
+            this.isLoading = false
+            this._updateList()
           }
-          this.handleList = res
-          this.isLoading = false
-          this._updateList()
         })
         .catch(err => {
           console.log(err)
