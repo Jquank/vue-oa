@@ -50,10 +50,10 @@ export default {
       this.sortable = Sortable.create(el, {
         ghostClass: 'sortable-ghost',
         onEnd: evt => {
-          const targetRow = this.tableData.splice(evt.oldIndex, 1)[0]
-          this.tableData.splice(evt.newIndex, 0, targetRow)
-          const tempIndex = this.newList.splice(evt.oldIndex, 1)[0]
-          this.newList.splice(evt.newIndex, 0, tempIndex)
+          // const targetRow = this.tableData.splice(evt.oldIndex, 1)[0]
+          // this.tableData.splice(evt.newIndex, 0, targetRow)
+          // const tempIndex = this.newList.splice(evt.oldIndex, 1)[0]
+          // this.newList.splice(evt.newIndex, 0, tempIndex)
         }
       })
     },
