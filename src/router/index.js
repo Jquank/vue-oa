@@ -26,9 +26,19 @@ import VisitRecord from 'components/customerManage/visitRecord/visitRecord'
 import FollowRecord from 'components/customerManage/followRecord/followRecord'
 import ImportCus from 'components/customerManage/importCus/importCus'
 // 客户审核
-import CustomerCheck from 'components/customerCheck/customerCheck'
-import CustomerSearch from 'components/customerSearch/customerSearch'
-import Contract from 'components/contract/contract'
+import DealCheck from 'components/customerCheck/dealCheck/dealCheck'
+import CheckRecord from 'components/customerCheck/checkRecord/checkRecord'
+import EditCusInfo from 'components/customerCheck/editCusInfo/editCusInfo'
+import CusPoolManage from 'components/customerCheck/cusPoolManage/cusPoolManage'
+
+// 客户搜索
+import CusSearch from 'components/customerSearch/cusSearch/cusSearch'
+import CusOut from 'components/customerSearch/cusOut/cusOut'
+// 合同管理
+import AddContract from 'components/contract/addContract/addContract'
+import AllotContract from 'components/contract/allotContract/allotContract'
+import ContractList from 'components/contract/contractList/contractList'
+import ApplyContract from 'components/contract/applyContract/applyContract'
 // 续费管理
 import RenewApply from 'components/renew/renewApply/renewApply'
 import Salary from 'components/salary/salary'
@@ -179,6 +189,69 @@ const router = new Router({
           name: 'importCus',
           meta: { text: '市场部导入客户' },
           component: ImportCus,
+        },
+        // 客户审核
+        {
+          path: 'dealCheck',
+          name: 'dealCheck',
+          meta: { text: '审核处理' },
+          component: DealCheck,
+        },
+        {
+          path: 'checkRecord',
+          name: 'checkRecord',
+          meta: { text: '审核记录' },
+          component: CheckRecord,
+        },
+        {
+          path: 'editCusInfo',
+          name: 'editCusInfo',
+          meta: { text: '客户信息修改' },
+          component: EditCusInfo,
+        },
+        {
+          path: 'cusPoolManage',
+          name: 'cusPoolManage',
+          meta: { text: '客户库管理' },
+          component: CusPoolManage,
+        },
+        // 客户搜索
+        {
+          path: 'cusSearch',
+          name: 'cusSearch',
+          meta: { text: '搜索客户' },
+          component: CusSearch,
+        },
+        {
+          path: 'cusOut',
+          name: 'cusOut',
+          meta: { text: '客户转出' },
+          component: CusOut,
+        },
+        // 合同管理
+        {
+          path: 'addContract',
+          name: 'addContract',
+          meta: { text: '新增合同' },
+          component: AddContract,
+        },
+        {
+          path: 'allotContract',
+          name: 'allotContract',
+          meta: { text: '分配合同' },
+          component: AllotContract,
+        },
+        {
+          path: 'contractList',
+          name: 'contractList',
+          meta: { text: '合同列表' },
+          component: ContractList,
+        },
+        {
+          path: 'applyContract',
+          name: 'applyContract',
+          meta: { text: '合同申请' },
+          component: ApplyContract,
         },
         // 到款管理
         {

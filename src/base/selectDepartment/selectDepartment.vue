@@ -2,7 +2,7 @@
 <template>
   <div class="sel-department"  style="width:300px">
     <el-input placeholder="点击选择部门" v-model="department" @focus="showDepartment">
-      <template slot="prepend">部门:</template>
+      <template slot="prepend">{{title}}:</template>
     </el-input>
     <el-tree :data="departmentList" :props="depProps" accordion node-key="id" ref="tree" @node-click="nodeClick"
       :expand-on-click-node="false" id="department"
@@ -13,6 +13,12 @@
 <script>
 import storage from 'good-storage'
 export default {
+  props: {
+    title: {
+      type: String,
+      default: '部门'
+    }
+  },
   data () {
     return {
       department: '',

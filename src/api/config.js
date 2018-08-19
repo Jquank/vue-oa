@@ -95,6 +95,26 @@ export const navList = [
     fontIcon: 'fa fa-calendar-check-o',
     text: '客户审核',
     cList: [
+      {
+        cid: 40,
+        to: '/indexPage/dealCheck',
+        text: '审核处理'
+      },
+      {
+        cid: 41,
+        to: '/indexPage/checkRecord',
+        text: '审核记录'
+      },
+      {
+        cid: 42,
+        to: '/indexPage/editCusInfo',
+        text: '客户信息修改'
+      },
+      {
+        cid: 43,
+        to: '/indexPage/cusPoolManage',
+        text: '客户库管理'
+      }
     ]
   },
   {
@@ -102,6 +122,16 @@ export const navList = [
     fontIcon: 'fa fa-search-plus',
     text: '客户搜索',
     cList: [
+      {
+        cid: 50,
+        to: '/indexPage/cusSearch',
+        text: '搜索客户'
+      },
+      {
+        cid: 51,
+        to: '/indexPage/cusOut',
+        text: '客户转出'
+      }
     ]
   },
   {
@@ -109,6 +139,26 @@ export const navList = [
     fontIcon: 'fa fa-file',
     text: '合同管理',
     cList: [
+      {
+        cid: 60,
+        to: '/indexPage/addContract',
+        text: '新增合同'
+      },
+      {
+        cid: 61,
+        to: '/indexPage/allotContract',
+        text: '分配合同'
+      },
+      {
+        cid: 60,
+        to: '/indexPage/contractList',
+        text: '合同列表'
+      },
+      {
+        cid: 61,
+        to: '/indexPage/applyContract',
+        text: '合同申请'
+      }
     ]
   },
   {
