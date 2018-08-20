@@ -4,8 +4,23 @@
   }
 }
 
-@media screen and (max-width: 600px) {
-  #m-bread, #down-client, #help-doc, #full-screen {
+
+@media screen and (max-width: 768px) {
+  #m-bread,
+  #down-client,
+  #help-doc,
+  #full-screen,
+  #user-name {
     display: none;
+  }
+  #nav-aside {
+    width: 0 !important;
+    position: fixed;
+  }
+  #nested {
+    left: 10px;
+  }
+  #main {
+    padding: 5px 2px !important;
   }
 }
