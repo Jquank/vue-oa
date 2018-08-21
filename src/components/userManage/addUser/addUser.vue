@@ -39,15 +39,17 @@
         <el-col :md="10">
           <el-form-item label="角色 :" :label-width="labelWidth" required>
             <el-select v-model="form.role" placeholder="选择性别" style="width:100%">
-              <el-option label="男" value="0"></el-option>
-              <el-option label="女" value="1"></el-option>
+              <el-option v-for="item in form.role" :key="item.id" label="form.role.name" value="form.role.id"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
         <el-col :md="10">
-          <el-form-item label="部门 :" :label-width="labelWidth"><el-input v-model="form.department"></el-input></el-form-item>
+          <!-- <el-form-item label="部门 :" :label-width="labelWidth"><el-input v-model="form.department"></el-input></el-form-item> -->
+          <el-form-item label="部门 :" :label-width="labelWidth">
+            <select-department @upDeptId="upDeptId" v-model="form.dept" style="width:100%"></select-department>
+          </el-form-item>
         </el-col>
         <el-col :md="10">
           <el-form-item label="职位 :" :label-width="labelWidth" required>
@@ -92,11 +94,13 @@
 </template>
 
 <script>
+import SelectDepartment from 'base/selectDepartment/selectDepartment'
 export default {
   data () {
     return {
       labelWidth: '90px',
       form: {
+        dept: '',
         accountName: '',
         trueName: '',
         userNum: '',
@@ -115,15 +119,43 @@ export default {
       }
     }
   },
+  mounted () {
+    this.$post('/Role/AllRolesGet').then(res => {
+      console.log(res.data)
+      if (res.data.status === 1) {
+
+      }
+    })
+  },
   methods: {
+    upDeptId (id) {
+      this.form.dept = id
+    },
     accountNameBlur () {
 
     },
     submit () {
-
+      let params = {
+        code: this.form.dept, // 部门编号
+        true_name: this.form.trueName,
+        sex: this.form.sex, // 0.男 1.女
+        name: this.form.accountName, // 登录名
+        workid: this.form.userNum, // 工号
+        hi: this.form.hi, // hi号
+        position: this.form.job, // 职位
+        bankcard: this.form.bankCardNum,
+        hiredate: this.form.entryDate,
+        pwd: this.form.password,
+        SFZ: this.form.idCardNum,
+        office_phone: this.form.extention,
+        mobile: this.form.phone
+      }
+      this.$post('/User/UserAdd', params).then(res => {
+        console.log(res)
+      })
     }
   },
-  components: {}
+  components: {SelectDepartment}
 }
 </script>
 

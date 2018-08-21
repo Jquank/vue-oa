@@ -49,6 +49,7 @@ import AddBaiduOrder from 'components/order/addBaiduOrder/addBaiduOrder'
 import OrderPending from 'components/order/orderPending/orderPending'
 import ViewDetail from 'components/order/orderPending/viewDetail'
 import EditOrder from 'components/order/orderPending/editOrder'
+import OrderProcessed from 'components/order/orderProcessed/orderProcessed'
 
 // 发票管理
 import InvoicePending from 'components/invoiceManage/invoicePending/invoicePending'
@@ -74,7 +75,7 @@ const router = new Router({
     {
       path: '/login',
       name: 'login',
-      component: IndexPage
+      component: Login
     },
     {
       path: '/indexPage',
@@ -262,12 +263,6 @@ const router = new Router({
         },
         // 订单管理
         {
-          path: 'addBaiduOrder',
-          name: 'addBaiduOrder',
-          meta: { text: '新增百度订单' },
-          component: AddBaiduOrder
-        },
-        {
           path: 'orderPending',
           name: 'orderPending',
           meta: { text: '待处理订单' },
@@ -284,6 +279,18 @@ const router = new Router({
             component:EditOrder
             }
           ]
+        },
+        {
+          path: 'orderProcessed',
+          name: 'orderProcessed',
+          meta: { text: '已处理订单' },
+          component: OrderProcessed
+        },
+        {
+          path: 'addBaiduOrder',
+          name: 'addBaiduOrder',
+          meta: { text: '新增百度订单' },
+          component: AddBaiduOrder
         },
         // 续费管理
         {
@@ -329,8 +336,8 @@ const router = new Router({
 import Progress from 'nprogress'
 Progress.configure({ showSpinner: false })
 router.beforeEach((to, from, next) => {
-  // const isLogin = cookie.get('userName')
-  const isLogin = true
+  const isLogin = cookie.get('userName')
+  // const isLogin = true
   if (to.name !== 'login') {
     if (!isLogin) {
       next({

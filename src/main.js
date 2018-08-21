@@ -19,12 +19,14 @@ import 'vue-area-linkage/dist/index.css'
 import VueAreaLinkage from 'vue-area-linkage'
 
 import * as filters from '@/common/js/filters'
+import { $post } from 'api/http'
 
 // import axios from 'axios'
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
 
 Vue.config.productionTip = false
 
+Vue.prototype.$post = $post
 Vue.config.errorHandler = function (err, vm, info) {
   if (err === 'ignore') {
     return true

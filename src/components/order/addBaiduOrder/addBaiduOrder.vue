@@ -1,182 +1,237 @@
 <template>
   <div class="addbaidu-order">
     <div class="order-content">
-      <el-form ref="form" :model="form" label-width="180px" >
-        <el-form-item label="公司名称" required>
-          <el-input v-model="form.cName" readonly style="width:300px" placeholder="点击选择按钮选择公司"></el-input>
-          <el-button type="primary" @click.native="selCompany" v-if="showEditBD">选择</el-button>
-        </el-form-item>
+      <el-form ref="form" :model="form" label-width="110px">
+        <el-row>
+          <el-col :md="12">
+            <el-form-item label="公司名称:" required>
+              <el-input v-model="form.cName" class="input-btn" disabled placeholder="点击选择按钮选择公司"></el-input>
+              <el-button type="primary" @click.native="selCompany" v-if="showEditBD">选择</el-button>
+            </el-form-item>
+          </el-col>
+        </el-row>
 
-        <el-form-item label="到款记录" required v-if="showEditBD">
-          <el-select v-model="form.record" placeholder="请选择到款记录" style="width:300px;">
-            <el-option v-for="(record,index) in moneyRecord.recordList" :key="index"
-              :label="record[0].companyname" :value="record"></el-option>
-          </el-select>
-        </el-form-item>
-
-        <el-form-item label="客户网站信息" required>
-          <el-input v-model="form.pcWeb" style="width:300px;" placeholder="pc端网址"></el-input>
-          <el-input v-model="form.phoneWeb" style="width:300px;" placeholder="手机端网址"></el-input>
-        </el-form-item>
-
-        <el-form-item label="联系人信息" required>
-          <el-row v-for="(item,index) in form.contactList" :key="index" :class="{'mt10px':index!==0}">
-            <el-input v-model="item.name" placeholder="联系人" style="width:145px;">
-              <!-- <el-select v-model="item.contact" slot="append">
-                <el-option v-for="(c,index) in contactName" :key="index"
-                  :label="c.name" :value="c.name">
-                </el-option>
-              </el-select> -->
-            </el-input>
-            <el-input v-model="item.contact" style="width:150px;" placeholder="手机号码"></el-input>
-            <el-input v-model="item.fixedNumber" style="width:150px;" placeholder="座机号码"></el-input>
-            <el-input v-model="item.email" style="width:145px;" placeholder="邮箱"></el-input>
-            <el-button :type="index===0?'success':'danger'" size="mini" circle class="ml10px"
-              :icon="index===0?isPlusIcon:isMinusIcon" @click.native="addContact(index)"></el-button>
-          </el-row>
-        </el-form-item>
-
-        <el-form-item label="客户地址" required>
-          <el-input v-model="form.cusAddress" style="width:600px;" placeholder="客户地址"></el-input>
-        </el-form-item>
-
-        <el-form-item label="网建类型" required>
-          <el-radio-group v-model="form.wjType">
-            <el-radio v-for="(type,index) in form.wjTypeList" :key="index" :label="type.code_val">{{type.code_desc}}</el-radio>
-          </el-radio-group>
-        </el-form-item>
-
-        <el-form-item label="客户类型" required>
-          <el-radio-group v-model="form.cusType">
-            <el-radio label="0">新客户</el-radio>
-            <el-radio label="1">老客户</el-radio>
-          </el-radio-group>
-        </el-form-item>
-
-        <el-form-item label="是否需要发票" required>
-          <el-radio-group v-model="form.isInvoice">
-            <el-radio label="10">不需要</el-radio>
-            <el-radio label="20">暂不需要</el-radio>
-            <el-radio label="30">需要</el-radio>
-          </el-radio-group>
-        </el-form-item>
-
-        <el-form-item label="合同编号">
-          <el-select v-model="form.bdOrderNumber" placeholder="百度推广服务订单编号" style="width:198px;">
-            <el-option label="百度推广服务订单编号" value="0"></el-option>
-            <el-option v-for="(contract1,index) in contract.bdOrderNumber" :key="index"
-              :label="contract1.number" :value="contract1.id"></el-option>
-          </el-select>
-          <el-select v-model="form.bdProxy"  @change="selProxy(form.bdProxy)"
-              placeholder="百度推广首消授权书" style="width:198px;">
-            <el-option label="百度推广首消授权书" value="0"></el-option>
-            <el-option label="无首消授权书" value="no_proxy20180625160112"></el-option>
-            <el-option  v-for="(contract2,index) in contract.bdProxy" :key="index"
-              :label="contract2.number" :value="contract2.id"></el-option>
-          </el-select>
-          <el-select v-model="form.bdServiceProtocol" placeholder="百度推广服务协议" style="width:198px;">
-            <el-option label="百度推广服务协议" value="0"></el-option>
-            <el-option  v-for="(contract3,index) in contract.bdServiceProtocol" :key="index"
-              :label="contract3.number" :value="contract3.id"></el-option>
-          </el-select>
-        </el-form-item>
-
-        <el-form-item label="商务信息" required>
-          <el-input v-model="form.shangWuName" readonly style="width:300px;"></el-input>
-        </el-form-item>
-        <!-- 百度订单详情   -->
-        <el-form-item label="订单详情" required>
-          <el-tabs type="border-card" style="max-width:750px;">
-            <!-- 企业资质 -->
-            <el-tab-pane label="企业资质">
-              <el-card v-if="showEditBD" shadow="always" class="card-tips">
-                [说明]：根据订单业务类型，上传需要的资质，图片格式为：jpg、png、jpeg，图片大小在3M以下。
-              </el-card>
-              <el-card v-if="!showEditBD" shadow="always" class="card-tips">
-                [说明]：点击删除可移除不符合要求的资质，在下方重新添加并上传正确的资质。
-              </el-card>
-              <!-- 编辑页回显企业资质照片 -->
-              <slot></slot>
-              <el-row style="margin-top:10px;" :gutter="15">
-                <el-col :sm="16">
-                  <el-input placeholder="对公账户" v-model="form.receiveAccount" style="width:100%">
-                    <template slot="prepend">对公账户 :</template>
-                  </el-input>
+        <el-row>
+          <el-col :md="12">
+            <el-form-item label="到款记录:" required v-if="showEditBD">
+              <el-select v-model="form.record" placeholder="请选择到款记录">
+                <el-option v-for="(record,index) in moneyRecord.recordList" :key="index" :label="record[0].companyname" :value="record"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :md="12">
+            <el-form-item label="客户网站信息:" class="web-info" required>
+              <el-row :gutter="5" type="flex" style="flex-wrap:wrap;">
+                <el-col :md="12">
+                  <el-input v-model="form.pcWeb" placeholder="pc端网址"></el-input>
                 </el-col>
-                <el-col :sm="8">
-                  <el-input v-model="form.receiveBank" placeholder="开户行" style="width:100%">
-                    <el-select slot="append" v-model="form.receiveBank">
-                      <el-option v-for="(bank,index) in form.receiveBanks" :key="index"
-                        :label="bank.code_desc" :value="bank.code_desc">
-                      </el-option>
-                    </el-select>
-                  </el-input>
+                <el-col :md="12">
+                  <el-input v-model="form.phoneWeb" placeholder="手机端网址"></el-input>
                 </el-col>
               </el-row>
-              <el-row style="margin-top:10px;" :gutter="15">
-                <el-col :sm="20">
-                  <el-select v-model="form.zizhiName" placeholder="请选择上传资质类型" style="width:100%">
-                    <el-option v-for="(qualify,index) in qualifyType" :key="index"
-                      :label="qualify.code_desc" :value="qualify.code_desc"></el-option>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :md="14">
+            <el-form-item label="联系人信息:" required>
+              <el-row v-for="(item,index) in form.contactList" :key="index" :class="{'mt10px':index!==0}" :gutter="5" type="flex" style="flex-wrap:wrap;">
+                <el-col :md="5">
+                  <el-input v-model="item.name" placeholder="联系人"></el-input>
+                </el-col>
+                <el-col :md="5">
+                  <el-input v-model="item.contact" placeholder="手机号码"></el-input>
+                </el-col>
+                <el-col :md="5">
+                  <el-input v-model="item.fixedNumber" placeholder="座机号码"></el-input>
+                </el-col>
+                <el-col :md="5">
+                  <el-input v-model="item.email" placeholder="邮箱"></el-input>
+                </el-col>
+                <el-col :md="4">
+                  <el-button :type="index===0?'success':'danger'" size="mini" circle class="ml10px" :icon="index===0?isPlusIcon:isMinusIcon" @click.native="addContact(index)"></el-button>
+                </el-col>
+              </el-row>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :md="12">
+            <el-form-item label="客户地址:" required>
+              <el-input v-model="form.cusAddress" placeholder="客户地址"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :md="12">
+            <el-form-item label="网建类型:" required>
+              <el-radio-group v-model="form.wjType">
+                <el-radio v-for="(type,index) in form.wjTypeList" :key="index" :label="type.code_val">{{type.code_desc}}</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :md="12">
+            <el-form-item label="客户类型:" required>
+              <el-radio-group v-model="form.cusType">
+                <el-radio label="0">新客户</el-radio>
+                <el-radio label="1">老客户</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :md="12">
+            <el-form-item label="是否需要发票:" required>
+              <el-radio-group v-model="form.isInvoice">
+                <el-radio label="10">不需要</el-radio>
+                <el-radio label="20">暂不需要</el-radio>
+                <el-radio label="30">需要</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :md="15">
+            <el-form-item label="合同编号:">
+              <el-row :gutter="5" type="flex" style="flex-wrap:wrap;">
+                <el-col :md="8">
+                  <el-select v-model="form.bdOrderNumber" placeholder="百度推广服务订单编号">
+                    <el-option label="百度推广服务订单编号" value="0"></el-option>
+                    <el-option v-for="(contract1,index) in contract.bdOrderNumber" :key="index" :label="contract1.number" :value="contract1.id"></el-option>
                   </el-select>
                 </el-col>
-                <el-col :sm="4">
-                  <el-button type="primary" @click.native="addQualify(form.zizhiName)">添加资质</el-button>
+                <el-col :md="8">
+                  <el-select v-model="form.bdProxy" @change="selProxy(form.bdProxy)" placeholder="百度推广首消授权书">
+                    <el-option label="百度推广首消授权书" value="0"></el-option>
+                    <el-option label="无首消授权书" value="no_proxy20180625160112"></el-option>
+                    <el-option v-for="(contract2,index) in contract.bdProxy" :key="index" :label="contract2.number" :value="contract2.id"></el-option>
+                  </el-select>
+                </el-col>
+                <el-col :md="8">
+                  <el-select v-model="form.bdServiceProtocol" placeholder="百度推广服务协议">
+                    <el-option label="百度推广服务协议" value="0"></el-option>
+                    <el-option v-for="(contract3,index) in contract.bdServiceProtocol" :key="index" :label="contract3.number" :value="contract3.id"></el-option>
+                  </el-select>
                 </el-col>
               </el-row>
-              <el-row style="margin-top:10px;">
-                <el-table border :data="form.zizhiList" :key="form.zizhiList.zizhiType" style="width: 100%;min-height:200px;">
-                  <el-table-column prop="zizhiType" label="资质类型">
-                  </el-table-column>
-                  <el-table-column label="操作">
-                    <template slot-scope="scope">
-                      <!-- <el-button type="primary">上传</el-button> -->
-                      <el-upload class="upload-demo" ref="upload" :action="uploadUrl" :before-upload="beforeUpload"
-                        :on-change="aaa"
-                        :on-preview="handlePreview" :on-remove="handleRemove" :file-list="fileList" :auto-upload="false">
-                        <el-button slot="trigger"  type="primary">选取文件</el-button>
-                        <el-button style="margin-left: 10px;" type="success" @click="submitUpload">上传到服务器</el-button>
-                        <el-button style="margin-left: 30px;" circle :icon="isMinusIcon" size="mini"
-                          type="danger" @click.native="removeQualify(scope.$index)"></el-button>
-                      </el-upload>
-                    </template>
-                  </el-table-column>
-                </el-table>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :md="12">
+            <el-form-item label="商务信息:" required>
+              <el-input v-model="form.shangWuName" disabled></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :md="20">
+            <!-- 百度订单详情   -->
+            <el-form-item label="订单详情:" required>
+              <el-tabs type="border-card">
+                <!-- 企业资质 -->
+                <el-tab-pane label="企业资质">
+                  <el-card v-if="showEditBD" shadow="always" class="card-tips">
+                    [说明]：根据订单业务类型，上传需要的资质，图片格式为：jpg、png、jpeg，图片大小在3M以下。
+                  </el-card>
+                  <el-card v-if="!showEditBD" shadow="always" class="card-tips">
+                    [说明]：点击删除可移除不符合要求的资质，在下方重新添加并上传正确的资质。
+                  </el-card>
+                  <!-- 编辑页回显企业资质照片 -->
+                  <slot></slot>
+                  <el-row style="margin-top:10px;" :gutter="10">
+                    <el-col :md="16">
+                      <el-input placeholder="对公账户" v-model="form.receiveAccount" style="width:100%">
+                        <template slot="prepend">对公账户 :</template>
+                      </el-input>
+                    </el-col>
+                    <el-col :md="8">
+                      <el-input v-model="form.receiveBank" placeholder="开户行" style="width:100%">
+                        <el-select slot="append" v-model="form.receiveBank">
+                          <el-option v-for="(bank,index) in form.receiveBanks" :key="index" :label="bank.code_desc" :value="bank.code_desc">
+                          </el-option>
+                        </el-select>
+                      </el-input>
+                    </el-col>
+                  </el-row>
+                  <el-row style="margin-top:10px;" :gutter="10">
+                    <el-col :sm="20">
+                      <el-select v-model="form.zizhiName" placeholder="请选择上传资质类型" style="width:100%">
+                        <el-option v-for="(qualify,index) in qualifyType" :key="index" :label="qualify.code_desc" :value="qualify.code_desc"></el-option>
+                      </el-select>
+                    </el-col>
+                    <el-col :sm="4">
+                      <el-button type="primary" @click.native="addQualify(form.zizhiName)">添加资质</el-button>
+                    </el-col>
+                  </el-row>
+                  <el-row style="margin-top:10px;">
+                    <el-table border :data="form.zizhiList" :key="form.zizhiList.zizhiType" style="width: 100%;min-height:200px;">
+                      <el-table-column prop="zizhiType" label="资质类型" width="130px;">
+                      </el-table-column>
+                      <el-table-column label="操作">
+                        <template slot-scope="scope">
+                          <!-- <el-button type="primary">上传</el-button> -->
+                          <el-upload class="upload-demo" ref="upload" :action="uploadUrl" :before-upload="beforeUpload" :on-change="aaa" :on-preview="handlePreview" :on-remove="handleRemove" :file-list="fileList" :auto-upload="false">
+                            <el-button slot="trigger" type="primary">选取文件</el-button>
+                            <el-button style="margin-left: 10px;" type="success" @click="submitUpload">上传到服务器</el-button>
+                            <el-button style="margin-left: 30px;" circle :icon="isMinusIcon" size="mini" type="danger" @click.native="removeQualify(scope.$index)"></el-button>
+                          </el-upload>
+                        </template>
+                      </el-table-column>
+                    </el-table>
+                  </el-row>
+                </el-tab-pane>
+                <!-- 到款记录 -->
+                <el-tab-pane label="到款记录">
+                  <el-card shadow="always" class="card-tips" v-if="form.record.length===0 && showEditBD">
+                    [说明]：请选择到款记录。
+                  </el-card>
+                  <el-card shadow="always" class="card-money-record" v-if="form.record.length!==0">
+                    <el-row>
+                      <b>公司名称（法人）：</b>
+                      <span>{{form.record[0].companyname}}</span>
+                    </el-row>
+                    <el-row>
+                      <b>到款金额 ：</b>
+                      <span>{{form.record[0].sum | currency1}}</span>
+                    </el-row>
+                    <el-row>
+                      <b>服务费 ：</b>
+                      <span>{{form.record[0].service | currency1}}</span>
+                    </el-row>
+                    <!-- <el-row><b>到款时间 ：</b><span>{{222}}</span></el-row> -->
+                    <el-row v-for="(rec,index) in recordDetail" :key="index">
+                      <template v-if="rec.type!=500">
+                        <b>{{rec.type | productType}} ：</b>
+                        <span>{{rec.value | currency1}}</span>
+                      </template>
+                    </el-row>
+                  </el-card>
+                </el-tab-pane>
+              </el-tabs>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :md="20">
+            <el-form-item label="">
+              <el-row style="text-align:right;">
+                <el-button type="warning" @click.native="subOrder(ONLY_E)">仅降E</el-button>
+                <el-button type="primary" @click.native="subOrder(!ONLY_E)">降E并提单</el-button>
               </el-row>
-            </el-tab-pane>
-            <!-- 到款记录 -->
-            <el-tab-pane label="到款记录">
-              <el-card shadow="always" class="card-tips" v-if="form.record.length===0 && showEditBD">
-                [说明]：请选择到款记录。
-              </el-card>
-              <el-card shadow="always" class="card-money-record" v-if="form.record.length!==0">
-                <el-row><b>公司名称（法人）：</b><span>{{form.record[0].companyname}}</span></el-row>
-                <el-row><b>到款金额 ：</b><span>{{form.record[0].sum | currency1}}</span></el-row>
-                <el-row><b>服务费 ：</b><span>{{form.record[0].service | currency1}}</span></el-row>
-                <!-- <el-row><b>到款时间 ：</b><span>{{222}}</span></el-row> -->
-                <el-row v-for="(rec,index) in recordDetail" :key="index">
-                  <template v-if="rec.type!=500">
-                    <b>{{rec.type | productType}} ：</b><span>{{rec.value | currency1}}</span>
-                  </template>
-                </el-row>
-              </el-card>
-            </el-tab-pane>
-          </el-tabs>
-        </el-form-item>
-
-        <el-form-item label="">
-          <el-row style="max-width:750px;text-align:right;">
-            <el-button type="warning" @click.native="subOrder(ONLY_E)">仅降E</el-button>
-            <el-button type="primary" @click.native="subOrder(!ONLY_E)">降E并提单</el-button>
-          </el-row>
-        </el-form-item>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
 
       <!-- 选择公司弹窗 -->
       <el-dialog title="选择下单客户" :visible.sync="comDialog.selCompanyDialog" width="650px">
         <el-input placeholder="请输入公司名进行搜索" v-model="comDialog.handleCompanyName">
-          <el-button @click.native="searchCompany(comDialog.handleCompanyName)"
-            slot="append" icon="el-icon-search"></el-button>
+          <el-button @click.native="searchCompany(comDialog.handleCompanyName)" slot="append" icon="el-icon-search"></el-button>
         </el-input>
         <el-table :data=comDialog.myCompany class="mt10px">
           <el-table-column property="name" label="客户名称" width="300"></el-table-column>
@@ -190,8 +245,7 @@
             </template>
           </el-table-column>
         </el-table>
-        <page class="pagination" :url="comDialog.url" :sendparams="comDialog.params"
-          @updateList="updateMyCompanyList" :key="comDialog.key">
+        <page class="pagination" :url="comDialog.url" :sendparams="comDialog.params" @updateList="updateMyCompanyList" :key="comDialog.key">
         </page>
       </el-dialog>
 
@@ -204,17 +258,19 @@
 import { serverUrl, uploadUrl } from 'api/config' //eslint-disable-line
 import Page from 'base/page/page'
 import { $post } from 'api/http'
-import { getCode, getMyContract } from 'api/getOptions'//eslint-disable-line
+import { getCode, getMyContract } from 'api/getOptions' //eslint-disable-line
 
 const ORDER_TYPE = 'BAITUI'
 
 export default {
   props: {
-    showEditBD: { // false表示跳转编辑订单页
+    showEditBD: {
+      // false表示跳转编辑订单页
       type: Boolean,
       default: true
     },
-    editData: { // 编辑页传过来的回显数据
+    editData: {
+      // 编辑页传过来的回显数据
       type: Object,
       default: function () {
         return {}
@@ -279,7 +335,7 @@ export default {
         handleCompanyName: '',
         myCompany: [],
         url: serverUrl + '/order.do?Add',
-        params: {pid: ORDER_TYPE},
+        params: { pid: ORDER_TYPE },
         key: ''
       },
       moneyRecord: {
@@ -529,7 +585,7 @@ export default {
       })
     }
   },
-  components: {Page}
+  components: { Page }
 }
 </script>
 
@@ -550,5 +606,9 @@ export default {
     display: flex;
     justify-content: flex-end;
   }
+  .input-btn {
+    width: calc(~'(100% - 72px)');
+  }
+
 }
 </style>

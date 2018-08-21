@@ -70,7 +70,7 @@ export default {
       border-bottom: 1px solid #e2e5ec;
     }
     .el-main {
-      padding: 5px 10px;
+      padding: 5px;
       background: #e2e5ec;
     }
   }

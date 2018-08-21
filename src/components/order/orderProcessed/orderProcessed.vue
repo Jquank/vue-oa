@@ -1,15 +1,15 @@
 <template>
-  <div class="order-pending">
-    <div class="pending-content">
+  <div class="order-processed">
+    <div class="processed-content">
       <div class="tab">
         <el-radio-group v-model="tabStatus" @change="tab(tabStatus)">
           <el-radio-button label="0">全部</el-radio-button>
-          <el-radio-button label="100">未加款</el-radio-button>
-          <el-radio-button label="300">已加款</el-radio-button>
+          <el-radio-button label="100">已通过</el-radio-button>
+          <el-radio-button label="300">已驳回</el-radio-button>
         </el-radio-group>
       </div>
       <!-- 搜索 -->
-      <div class="pending-search">
+      <div class="processed-search">
         <el-input placeholder="搜索客户名称" v-model="cusName" class="search-item item-width">
           <template slot="prepend">客户名称:</template>
         </el-input>
@@ -21,10 +21,6 @@
           <el-option label="百度推广" value="BAITUI"></el-option>
           <el-option label="网建" value="WEBSITE"></el-option>
           <el-option label="信息流" value="XXL"></el-option>
-        </auto-select>
-        <auto-select title="订单状态" v-model="orderStatus" class="search-item item-width">
-          <el-option label="仅降E" value="0"></el-option>
-          <el-option label="降E并提单" value="10"></el-option>
         </auto-select>
         <el-input placeholder="搜索百度账号" v-model="bd_account" class="search-item item-width">
           <template slot="prepend">百度账号:</template>
@@ -101,7 +97,6 @@ export default {
       showBread: true,
       tabStatus: '0',
       key: '',
-      permission: sessionStorage.getItem('permissions'),
       cusName: '',
       orderNumber: '',
       productType: '',
@@ -154,16 +149,6 @@ export default {
       this.params = Object.assign({}, this.params, {addmoney: tabStatus})
     },
     search () {
-      this.params = {
-        status: 100,
-        companyname: this.cusName || undefined, // 公司名称
-        orderid: this.orderNumber || undefined, // 订单编号
-        pid: this.productType === '-1' || this.productType === '' ? undefined : this.productType, // 产品类型
-        baiducount: this.bd_account || undefined, // 百度账号
-        baiduid: this.bd_id || undefined, // 百度id
-        opentime: this.achievement === '-1' || this.achievement === '' ? undefined : this.achievement, // 业绩
-        audittype: this.orderStatus === '-1' || this.orderStatus === '' ? undefined : this.orderStatus // 订单类型
-      }
     },
     reset () {
       this.cusName = ''
@@ -175,23 +160,10 @@ export default {
       this.orderStatus = ''
     },
     updatePendingList (data, load) {
-      this.isLoading = load
-      if (!load) {
-        this.pendingList = data.data[0].data
-      }
     },
     viewOrder (data) {
-      this.$router.push({
-        path: `orderPending/view/${data.cpid}`,
-        query: {data: data}
-      })
-      // this.showBread = false
     },
     updateOrder (data) {
-      this.$router.push({
-        path: `orderPending/edit/${data.cpid}`,
-        query: {data: data}
-      })
     }
   },
   components: {
@@ -201,15 +173,15 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.order-pending {
+.order-processed {
   // position: relative;
-  .pending-content {
+  .processed-content {
     background: #fff;
     padding: 20px;
     .tab{
       margin-left: 10px;
     }
-    .pending-search{
+    .processed-search{
       display: flex;
       flex-wrap: wrap;
     .search-item {

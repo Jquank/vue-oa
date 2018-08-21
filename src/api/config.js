@@ -150,12 +150,12 @@ export const navList = [
         text: '分配合同'
       },
       {
-        cid: 60,
+        cid: 62,
         to: '/indexPage/contractList',
         text: '合同列表'
       },
       {
-        cid: 61,
+        cid: 63,
         to: '/indexPage/applyContract',
         text: '合同申请'
       }
@@ -198,9 +198,8 @@ export const navList = [
     text: '订单管理',
     cList: [
       { cid: 100, to: '/indexPage/orderPending', text: '待处理订单' },
-      // { cid: 101, to: '/indexPage/auth', text: '已处理订单' },
-      // { cid: 102, to: '/indexPage/systemCycle', text: '订单列表' },
-      // { cid: 103, to: '/indexPage/departSetNum', text: '资金表' },
+      { cid: 101, to: '/indexPage/orderProcessed', text: '已处理订单' },
+      // { cid: 102, to: '/indexPage/orderList', text: '订单列表' },
       { cid: 104, to: '/indexPage/addBaiduOrder', text: '新增百度订单' }
       // { cid: 105, to: '/indexPage/news', text: '新增网建订单' }
     ]

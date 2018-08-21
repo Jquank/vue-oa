@@ -24,6 +24,7 @@ import { $post } from '@/api/http'
 import submitBox from 'base/submitBox/submitBox'
 const ruleUrl = '/Permission/PermissionGetByPid'
 const editUrl = '/Permission/MenuNameUpdate'
+const addUrl = '/User/UserAdd'
 export default {
   data () {
     return {
@@ -69,10 +70,10 @@ export default {
     addRule (pid) {
       let that = this
       submitBox(that, {
-        url: editUrl,
+        url: addUrl,
         editParams: {
-          menuName: '',
-          id: ''
+          code: '',
+          true_name: ''
         },
         title: '新增权限名称',
         inputValue: ''
