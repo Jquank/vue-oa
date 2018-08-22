@@ -60,7 +60,9 @@ a {
 .mt10px {
   margin-top: 10px;
 }
-
+.padding20px{
+  padding: 20px;
+}
 div.el-table {
   font-size: 12px;
   min-height: 100px;

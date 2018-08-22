@@ -28,7 +28,7 @@ export default {
       type: String,
       default: ''
     },
-    sendparams: {
+    sendParams: {
       type: Object,
       default: function () {
         return {}
@@ -36,9 +36,18 @@ export default {
     }
   },
   watch: {
-    sendparams () {
+    // sendParams: {
+    //   handler () {
+    //     console.log(333)
+    //     this._getFirstList()
+    //   },
+    //   deep: true
+    // }
+    sendParams () {
+      console.log(333)
       this._getFirstList()
     }
+
   },
   data () {
     return {
@@ -60,7 +69,7 @@ export default {
       let params = Object.assign({}, {
         pageSize: 10,
         pageNum: 1
-      }, this.sendparams)
+      }, this.sendParams)
 
       $post(this.url, params)
         .then(res => {
@@ -92,7 +101,7 @@ export default {
       let params = Object.assign({}, {
         pageSize: this.pageval,
         pageNum: 1
-      }, this.sendparams)
+      }, this.sendParams)
       $post(this.url, params)
         .then(res => {
           if (res.data.status === 1) {
@@ -120,7 +129,7 @@ export default {
       let params = Object.assign({}, {
         pageSize: this.pageval,
         pageNum: page
-      }, this.sendparams)
+      }, this.sendParams)
       $post(this.url, params)
         .then(res => {
           if (res.data.status === 1) {

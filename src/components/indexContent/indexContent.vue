@@ -1,5 +1,5 @@
 <template>
-  <div class="index-content">
+  <div class="index-content padding20px media-padding">
     <renew-info></renew-info>
   </div>
 </template>

@@ -1,6 +1,6 @@
 <template>
   <div class="rule">
-    <div class="rule-content">
+    <div class="rule-content media-padding">
       <div style="padding-bottom:5px;">
         <el-button @click.native="addRule" size="mini" type="primary" icon="fa fa-plus"> 新 增</el-button>
         <el-button @click.native="backWard" size="mini" type="primary" icon="fa fa-step-backward"> 返回上一级</el-button>

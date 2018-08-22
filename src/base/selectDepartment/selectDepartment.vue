@@ -24,11 +24,15 @@ export default {
     departmentid: {
       type: String,
       default: ''
+    },
+    echoDept: {
+      type: String,
+      default: ''
     }
   },
   data () {
     return {
-      department: '',
+      department: this.echoDept,
       departmentList: [],
       depProps: {
         children: 'children',

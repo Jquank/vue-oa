@@ -2,11 +2,46 @@
 // 续费详情
 <template>
   <div class="renew-info">
-    <div class="renew-title">
-      <el-button type="primary">续费信息</el-button>
-    </div>
-    <el-table :data="renewData" :span-method="arraySpanMethod" :show-header="false" border style="width: 100%">
-      <el-table-column prop="name1" label="1" width="180">
+    <el-table :data="renewData" :span-method="arraySpanMethod" :header-cell-class-name="headerStyle" :cell-style="cellStyle" border style="width: 100%">
+      <el-table-column prop="name1" label="续费信息" width="100">
+      </el-table-column>
+      <el-table-column prop="companyname" label="2">
+      </el-table-column>
+      <el-table-column prop="name2" label="3">
+      </el-table-column>
+      <el-table-column prop="addtype" label="4">
+      </el-table-column>
+      <el-table-column prop="name3" label="5">
+      </el-table-column>
+      <el-table-column prop="proType" label="6">
+      </el-table-column>
+      <el-table-column prop="name4" label="7">
+      </el-table-column>
+      <el-table-column prop="addCount" label="8">
+      </el-table-column>
+    </el-table>
+    <hr/>
+    <el-table :data="renewData" :span-method="arraySpanMethod" :header-cell-class-name="headerStyle2" :cell-style="cellStyle"  border style="width: 100%">
+      <el-table-column prop="name1" label="实际到款" width="100">
+      </el-table-column>
+      <el-table-column prop="companyname" label="2">
+      </el-table-column>
+      <el-table-column prop="name2" label="代金券">
+      </el-table-column>
+      <el-table-column prop="addtype" label="4">
+      </el-table-column>
+      <el-table-column prop="name3" label="现金券">
+      </el-table-column>
+      <el-table-column prop="proType" label="6">
+      </el-table-column>
+      <el-table-column prop="name4" label="申请加款">
+      </el-table-column>
+      <el-table-column prop="addCount" label="8">
+      </el-table-column>
+    </el-table>
+    <hr/>
+    <el-table :data="renewData" :header-cell-class-name="headerStyle" :cell-style="cellStyle" border style="width: 100%">
+      <el-table-column prop="name1" label="续费信息" width="100">
       </el-table-column>
       <el-table-column prop="companyname" label="2">
       </el-table-column>
@@ -55,8 +90,8 @@ export default {
         {
           name1: '服务费月份',
           companyname: '0',
-          name2: '续费类型',
-          addtype: '',
+          name2: '假期加款',
+          addtype: '否',
           name3: '活动类型',
           proType: '',
           name4: '续费次数',
@@ -66,6 +101,25 @@ export default {
     }
   },
   methods: {
+    headerStyle ({ row, column, rowIndex, columnIndex }) {
+      if (columnIndex !== 0) {
+        return 'renewHeaderClass'
+      } else {
+        return 'renewTitleClass'
+      }
+    },
+    headerStyle2 ({ row, column, rowIndex, columnIndex }) {
+      if (columnIndex % 2 === 1) {
+        return 'renewHeaderClass'
+      } else {
+        return 'moneyTitleClass'
+      }
+    },
+    cellStyle ({ row, column, rowIndex, columnIndex }) {
+      if (rowIndex === 0) {
+        return 'border-top: 1px solid #ebeef5'
+      }
+    },
     arraySpanMethod ({ row, column, rowIndex, columnIndex }) {
       if (rowIndex === 1) {
         if (columnIndex === 5) {
@@ -75,9 +129,14 @@ export default {
         }
       }
       if (rowIndex === 2) {
-        if (columnIndex === 1) {
-          return [1, 7]
-        } else if (columnIndex === 2 || columnIndex === 3 || columnIndex === 4 || columnIndex === 5 || columnIndex === 6 || columnIndex === 7) {
+        if (columnIndex === 3) {
+          return [1, 5]
+        } else if (
+          columnIndex === 4 ||
+          columnIndex === 5 ||
+          columnIndex === 6 ||
+          columnIndex === 7
+        ) {
           return [0, 0]
         }
       }
@@ -87,11 +146,23 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
-  .renew-title{
-    .el-button{
-      border-radius: 2px;
-      border-top-right-radius: 10px;
-    }
+<style>
+  .renewHeaderClass{
+    opacity: 0;
   }
+  .renewTitleClass{
+    background: #409EFF !important;
+    color: #fff;
+    border-radius: 3px;
+    border-top-right-radius: 15px;
+  }
+  .moneyTitleClass{
+    background: #E6A23C !important;
+    color: #fff;
+    border-radius: 3px;
+    border-top-right-radius: 15px;
+  }
+</style>
+
+<style lang="less" scoped>
 </style>

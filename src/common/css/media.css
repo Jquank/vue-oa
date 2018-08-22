@@ -23,4 +23,10 @@
   #main {
     padding: 5px 2px !important;
   }
+  .media-padding{
+    padding: 10px !important;
+  }
+  .el-dialog{
+    width:95%
+  }
 }
