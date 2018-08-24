@@ -141,118 +141,120 @@ const router = new Router({
           path: 'addUser',
           name: 'addUser',
           meta: { text: '新增人员' },
-          component: AddUser,
+          component: AddUser
         },
         {
           path: 'userList',
           name: 'userList',
           meta: { text: '人员列表' },
-          component: UserList,
+          component: UserList
         },
         // 客户管理
         {
           path: 'addCus',
           name: 'addCus',
           meta: { text: '新增客户' },
-          component: AddCus,
+          component: AddCus
         },
         {
           path: 'applyCus',
           name: 'applyCus',
           meta: { text: '申领客户' },
-          component: ApplyCus,
+          component: ApplyCus
         },
         {
           path: 'myCustomer',
           name: 'myCustomer',
           meta: { text: '我的客户' },
           component: MyCustomer,
-          children: [{
-            path: ':id',
-            meta: { text: '我的客户/客户详情' },
-            component: MyCusDetail
-          }]
+          children: [
+            {
+              path: ':id',
+              meta: { text: '我的客户/客户详情' },
+              component: MyCusDetail
+            }
+          ]
         },
         {
           path: 'visitRecord',
           name: 'visitRecord',
           meta: { text: '出访记录' },
-          component: VisitRecord,
+          component: VisitRecord
         },
         {
           path: 'followRecord',
           name: 'followRecord',
           meta: { text: '跟进记录' },
-          component: FollowRecord,
+          component: FollowRecord
         },
         {
           path: 'importCus',
           name: 'importCus',
           meta: { text: '市场部导入客户' },
-          component: ImportCus,
+          component: ImportCus
         },
         // 客户审核
         {
           path: 'dealCheck',
           name: 'dealCheck',
           meta: { text: '审核处理' },
-          component: DealCheck,
+          component: DealCheck
         },
         {
           path: 'checkRecord',
           name: 'checkRecord',
           meta: { text: '审核记录' },
-          component: CheckRecord,
+          component: CheckRecord
         },
         {
           path: 'editCusInfo',
           name: 'editCusInfo',
           meta: { text: '客户信息修改' },
-          component: EditCusInfo,
+          component: EditCusInfo
         },
         {
           path: 'cusPoolManage',
           name: 'cusPoolManage',
           meta: { text: '客户库管理' },
-          component: CusPoolManage,
+          component: CusPoolManage
         },
         // 客户搜索
         {
           path: 'cusSearch',
           name: 'cusSearch',
           meta: { text: '搜索客户' },
-          component: CusSearch,
+          component: CusSearch
         },
         {
           path: 'cusOut',
           name: 'cusOut',
           meta: { text: '客户转出' },
-          component: CusOut,
+          component: CusOut
         },
         // 合同管理
         {
           path: 'addContract',
           name: 'addContract',
           meta: { text: '新增合同' },
-          component: AddContract,
+          component: AddContract
         },
         {
           path: 'allotContract',
           name: 'allotContract',
           meta: { text: '分配合同' },
-          component: AllotContract,
+          component: AllotContract
         },
         {
           path: 'contractList',
           name: 'contractList',
           meta: { text: '合同列表' },
-          component: ContractList,
+          component: ContractList
         },
         {
           path: 'applyContract',
           name: 'applyContract',
           meta: { text: '合同申请' },
-          component: ApplyContract,
+          component: ApplyContract
         },
         // 到款管理
         {
@@ -269,14 +271,14 @@ const router = new Router({
           component: OrderPending,
           children: [
             {
-            path: 'view/:id',
-            meta: { text: '待处理订单/查看订单详情' },
-            component: ViewDetail
+              path: 'view/:id',
+              meta: { text: '待处理订单/查看订单详情' },
+              component: ViewDetail
             },
             {
-            path:'edit/:id',
-            meta: { text: '待处理订单/编辑订单' },
-            component:EditOrder
+              path: 'edit/:id',
+              meta: { text: '待处理订单/编辑订单' },
+              component: EditOrder
             }
           ]
         },
@@ -304,25 +306,25 @@ const router = new Router({
           path: 'invoicePending',
           name: 'invoicePending',
           meta: { text: '待开发票' },
-          component:InvoicePending
+          component: InvoicePending
         },
         // 图表
         {
           path: 'charts',
           name: 'charts',
           meta: { text: '图表' },
-          component:Charts
+          component: Charts
         },
         {
           path: 'editTable',
           name: 'editTable',
           meta: { text: '可编辑的表格' },
-          component:EditTable
+          component: EditTable
         }
       ]
     }
   ],
-  scrollBehavior (to, from, savedPosition) {
+  scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {
       return savedPosition
     } else {
@@ -333,7 +335,7 @@ const router = new Router({
   }
 })
 
-import Progress from 'nprogress'
+import Progress from 'nprogress' //进度条
 Progress.configure({ showSpinner: false })
 router.beforeEach((to, from, next) => {
   const isLogin = cookie.get('userName')
@@ -345,7 +347,8 @@ router.beforeEach((to, from, next) => {
       })
       Progress.done()
     } else {
-      if (to.name === from.name) { // 防止刷新的时候加载两次组件
+      if (to.name === from.name) {
+        // 防止刷新的时候加载两次组件
         next(false)
       } else {
         Progress.start()
@@ -353,12 +356,11 @@ router.beforeEach((to, from, next) => {
       }
     }
   } else {
-    sessionStorage.clear()
     next()
     Progress.done()
   }
 })
-router.afterEach((to, from)=>{
+router.afterEach((to, from) => {
   Progress.done()
 })
 

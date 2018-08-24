@@ -1,32 +1,56 @@
 import axios from 'axios'
 import router from '@/router'
 import qs from 'querystring'
-console.log(router)
-// 添加响应拦截器
+
+import { Loading, Message } from 'element-ui'
 
 const instance = axios.create({
   baseURL: 'http://172.16.11.72:88',
-  withCredentials: true // 跨域凭证
+  withCredentials: true, // 跨域凭证
+  timeout: 6000
 })
-
-instance.interceptors.response.use(response => {
-  // 对响应数据做点什么
-  if (response.data.status === -1) {
-    console.log(888)
-    router.push('/login')
-    return response
-  } else {
-    return response
+let loadingInstance
+instance.interceptors.request.use(
+  config => {
+    // element ui Loading方法
+    loadingInstance = Loading.service({
+      fullscreen: true,
+      background: 'rgba(0, 0, 0, 0.3)'
+    })
+    return config
+  },
+  err => {
+    loadingInstance.close()
+    Message.error({
+      message: '加载超时'
+    })
+    console.log(err)
+    return Promise.reject(err)
   }
-}, err => {
-  console.log(err)
-})
-
+)
+instance.interceptors.response.use(
+  response => {
+    if (response.data.status === 1) {
+      loadingInstance.close()
+      return response
+    }
+    if (response.data.status === -1) {
+      router.push('/login')
+    }
+  },
+  err => {
+    loadingInstance.close()
+    Message.error({
+      message: '网络错误，请检查'
+    })
+    console.log(err)
+    return Promise.reject(err)
+  }
+)
 export function $post (url, params = {}) {
-  // const tk = storage.session.get('token')
   return new Promise((resolve, reject) => {
-    // axios.post(url + '&tk=' + tk, params)
-    instance.post(url, qs.stringify(params))
+    instance
+      .post(url, qs.stringify(params))
       .then(res => {
         resolve(res)
       })
@@ -36,9 +60,9 @@ export function $post (url, params = {}) {
   })
 }
 export function $get (url, params = {}) {
-  // const tk = storage.session.get('token')
   return new Promise((resolve, reject) => {
-    instance.get(url, {params: params})
+    instance
+      .get(url, { params: params })
       .then(res => {
         resolve(res)
       })
