@@ -33,7 +33,10 @@
         </el-col>
         <el-col :md="10">
           <el-form-item label="客户来源 :" :label-width="labelWidth" required>
-            <el-input v-model="form.cusFrom" placeholder="客户来源"></el-input>
+            <el-select v-model="form.cusFrom" placeholder="客户来源" style="width:100%;">
+              <el-option value="10" label="个人查找"></el-option>
+              <el-option value="20" label="个人查找"></el-option>
+            </el-select>
           </el-form-item>
         </el-col>
       </el-row>

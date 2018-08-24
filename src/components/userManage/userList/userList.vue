@@ -6,7 +6,7 @@
     </div>
     <div class="search">
       <select-department @upDeptId="upDeptId" :key="key_dept" class="search-item"></select-department>
-      <el-input v-model="staffName" @focus="showDepartment" class="search-item" style="width:300px;" placeholder="搜索员工姓名">
+      <el-input v-model="staffName" class="search-item" style="width:300px;" placeholder="搜索员工姓名">
         <template slot="prepend">员工姓名:</template>
       </el-input>
       <auto-select title="司龄" v-model="workAge" :key="key_sel" class="search-item" style="width:300px;">
@@ -49,25 +49,72 @@
       </el-table-column>
       <el-table-column prop="status" label="账号开关" width="140">
       </el-table-column>
-      <el-table-column label="操作" width="200">
+      <el-table-column label="操作" width="300">
         <template slot-scope="scope">
           <el-button @click.native="editUserInfo(scope.row.id)" size="mini" type="primary">编辑</el-button>
-          <el-button @click.native="editDept" size="mini" type="primary">编辑管理部门</el-button>
+          <el-button @click.native="editQuota(scope.row.id)" size="mini" type="primary">编辑配额</el-button>
+          <el-button @click.native="editDept(scope.row.id)" size="mini" type="primary">编辑管理部门</el-button>
         </template>
       </el-table-column>
     </el-table>
     <page @updateList="updateList" :url="url" :sendParams="sendParams" class="page"></page>
     <!-- 编辑部门弹窗 -->
-    <el-dialog title="编辑部门" :visible.sync="deptTreeDialog" width="350px">
-      <select-dept></select-dept>
+    <el-dialog title="编辑部门管理" :visible.sync="deptTreeDialog" width="350px">
+      <select-dept @sendDeptCodes="receiveDeptCodes"></select-dept>
+      <div style="text-align:center;padding-top:15px;">
+        <el-button @click.native="subDeptManage" type="primary" size="mini">提 交</el-button>
+      </div>
     </el-dialog>
     <!-- 编辑人员信息弹窗 -->
     <el-dialog title="编辑人员信息" :visible.sync="userInfoDialog" width="800px">
-      <add-user :key="key_add_user" :echoUserInfo="userInfo" :editDisable="true"></add-user>
+      <add-user @closeDialog="closeDialog" :key="key_add_user" :echoUserInfo="userInfo" :editDisable="true"></add-user>
     </el-dialog>
     <!-- 编辑配额弹窗 -->
     <el-dialog title="编辑配额" :visible.sync="editQuotaDialog" width="800px">
-      <add-user :key="key_add_user" :echoUserInfo="userInfo" :editDisable="true"></add-user>
+      <el-form ref="form" :model="form" label-width="80px">
+        <el-row :gutter="20">
+          <el-col :md="12">
+            <el-form-item label="账户名 :" :label-width="labelWidth" required>
+              <el-input v-model="form.accountName" disabled></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :md="12">
+            <el-form-item label="姓名 :" :label-width="labelWidth" required>
+              <el-input v-model="form.trueName" disabled></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :md="12">
+            <el-form-item label="工号 :" :label-width="labelWidth" required>
+              <el-input  v-model="form.userNum" disabled></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :md="12">
+            <el-form-item label="性别 :" :label-width="labelWidth" required>
+              <el-select v-model="form.sex" disabled placeholder="选择性别" style="width:100%">
+                <el-option label="男" value="0"></el-option>
+                <el-option label="女" value="1"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :md="12">
+            <el-form-item label="保A配额 :" :label-width="labelWidth">
+              <el-input v-model="form.baoAquota"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :md="12">
+            <el-form-item label="跟踪配额 :" :label-width="labelWidth">
+              <el-input v-model="form.followQuota"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <div style="text-align: center;">
+          <el-button @click.native="subQuota" type="primary">提 交</el-button>
+        </div>
+      </el-form>
     </el-dialog>
   </div>
 </template>
@@ -95,7 +142,18 @@ export default {
       url: '/User/search',
       sendParams: {},
       tableData: [],
-      isLoading: true
+      isLoading: true,
+      labelWidth: '80px',
+      form: {
+        accountName: '',
+        trueName: '',
+        userNum: '',
+        sex: '',
+        baoAquota: '',
+        followQuota: ''
+      },
+      uid: '',
+      deptCodes: []
     }
   },
   created () {},
@@ -110,8 +168,9 @@ export default {
     reset () {
       this.staffName = ''
       this.workAge = ''
+      this.deptCode = ''
       this.key_dept = new Date() + ''
-      this.key_sel = new Date() + '' // 重置时绑定新的key值来重新加载子组件以达到重置的目的
+      this.key_sel = new Date() + '1' // 重置时绑定新的key值来重新加载子组件以达到重置的目的
     },
     updateList (data, load) {
       this.isLoading = load
@@ -120,28 +179,72 @@ export default {
       }
     },
     handleSelectionChange () {},
-    editDept () {
+    editDept (uid) { // 编辑部门
       this.deptTreeDialog = true
+      this.uid = uid
     },
-    editUserInfo (uid) {
+    editQuota (uid) { // 编辑配额
+      this.uid = uid
+      this.editQuotaDialog = true
+      this.$post('/User/UserGetById', { uid: uid }).then(res => {
+        if (res.data.status === 1) {
+          this.userInfo = res.data.data
+          this.form = {
+            accountName: this.userInfo.name,
+            trueName: this.userInfo.true_name,
+            userNum: this.userInfo.workid,
+            sex: this.userInfo.sex + '',
+            baoAquota: this.userInfo.max_a,
+            followQuota: this.userInfo.max_b
+          }
+        }
+      })
+    },
+    editUserInfo (uid) { // 编辑人员信息
       this.userInfoDialog = true
-      this.$post('/User/UserGetById', {uid: uid}).then(res => {
+      this.$post('/User/UserGetById', { uid: uid }).then(res => {
         if (res.data.status === 1) {
           this.userInfo = res.data.data
           this.key_add_user = new Date() + ''
-          // let editPageParams = {
-          //   baoAquota: this.baoAquota,
-          //   followQuota: this.followQuota,
-          //   turnRealDate: this.turnRealDate,
-          //   leaveDate: this.leaveDate
-          // }
         }
       })
+    },
+    closeDialog () {
+      this.userInfoDialog = false
     },
     upDeptId (id) {
       this.deptCode = id
     },
-    showDepartment () {}
+    subQuota () { // 提交配额
+      let params = {
+        id: this.uid,
+        max_a: this.form.baoAquota,
+        max_b: this.form.followQuota
+      }
+      this.$post('/User/UserUpdateMax', params).then(res => {
+        if (res.data.status === 1) {
+          this.$message({
+            message: res.data.msg,
+            type: 'success'
+          })
+          this.editQuotaDialog = false
+        }
+      })
+    },
+    receiveDeptCodes (data) {
+      console.log(123)
+      this.deptCodes = data
+      console.log(data)
+    },
+    subDeptManage () { // 提交部门管理
+      let params = {
+        deptCodes: this.deptCodes,
+        id: this.uid
+      }
+      this.$post('/User/UserUpdateMgr', params).then(res => {
+
+      })
+    }
   },
   components: { Page, SelectDept, SelectDepartment, AutoSelect, AddUser }
 }

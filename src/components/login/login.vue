@@ -30,9 +30,6 @@
 </template>
 
 <script>
-import { $post } from '@/api/http'
-// import { getArea } from 'api/getOptions'
-// import storage from 'good-storage'
 import cookie from 'js-cookie'
 
 export default {
@@ -61,9 +58,8 @@ export default {
         username: this.myName,
         password: this.myPassword
       }
-      $post('/login', params)
+      this.$post('/login', params)
         .then(res => {
-          console.log(res.data.status)
           if (res.data.status === 1) {
             // storage.session.set('userId', res.data.data.id)
             // storage.session.set('permissions', res.data.data.permissions)

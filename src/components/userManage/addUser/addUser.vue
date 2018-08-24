@@ -52,17 +52,17 @@
       </el-row>
       <!-- 保A配额 -->
       <el-row v-if="editDisable" :gutter="20">
-          <el-col :md="12">
-            <el-form-item label="保A配额 :" :label-width="labelWidth">
-              <el-input v-model="form.baoAquota"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :md="12">
-            <el-form-item label="跟踪配额 :" :label-width="labelWidth">
-              <el-input v-model="form.followQuota"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
+        <el-col :md="12">
+          <el-form-item label="保A配额 :" :label-width="labelWidth">
+            <el-input v-model="form.baoAquota"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :md="12">
+          <el-form-item label="跟踪配额 :" :label-width="labelWidth">
+            <el-input v-model="form.followQuota"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
       <el-row :gutter="20">
         <el-col :md="12">
           <el-form-item label="部门 :" :label-width="labelWidth">
@@ -255,12 +255,17 @@ export default {
         rids: [this.form.role],
         dept: this.form.canCall
       }
-      console.log(params)
-      if (!this.editDisable) {
+      if (!this.editDisable) { // 新增人员页的提交
         this.$post('/User/UserAdd', params).then(res => {
-          console.log(res)
+          let code = res.data.status
+          this.$message({
+            message: res.data.msg,
+            type: code === 1 ? 'success' : 'error'
+          })
+        }).catch(err => {
+          console.log(err)
         })
-      } else {
+      } else { // 人员列表编辑的提交
         let _params = {
           id: this.form.id,
           resignationtime: this.form.leaveDate,
@@ -271,7 +276,16 @@ export default {
         }
         params = Object.assign({}, params, _params)
         this.$post('/User/UserUpdate', params).then(res => {
-          console.log(res)
+          let code = res.data.status
+          this.$message({
+            message: res.data.msg,
+            type: code === 1 ? 'success' : 'error'
+          })
+          if (code === 1) { // 派发编辑页关闭弹窗事件
+            this.$emit('closeDialog', false)
+          }
+        }).catch(err => {
+          console.log(err)
         })
       }
     }
