@@ -50,7 +50,7 @@ export default {
 #app {
   padding: 0;
   .nav-aside {
-    z-index: 100000;
+    z-index: 1999;
     background: #19233c;
     height: 100%;
     overflow: hidden;

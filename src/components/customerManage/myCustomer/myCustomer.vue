@@ -21,7 +21,7 @@
         <el-input placeholder="搜索所属商务" v-model="shangWu" class="cus-item item-width">
           <template slot="prepend">所属商务:</template>
         </el-input>
-        <auto-select title="客户状态" v-model="cusStatus" class="cus-item item-width">
+        <auto-select :title="'客户状态'" v-model="cusStatus" id="mycus-status" class="cus-item item-width">
           <el-option label="全部" value=""></el-option>
           <el-option label="今日申领客户" value="10"></el-option>
           <el-option label="今日完成客户" value="20"></el-option>
@@ -74,7 +74,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <page class="pagination" :url="myCusUrl" :sendparams="params" @updateList="updateMyCusList"></page>
+      <page class="pagination" :url="myCusUrl" :sendParams="params" @updateList="updateMyCusList"></page>
     </div>
     <router-view></router-view>
   </div>
@@ -89,6 +89,7 @@ import AutoSelect from 'base/autoSelect/autoSelect'
 export default {
   data () {
     return {
+      refresh: true,
       statusRadio: '10',
       cusName: '',
       area: [],
@@ -112,7 +113,8 @@ export default {
       myCusList: []
     }
   },
-  created () {},
+  mounted () {
+  },
   methods: {
     // 查看按钮
     viewDetail (data) {
@@ -134,6 +136,13 @@ export default {
   }
 }
 </script>
+
+<style>
+ /* 自定义select的padding */
+#mycus-status input.el-input__inner {
+  padding-left: 86px;
+}
+</style>
 
 <style scoped lang="less">
 .my-customer {

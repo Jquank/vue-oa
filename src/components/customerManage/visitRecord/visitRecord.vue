@@ -4,7 +4,7 @@
       <el-input v-model="cusName" class="visit-item item-width" placeholder="搜索客户名称">
         <template slot="prepend">客户名称:</template>
       </el-input>
-      <auto-select title="出访类型" v-model="visitType" class="visit-item item-width">
+      <auto-select title="出访类型" v-model="visitType" id="visit-status" class="visit-item item-width">
         <el-option label="全部" value=""></el-option>
         <el-option label="今日申领客户" value="10"></el-option>
         <el-option label="今日完成客户" value="20"></el-option>
@@ -34,7 +34,12 @@ export default {
   }
 }
 </script>
-
+<style>
+ /* 自定义select的padding */
+#visit-status input.el-input__inner {
+  padding-left: 86px;
+}
+</style>
 <style lang="less" scoped>
 .visit-record {
   background: #fff;

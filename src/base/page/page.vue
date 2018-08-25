@@ -64,8 +64,6 @@ export default {
   methods: {
     // 获取列表的第一页
     _getFirstList () {
-      this.isLoading = true // 默认派发loading效果
-      this._updateList()
       let params = Object.assign({}, {
         pageSize: 10,
         pageNum: 1
@@ -80,23 +78,17 @@ export default {
               this.pageCount = 0
             }
             this.handleList = res
-            this.isLoading = false // 成功请求到数据后取消loading效果
             this._updateList()
           } else {
-            this.isLoading = false // 请求失败取消loading状态
             this._updateList()
           }
         })
         .catch(err => {
-          this.isLoading = false // 请求失败取消loading状态
-          this._updateList()
           console.log(err)
         })
     },
     // page-size改变的回调，默认为10
     handleSizeChange (val) {
-      this.isLoading = true
-      this._updateList()
       this.pageval = val
       let params = Object.assign({}, {
         pageSize: this.pageval,
@@ -106,23 +98,17 @@ export default {
         .then(res => {
           if (res.data.status === 1) {
             this.handleList = res
-            this.isLoading = false
             this._updateList()
           } else {
-            this.isLoading = false
             this._updateList()
           }
         })
         .catch(err => {
-          this.isLoading = false
-          this._updateList()
           console.log(err)
         })
     },
     // 当前页改变的回调
     handleCurrentChange (page) {
-      this.isLoading = true
-      this._updateList()
       if (!this.pageval) {
         this.pageval = 10
       }
@@ -134,22 +120,18 @@ export default {
         .then(res => {
           if (res.data.status === 1) {
             this.handleList = res
-            this.isLoading = false
             this._updateList()
           } else {
-            this.isLoading = false
             this._updateList()
           }
         })
         .catch(err => {
-          this.isLoading = false
-          this._updateList()
           console.log(err)
         })
     },
     // 触发自定义事件
     _updateList () {
-      this.$emit('updateList', this.handleList, this.isLoading)
+      this.$emit('updateList', this.handleList)
     }
   }
 }

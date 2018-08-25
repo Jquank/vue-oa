@@ -10,12 +10,12 @@ const instance = axios.create({
   timeout: 6000
 })
 let loadingInstance
-instance.interceptors.request.use(
+instance.interceptors.request.use( // 请求拦截
   config => {
     // element ui Loading方法
     loadingInstance = Loading.service({
       fullscreen: true,
-      background: 'rgba(0, 0, 0, 0.3)'
+      background: 'rgba(0, 0, 0, 0.5)'
     })
     return config
   },
@@ -28,15 +28,13 @@ instance.interceptors.request.use(
     return Promise.reject(err)
   }
 )
-instance.interceptors.response.use(
+instance.interceptors.response.use( // 响应拦截
   response => {
-    if (response.data.status === 1) {
-      loadingInstance.close()
-      return response
-    }
+    loadingInstance.close()
     if (response.data.status === -1) {
       router.push('/login')
     }
+    return response
   },
   err => {
     loadingInstance.close()

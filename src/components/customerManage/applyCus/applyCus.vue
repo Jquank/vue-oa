@@ -13,7 +13,7 @@
       <el-input v-model="cusName" class="apply-item item-width">
         <template slot="prepend">客户名称:</template>
       </el-input>
-      <auto-select title="状态" v-model="applyCusStatus" class="apply-item item-width">
+      <auto-select :title="'状态'" v-model="applyCusStatus" class="apply-item item-width">
         <el-option label="全部" value=""></el-option>
         <el-option label="今日申领客户" value="10"></el-option>
         <el-option label="今日完成客户" value="20"></el-option>

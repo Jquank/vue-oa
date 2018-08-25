@@ -101,3 +101,11 @@ div.el-dialog__body {
 .el-input-group__append, .el-input-group__prepend{
   padding:0 10px;
 }
+
+.el-loading-mask{
+  /* background: rgba(0,0,0,0.2) */
+}
+
+.xsbtn.el-button{
+    padding: 5px 8px;
+}
