@@ -109,3 +109,8 @@ div.el-dialog__body {
 .xsbtn.el-button{
     padding: 5px 8px;
 }
+
+.line{
+  border-top: 1px solid rgb(216, 210, 210);
+  padding-bottom: 5px;
+}

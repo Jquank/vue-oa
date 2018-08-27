@@ -1,11 +1,20 @@
 // 部门树
 <template>
-    <el-tree :data="departmentList" :props="depProps" accordion node-key="id" ref="tree" :expand-on-click-node="true" :show-checkbox="true" @check="handleCheck" id="department" :default-expanded-keys="defaultExpanded"></el-tree>
+    <el-tree :data="departmentList" :props="depProps" accordion node-key="id" ref="tree" :expand-on-click-node="true" :show-checkbox="true" @check="handleCheck" id="department" :default-expanded-keys="defaultExpanded"
+    :default-checked-keys="defaultChecked"></el-tree>
 </template>
 
 <script>
 import { $post } from 'api/http'
 export default {
+  props: {
+    defaultChecked: {
+      type: Array,
+      default: function () {
+        return []
+      }
+    }
+  },
   data () {
     return {
       departmentList: [],
@@ -13,7 +22,7 @@ export default {
         children: 'children',
         label: 'name'
       },
-      defaultExpanded: ['KD01']
+      defaultExpanded: []
     }
   },
   mounted () {
@@ -32,7 +41,6 @@ export default {
       let idsArr = []
       let node = this.$refs.tree.getCheckedNodes(false, false) // 所有打钩的节点
       let treeNode = this._transTree(node) // node转化为树结构
-      console.log(treeNode)
       treeNode.forEach(val => {
         idsArr.push(val.id)
       })

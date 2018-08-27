@@ -56,7 +56,7 @@
           <el-button plain disabled class="xsbtn" :type="scope.row.status==-10?'danger':'success'">{{scope.row.status==-10?'已关闭':'已打开'}}</el-button>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="300">
+      <el-table-column label="操作" width="250">
         <template slot-scope="scope">
           <el-button @click.native="editUserInfo(scope.row.id)" class="xsbtn" type="primary">编辑</el-button>
           <el-button @click.native="editQuota(scope.row.id)" class="xsbtn" type="primary">编辑配额</el-button>
@@ -67,7 +67,7 @@
     <page @updateList="updateList" :url="url" :sendParams="sendParams" class="page"></page>
     <!-- 编辑部门弹窗 -->
     <el-dialog title="编辑部门管理" :visible.sync="deptTreeDialog" width="350px">
-      <select-dept @sendDeptCodes="receiveDeptCodes"></select-dept>
+      <select-dept @sendDeptCodes="receiveDeptCodes" :defaultChecked="defaultChecked"></select-dept>
       <div style="text-align:center;padding-top:15px;">
         <el-button @click.native="subDeptManage" type="primary" size="mini">提 交</el-button>
       </div>
@@ -160,7 +160,8 @@ export default {
       },
       uid: '',
       deptCodes: [],
-      multipleSelection: []
+      multipleSelection: [],
+      defaultChecked: [] // 部门树默认勾选
     }
   },
   created () {},
@@ -215,6 +216,11 @@ export default {
       // 编辑部门
       this.deptTreeDialog = true
       this.uid = uid
+      this.$post('/Department/MgrDepartmentGetByUser', { uid: this.uid }).then(res => {
+        if (res.data.status === 1) {
+          this.defaultChecked = res.data.data
+        }
+      })
     },
     editQuota (uid) {
       // 编辑配额
@@ -276,12 +282,20 @@ export default {
       // 提交部门管理
       let params = {
         deptCodes: this.deptCodes,
-        id: this.uid
+        uid: this.uid
       }
-      this.$post('/User/UserUpdateMgr', params).then(res => {})
+      this.$post('/User/UserUpdateMgr', params).then(res => {
+        if (res.data.status === 1) {
+          this.deptTreeDialog = false
+          this.$message({
+            type: 'success',
+            message: res.data.msg
+          })
+        }
+      })
     },
     hiddenDepartment (e) {
-      // 隐藏部门树
+      // 隐藏带input的部门树
       let tree = document.getElementById('department')
       if (tree && e.target.id !== 'dept-input') {
         tree.style.display = 'none'

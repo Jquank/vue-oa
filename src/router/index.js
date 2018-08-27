@@ -20,6 +20,7 @@ import UserList from 'components/userManage/userList/userList'
 // 客户管理
 import AddCus from 'components/customerManage/addCus/addCus'
 import ApplyCus from 'components/customerManage/applyCus/applyCus'
+import ApplyDetail from 'components/customerManage/applyCus/applyDetail'
 import MyCustomer from 'components/customerManage/myCustomer/myCustomer'
 import MyCusDetail from 'components/customerManage/myCustomer/myCusDetail'
 import VisitRecord from 'components/customerManage/visitRecord/visitRecord'
@@ -160,7 +161,12 @@ const router = new Router({
           path: 'applyCus',
           name: 'applyCus',
           meta: { text: '申领客户' },
-          component: ApplyCus
+          component: ApplyCus,
+          children: [{
+            path: ':id',
+            meta: { text: '客户详情' },
+            component: ApplyDetail
+          }]
         },
         {
           path: 'myCustomer',
