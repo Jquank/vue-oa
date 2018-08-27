@@ -39,7 +39,7 @@ export default {
 
 <style lang="less" scoped>
 .cus-search {
-  background: #fff;
+
   padding: 20px;
   .search {
     display: flex;

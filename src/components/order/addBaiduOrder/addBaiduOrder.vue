@@ -591,7 +591,7 @@ export default {
 
 <style lang="less" scoped>
 .order-content {
-  background: #fff;
+
   padding: 20px;
   .card-tips {
     color: red;

@@ -1,5 +1,5 @@
 <template>
-  <div class="visit-record">
+  <div class="visit-record component-container media-padding">
     <div class="visit-search">
       <el-input v-model="cusName" class="visit-item item-width" placeholder="搜索客户名称">
         <template slot="prepend">客户名称:</template>
@@ -42,7 +42,7 @@ export default {
 </style>
 <style lang="less" scoped>
 .visit-record {
-  background: #fff;
+
   padding: 20px;
   .visit-search {
     display: flex;

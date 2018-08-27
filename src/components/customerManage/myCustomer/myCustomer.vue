@@ -1,6 +1,6 @@
 <template>
-  <div class="my-customer">
-    <div class="my-main">
+  <div class="my-customer component-container media-padding">
+    <div>
       <div class="cus-status">
         <el-radio-group v-model="statusRadio">
           <el-radio-button label="10">保A客户</el-radio-button>
@@ -21,7 +21,7 @@
         <el-input placeholder="搜索所属商务" v-model="shangWu" class="cus-item item-width">
           <template slot="prepend">所属商务:</template>
         </el-input>
-        <auto-select :title="'客户状态'" v-model="cusStatus" id="mycus-status" class="cus-item item-width">
+        <auto-select :title="'客户状态'" v-model="cusStatus" id="mycus-auto-select" class="cus-item item-width">
           <el-option label="全部" value=""></el-option>
           <el-option label="今日申领客户" value="10"></el-option>
           <el-option label="今日完成客户" value="20"></el-option>
@@ -37,7 +37,7 @@
         <el-table-column fixed prop="companyname" label="客户名称">
         </el-table-column>
         <el-table-column prop="companytype" label="公司状态" width="70">
-          <span :class="scope.row.companytype===-10?'redfont':''" slot-scope="scope">
+          <span :class="scope.row.companytype===-10?'red':''" slot-scope="scope">
             {{scope.row.companytype | comType}}
           </span>
         </el-table-column>
@@ -53,7 +53,7 @@
         <el-table-column prop="productname" label="业务类型" width="70">
         </el-table-column>
         <el-table-column prop="" label="业务状态" width="120">
-          <span :class="scope.row.companylogstatus===10?'redfont':''" slot-scope="scope">
+          <span :class="scope.row.companylogstatus===10?'red':''" slot-scope="scope">
             {{scope.row.companylogtype+""+scope.row.companylogstatus | businessStatus}}
           </span>
         </el-table-column>
@@ -62,7 +62,7 @@
         <el-table-column prop="username" label="所属商务" width="80">
         </el-table-column>
         <el-table-column prop="" label="最后跟进时间">
-          <span :class="scope.row.tip?'redfont':''" slot-scope="scope">
+          <span :class="scope.row.tip?'red':''" slot-scope="scope">
             {{scope.row.visittime | timeFormat}}
           </span>
         </el-table-column>
@@ -137,22 +137,15 @@ export default {
 }
 </script>
 
-<style>
- /* 自定义select的padding */
-#mycus-status input.el-input__inner {
-  padding-left: 86px;
-}
+<style lang="less">
+ /* 自定义auto-select的padding */
+  #mycus-auto-select{
+    .auto-select-padding(86px);
+  }
 </style>
 
 <style scoped lang="less">
 .my-customer {
-  .my-main {
-    background: #fff;
-    padding: 20px;
-  }
-  .redfont {
-    color: red;
-  }
   .pagination {
     padding-top: 10px;
     display: flex;

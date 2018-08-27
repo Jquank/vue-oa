@@ -1,5 +1,5 @@
 <template>
-  <div class="index-content padding20px media-padding">
+  <div class="index-content component-container media-padding">
     <renew-info></renew-info>
   </div>
 </template>
@@ -20,8 +20,5 @@ export default {
 </script>
 
 <style scoped lang="less">
-  .index-content{
-    background: #fff;
-  }
 
 </style>

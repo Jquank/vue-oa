@@ -1,5 +1,5 @@
 <template>
-  <div class="news-manage">
+  <div class="news-manage component-container media-padding">
     <div class="news-content">
       <el-row>
         <el-button type="primary" @click="addNews">新增</el-button>
@@ -72,7 +72,7 @@ export default {
   position: relative;
   .news-content {
     position: relative;
-    background: #fff;
+
     padding: 20px;
     .pagination {
       padding-top: 10px;

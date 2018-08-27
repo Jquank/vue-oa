@@ -132,8 +132,8 @@ export default {
     },
     phoneCollapse (width, result) {
       let aside = document.getElementById('nav-aside')
-      this.$refs.nested.style.left = result ? '10px' : '190px'
-      result ? aside.setAttribute('style', 'width:0 !important') : aside.setAttribute('style', 'width:180px !important')
+      this.$refs.nested.style.left = result ? '10px' : '170px'
+      result ? aside.setAttribute('style', 'width:0 !important') : aside.setAttribute('style', 'width:160px !important')
     },
     pcCollapse (width, result) {
       let aside = document.getElementById('nav-aside')

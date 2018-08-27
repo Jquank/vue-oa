@@ -1,5 +1,5 @@
 <template>
-  <div class="follow-record">
+  <div class="follow-record component-container media-padding">
     <div class="follow-search">
       <el-input v-model="cusName" class="follow-item item-width" placeholder="搜索客户名称">
         <template slot="prepend">客户名称:</template>
@@ -29,7 +29,7 @@ export default {
 
 <style lang="less" scoped>
 .follow-record {
-  background: #fff;
+
   padding: 20px;
   .follow-search {
     display: flex;

@@ -45,7 +45,7 @@ export default {
   margin-left: 10px;
 }
 .cus-search {
-  background: #fff;
+
   padding: 20px;
   .multi-import{
     .marginleft10px

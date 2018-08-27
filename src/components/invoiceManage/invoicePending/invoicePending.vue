@@ -112,7 +112,7 @@ export default {
 <style lang="less">
 .invoice-pending {
   .invoice-content {
-    background: #fff;
+
     padding: 20px;
     .onecell{
       display: none;

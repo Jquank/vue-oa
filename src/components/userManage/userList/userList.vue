@@ -1,5 +1,5 @@
 <template>
-  <div class="user-list padding20px media-padding" @click="hiddenDepartment">
+  <div class="user-list component-container media-padding" @click="hiddenDepartment">
     <div class="import-file">
       <el-button type="primary" icon="el-icon-upload">导入人员</el-button>
       <el-button type="success" icon="el-icon-upload">导入组织结构</el-button>
@@ -294,7 +294,6 @@ export default {
 
 <style lang="less" scoped>
 .user-list {
-  background: #fff;
   .import-file {
     display: flex;
     flex-wrap: wrap;

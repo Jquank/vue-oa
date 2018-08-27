@@ -204,7 +204,7 @@ export default {
 .order-pending {
   // position: relative;
   .pending-content {
-    background: #fff;
+
     padding: 20px;
     .tab{
       margin-left: 10px;

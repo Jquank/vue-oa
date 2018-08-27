@@ -39,7 +39,6 @@ export default {
 
 <style lang="less" scoped>
 .add-contract {
-  background: #fff;
   padding: 20px;
   .contract-type {
     .contract-item {

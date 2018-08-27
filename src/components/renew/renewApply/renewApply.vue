@@ -157,7 +157,7 @@ export default {
 
 <style lang="less" scoped>
   .renew-apply{
-    background: #fff;
+
     padding: 20px;
     .input-btn{
       width:calc(~"(100% - 70px)");

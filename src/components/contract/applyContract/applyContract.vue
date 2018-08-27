@@ -45,7 +45,6 @@ export default {
 
 <style lang="less" scoped>
 .apply-contract {
-  background: #fff;
   padding: 20px;
   .apply-btn{
     margin-left:10px;

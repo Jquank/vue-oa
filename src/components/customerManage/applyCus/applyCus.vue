@@ -1,5 +1,5 @@
 <template>
-  <div class="apply-cus">
+  <div class="apply-cus component-container media-padding">
     <div class="apply top">
       <select-area v-model="area" class="apply-item item-width"></select-area>
       <select-trade v-model="trade" class="apply-item item-width"></select-trade>
@@ -50,7 +50,7 @@ export default {
 
 <style lang="less" scoped>
 .apply-cus{
-  background: #fff;
+
   padding: 20px;
   .top{
     margin-top:-10px;

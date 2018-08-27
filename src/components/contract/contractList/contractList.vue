@@ -50,7 +50,6 @@ export default {
 
 <style lang="less" scoped>
 .contract-list {
-  background: #fff;
   padding: 20px;
   .allot-search {
     display: flex;

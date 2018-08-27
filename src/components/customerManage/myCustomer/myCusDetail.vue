@@ -1,5 +1,5 @@
 <template>
-  <div class="mycus-detail">
+  <div class="mycus-detail component-container media-padding">
     <p class="bread-title">
       <span>我的客户 / 客户详情</span>
     </p>
@@ -290,7 +290,7 @@ export default {
   left: 0;
   z-index: 100;
   .detail-main {
-    background: #fff;
+
     padding: 20px;
     .detail-title {
       display: flex;
