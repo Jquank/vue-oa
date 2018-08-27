@@ -176,7 +176,7 @@ export default {
 .order-processed {
   // position: relative;
   .processed-content {
-    background: #fff;
+
     padding: 20px;
     .tab{
       margin-left: 10px;

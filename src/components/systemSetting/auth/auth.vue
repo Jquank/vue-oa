@@ -1,53 +1,51 @@
 <template>
-  <div>
-    <div class="auth">
-      <el-row style="margin-bottom:10px;">
-        <el-button type="primary" size="mini" @click.native="addNewRole">
-          <i class="fa fa-plus"></i> 新增角色
-        </el-button>
-      </el-row>
-      <el-row>
-        <el-table
-          stripe
-          :data="authList"
-          style="width: 100%">
-          <el-table-column type="index" width="100">
-          </el-table-column>
-          <el-table-column prop="name" label="角色名称" width="200">
-          </el-table-column>
-          <el-table-column prop="" label="操作">
-            <template slot-scope="scope">
-              <el-button type="success" size="mini"
-                @click.native="editRoleName(scope.row.name,scope.row.id)">
-                <i class="fa fa-exchange"></i> 修改名称
-              </el-button>
-              <el-button type="primary" size="mini"
-                @click.native="editRoleAuth(scope.row.name,scope.row.id)">
-                <i class="fa fa-edit"></i> 编辑角色权限
-              </el-button>
-            </template>
-          </el-table-column>
+  <div class="auth component-container media-padding">
+    <el-row style="margin-bottom:10px;">
+      <el-button type="primary" size="mini" @click.native="addNewRole">
+        <i class="fa fa-plus"></i> 新增角色
+      </el-button>
+    </el-row>
+    <el-row>
+      <el-table
+        stripe
+        :data="authList"
+        style="width: 100%">
+        <el-table-column type="index" width="100">
+        </el-table-column>
+        <el-table-column prop="name" label="角色名称" width="200">
+        </el-table-column>
+        <el-table-column prop="" label="操作">
+          <template slot-scope="scope">
+            <el-button type="success" size="mini"
+              @click.native="editRoleName(scope.row.name,scope.row.id)">
+              <i class="fa fa-exchange"></i> 修改名称
+            </el-button>
+            <el-button type="primary" size="mini"
+              @click.native="editRoleAuth(scope.row.name,scope.row.id)">
+              <i class="fa fa-edit"></i> 编辑角色权限
+            </el-button>
+          </template>
+        </el-table-column>
 
-        </el-table>
-      </el-row>
-      <!-- 编辑角色弹窗 -->
-      <el-dialog title="配置权限" :visible.sync="editAuthDialog" width="300px">
-        <div style="color:red;">
-          <span>所配角色：{{handleRoleName}}</span>
-        </div>
-        <el-tree
-          :data="roleData"
-          :props="roleProps"
-          show-checkbox accordion :check-strictly="true"
-          node-key="id" ref="tree"
-          :default-checked-keys="defaultChecked"
-          @check-change="checkChange">
-        </el-tree>
-        <div style="width:90%;text-align:right;margin-top:10px;">
-          <el-button type="primary"  @click.native="savePermission">保存</el-button>
-        </div>
-      </el-dialog>
-    </div>
+      </el-table>
+    </el-row>
+    <!-- 编辑角色弹窗 -->
+    <el-dialog title="配置权限" :visible.sync="editAuthDialog" width="300px">
+      <div style="color:red;">
+        <span>所配角色：{{handleRoleName}}</span>
+      </div>
+      <el-tree
+        :data="roleData"
+        :props="roleProps"
+        show-checkbox accordion :check-strictly="true"
+        node-key="id" ref="tree"
+        :default-checked-keys="defaultChecked"
+        @check-change="checkChange">
+      </el-tree>
+      <div style="width:90%;text-align:right;margin-top:10px;">
+        <el-button type="primary"  @click.native="savePermission">保存</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -186,8 +184,6 @@ export default {
 
 <style lang="less">
   .auth{
-    background: #fff;
-    padding:20px;
     .el-dialog__body{
       padding:0 20px 20px;
     }

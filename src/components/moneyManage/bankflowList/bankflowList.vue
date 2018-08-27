@@ -279,7 +279,7 @@ export default {
 <style lang="less">
   .bankflow{
     .content{
-      background: #fff;
+
       padding: 20px;
       .el-row{
         margin-bottom: 20px;

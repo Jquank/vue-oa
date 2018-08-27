@@ -1,5 +1,5 @@
 <template>
-  <div class="cus-pool">
+  <div class="cus-pool component-container media-padding">
     <div class="cus-status">
         <el-radio-group v-model="statusRadio">
           <el-radio-button label="10">全部</el-radio-button>
@@ -54,7 +54,6 @@ export default {
 
 <style lang="less" scoped>
 .cus-pool {
-  background: #fff;
   padding: 20px;
   .cus-status{
     margin-left: 10px;

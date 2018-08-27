@@ -38,7 +38,6 @@ export default {
 
 <style lang="less" scoped>
 .allot-contract {
-  background: #fff;
   padding: 20px;
   .allot-search {
     display: flex;

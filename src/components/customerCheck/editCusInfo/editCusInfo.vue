@@ -1,5 +1,5 @@
 <template>
-  <div class="cus-edit">
+  <div class="cus-edit component-container media-padding">
     <div class="edit-search">
       <el-input placeholder="搜索客户名称" v-model="cusName" class="edit-item item-width">
         <template slot="prepend">客户名称:</template>
@@ -39,7 +39,6 @@ export default {
 
 <style lang="less" scoped>
 .cus-edit {
-  background: #fff;
   padding: 20px;
   margin-top: -10px;
   .edit-search {

@@ -1,5 +1,5 @@
 <template>
-  <div class="import-cus">
+  <div class="import-cus component-container media-padding">
     <div class="import-search">
       <el-input v-model="cusName" class="import-item item-width" placeholder="搜索客户名称">
         <template slot="prepend">客户名称:</template>
@@ -26,7 +26,7 @@ export default {
 
 <style lang="less" scoped>
 .import-cus {
-  background: #fff;
+
   padding: 20px;
   .import-search {
     display: flex;

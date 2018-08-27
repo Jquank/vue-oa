@@ -1,5 +1,5 @@
 <template>
-  <div class="check-record">
+  <div class="check-record  component-container media-padding">
     <div class="record-search">
       <el-input placeholder="搜索客户名称" v-model="cusName" class="record-item item-width">
         <template slot="prepend">客户名称:</template>
@@ -40,7 +40,6 @@ export default {
 
 <style lang="less" scoped>
 .check-record {
-  background: #fff;
   padding: 20px;
   margin-top: -10px;
   .record-search {

@@ -1,5 +1,5 @@
 <template>
-  <div class="rule">
+  <div class="rule component-container media-padding">
     <div class="rule-content media-padding">
       <div style="padding-bottom:5px;">
         <el-button @click.native="addRule" size="mini" type="primary" icon="fa fa-plus"> 新 增</el-button>
@@ -95,7 +95,7 @@ export default {
 <style scoped lang="less">
 .rule {
   .rule-content {
-    background: #fff;
+
     padding: 20px;
   }
 }

@@ -67,11 +67,12 @@ export default {
     }
     .el-header {
       padding: 0;
-      background: #fff;
+
       border-bottom: 1px solid #e2e5ec;
     }
     .el-main {
       padding: 5px;
+      height: calc(~"(100vh - 60px)");
       background: #e2e5ec;
     }
   }

@@ -7,7 +7,7 @@ import { Loading, Message } from 'element-ui'
 const instance = axios.create({
   baseURL: 'http://172.16.11.72:88',
   withCredentials: true, // 跨域凭证
-  timeout: 6000
+  timeout: 1000
 })
 let loadingInstance
 instance.interceptors.request.use( // 请求拦截
@@ -39,7 +39,7 @@ instance.interceptors.response.use( // 响应拦截
   err => {
     loadingInstance.close()
     Message.error({
-      message: '网络错误，请检查'
+      message: '网络错误'
     })
     console.log(err)
     return Promise.reject(err)

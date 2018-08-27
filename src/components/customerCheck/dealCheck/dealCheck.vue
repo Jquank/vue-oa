@@ -1,5 +1,5 @@
 <template>
-  <div class="deal-check">
+  <div class="deal-check component-container media-padding">
     <div class="check-status">
       <el-radio-group v-model="checkRadio">
         <el-radio-button label="10">全部</el-radio-button>
@@ -47,7 +47,6 @@ export default {
 
 <style lang="less" scoped>
 .deal-check {
-  background: #fff;
   padding: 20px;
   .check-status {
     margin-left: 10px;

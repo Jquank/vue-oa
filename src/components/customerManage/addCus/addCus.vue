@@ -1,5 +1,5 @@
 <template>
-  <div class="add-user">
+  <div class="add-user component-container media-padding">
     <el-form ref="form" :model="form" label-width="90px">
       <el-row :gutter="20">
         <el-col :md="12" class="maxwidth">
@@ -173,7 +173,7 @@ export default {
 
 <style lang="less" scoped>
 .add-user {
-  background: #fff;
+
   padding: 20px;
   .maxwidth{
     max-width: 500px;

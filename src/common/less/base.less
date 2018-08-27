@@ -1,127 +1,114 @@
 @import 'nomalize.css';
 @import 'font-awesome.min.css';
-@media (max-width: 1200px) {
-  #iframe-call {
-    height: 90px;
-  }
-}
-@media screen and (max-width: 768px) {
-  #m-bread,
-  #down-client,
-  #help-doc,
-  #full-screen,
-  #user-name {
-    display: none;
-  }
-  #nav-aside {
-    width: 0 !important;
-    position: fixed;
-  }
-  #nested {
-    left: 10px;
-  }
-  #main {
-    padding: 5px 2px;
-  }
-  .media-padding {
-    padding: 5px 2px;
-  }
-  .el-dialog {
-    width: 95%;
-  }
-}
+@import 'media.less';
 ul {
   margin: 0;
   padding: 0;
 }
+
 li {
   list-style: none;
 }
+
 body {
   font: 14px "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
 }
+
 a {
   text-decoration: none;
   color: #666;
 }
+
 ::-webkit-input-placeholder {
   /* WebKit browsers */
   color: #b5b7bb !important;
 }
+
 :-moz-placeholder {
   /* Mozilla Firefox 4 to 18 */
   color: #b5b7bb !important;
 }
+
 ::-moz-placeholder {
   /* Mozilla Firefox 19+ */
   color: #b5b7bb !important;
 }
+
 :-ms-input-placeholder {
   /* Internet Explorer 10+ */
-  color: #b5b7bb !important;
+  color:#b5b7bb !important;
 }
+
 .img-responsive {
   width: 100%;
   height: auto;
   display: block;
 }
+
 .red {
   color: red;
 }
+
 .ml10px {
   margin-left: 10px !important;
 }
+
 .mr10px {
   margin-right: 10px;
 }
+
 .mt10px {
   margin-top: 10px;
 }
 /*组件容器样式*/
-.component-container {
+.component-container{
   padding: 15px;
-  min-height: calc((100% - 30px));
+  min-height: calc(~"(100% - 30px)");
   background: #fff;
 }
 div.el-table {
   font-size: 12px;
   min-height: 100px;
 }
+
 /* 表头背景色 */
+
 .el-table thead th {
   background: #E2E5EC;
 }
+
 /* 侧边栏剪头  */
+
 .nav-aside .el-submenu__icon-arrow {
   right: 50px;
 }
+
 div.el-dialog__body {
   padding-top: 5px;
 }
+
 /* 面包屑title */
+
 .bread-title {
   text-indent: 1em;
   margin-top: 0;
   padding-top: 2px;
   margin-bottom: 5px;
 }
-.check-title {
-  margin: 2px 0 15px;
-  color: #E6A23C;
+
+.check-title{
+  margin:2px 0 15px;
+  color:#E6A23C;
 }
 /* input的apend或prepend文字pandding */
-.el-input-group__append,
-.el-input-group__prepend {
-  padding: 0 10px;
-}
-.el-loading-mask {
-  /* background: rgba(0,0,0,0.2) */
-}
-.xsbtn.el-button {
-  padding: 5px 8px;
+.el-input-group__append, .el-input-group__prepend{
+  padding:0 10px;
 }
 
-.line{
-  border-top: 1px solid rgb(216, 210, 210);
-  padding-bottom: 5px;
+.el-loading-mask{
+  /* background: rgba(0,0,0,0.2) */
+}
+
+.xsbtn.el-button{
+    padding: 5px 8px;
 }

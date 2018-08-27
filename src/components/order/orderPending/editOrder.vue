@@ -97,7 +97,7 @@ export default {
     left: 0;
     z-index: 200;
     .detail-content{
-      background: #fff;
+
       padding: 20px;
     }
   }
