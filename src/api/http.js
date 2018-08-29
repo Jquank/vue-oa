@@ -7,7 +7,8 @@ import { Loading, Message } from 'element-ui'
 const instance = axios.create({
   baseURL: 'http://172.16.11.72:88',
   withCredentials: true, // 跨域凭证
-  timeout: 1000
+  timeout: 3000
+  // headers: {'Content-Type': 'application/form-data'}
 })
 let loadingInstance
 instance.interceptors.request.use( // 请求拦截

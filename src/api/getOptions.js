@@ -4,7 +4,7 @@ import { serverUrl } from '@/api/config'
 const tradeUrl = '/CompanyCat/AllCompanyCatGet'
 const areaUrl = '/Area/HomeAreaTreeGet'
 const sourceUrl = serverUrl + '/cd.do?get&code=27'
-const codeUrl = serverUrl + '/cd.do?get&code='
+const codeUrl = '/CodeDic/CodeDicgetByCode?code='
 const contractUrl = serverUrl + '/Contract.do?SearchByCatId'
 const departmentUrl = serverUrl + '/Search.do?DeptTree'
 

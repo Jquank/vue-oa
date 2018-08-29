@@ -190,13 +190,16 @@ export default {
       }
     }
   },
+  // created () {
+
+  // },
   created () {
     this._getRolesAndPosition()
-  },
-  mounted () {
+    console.log(123)
     if (!this.editDisable) {
       return
     }
+
     this.echoDept = this.echoUserInfo.fullDeptName
     this.key_dept = new Date() + ''
     let receiveData = {
@@ -208,7 +211,7 @@ export default {
       idCardNum: this.echoUserInfo.sfz,
       password: this.echoUserInfo.pwd,
       bankCardNum: this.echoUserInfo.bankcard,
-      role: this.echoUserInfo.roles[0].rid,
+      // role: this.echoUserInfo.roles[0].rid, //报错没提示！！！
       job: this.echoUserInfo.position,
       phone: this.echoUserInfo.mobile,
       extention: this.echoUserInfo.office_phone,
@@ -221,6 +224,11 @@ export default {
       followQuota: this.echoUserInfo.max_b,
       baiduID: this.echoUserInfo.bdcall_id,
       id: this.echoUserInfo.id
+    }
+    try {
+      receiveData.role = this.echoUserInfo.roles[0].rid
+    } catch (error) {
+      receiveData.role = ''
     }
     this.form = Object.assign({}, this.form, receiveData)
   },

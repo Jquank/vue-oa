@@ -13,6 +13,12 @@ export default {
       default: function () {
         return []
       }
+    },
+    defaultExpanded: {
+      type: Array,
+      default: function () {
+        return ['KD01']
+      }
     }
   },
   data () {
@@ -21,11 +27,11 @@ export default {
       depProps: {
         children: 'children',
         label: 'name'
-      },
-      defaultExpanded: []
+      }
     }
   },
   mounted () {
+    console.log(this.defaultExpanded)
     this._getDeptList()
   },
   methods: {

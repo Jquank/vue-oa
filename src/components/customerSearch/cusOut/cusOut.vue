@@ -1,5 +1,5 @@
 <template>
-  <div class="cus-search">
+  <div class="cus-search component-container media-padding">
     <div class="multi-import">
       <el-button type="primary" icon="fa fa-cloud-download"> 批量导入</el-button>
       <span class="red">(ps:excell表头为“百度用户名”、“转入客服编号”、“SF系统”)</span>
@@ -17,25 +17,58 @@
       </div>
     </div>
     <div class="out-btn">
-      <el-button type="success">转 出</el-button>
+      <el-button type="success" @click.native="cusOut">转 出</el-button>
     </div>
+
+    <!-- 转出弹窗 -->
+    <el-dialog title="选择客服" :visible.sync="selCusServiceDialog" width="500px">
+      <el-input v-model="accountSF" placeholder="请填写SF账号(必填)">
+        <span slot="prepend">SF账号</span>
+      </el-input>
+      <el-input @click.native="searchService($event,serviceName)" v-model="serviceName" style="margin-top:10px;" placeholder="搜索客服">
+        <span slot="append" class="search-service">搜索客服</span>
+      </el-input>
+      <el-table :data="serviceData" highlight-current-row style="width:100%;margin-top:10px;">
+        <el-table-column type="selection" width="55">
+        </el-table-column>
+        <el-table-column prop="" label="转出客服">
+        </el-table-column>
+      </el-table>
+      <!-- <page></page> -->
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import AutoSelect from 'base/autoSelect/autoSelect'
 import SelectDepartment from 'base/selectDepartment/selectDepartment'
+import Page from 'base/page/page'
 export default {
   data () {
     return {
       cusName: '',
-      userName: ''
+      userName: '',
+      selCusServiceDialog: false,
+      accountSF: '',
+      serviceName: '',
+      serviceData: []
 
+    }
+  },
+  methods: {
+    cusOut () {
+      this.selCusServiceDialog = true
+    },
+    searchService (e, name) {
+      if (e.target.nodeName !== 'INPUT') {
+        console.log(name)
+      }
     }
   },
   components: {
     AutoSelect,
-    SelectDepartment
+    SelectDepartment,
+    Page
   }
 }
 </script>
@@ -45,8 +78,6 @@ export default {
   margin-left: 10px;
 }
 .cus-search {
-
-  padding: 20px;
   .multi-import{
     .marginleft10px
   }
@@ -58,12 +89,19 @@ export default {
       margin-top: 10px;
     }
     .item-width {
-      width: 300px;
+      width: 280px;
     }
   }
   .out-btn{
     .marginleft10px;
     margin-top: 10px;
+  }
+
+  .search-service{
+    display: inline-block;
+    width:100%;
+    height:100%;
+    cursor: pointer;
   }
 }
 </style>

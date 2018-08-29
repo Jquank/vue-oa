@@ -31,7 +31,6 @@
 
 <script>
 import cookie from 'js-cookie'
-
 export default {
   data () {
     return {
@@ -49,7 +48,6 @@ export default {
     // storage.remove('bankType')
   },
   mounted () {
-
   },
   methods: {
     login () {

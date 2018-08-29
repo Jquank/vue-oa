@@ -1,11 +1,17 @@
 <template>
-  <el-cascader v-model="trade" @change="$emit('input', trade)" placeholder="请选择行业" :options="options" :change-on-select="false" :props="props"></el-cascader>
+  <el-cascader v-model="trade" @change="$emit('input', trade)" :disabled="tradeDisable" placeholder="请选择行业" :options="options" :change-on-select="false" :props="props"></el-cascader>
 </template>
 
 <script>
 import { getTrade } from 'api/getOptions'
 import storage from 'good-storage'
 export default {
+  props: {
+    tradeDisable: {
+      type: Boolean,
+      default: false
+    }
+  },
   data () {
     return {
       trade: [],

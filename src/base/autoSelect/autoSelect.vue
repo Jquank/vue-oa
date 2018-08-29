@@ -39,7 +39,7 @@ export default {
 </script>
 <style>
 .auto-sel input.el-input__inner {
-  padding-left: 60px; /* 默认两个字的宽度+34px，如果不是两个字，需在父组件中重新定义padding值 */
+  padding-left: 86px; /* 默认4个字的宽度+34px，如果不是4个字，需在父组件中重新定义padding值 */
 }
 </style>
 

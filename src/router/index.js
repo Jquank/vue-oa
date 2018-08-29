@@ -30,7 +30,9 @@ import ImportCus from 'components/customerManage/importCus/importCus'
 import DealCheck from 'components/customerCheck/dealCheck/dealCheck'
 import CheckRecord from 'components/customerCheck/checkRecord/checkRecord'
 import EditCusInfo from 'components/customerCheck/editCusInfo/editCusInfo'
+import CusInfoEdit from 'components/customerCheck/editCusInfo/cusInfoEdit'
 import CusPoolManage from 'components/customerCheck/cusPoolManage/cusPoolManage'
+import ViewCusInfo from 'components/customerCheck/cusPoolManage/viewCusInfo'
 
 // 客户搜索
 import CusSearch from 'components/customerSearch/cusSearch/cusSearch'
@@ -45,6 +47,7 @@ import RenewApply from 'components/renew/renewApply/renewApply'
 import Salary from 'components/salary/salary'
 // 到款管理
 import BankflowList from 'components/moneyManage/bankflowList/bankflowList'
+import MoneyCount from 'components/moneyManage/moneyCount/moneyCount'
 // 订单管理
 import AddBaiduOrder from 'components/order/addBaiduOrder/addBaiduOrder'
 import OrderPending from 'components/order/orderPending/orderPending'
@@ -76,7 +79,7 @@ const router = new Router({
     {
       path: '/login',
       name: 'login',
-      component: IndexPage
+      component: Login
     },
     {
       path: '/indexPage',
@@ -216,13 +219,25 @@ const router = new Router({
           path: 'editCusInfo',
           name: 'editCusInfo',
           meta: { text: '客户信息修改' },
-          component: EditCusInfo
+          component: EditCusInfo,
+          children: [
+            {
+              path: ':id',
+              meta: { text: '修改客户信息' },
+              component: CusInfoEdit
+            }
+          ]
         },
         {
           path: 'cusPoolManage',
           name: 'cusPoolManage',
           meta: { text: '客户库管理' },
-          component: CusPoolManage
+          component: CusPoolManage,
+          children : [{
+            path: ':id',
+            meta: { text: '客户审核' },
+            component: ViewCusInfo
+          }]
         },
         // 客户搜索
         {
@@ -268,6 +283,12 @@ const router = new Router({
           name: 'bankflowList',
           meta: { text: '银行流水列表' },
           component: BankflowList
+        },
+        {
+          path: 'moneyCount',
+          name: 'moneyCount',
+          meta: { text: '到款统计' },
+          component: MoneyCount
         },
         // 订单管理
         {

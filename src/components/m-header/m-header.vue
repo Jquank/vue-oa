@@ -174,9 +174,9 @@ export default {
     },
     exitLogin () {
       $post('/logout').then(res => {
+        this.$router.push('/login')
         if (res.data.status === -1) {
           cookie.remove('userName')
-          this.$router.push('/login')
         }
       })
     },

@@ -83,6 +83,14 @@ a {
   min-height: calc((100% - 30px));
   background: #fff;
 }
+.child-component-container {
+  width: 100%;
+  background: #fff;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 200;
+}
 div.el-table {
   font-size: 12px;
   min-height: 100px;
@@ -120,8 +128,7 @@ div.el-dialog__body {
 .xsbtn.el-button {
   padding: 5px 8px;
 }
-
-.line{
-  border-top: 1px solid rgb(216, 210, 210);
+.line {
+  border-top: 1px solid #dfdcdc;
   padding-bottom: 5px;
 }

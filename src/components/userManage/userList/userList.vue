@@ -8,6 +8,7 @@
         <el-switch @change="turnOff(accountOff)" v-model="accountOff" active-color="#13ce66" inactive-color="#13ce66"></el-switch>
       </el-button>
     </div>
+    <!-- 搜索 -->
     <div class="search">
       <select-department @upDeptId="upDeptId" :title="'部门'" :key="key_dept" class="search-item"></select-department>
       <el-input v-model="staffName" class="search-item" style="width:300px;" placeholder="搜索员工姓名">
@@ -24,6 +25,7 @@
         <el-button type="warning" @click="reset">重 置</el-button>
       </div>
     </div>
+    <!-- 列表 -->
     <el-table ref="multipleTable" :data="tableData" style="width:100%" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55">
       </el-table-column>
@@ -67,7 +69,7 @@
     <page @updateList="updateList" :url="url" :sendParams="sendParams" class="page"></page>
     <!-- 编辑部门弹窗 -->
     <el-dialog title="编辑部门管理" :visible.sync="deptTreeDialog" width="350px">
-      <select-dept @sendDeptCodes="receiveDeptCodes" :defaultChecked="defaultChecked"></select-dept>
+      <select-dept :key="key_dept_manage" @sendDeptCodes="receiveDeptCodes" :defaultChecked="defaultChecked" :defaultExpanded="defaultExpanded"></select-dept>
       <div style="text-align:center;padding-top:15px;">
         <el-button @click.native="subDeptManage" type="primary" size="mini">提 交</el-button>
       </div>
@@ -161,11 +163,17 @@ export default {
       uid: '',
       deptCodes: [],
       multipleSelection: [],
-      defaultChecked: [] // 部门树默认勾选
+      defaultChecked: [], // 部门树默认勾选
+      defaultExpanded: [], // 部门树默认展开
+      componentid: '',
+      key_dept_manage: ''
     }
   },
   created () {},
+  mounted () {
+  },
   methods: {
+    // 账号开关
     turnOff (val) {
       if (this.multipleSelection.length === 0) {
         this.$message({
@@ -177,8 +185,8 @@ export default {
       this._turnOffRequest()
     },
     _turnOffRequest () {
-      this.$post('/User/UserStatusUpdate', {
-        uid: this.multipleSelection
+      this.$post('/User/UserStatusBatchUpdate', {
+        uids: this.multipleSelection
       }).then(res => {
         if (res.data.status === 1) {
           this.$message({
@@ -212,18 +220,20 @@ export default {
     updateList (data) {
       this.tableData = data.data.data.list
     },
+    // 编辑部门
     editDept (uid) {
-      // 编辑部门
-      this.deptTreeDialog = true
+      this.key_dept_manage = uid
       this.uid = uid
+      this.deptTreeDialog = true
       this.$post('/Department/MgrDepartmentGetByUser', { uid: this.uid }).then(res => {
         if (res.data.status === 1) {
           this.defaultChecked = res.data.data
+          this.defaultExpanded = res.data.data
         }
       })
     },
+    // 编辑配额
     editQuota (uid) {
-      // 编辑配额
       this.uid = uid
       this.editQuotaDialog = true
       this.$post('/User/UserGetById', { uid: uid }).then(res => {
@@ -240,8 +250,8 @@ export default {
         }
       })
     },
+    // 编辑人员信息
     editUserInfo (uid) {
-      // 编辑人员信息
       this.userInfoDialog = true
       this.$post('/User/UserGetById', { uid: uid }).then(res => {
         if (res.data.status === 1) {
@@ -256,8 +266,8 @@ export default {
     upDeptId (id) {
       this.deptCode = id
     },
+    // 提交配额
     subQuota () {
-      // 提交配额
       let params = {
         id: this.uid,
         max_a: this.form.baoAquota,
@@ -278,8 +288,8 @@ export default {
       this.deptCodes = data
       console.log(data)
     },
+    // 提交部门管理
     subDeptManage () {
-      // 提交部门管理
       let params = {
         deptCodes: this.deptCodes,
         uid: this.uid
@@ -294,8 +304,8 @@ export default {
         }
       })
     },
+    // 隐藏带input的部门树
     hiddenDepartment (e) {
-      // 隐藏带input的部门树
       let tree = document.getElementById('department')
       if (tree && e.target.id !== 'dept-input') {
         tree.style.display = 'none'

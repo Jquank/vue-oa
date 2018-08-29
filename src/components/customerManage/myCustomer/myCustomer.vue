@@ -75,6 +75,7 @@
         </el-table-column>
       </el-table>
       <page class="pagination" :url="myCusUrl" :sendParams="params" @updateList="updateMyCusList"></page>
+      <el-button @click.native="view">查看</el-button>
     </div>
     <router-view></router-view>
   </div>
@@ -116,6 +117,11 @@ export default {
   mounted () {
   },
   methods: {
+    view () {
+      this.$router.push({
+        path: `myCustomer/123`
+      })
+    },
     // 查看按钮
     viewDetail (data) {
       this.$router.push({

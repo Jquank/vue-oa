@@ -14,7 +14,7 @@
       :current-page="currentPage"
       :page-sizes="[10,30,50,100]"
       :page-size="10"
-      layout="total, sizes, prev, pager, next, jumper"
+      :layout="layout"
       :total="pageCount">
     </el-pagination>
   </div>
@@ -44,7 +44,6 @@ export default {
     //   deep: true
     // }
     sendParams () {
-      console.log(333)
       this._getFirstList()
     }
 
@@ -55,10 +54,15 @@ export default {
       handleList: [],
       pageCount: 0,
       pageval: 10,
-      isLoading: true
+      isLoading: true,
+      layout: 'total, sizes, prev, pager, next, jumper'
     }
   },
   created () {
+    let width = document.documentElement.clientWidth
+    if (width < 768) {
+      this.layout = 'total, prev, next, jumper'
+    }
     this._getFirstList()
   },
   methods: {

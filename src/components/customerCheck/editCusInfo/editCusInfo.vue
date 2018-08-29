@@ -13,8 +13,10 @@
       <div class="edit-item">
         <el-button type="primary">查 询</el-button>
         <el-button type="warning">重 置</el-button>
+        <el-button type="warning" @click.native="view">查 看</el-button>
       </div>
     </div>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -30,6 +32,13 @@ export default {
 
     }
   },
+  methods: {
+    view () {
+      this.$router.push({
+        path: `editCusInfo/8465`
+      })
+    }
+  },
   components: {
     AutoSelect,
     SelectDepartment
@@ -39,11 +48,11 @@ export default {
 
 <style lang="less" scoped>
 .cus-edit {
-  padding: 20px;
-  margin-top: -10px;
+  position: relative;
   .edit-search {
     display: flex;
     flex-wrap: wrap;
+    margin-top: -10px;
     .edit-item {
       margin-left: 10px;
       margin-top: 10px;

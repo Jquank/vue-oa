@@ -1,5 +1,5 @@
 <template>
-  <div class="apply-detail media-padding">
+  <div class="view-detail child-component-container media-padding">
     <div class="detail-main">
       <div class="cus-info">
         <div class="title">
@@ -15,7 +15,7 @@
               </el-form-item>
             </el-col>
             <el-col :md="12" class="maxwidth">
-              <el-form-item label="所属行业 :" required>
+              <el-form-item label="所属行业 :" >
                 <select-trade v-model="form.trade" style="width:100%"></select-trade>
               </el-form-item>
             </el-col>
@@ -23,23 +23,23 @@
           <el-row :gutter="20">
             <el-col :md="12" class="maxwidth">
               <el-form-item label="客户法人 :">
-                <el-input v-model="form.cus" :disabled="disabled" placeholder="客户法人"></el-input>
+                <el-input v-model="form.cus"  placeholder="客户法人"></el-input>
               </el-form-item>
             </el-col>
             <el-col :md="12" class="maxwidth">
               <el-form-item label="客户地址 :">
-                <el-input v-model="form.cusAddr" :disabled="disabled" placeholder="客户地址"></el-input>
+                <el-input v-model="form.cusAddr"  placeholder="客户地址"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="20">
             <el-col :md="12" class="maxwidth">
               <el-form-item label="成立日期 :">
-                <el-date-picker v-model="form.buildDate" value-format="yyyy-MM-dd" :disabled="disabled" type="date" placeholder="选择日期" style="width:100%"></el-date-picker>
+                <el-date-picker v-model="form.buildDate" value-format="yyyy-MM-dd"  type="date" placeholder="选择日期" style="width:100%"></el-date-picker>
               </el-form-item>
             </el-col>
             <el-col :md="12" class="maxwidth">
-              <el-form-item label="所属地区 :" required>
+              <el-form-item label="所属地区 :" >
                 <select-area v-model="form.area" style="width:100%"></select-area>
               </el-form-item>
             </el-col>
@@ -48,12 +48,12 @@
           <el-row :gutter="20">
             <el-col :md="12" class="maxwidth">
               <el-form-item label="客户网址 :">
-                <el-input v-model="form.cusWeb" :disabled="disabled" placeholder="客户网址"></el-input>
+                <el-input v-model="form.cusWeb"  placeholder="客户网址"></el-input>
               </el-form-item>
             </el-col>
             <el-col :md="12" class="maxwidth">
               <el-form-item label="客户来源 :">
-                <el-select v-model="form.cusFrom" :disabled="disabled" placeholder="客户来源" style="width:100%;">
+                <el-select v-model="form.cusFrom"  placeholder="客户来源" style="width:100%;">
                   <el-option value="10" label="个人查找"></el-option>
                   <el-option value="20" label="个人查找"></el-option>
                 </el-select>
@@ -62,13 +62,13 @@
           </el-row>
           <el-row v-for="(item,index) in contactList" :key="index" :gutter="20">
             <el-col :md="12" class="maxwidth">
-              <el-form-item label="联系人 :" required>
-                <el-input v-model="contactList[index].contact" :disabled="disabled" placeholder="联系人"></el-input>
+              <el-form-item label="联系人 :" >
+                <el-input v-model="contactList[index].contact"  placeholder="联系人"></el-input>
               </el-form-item>
             </el-col>
             <el-col :md="12" class="maxwidth">
-              <el-form-item label="联系电话 :" required>
-                <el-input v-model="contactList[index].phone" :disabled="disabled" placeholder="联系电话" class="contact-phone"></el-input>
+              <el-form-item label="联系电话 :" >
+                <el-input v-model="contactList[index].phone"  placeholder="联系电话" class="contact-phone"></el-input>
                 <el-button @click.native="addContact(index)" class="circle-btn" :type="index===0?'success':'danger'" size="mini" :icon="index===0?'fa fa-plus':'fa fa-minus'" circle></el-button>
               </el-form-item>
             </el-col>
@@ -76,50 +76,78 @@
           <el-row :gutter="20">
             <el-col :md="24" class="maxwidth">
               <el-form-item label="客户类型 :">
-                <el-select v-model="form.remark" style="width:100%;">
-                  <el-option>123</el-option>
+                <el-select v-model="form.cusType" style="width:100%;">
+                  <el-option value="10">123</el-option>
                 </el-select>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="20">
             <el-col :md="24" style="max-width:1000px;">
-              <el-form-item label="经营范围 :" required>
-                <el-input v-model="form.businessScope" :disabled="disabled" type="textarea" :rows="3" placeholder="经营范围"></el-input>
+              <el-form-item label="经营范围 :" >
+                <el-input v-model="form.businessScope"  type="textarea" :rows="3" placeholder="经营范围"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
-
+          <el-row :gutter="20">
+            <el-col :md="24" style="max-width:1000px;">
+              <el-form-item label="备注 :" >
+                <el-input v-model="form.remark"  type="textarea" :rows="3" placeholder="经营范围"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
         </el-form>
-      </div>
-      <div class="follow-record">
-        <div class="title">
-          <el-button class="title-btn" type="primary">跟进记录</el-button>
+        <div style="text-align: center;">
+          <el-button type="warning">保存客户资料</el-button>
         </div>
-        <div class="line" style="max-width:980px;"></div>
-        <el-table :data="followRecordData" style="max-width: 980px;">
-          <el-table-column prop="date" label="日期" width="180">
-          </el-table-column>
-          <el-table-column prop="name" label="姓名" width="180">
-          </el-table-column>
-          <el-table-column prop="address" label="地址">
-          </el-table-column>
-        </el-table>
       </div>
-      <div class="remark mt10px">
-        <span>备注：</span>
-        <el-row>
-          <el-col :md="24" style="max-width: 980px;">
-            <el-input type="textarea" :rows="3"></el-input>
-          </el-col>
-        </el-row>
-      </div>
-      <div class="btns mt10px">
-        <el-button type="success" @click.native="aaa">跟进</el-button>
-        <el-button type="success" @click.native="aaa">转跟踪</el-button>
-        <el-button type="success" @click.native="aaa">暂不联系</el-button>
-        <el-button type="success" @click.native="aaa">永久放弃</el-button>
-        <el-button type="success" @click.native="aaa">空号/错号</el-button>
+      <!-- 日志记录 -->
+      <div class="record mt10px">
+        <div class="title">
+          <el-button class="title-btn" type="primary">日志记录</el-button>
+        </div>
+        <el-tabs type="border-card" style="max-width:980px;">
+          <el-tab-pane label="审核记录">
+            <el-table :data="recordData">
+              <el-table-column prop="date" label="日期" width="180">
+              </el-table-column>
+              <el-table-column prop="name" label="姓名" width="180">
+              </el-table-column>
+              <el-table-column prop="address" label="地址">
+              </el-table-column>
+            </el-table>
+          </el-tab-pane>
+          <el-tab-pane label="修改记录">
+            <el-table :data="recordData">
+              <el-table-column prop="date" label="日期" width="180">
+              </el-table-column>
+              <el-table-column prop="name" label="姓名" width="180">
+              </el-table-column>
+              <el-table-column prop="address" label="地址">
+              </el-table-column>
+            </el-table>
+          </el-tab-pane>
+          <el-tab-pane label="申请修改记录">
+            <el-table :data="recordData">
+              <el-table-column prop="date" label="日期" width="180">
+              </el-table-column>
+              <el-table-column prop="name" label="姓名" width="180">
+              </el-table-column>
+              <el-table-column prop="address" label="地址">
+              </el-table-column>
+            </el-table>
+          </el-tab-pane>
+          <el-tab-pane label="放弃保A日志">
+            <el-table :data="recordData">
+              <el-table-column prop="date" label="日期" width="180">
+              </el-table-column>
+              <el-table-column prop="name" label="姓名" width="180">
+              </el-table-column>
+              <el-table-column prop="address" label="地址">
+              </el-table-column>
+            </el-table>
+          </el-tab-pane>
+        </el-tabs>
       </div>
     </div>
   </div>
@@ -140,6 +168,7 @@ export default {
         cusFrom: '',
         trade: '',
         area: '',
+        cusType: '',
         businessScope: '',
         remark: ''
       },
@@ -150,7 +179,7 @@ export default {
         }
       ],
       disabled: false,
-      followRecordData: []
+      recordData: []
     }
   },
   methods: {
@@ -170,14 +199,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.apply-detail {
-  width: 100%;
-  height: 100%;
-  background: #fff;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 200;
+.view-detail {
   .detail-main{
     padding: 15px;
   }
