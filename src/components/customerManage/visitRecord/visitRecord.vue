@@ -18,7 +18,7 @@
     </div>
 
     <!-- 填写出访结果弹窗 -->
-    <el-dialog title="填写出访结果" :visible.sync="visitResultDialog">
+    <el-dialog v-el-drag-dialog title="填写出访结果" class="visit-result-dialog" :visible.sync="visitResultDialog">
       <el-form ref="form" :model="form" label-width="105px">
         <el-row :gutter="20">
           <el-col :md="12" class="maxwidth">
@@ -78,7 +78,7 @@
           <el-col :md="12" class="maxwidth">
             <el-form-item label="出访类型 :">
               <el-select v-model="form.visitType" :disabled="disabled" style="width:100%;">
-                <el-option>111</el-option>
+                <el-option value="10">111</el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -110,7 +110,9 @@
 
 <script>
 import AutoSelect from 'base/autoSelect/autoSelect'
+import elDragDialog from '@/directive/el-dragDialog' // eslint-disable-line
 export default {
+  directives: { elDragDialog },
   data () {
     return {
       cusName: '',
@@ -143,11 +145,12 @@ export default {
   }
 }
 </script>
-<style>
-/* 自定义select的padding */
-#visit-status input.el-input__inner {
-  padding-left: 86px;
-}
+<style lang="less">
+.visit-result-dialog{
+    >.el-dialog{
+      width:800px;
+    }
+  }
 </style>
 <style lang="less" scoped>
 .visit-record {

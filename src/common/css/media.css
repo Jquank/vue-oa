@@ -25,6 +25,6 @@
     padding: 5px 2px;
   }
   .el-dialog {
-    width: 95%;
+    width: 98% !important;
   }
 }

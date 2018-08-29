@@ -1,35 +1,6 @@
 @import 'nomalize.css';
 @import 'font-awesome.min.css';
-@media (max-width: 1200px) {
-  #iframe-call {
-    height: 90px;
-  }
-}
-@media screen and (max-width: 768px) {
-  #m-bread,
-  #down-client,
-  #help-doc,
-  #full-screen,
-  #user-name {
-    display: none;
-  }
-  #nav-aside {
-    width: 0 !important;
-    position: fixed;
-  }
-  #nested {
-    left: 10px;
-  }
-  #main {
-    padding: 5px 2px;
-  }
-  .media-padding {
-    padding: 5px 2px;
-  }
-  .el-dialog {
-    width: 95%;
-  }
-}
+@import 'media.css';
 ul {
   margin: 0;
   padding: 0;
