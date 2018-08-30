@@ -69,21 +69,23 @@ export default {
     // 获取列表的第一页
     _getFirstList () {
       let params = Object.assign({}, {
-        pageSize: 10,
-        pageNum: 1
+        // pageSize: 10,
+        // pageNum: 1
+        pagesize: 10,
+        currentpage: 1
       }, this.sendParams)
 
       $post(this.url, params)
         .then(res => {
-          if (res.data.status === 1) {
+          // if (res.data.status === 1) {
+          if (res.data) {
             try {
-              this.pageCount = res.data.data.total
+              // this.pageCount = res.data.data.total
+              this.pageCount = res.data[1].data.pagecount
             } catch (e) {
               this.pageCount = 0
             }
             this.handleList = res
-            this._updateList()
-          } else {
             this._updateList()
           }
         })
@@ -95,15 +97,16 @@ export default {
     handleSizeChange (val) {
       this.pageval = val
       let params = Object.assign({}, {
-        pageSize: this.pageval,
-        pageNum: 1
+        // pageSize: this.pageval,
+        // pageNum: 1
+        pagesize: this.pageval,
+        currentpage: 1
       }, this.sendParams)
       $post(this.url, params)
         .then(res => {
-          if (res.data.status === 1) {
+          // if (res.data.status === 1) {
+          if (res.data) {
             this.handleList = res
-            this._updateList()
-          } else {
             this._updateList()
           }
         })
@@ -117,15 +120,16 @@ export default {
         this.pageval = 10
       }
       let params = Object.assign({}, {
-        pageSize: this.pageval,
-        pageNum: page
+        // pageSize: this.pageval,
+        // pageNum: page
+        pagesize: this.pageval,
+        currentpage: page
       }, this.sendParams)
       $post(this.url, params)
         .then(res => {
-          if (res.data.status === 1) {
+          // if (res.data.status === 1) {
+          if (res.data) {
             this.handleList = res
-            this._updateList()
-          } else {
             this._updateList()
           }
         })

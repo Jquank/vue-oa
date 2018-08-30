@@ -1,14 +1,14 @@
 import axios from 'axios'
 import router from '@/router'
-import qs from 'querystring'
+// import qs from 'querystring'
 
 import { Loading, Message } from 'element-ui'
 
 const instance = axios.create({
-  baseURL: 'http://172.16.11.72:88',
-  withCredentials: true, // 跨域凭证
-  timeout: 3000
-  // headers: {'Content-Type': 'application/form-data'}
+  baseURL: 'http://172.16.11.78:8080/BaiJieOA',
+  // withCredentials: true, // 跨域凭证
+  timeout: 10000
+  // headers: {'Content-Type': 'application/json'}
 })
 let loadingInstance
 instance.interceptors.request.use( // 请求拦截
@@ -49,7 +49,8 @@ instance.interceptors.response.use( // 响应拦截
 export function $post (url, params = {}) {
   return new Promise((resolve, reject) => {
     instance
-      .post(url, qs.stringify(params))
+      // .post(url, qs.stringify(params))
+      .post(url, params)
       .then(res => {
         resolve(res)
       })

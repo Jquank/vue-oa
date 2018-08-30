@@ -35,7 +35,7 @@ export default {
   data () {
     return {
       myName: 'admin',
-      myPassword: '1234rfv'
+      myPassword: '2018123'
       // userName: ""
     }
   },
@@ -51,13 +51,17 @@ export default {
   },
   methods: {
     login () {
+      sessionStorage.clear()
       // this.$router.push('/indexPage')
       let params = {
         username: this.myName,
         password: this.myPassword
       }
-      this.$post('/login', params)
+      // this.$post('/login', params)
+      this.$post('/User.do?login', params)
         .then(res => {
+          sessionStorage.setItem('token', res.data.data.tk)
+          this.$router.push('/indexPage')
           if (res.data.status === 1) {
             // storage.session.set('userId', res.data.data.id)
             // storage.session.set('permissions', res.data.data.permissions)

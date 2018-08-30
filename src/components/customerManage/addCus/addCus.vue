@@ -127,6 +127,13 @@ export default {
       })
     },
     accountNameBlur (val) {
+      if (!val) {
+        this.$message({
+          type: 'error',
+          message: '名称重复'
+        })
+        return
+      }
       this.$post('/Company/CompanyIsRepeat', {name: val}).then(res => {
         if (res.data.status === 1) {
           this.disabled = false
@@ -164,7 +171,6 @@ export default {
           type: 'error',
           message: '请填写必填项！'
         })
-        return
       }
       this.contactList.forEach(val => {
         val.contact = val.contact.replace(/\D*/g, '')
@@ -195,7 +201,11 @@ export default {
       console.log(params)
       this.$post('/Company/CompanySet', params).then(res => {
         if (res.data.status === 1) {
-
+          this.$message({
+            type: 'success',
+            message: res.data.msg
+          })
+          this.$router.push('/indexPage/myCustomer')
         }
       })
     }

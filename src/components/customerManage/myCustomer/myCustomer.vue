@@ -33,8 +33,8 @@
       </div>
 
       <!-- 列表 -->
-      <el-table stripe border max-height="800" :data="myCusList" style="width: 100%">
-        <el-table-column fixed prop="companyname" label="客户名称">
+      <el-table stripe border :data="myCusList" style="width: 100%">
+        <el-table-column prop="companyname" label="客户名称">
         </el-table-column>
         <el-table-column prop="companytype" label="公司状态" width="70">
           <span :class="scope.row.companytype===-10?'red':''" slot-scope="scope">
@@ -61,21 +61,20 @@
         </el-table-column>
         <el-table-column prop="username" label="所属商务" width="80">
         </el-table-column>
-        <el-table-column prop="" label="最后跟进时间">
+        <el-table-column prop="" label="最后跟进时间" width="140">
           <span :class="scope.row.tip?'red':''" slot-scope="scope">
             {{scope.row.visittime | timeFormat}}
           </span>
         </el-table-column>
-        <el-table-column fixed="right" label="操作">
+        <el-table-column label="操作" width="90">
           <template slot-scope="scope">
-            <el-button @click.native.prevent="viewDetail(myCusList[scope.$index])" type="success" size="mini">
+            <el-button @click.native.prevent="viewDetail(scope.row)" type="success" size="mini">
               查看
             </el-button>
           </template>
         </el-table-column>
       </el-table>
       <page class="pagination" :url="myCusUrl" :sendParams="params" @updateList="updateMyCusList"></page>
-      <el-button @click.native="view">查看</el-button>
     </div>
     <router-view></router-view>
   </div>
@@ -83,10 +82,10 @@
 
 <script>
 import Page from '@/base/page/page'
-import { serverUrl } from '@/api/config'
 import SelectArea from 'base/selectArea/selectArea'
 import SelectTrade from 'base/selectTrade/selectTrade'
 import AutoSelect from 'base/autoSelect/autoSelect'
+const tk = sessionStorage.getItem('token')
 export default {
   data () {
     return {
@@ -102,7 +101,7 @@ export default {
         logStatus: 100,
         myKind: 30
       },
-      myCusUrl: serverUrl + '/Company.do?myCustomer',
+      myCusUrl: '/Company.do?myCustomer&tk=' + tk,
       pageCount: 0,
       cusType: '',
       myCusType: [
@@ -117,11 +116,6 @@ export default {
   mounted () {
   },
   methods: {
-    view () {
-      this.$router.push({
-        path: `myCustomer/123`
-      })
-    },
     // 查看按钮
     viewDetail (data) {
       this.$router.push({
@@ -130,7 +124,6 @@ export default {
       })
     },
     updateMyCusList (data) {
-      console.log(data)
       this.myCusList = data.data[0].data
     }
   },
@@ -152,6 +145,7 @@ export default {
 
 <style scoped lang="less">
 .my-customer {
+  position: relative;
   .pagination {
     padding-top: 10px;
     display: flex;

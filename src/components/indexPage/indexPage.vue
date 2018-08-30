@@ -1,7 +1,7 @@
 <template>
 
-  <div id="app">
-    <el-container>
+  <div id="app" >
+    <el-container @touchmove.prevent>
       <!-- 1左侧边栏 -->
       <el-aside id="nav-aside" class="nav-aside" width="180px">
         <navbar></navbar>
@@ -9,11 +9,11 @@
       <!-- 2右侧头部和主体内容 -->
       <el-container class="con-right">
         <!-- 头部 -->
-        <el-header height="50px">
+        <el-header id="my-header"  height="50px" @touchstart.prevent>
           <m-header></m-header>
         </el-header>
         <!-- 主体内容 -->
-        <el-main id="main">
+        <el-main id="main" @touchmove.stop>
           <!-- <div id="call-center">
             <iframe ref="iframecall" id="iframe-call" src="http://gccp.baidu.com/gaiamgmt/fe-communication/communications/index.html#/" frameborder="0"></iframe>
           </div> -->
@@ -37,6 +37,12 @@ export default {
   },
   mounted () {
     // loadCallIframe('iframe-call')
+  },
+  methods: {
+    aaa (e) {
+      console.log(123)
+      e.preventDefault()
+    }
   },
   components: {
     Navbar,
@@ -67,13 +73,13 @@ export default {
     }
     .el-header {
       padding: 0;
-
       border-bottom: 1px solid #e2e5ec;
     }
     .el-main {
       padding: 5px;
       height: calc(~"(100vh - 60px)");
       background: #e2e5ec;
+      margin-top:50px;
     }
   }
   .fade-enter-active{

@@ -1,5 +1,5 @@
 <template>
-  <div class="apply-detail media-padding">
+  <div class="apply-detail child-component-container media-padding">
     <div class="detail-main">
       <div class="cus-info">
         <div class="title">
@@ -171,13 +171,6 @@ export default {
 
 <style lang="less" scoped>
 .apply-detail {
-  width: 100%;
-  height: 100%;
-  background: #fff;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 200;
   .detail-main{
     padding: 15px;
   }

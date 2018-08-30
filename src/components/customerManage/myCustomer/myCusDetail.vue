@@ -1,282 +1,220 @@
 <template>
-  <div class="mycus-detail component-container media-padding">
-    <p class="bread-title">
-      <span>我的客户 / 客户详情</span>
-    </p>
+  <div class="mycus-detail child-component-container media-padding">
     <div class="detail-main">
-      <div class="detail-title">
-        <h4>客户详情</h4>
-        <el-button type="warning" height="10px">返回</el-button>
-      </div>
-      <div class="detail-content">
-        <el-table :data="cusDetailData" border style="width: 100%" :span-method="spanMethod">
-          <el-table-column prop="title" label="" width="80">
-          </el-table-column>
-          <el-table-column prop="" label="">
-            <template slot-scope="scope">
-              <el-date-picker v-model="scope.row.content" type="datetime" placeholder="选择日期时间" style="width:100%" v-if="scope.row.title==='成立日期'"></el-date-picker>
-              <el-input type="textarea" :row="3" v-model="scope.row.content" size="medium" v-else-if="scope.row.title==='经营范围'"></el-input>
-              <el-input v-model="scope.row.content" v-else></el-input>
-            </template>
-          </el-table-column>
-          <el-table-column prop="title1" label="" width="80">
-          </el-table-column>
-          <el-table-column prop="" label="">
-            <template slot-scope="scope">
-              <el-cascader v-if="scope.row.title1==='所属行业'" style="width:100%" :options="tradeOptions" :props="tradeProps" @active-item-change="handleTradeChange" v-model="selTradeOption">
-              </el-cascader>
-              <el-cascader v-else-if="scope.row.title1==='所属地区'" style="width:100%" :options="areaOptions" v-model="selAreaOption">
-              </el-cascader>
-              <el-select v-model="selSourceOption" placeholder="请选择" style="width:100%" v-else-if="scope.row.title1==='客户来源'">
-                <el-option v-for="item in cusSource" :key="item.id" :label="item.code_desc" :value="item.id">
-                </el-option>
-              </el-select>
-              <el-input v-else v-model="scope.row.content1"></el-input>
-            </template>
-          </el-table-column>
-        </el-table>
-      </div>
+      <div class="cus-info">
+        <div class="title">
+          <el-button class="title-btn" type="primary">客户信息</el-button>
+          <el-button class="back" type="warning">返回</el-button>
+        </div>
+        <div class="line" style="max-width:980px;"></div>
+        <el-form ref="form" :model="form" label-width="90px">
+          <el-row :gutter="20">
+            <el-col :md="12" class="maxwidth">
+              <el-form-item label="客户名称 :">
+                <el-input @blur="accountNameBlur(form.cusName)" v-model="form.cusName" placeholder="客户名称"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :md="12" class="maxwidth">
+              <el-form-item label="所属行业 :" required>
+                <select-trade v-model="form.trade" style="width:100%"></select-trade>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :md="12" class="maxwidth">
+              <el-form-item label="客户法人 :">
+                <el-input v-model="form.cus" :disabled="disabled" placeholder="客户法人"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :md="12" class="maxwidth">
+              <el-form-item label="客户地址 :">
+                <el-input v-model="form.cusAddr" :disabled="disabled" placeholder="客户地址"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :md="12" class="maxwidth">
+              <el-form-item label="成立日期 :">
+                <el-date-picker v-model="form.buildDate" value-format="yyyy-MM-dd" :disabled="disabled" type="date" placeholder="选择日期" style="width:100%"></el-date-picker>
+              </el-form-item>
+            </el-col>
+            <el-col :md="12" class="maxwidth">
+              <el-form-item label="所属地区 :" required>
+                <select-area v-model="form.area" style="width:100%"></select-area>
+              </el-form-item>
+            </el-col>
 
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :md="12" class="maxwidth">
+              <el-form-item label="客户网址 :">
+                <el-input v-model="form.cusWeb" :disabled="disabled" placeholder="客户网址"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :md="12" class="maxwidth">
+              <el-form-item label="客户来源 :">
+                <el-select v-model="form.cusFrom" :disabled="disabled" placeholder="客户来源" style="width:100%;">
+                  <el-option value="10" label="个人查找"></el-option>
+                  <el-option value="20" label="个人查找"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row v-for="(item,index) in form.contactList" :key="index" :gutter="20">
+            <el-col :md="12" class="maxwidth">
+              <el-form-item label="联系人 :" required>
+                <el-input v-model="form.contactList[index].name" :disabled="disabled" placeholder="联系人"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :md="12" class="maxwidth">
+              <el-form-item label="联系电话 :" required>
+                <el-input v-model="form.contactList[index].contact" :disabled="disabled" placeholder="联系电话" class="contact-phone"></el-input>
+                <el-button @click.native="addContact(index)" class="circle-btn" :type="index===0?'success':'danger'" size="mini" :icon="index===0?'fa fa-plus':'fa fa-minus'" circle></el-button>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :md="24" style="max-width:1000px;">
+              <el-form-item label="经营范围 :" required>
+                <el-input v-model="form.businessScope" :disabled="disabled" type="textarea" :rows="3" placeholder="经营范围"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <div class="btns mt10px" style="max-width:1000px;text-align:center;">
+            <el-button type="success" @click.native="aaa">申请保A</el-button>
+            <el-button type="warning" @click.native="aaa">修改并申请重审</el-button>
+          </div>
+        </el-form>
+      </div>
+      <div class="follow-record mt10px">
+        <div class="title">
+          <el-button class="title-btn" type="primary">日志记录</el-button>
+        </div>
+        <div class="line" style="max-width:980px;"></div>
+        <el-tabs v-model="activeName" style="max-width:980px;" type="card" @tab-click="handleClick">
+          <el-tab-pane label="跟进记录" name="1">
+            <el-table :data="followRecordData" style="width: 100%;">
+              <el-table-column prop="date" label="日期" width="180">
+              </el-table-column>
+              <el-table-column prop="name" label="姓名" width="180">
+              </el-table-column>
+              <el-table-column prop="address" label="地址">
+              </el-table-column>
+            </el-table>
+          </el-tab-pane>
+          <el-tab-pane label="审核记录" name="2">配置管理</el-tab-pane>
+          <el-tab-pane label="出访记录" name="3">角色管理</el-tab-pane>
+          <el-tab-pane label="修改记录" name="4">定时任务补偿</el-tab-pane>
+          <el-tab-pane label="申请修改记录" name="5">定时任务补偿</el-tab-pane>
+          <el-tab-pane label="放弃保A日志" name="6">定时任务补偿</el-tab-pane>
+          <el-tab-pane label="续费记录" name="7">定时任务补偿</el-tab-pane>
+        </el-tabs>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { serverUrl } from '@/api/config'
-import { $post } from '@/api/http'
-import { getArea, getSource, getTrade } from '@/api/getOptions'
-const detailUrl = serverUrl + '/CustomerCheck.do?customlist'
-// const tradeUrl = serverUrl + '/CompanyCat.do?compcat'
-// const areaUrl = serverUrl + '/Area.do?comparea'
-// const sourceUrl = serverUrl + '/cd.do?get&code=27'
+import SelectArea from 'base/selectArea/selectArea'
+import SelectTrade from 'base/selectTrade/selectTrade'
+const tk = sessionStorage.getItem('token')
 export default {
   data () {
     return {
-      cusSource: [],
-      selSourceOption: '',
-      tradeOptions: [],
-      tradeProps: {
-        value: 'label',
-        children: 'secondTrade'
+      form: {
+        cusName: '',
+        buildDate: '',
+        cus: '',
+        cusAddr: '',
+        cusWeb: '',
+        cusFrom: '',
+        trade: '',
+        area: '',
+        businessScope: '',
+        contactList: [
+          {
+            contact: '',
+            phone: ''
+          }
+        ]
       },
-      selTradeOption: [],
-      cusDetailData: [],
-      areaOptions: [
-        {
-          value: 'zhinan',
-          label: '指南',
-          children: [
-            {
-              value: 'shejiyuanze',
-              label: '设计原则'
-            },
-            {
-              value: 'daohang',
-              label: '导航'
-            }
-          ]
-        },
-        {
-          value: 'zujian',
-          label: '组件',
-          children: [
-            {
-              value: 'basic',
-              label: 'Basic'
-            },
-            {
-              value: 'form',
-              label: 'Form'
-            },
-            {
-              value: 'data',
-              label: 'Data'
-            },
-            {
-              value: 'notice',
-              label: 'Notice'
-            },
-            {
-              value: 'navigation',
-              label: 'Navigation'
-            },
-            {
-              value: 'others',
-              label: 'Others'
-            }
-          ]
-        },
-        {
-          value: 'ziyuan',
-          label: '资源',
-          children: [
-            {
-              value: 'axure',
-              label: 'Axure Components'
-            },
-            {
-              value: 'sketch',
-              label: 'Sketch Templates'
-            },
-            {
-              value: 'jiaohu',
-              label: '组件交互文档'
-            }
-          ]
-        }
-      ],
-      selAreaOption: ['zujian', 'data']
+      disabled: false,
+      followRecordData: [],
+      activeName: '1',
+      receiveData: {},
+      detailData: {}
     }
   },
   created () {
-    this._getCusDetailData()
-
-    getSource().then(res => {
-      this.cusSource = res.data.data
-    })
-    getTrade().then(res => {
-      console.log(res.data.data)
-      let resArr = res.data.data
-      resArr.forEach(val => {
-        this.tradeOptions.push({
-          id: val.id,
-          value: val.name,
-          label: val.name,
-          secondTrade: [
-            {
-              id: '',
-              value: '',
-              label: ''
-            }
-          ]
-        })
-      })
-    })
-
-    getArea({ parentid: 1 }).then(res => {
-      console.log(res)
-    })
+    console.log(this.$route.query.data)
+    this.receiveData = this.$route.query.data
+    this._getMyCusDetail()
   },
   methods: {
-    // 合并行或列
-    spanMethod ({ row, column, rowIndex, columnIndex }) {
-      if (rowIndex === 5) {
-        if (columnIndex === 1) {
-          return [1, 3]
+    _getMyCusDetail () {
+      this.$post('/CustomerCheck.do?customlist&tk=' + tk, {
+        cid: this.receiveData.id, companylogid: this.receiveData.companylogid
+      }).then(res => {
+        let detailData = res.data[0].data[0]
+
+        this.form = {
+          cusName: detailData.name,
+          buildDate: detailData.establishment_date,
+          cus: detailData.legal_person,
+          cusAddr: detailData.address,
+          cusWeb: detailData.website,
+          cusFrom: detailData.fm,
+          trade: detailData.cid,
+          area: detailData.province,
+          businessScope: detailData.business_scope,
+          contactList: [
+            {
+              contact: detailData.contact,
+              name: detailData.name
+            }
+          ]
         }
+      })
+    },
+    addContact (index) {
+      if (index === 0) {
+        this.form.contactList.push({
+          contact: '',
+          name: ''
+        })
+      } else {
+        this.form.contactList.splice(index, 1)
       }
     },
-    // 获取并处理详情页的数据
-    _getCusDetailData () {
-      let receiveData = this.$route.query.data
-      if (!receiveData.id) {
-        this.$router.push({
-          path: '/indexPage/myCustomer'
-        })
-        return
-      }
-      let params = {
-        id: receiveData.id,
-        clstatus: receiveData.companylogstatus,
-        cltype: receiveData.companylogtype,
-        protectAuid: receiveData.userid
-      }
-      $post(detailUrl, params)
-        .then(res => {
-          if (res.data[0].success === true) {
-            let res0 = res.data[0].data[0]
-            let res1 = res.data[1].data[0]
-            // let res2 = res.data[2].data[0]
-            console.log(res)
-            this.selSourceOption = res0.fm
-            this.selTradeOption = [res0.cname, res0.bname]
-            let arr = [
-              {
-                content: res0.name,
-                title: '客户名称',
-                content1: '',
-                title1: '所属行业'
-              },
-              {
-                content: res0.legal_person,
-                title: '客户法人',
-                content1: res0.address,
-                title1: '客户地址'
-              },
-              {
-                content: res0.establishment_date,
-                title: '成立日期',
-                content1: '',
-                title1: '所属地区'
-              },
-              {
-                content: res0.website,
-                title: '客户网址',
-                content1: '',
-                title1: '客户来源'
-              },
-              {
-                content: res1.name,
-                title: '联系人',
-                content1: res1.contact,
-                title1: '联系电话'
-              },
-              { content: res0.business_scope, title: '经营范围' }
-            ]
-            this.cusDetailData = [].concat(arr)
-          }
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    },
-    // 动态加载二级行业
-    handleTradeChange (val) {
-      let handleId = ''
-      let handleIndex = 0
-      for (let i = 0; i < this.tradeOptions.length; i++) {
-        if (val[0] === this.tradeOptions[i].label) {
-          handleId = this.tradeOptions[i].id
-          handleIndex = i
-        }
-      }
-      getTrade({ parentid: handleId })
-        .then(res => {
-          if (res.data.success === true) {
-            let resArr = res.data.data
-            resArr.forEach(v => {
-              this.tradeOptions[handleIndex].secondTrade.push({
-                id: v.id,
-                value: v.name,
-                label: v.name
-              })
-            })
-          }
-          console.log(this.tradeOptions)
-        })
-        .catch(err => {
-          console.log(err)
-        })
+    handleClick (tab, event) {
+      console.log(tab, event)
     }
   },
-  components: {}
+  components: { SelectArea, SelectTrade }
 }
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 .mycus-detail {
-  width: 100%;
-  height: 100%;
-  background: #e2e5ec;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 100;
   .detail-main {
-    padding: 20px;
-    .detail-title {
-      display: flex;
-      justify-content: space-between;
+    padding: 15px;
+  }
+  .maxwidth {
+    max-width: 500px;
+  }
+  .contact-phone {
+    width: calc(~'(100% - 30px)');
+  }
+  .circle-btn {
+    width: 26px;
+    height: 26px;
+  }
+  .title {
+    display: flex;
+    justify-content: space-between;
+    max-width: 980px;
+    .title-btn {
+      border-top-right-radius: 15px;
     }
   }
 }
