@@ -1,7 +1,6 @@
 <template>
   <div class="control-scroll">
     <div ref="navbar" class="nav-bar">
-      <img ref="loginimg" class="logo-img" src="../../common/img/logo.jpg" alt="">
       <el-menu
       :collapse="myCollapse"
       router
@@ -83,16 +82,10 @@ export default {
   overflow-y: auto;
   .nav-bar {
     width: 197px;
-    .logo-img {
-      width: 197px;
-      height: 50px;
-      position: relative;
-      top:0;
-      left:-10px;
-      transition: all 0.5s;
-    }
+    height: 100%;
     .el-menu {
       width: 100%;
+      height: 100%;
       border: none;
     }
     .el-menu-item.is-active {

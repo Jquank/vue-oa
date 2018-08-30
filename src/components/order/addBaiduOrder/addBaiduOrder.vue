@@ -1,5 +1,5 @@
 <template>
-  <div class="addbaidu-order">
+  <div class="addbaidu-order component-container media-padding">
     <div class="order-content">
       <el-form ref="form" :model="form" label-width="110px">
         <el-row>

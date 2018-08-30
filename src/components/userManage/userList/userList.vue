@@ -26,8 +26,8 @@
       </div>
     </div>
     <!-- 列表 -->
-    <el-table ref="multipleTable" :data="tableData" style="width:100%" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55">
+    <el-table ref="multipleTable" :data="tableData" style="width:100%;" @selection-change="handleSelectionChange">
+      <el-table-column fixed type="selection" width="55">
       </el-table-column>
       <el-table-column prop="loginName" label="账户名" width="100">
       </el-table-column>

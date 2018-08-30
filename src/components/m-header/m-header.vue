@@ -4,14 +4,18 @@
       <a @click="nested" class="fa" :class="collapseIcon"></a>
     </div>
     <div class="m-header">
-      <div class="m-bread" id="m-bread">
-        <span>{{firstTitle}}</span>
-        <span v-show="secondTitle">&nbsp;/&nbsp;</span>
-        <span ref="secondTitle">{{secondTitle}}</span>
-        <span v-show="thirdTitle">&nbsp;/&nbsp;</span>
-        <span>{{thirdTitle}}</span>
+      <div class="header-left">
+        <div>
+          <img ref="logoimg" class="logo-img" src="../../common/img/logo.jpg" alt="">
+        </div>
+        <div class="m-bread" id="m-bread">
+          <span>{{firstTitle}}</span>
+          <span v-show="secondTitle">&nbsp;/&nbsp;</span>
+          <span ref="secondTitle">{{secondTitle}}</span>
+          <span v-show="thirdTitle">&nbsp;/&nbsp;</span>
+          <span>{{thirdTitle}}</span>
+        </div>
       </div>
-
       <ul class="head-ul">
         <li id="down-client">
           <a href="http://bg.baijiegroup.com/BaiJieOA/bj_crm_oa.zip" title="下载客户端">
@@ -58,27 +62,26 @@
           </a>
         </li>
       </ul>
-
-      <!-- 修改个人信息弹窗 start-->
-      <el-dialog @open="open" title="修改密码" :visible.sync="dialogFormVisible">
-        <el-form :model="form">
-          <el-form-item label="用户名" :label-width="formLabelWidth">
-            <el-input v-model="form.name" auto-complete="off" disabled></el-input>
-          </el-form-item>
-          <el-form-item label="真实姓名" :label-width="formLabelWidth">
-            <el-input v-model="form.trueName" auto-complete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="密码" :label-width="formLabelWidth">
-            <el-input @keyup.enter.native="editPwd" type="password" v-model="form.mima" auto-complete="off"></el-input>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="editPwd">确 定</el-button>
-        </div>
-      </el-dialog>
-      <!-- 修改个人信息弹窗 end-->
     </div>
+    <!-- 修改个人信息弹窗 start-->
+    <el-dialog @open="open" title="修改密码" :visible.sync="dialogFormVisible">
+      <el-form :model="form">
+        <el-form-item label="用户名" :label-width="formLabelWidth">
+          <el-input v-model="form.name" auto-complete="off" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="真实姓名" :label-width="formLabelWidth">
+          <el-input v-model="form.trueName" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="密码" :label-width="formLabelWidth">
+          <el-input @keyup.enter.native="editPwd" type="password" v-model="form.mima" auto-complete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="editPwd">确 定</el-button>
+      </div>
+    </el-dialog>
+    <!-- 修改个人信息弹窗 end-->
   </div>
 
 </template>
@@ -122,6 +125,8 @@ export default {
   created () {
     this._findBread()
   },
+  mounted () {
+  },
   methods: {
     // 侧边栏折叠
     nested () {
@@ -132,13 +137,17 @@ export default {
     },
     phoneCollapse (width, result) {
       let aside = document.getElementById('nav-aside')
+      let logo = this.$refs.logoimg
       this.$refs.nested.style.left = result ? '10px' : '170px'
       result ? aside.setAttribute('style', 'width:0 !important') : aside.setAttribute('style', 'width:160px !important')
+      result ? logo.setAttribute('style', 'width:0 !important') : logo.setAttribute('style', 'width:160px !important')
     },
     pcCollapse (width, result) {
       let aside = document.getElementById('nav-aside')
+      let logo = this.$refs.logoimg
       this.$refs.nested.style.left = result ? '190px' : '10px'
       result ? aside.setAttribute('style', 'width:180px !important') : aside.setAttribute('style', 'width:0 !important')
+      result ? logo.setAttribute('style', 'width:180px !important') : logo.setAttribute('style', 'width:0 !important')
     },
     fullScreen () {
       this.count++
@@ -195,26 +204,37 @@ export default {
 
 <style scoped lang="less">
 .nested {
-    width: 25px;
-    font-size: 16px;
-    z-index: 1000;
-    position: fixed;
-    top: 17px;
-    left: 190px;
-    transition: all 0.5s;
-    cursor: pointer;
-  }
+  width: 25px;
+  font-size: 16px;
+  z-index: 1000;
+  position: fixed;
+  top: 17px;
+  left: 190px;
+  transition: all 0.5s;
+  cursor: pointer;
+}
 .m-header {
   display: flex;
   justify-content: space-between;
-  .m-bread {
-    height: 50px;
-    min-width: 260px;
-    line-height: 50px;
-    padding-left: 40px;
-    color: gray;
-    & > span:nth-child(2n-1) {
-      cursor: pointer;
+  .header-left {
+    display: flex;
+    .m-bread {
+      height: 50px;
+      min-width: 260px;
+      line-height: 50px;
+      padding-left: 35px;
+      color: gray;
+      & > span:nth-child(2n-1) {
+        cursor: pointer;
+      }
+    }
+    .logo-img {
+      width: 180px;
+      height: 50px;
+      // position: relative;
+      // top: 0;
+      // left: -10px;
+      transition: all 0.5s;
     }
   }
 

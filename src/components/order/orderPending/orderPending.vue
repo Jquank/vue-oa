@@ -1,5 +1,5 @@
 <template>
-  <div class="order-pending">
+  <div class="order-pending component-container media-padding">
     <div class="pending-content">
       <div class="tab">
         <el-radio-group v-model="tabStatus" @change="tab(tabStatus)">

@@ -18,24 +18,20 @@
   #nested {
     left: 10px;
   }
-  #main {
+  #app .con-bottom #main {
     padding: 5px 2px;
-    position: fixed;
-    top: 60px;
-    right: 0;
-    left: 0;
-    bottom: 0;
-    -webkit-overflow-scrolling: touch;
   }
-  #my-header {
-    position: fixed;
-    top: 0;
-    right: 0;
+  #my-header .logo-img {
+    width: 0;
   }
   .media-padding {
     padding: 5px 2px;
   }
   .el-dialog {
     width: 98% !important;
+  }
+  .el-message {
+    min-width: 100px;
+    top: 50px;
   }
 }
