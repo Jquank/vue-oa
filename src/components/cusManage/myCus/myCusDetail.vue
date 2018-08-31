@@ -4,7 +4,7 @@
       <div class="cus-info">
         <div class="title">
           <el-button class="title-btn" type="primary">客户信息</el-button>
-          <el-button class="back" type="warning">返回</el-button>
+          <el-button @click.native="backRouter" class="back" type="warning">返回</el-button>
         </div>
         <div class="line" style="max-width:980px;"></div>
         <el-form ref="form" :model="form" label-width="90px">
@@ -76,7 +76,7 @@
           <el-row :gutter="20">
             <el-col :md="24" style="max-width:1000px;">
               <el-form-item label="经营范围 :" required>
-                <el-input v-model="form.businessScope" :disabled="disabled" type="textarea" :rows="3" placeholder="经营范围"></el-input>
+                <el-input v-model="form.businessScope" :disabled="disabled" type="textarea" :rows="4" placeholder="经营范围"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -90,19 +90,42 @@
         <div class="title">
           <el-button class="title-btn" type="primary">日志记录</el-button>
         </div>
-        <div class="line" style="max-width:980px;"></div>
-        <el-tabs v-model="activeName" style="max-width:980px;" type="card" @tab-click="handleClick">
+        <!-- <div class="line" style="max-width:980px;"></div> -->
+        <el-tabs v-model="activeName" style="width:100%;" type="card" @tab-click="handleClick">
           <el-tab-pane label="跟进记录" name="1">
-            <el-table :data="followRecordData" style="width: 100%;">
-              <el-table-column prop="date" label="日期" width="180">
+            <el-table :data="followLogs" style="width: 100%;">
+              <el-table-column prop="insert_time" label="跟进日期" width="150">
               </el-table-column>
-              <el-table-column prop="name" label="姓名" width="180">
+              <el-table-column prop="remark" label="跟进备注">
               </el-table-column>
-              <el-table-column prop="address" label="地址">
+              <el-table-column prop="username" label="跟进人" width="150">
               </el-table-column>
             </el-table>
           </el-tab-pane>
-          <el-tab-pane label="审核记录" name="2">配置管理</el-tab-pane>
+          <el-tab-pane label="审核记录" name="2">
+            <el-table :data="checkLogs" style="width: 100%;">
+              <el-table-column prop="pname" label="业务类型" width="80">
+              </el-table-column>
+              <el-table-column prop="type" label="处理类型" width="120">
+              </el-table-column>
+              <el-table-column prop="status" label="处理状态" width="120">
+              </el-table-column>
+              <el-table-column prop="username" label="提交人" width="100">
+              </el-table-column>
+              <el-table-column prop="insert_time" label="提交时间" width="120">
+              </el-table-column>
+              <el-table-column prop="cremark" label="提交备注">
+              </el-table-column>
+              <el-table-column prop="auditor" label="处理人" width="100">
+              </el-table-column>
+              <el-table-column prop="auditor_time" label="处理时间" width="120">
+              </el-table-column>
+              <el-table-column prop="reason" label="被拒原因">
+              </el-table-column>
+              <el-table-column prop="clremark" label="处理备注">
+              </el-table-column>
+            </el-table>
+          </el-tab-pane>
           <el-tab-pane label="出访记录" name="3">角色管理</el-tab-pane>
           <el-tab-pane label="修改记录" name="4">定时任务补偿</el-tab-pane>
           <el-tab-pane label="申请修改记录" name="5">定时任务补偿</el-tab-pane>
@@ -142,21 +165,35 @@ export default {
       followRecordData: [],
       activeName: '1',
       receiveData: {},
-      detailData: {}
+      detailData: {},
+      followLogs: [], // 跟进记录
+      checkLogs: [], // 审核记录
+      visitLogs: [], // 出访记录
+      applyChangeLogs: [], // 申请修改记录
+      stopBaoALogs: [], // 放弃保A记录
+      renewLogs: [], // 续费记录
+      productId: ''
     }
   },
   created () {
     console.log(this.$route.query.data)
     this.receiveData = this.$route.query.data
+    if (!this.receiveData.id) {
+      this.$router.go(-1)
+      return
+    }
     this._getMyCusDetail()
   },
   methods: {
     _getMyCusDetail () {
       this.$post('/CustomerCheck.do?customlist&tk=' + tk, {
-        cid: this.receiveData.id, companylogid: this.receiveData.companylogid
+        cid: this.receiveData.id,
+        companylogid: this.receiveData.companylogid
       }).then(res => {
         let detailData = res.data[0].data[0]
-
+        let contacts = res.data[1].data || [{}]
+        this.productId = detailData.productid
+        this.checkLogs = res.data[2].data
         this.form = {
           cusName: detailData.name,
           buildDate: detailData.establishment_date,
@@ -167,14 +204,24 @@ export default {
           trade: detailData.cid,
           area: detailData.province,
           businessScope: detailData.business_scope,
-          contactList: [
-            {
-              contact: detailData.contact,
-              name: detailData.name
-            }
-          ]
+          contactList: contacts
         }
+        this._getFollowLogs()
       })
+    },
+    // 跟进记录
+    _getFollowLogs () {
+      this.$post('/follow.do?up&tk=' + tk, {
+        cid: this.receiveData.id,
+        pid: this.productId,
+        cat: 200,
+        companylogid: this.receiveData.companylogid
+      }).then(res => {
+        this.followLogs = res.data.data
+      })
+    },
+    backRouter () {
+      this.$router.go(-1)
     },
     addContact (index) {
       if (index === 0) {

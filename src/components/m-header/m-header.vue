@@ -182,12 +182,14 @@ export default {
       }
     },
     exitLogin () {
-      $post('/logout').then(res => {
-        this.$router.push('/login')
-        if (res.data.status === -1) {
-          cookie.remove('userName')
-        }
-      })
+      sessionStorage.setItem('token', '')
+      this.$router.push('/login')
+      cookie.remove('userName')
+      // $post('/logout').then(res => {
+      //   if (res.data.status === -1) {
+
+      //   }
+      // })
     },
     refresh () {
       this.$router.go(0)

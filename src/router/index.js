@@ -18,25 +18,25 @@ import Editor from 'components/systemSetting/news/editor'
 import AddUser from 'components/userManage/addUser/addUser'
 import UserList from 'components/userManage/userList/userList'
 // 客户管理
-import AddCus from 'components/customerManage/addCus/addCus'
-import ApplyCus from 'components/customerManage/applyCus/applyCus'
-import ApplyDetail from 'components/customerManage/applyCus/applyDetail'
-import MyCustomer from 'components/customerManage/myCustomer/myCustomer'
-import MyCusDetail from 'components/customerManage/myCustomer/myCusDetail'
-import VisitRecord from 'components/customerManage/visitRecord/visitRecord'
-import FollowRecord from 'components/customerManage/followRecord/followRecord'
-import ImportCus from 'components/customerManage/importCus/importCus'
+import AddCus from 'components/cusManage/addCus/addCus'
+import ApplyCus from 'components/cusManage/applyCus/applyCus'
+import ApplyDetail from 'components/cusManage/applyCus/applyDetail'
+import MyCus from 'components/cusManage/myCus/myCus'
+import MyCusDetail from 'components/cusManage/myCus/myCusDetail'
+import VisitRecord from 'components/cusManage/visitRecord/visitRecord'
+import FollowRecord from 'components/cusManage/followRecord/followRecord'
+import ImportCus from 'components/cusManage/importCus/importCus'
 // 客户审核
-import DealCheck from 'components/customerCheck/dealCheck/dealCheck'
-import CheckRecord from 'components/customerCheck/checkRecord/checkRecord'
-import EditCusInfo from 'components/customerCheck/editCusInfo/editCusInfo'
-import CusInfoEdit from 'components/customerCheck/editCusInfo/cusInfoEdit'
-import CusPoolManage from 'components/customerCheck/cusPoolManage/cusPoolManage'
-import ViewCusInfo from 'components/customerCheck/cusPoolManage/viewCusInfo'
+import DealCheck from 'components/cusCheck/dealCheck/dealCheck'
+import CheckRecord from 'components/cusCheck/checkRecord/checkRecord'
+import CusInfo from 'components/cusCheck/cusInfo/cusInfo'
+import viewCusInfo from 'components/cusCheck/cusInfo/viewCusInfo'
+import CusPoolManage from 'components/cusCheck/cusPoolManage/cusPoolManage'
+import ViewCusInfo from 'components/cusCheck/cusPoolManage/viewCusInfo'
 
 // 客户搜索
-import CusSearch from 'components/customerSearch/cusSearch/cusSearch'
-import CusOut from 'components/customerSearch/cusOut/cusOut'
+import CusSearch from 'components/cusSearch/cusSearch/cusSearch'
+import CusOut from 'components/cusSearch/cusOut/cusOut'
 // 合同管理
 import AddContract from 'components/contract/addContract/addContract'
 import AllotContract from 'components/contract/allotContract/allotContract'
@@ -44,7 +44,7 @@ import ContractList from 'components/contract/contractList/contractList'
 import ApplyContract from 'components/contract/applyContract/applyContract'
 // 续费管理
 import RenewApply from 'components/renew/renewApply/renewApply'
-import Salary from 'components/salary/salary'
+import SalaryList from 'components/salary/salaryList'
 // 到款管理
 import BankflowList from 'components/moneyManage/bankflowList/bankflowList'
 import MoneyCount from 'components/moneyManage/moneyCount/moneyCount'
@@ -172,10 +172,10 @@ const router = new Router({
           }]
         },
         {
-          path: 'myCustomer',
-          name: 'myCustomer',
+          path: 'myCus',
+          name: 'myCus',
           meta: { text: '我的客户' },
-          component: MyCustomer,
+          component: MyCus,
           children: [
             {
               path: ':id',
@@ -216,15 +216,15 @@ const router = new Router({
           component: CheckRecord
         },
         {
-          path: 'editCusInfo',
-          name: 'editCusInfo',
+          path: 'cusInfo',
+          name: 'cusInfo',
           meta: { text: '客户信息修改' },
-          component: EditCusInfo,
+          component: CusInfo,
           children: [
             {
               path: ':id',
               meta: { text: '修改客户信息' },
-              component: CusInfoEdit
+              component: viewCusInfo
             }
           ]
         },
@@ -334,6 +334,13 @@ const router = new Router({
           name: 'invoicePending',
           meta: { text: '待开发票' },
           component: InvoicePending
+        },
+        // 工资管理
+        {
+          path: 'salaryList',
+          name: 'salaryList',
+          meta: { text: '工资列表' },
+          component: SalaryList
         },
         // 图表
         {

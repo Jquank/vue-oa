@@ -35,7 +35,7 @@ export default {
   methods: {
     view () {
       this.$router.push({
-        path: `editCusInfo/8465`
+        path: `cusInfo/8465`
       })
     }
   },

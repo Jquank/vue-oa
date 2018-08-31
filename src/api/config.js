@@ -70,7 +70,7 @@ export const navList = [
     },
     {
       cid: 52,
-      to: '/indexPage/myCustomer',
+      to: '/indexPage/myCus',
       text: '我的客户'
     },
     {
@@ -107,7 +107,7 @@ export const navList = [
       },
       {
         cid: 42,
-        to: '/indexPage/editCusInfo',
+        to: '/indexPage/cusInfo',
         text: '客户信息修改'
       },
       {
@@ -230,6 +230,7 @@ export const navList = [
     fontIcon: 'fa fa-money',
     text: '工资管理',
     cList: [
+      { cid: 140, to: '/indexPage/salaryList', text: '工资列表' }
     ]
   },
   {

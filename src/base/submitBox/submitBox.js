@@ -18,7 +18,7 @@ export default function submitBox (that, obj = {}) {
     that.$prompt(obj.title || '', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
-      inputType: 'text',
+      inputType: obj.type ? obj.type : 'text',
       inputValue: obj.inputValue || ''
       // inputPattern: /[]/,
       // inputErrorMessage: '邮箱格式不正确'

@@ -31,7 +31,7 @@
 import Navbar from 'components/navbar/navbar'
 import MHeader from 'components/m-header/m-header'
 // import { getArea, getSource, getTrade } from '@/api/getOptions'
-import BScroll from 'better-scroll'
+// import BScroll from 'better-scroll'
 export default {
   data () {
     return {}
@@ -39,11 +39,13 @@ export default {
   mounted () {
     // loadCallIframe('iframe-call')
     let main = document.getElementById('main')
-    let scroll = new BScroll(main, { //eslint-disable-line
-      click: true,
-      scrollY: true,
-      scrollX: true,
-      freeScroll: true
+    this.$nextTick(() => {
+      let scroll = new BScroll(main, { //eslint-disable-line
+        click: true,
+        scrollY: true,
+        scrollX: true,
+        freeScroll: true
+      })
     })
   },
   components: {
