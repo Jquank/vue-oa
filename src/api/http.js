@@ -5,7 +5,7 @@ import router from '@/router'
 import { Loading, Message } from 'element-ui'
 
 const instance = axios.create({
-  baseURL: 'http://172.16.11.78:8080/BaiJieOA',
+  baseURL: 'http://bg.baijiegroup.com/BaiJieOA',
   // withCredentials: true, // 跨域凭证
   timeout: 10000
   // headers: {'Content-Type': 'application/json'}

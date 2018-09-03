@@ -4,18 +4,51 @@
       <el-input v-model="cusName" class="visit-item item-width" placeholder="搜索客户名称">
         <template slot="prepend">客户名称:</template>
       </el-input>
-      <auto-select title="出访类型" v-model="visitType" id="visit-status" class="visit-item item-width">
-        <el-option label="全部" value=""></el-option>
-        <el-option label="今日申领客户" value="10"></el-option>
-        <el-option label="今日完成客户" value="20"></el-option>
+      <auto-select :key="key_visit_type" title="出访类型" defaultValue="100" v-model="visitType" id="visit-status" class="visit-item item-width">
+        <el-option label="全部" value="100"></el-option>
+        <el-option label="首访" value="110"></el-option>
+        <el-option label="二访" value="120"></el-option>
       </auto-select>
-      <el-date-picker v-model="visitDate" type="datetimerange" range-separator="至" start-placeholder="出访开始日期" end-placeholder="出访结束日期" class="visit-item" style="width:350px;"></el-date-picker>
+      <el-date-picker v-model="visitDate" format="yyyy/MM/dd HH:mm" value-format="yyyy/MM/dd HH:mm" :unlink-panels="true" type="datetimerange" range-separator="至" start-placeholder="出访开始日期" end-placeholder="出访结束日期" class="visit-item" style="width:300px;"></el-date-picker>
       <div class="visit-item">
-        <el-button type="primary">查 询</el-button>
-        <el-button type="warning">重 置</el-button>
-        <el-button type="warning" @click.native="view">查 看</el-button>
+        <el-button @click.native="search" type="primary">查 询</el-button>
+        <el-button @click.native="reset" type="warning">重 置</el-button>
       </div>
     </div>
+
+    <!-- 列表 -->
+      <el-table stripe border :data="myVisitList" style="width: 100%;margin-top:10px;">
+        <el-table-column prop="cname" label="客户名称">
+        </el-table-column>
+        <el-table-column prop="pname" label="业务类型" width="80">
+        </el-table-column>
+        <el-table-column prop="" label="出访类型" width="80">
+          <span slot-scope="scope">{{scope.row.cat == 110? '首访': '二访'}}</span>
+        </el-table-column>
+        <el-table-column prop="" label="客户意向" width="70">
+          <span slot-scope="scope">{{scope.row.result+'%'}}</span>
+        </el-table-column>
+        <el-table-column prop="ccname" label="拜访人" width="70">
+        </el-table-column>
+        <el-table-column prop="uname" label="出访人" width="70">
+        </el-table-column>
+        <el-table-column prop="accompanyname" label="陪访人" width="70">
+        </el-table-column>
+        <el-table-column prop="" label="出访时间" width="135">
+          <span slot-scope="scope">{{scope.row.begin_time | timeFormat}}</span>
+        </el-table-column>
+        <el-table-column prop="" label="拜访结束时间" width="135">
+          <span slot-scope="scope">{{scope.row.end_time | timeFormat}}</span>
+        </el-table-column>
+        <el-table-column prop="remark" label="出访结果">
+        </el-table-column>
+        <el-table-column label="操作" width="140">
+          <template slot-scope="scope">
+            <el-button @click.native.prevent="writeVisitResult(scope.row)" type="primary" size="mini">填写出访结果</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <page class="pagination" :url="myVisitUrl" :sendParams="params" @updateList="updateMyVisitList"></page>
 
     <!-- 填写出访结果弹窗 -->
     <el-dialog v-el-drag-dialog title="填写出访结果" class="visit-result-dialog" :visible.sync="visitResultDialog">
@@ -111,12 +144,18 @@
 <script>
 import AutoSelect from 'base/autoSelect/autoSelect'
 import elDragDialog from '@/directive/el-dragDialog' // eslint-disable-line
+import Page from 'base/page/page'
+const tk = sessionStorage.getItem('token')
 export default {
   directives: { elDragDialog },
   data () {
     return {
+      key_visit_type: '',
+      myVisitList: [],
+      myVisitUrl: '/follow.do?ListAll&tk=' + tk,
+      params: { cat: '100' },
       cusName: '',
-      visitType: '',
+      visitType: '100',
       visitDate: '',
       visitResultDialog: false,
       form: {
@@ -136,12 +175,29 @@ export default {
     }
   },
   methods: {
-    view () {
+    search () {
+      this.params = {
+        companyname: this.cusName,
+        cat: this.visitType,
+        begin_time: this.visitDate[0],
+        end_time: this.visitDate[1]
+      }
+    },
+    reset () {
+      this.cusName = ''
+      this.key_visit_type = new Date() + ''
+      this.visitType = '100'
+      this.visitDate = ''
+    },
+    writeVisitResult () {
       this.visitResultDialog = true
+    },
+    updateMyVisitList (data) {
+      this.myVisitList = data.data[0].data
     }
   },
   components: {
-    AutoSelect
+    AutoSelect, Page
   }
 }
 </script>

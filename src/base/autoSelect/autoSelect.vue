@@ -18,6 +18,10 @@ export default {
       type: String,
       default: ''
     },
+    defaultValue: { // 默认显示
+      type: String,
+      default: ''
+    },
     placeholder: {
       type: String,
       default: '请选择'
@@ -25,7 +29,7 @@ export default {
   },
   data () {
     return {
-      sel: ''
+      sel: this.defaultValue || ''
     }
   },
   mounted () {
