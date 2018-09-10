@@ -4,11 +4,13 @@ import router from '@/router'
 
 import { Loading, Message } from 'element-ui'
 
+// const tk = sessionStorage.getItem('token')
 const instance = axios.create({
-  baseURL: 'http://bg.baijiegroup.com/BaiJieOA',
+  // baseURL: 'http://bg.baijiegroup.com/BaiJieOA',
+  baseURL: 'http://172.16.11.78:8080/BaiJieOA',
   // withCredentials: true, // 跨域凭证
   timeout: 10000
-  // headers: {'Content-Type': 'application/json'}
+  // headers: {'token': tk}
 })
 let loadingInstance
 instance.interceptors.request.use( // 请求拦截
@@ -32,7 +34,7 @@ instance.interceptors.request.use( // 请求拦截
 instance.interceptors.response.use( // 响应拦截
   response => {
     loadingInstance.close()
-    if (response.data.status === -1) {
+    if (response.data === 'tosignin') {
       router.push('/login')
     }
     return response

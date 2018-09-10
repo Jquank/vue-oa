@@ -35,39 +35,27 @@ export default {
   data () {
     return {
       myName: 'admin',
-      myPassword: '2018123'
-      // userName: ""
+      myPassword: '1234rfv'
     }
   },
   created () {
-    // storage.remove('productType')
-    // storage.remove('wjType')
-    // storage.remove('department')
-    // storage.remove('province')
-    // storage.remove('trade')
-    // storage.remove('bankType')
   },
   mounted () {
   },
   methods: {
     login () {
-      sessionStorage.clear()
-      // this.$router.push('/indexPage')
       let params = {
         username: this.myName,
         password: this.myPassword
       }
-      // this.$post('/login', params)
       this.$post('/User.do?login', params)
         .then(res => {
-          sessionStorage.setItem('token', res.data.data.tk)
-          this.$router.push('/indexPage')
-          if (res.data.status === 1) {
+          if (res.data.success) {
+            cookie.set('tk', res.data.data.tk)
+            this.$router.push('/indexPage')
             // storage.session.set('userId', res.data.data.id)
             // storage.session.set('permissions', res.data.data.permissions)
             // storage.session.set('token', res.data.data.tk)
-            cookie.set('userName', this.myName)
-            this.$router.push('/indexPage')
             // getCode(38).then(res => {
             //   let data = res.data.data || []
             //   storage.set('productType', data)
@@ -109,7 +97,7 @@ export default {
             // })
           } else {
             this.$message({
-              message: '账号或密码错误！',
+              message: res.data.msg,
               type: 'error'
             })
           }
@@ -121,26 +109,8 @@ export default {
           })
           console.log(err)
         })
-    },
-    _transTree (arr) {
-      let r = []
-      let hash = {}
-      arr.forEach((val, key) => {
-        hash[val.code] = val
-      })
-      for (let i = 0; i < arr.length; i++) {
-        let oneData = arr[i]
-        let parentcode = oneData.parentcode
-        let hashVP = hash[parentcode]
-        if (hashVP) {
-          !hashVP['children'] && (hashVP['children'] = [])
-          hashVP['children'].push(oneData)
-        } else {
-          r.push(oneData)
-        }
-      }
-      return r
     }
+
   }
 }
 </script>

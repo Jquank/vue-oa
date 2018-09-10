@@ -5,7 +5,6 @@
 
 <script>
 // import { getArea } from 'api/getOptions'
-import { $post } from 'api/http'
 import storage from 'good-storage'
 export default {
   props: {
@@ -35,12 +34,13 @@ export default {
   },
   methods: {
     _getAreaList () {
-      $post('/Area/HomeAreaTreeGet').then(res => {
+      this.$post('/Area.do?comparea', {parentid: 1}).then(res => {
+        let area = res.data.data
+        // this.clearChildren(area)
+        this.options = area
+        storage.set('area', area)
         if (res.data.status === 1) {
-          let area = res.data.data
-          this.clearChildren(area)
-          this.options = area
-          storage.set('area', area)
+
         }
       })
     },

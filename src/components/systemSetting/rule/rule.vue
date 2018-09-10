@@ -20,10 +20,7 @@
 </template>
 
 <script>
-import { $post } from '@/api/http'
 import submitBox from 'base/submitBox/submitBox'
-const ruleUrl = '/Permission/PermissionGetByPid'
-const editUrl = '/Permission/MenuNameUpdate'
 const addUrl = '/User/UserAdd'
 export default {
   data () {
@@ -38,25 +35,25 @@ export default {
   },
   methods: {
     _getRuleList (pid) {
-      let ruleParams = { pid: pid || '' }
-      $post(ruleUrl, ruleParams).then(res => {
-        if (res.data.status === 1) {
+      let params = {
+        permission: pid
+      }
+      this.$post('/Permission.do?get&tk=' + this.$tk, params).then(res => {
+        if (res.data.success) {
           this.tableData = res.data.data
-          console.log(this.tableData)
         }
       })
     },
     handleCheckNext (pid) {
-      this.pid = pid
       this._getRuleList(pid)
     },
     handleEdit (id, preName, pid) {
       let that = this
       // 编辑弹窗
       submitBox(that, {
-        url: editUrl,
+        url: '/Permission.do?update&tk=' + this.$tk,
         editParams: {
-          menuName: '',
+          name: '',
           id: id
         },
         title: '编辑权限名称',

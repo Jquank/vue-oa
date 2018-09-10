@@ -164,7 +164,6 @@ import Page from '@/base/page/page'
 import SelectArea from 'base/selectArea/selectArea'
 import SelectTrade from 'base/selectTrade/selectTrade'
 import AutoSelect from 'base/autoSelect/autoSelect'
-const tk = sessionStorage.getItem('token')
 export default {
   data () {
     return {
@@ -180,7 +179,7 @@ export default {
         logStatus: 100,
         myKind: 30
       },
-      myCusUrl: '/Company.do?myCustomer&tk=' + tk,
+      myCusUrl: '/Company.do?myCustomer&tk=' + this.$tk,
       pageCount: 0,
       cusType: '',
       myCusType: [

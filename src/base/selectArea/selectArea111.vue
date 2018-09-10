@@ -5,6 +5,7 @@
 <script>
 import storage from 'good-storage'
 import { getArea } from 'api/getOptions'
+// import transTree from 'common/js/utils'
 export default {
   data () {
     return {
@@ -20,7 +21,12 @@ export default {
     }
   },
   mounted () {
-    this.options = storage.get('province')
+    let areaList = storage.get('area')
+    if (!areaList) {
+      this._getAreaList()
+    } else {
+      this.options = areaList
+    }
   },
   methods: {
     change (val) {
