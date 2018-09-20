@@ -1,13 +1,12 @@
 import axios from 'axios'
 import router from '@/router'
 // import qs from 'querystring'
-
+import cookie from 'js-cookie'
 import { Loading, Message } from 'element-ui'
-
-// const tk = sessionStorage.getItem('token')
+// export const serverUrl = 'http://bg.baijiegroup.com/BaiJieOA'
+export const serverUrl = 'http://172.16.11.78:8080/BaiJieOA'
 const instance = axios.create({
-  // baseURL: 'http://bg.baijiegroup.com/BaiJieOA',
-  baseURL: 'http://172.16.11.78:8080/BaiJieOA',
+  baseURL: serverUrl,
   // withCredentials: true, // 跨域凭证
   timeout: 10000
   // headers: {'token': tk}
@@ -49,10 +48,13 @@ instance.interceptors.response.use( // 响应拦截
   }
 )
 export function $post (url, params = {}) {
+  let tk = cookie.get('tk')
+  let isQuestionMark = url.indexOf('?') > -1
+  let mark = isQuestionMark ? '&' : '?'
   return new Promise((resolve, reject) => {
     instance
       // .post(url, qs.stringify(params))
-      .post(url, params)
+      .post(url + mark + 'tk=' + tk, params)
       .then(res => {
         resolve(res)
       })
@@ -61,10 +63,13 @@ export function $post (url, params = {}) {
       })
   })
 }
-export function $get (url, params = {}) {
+export function $get (url, _params = {}) {
+  let tk = cookie.get('tk')
+  let isQuestionMark = url.indexOf('?') > -1
+  let mark = isQuestionMark ? '&' : '?'
   return new Promise((resolve, reject) => {
     instance
-      .get(url, { params: params })
+      .get(url + mark + 'tk=' + tk, { params: _params })
       .then(res => {
         resolve(res)
       })

@@ -10,11 +10,14 @@
     </div>
     <!-- 搜索 -->
     <div class="search">
-      <select-department @upDeptId="upDeptId" :title="'部门'" :key="key_dept" class="search-item"></select-department>
-      <el-input v-model="staffName" class="search-item" style="width:300px;" placeholder="搜索员工姓名">
+      <select-department  @keydown.enter.native="search" @upDeptId="upDeptId" :title="'部门'" :key="key_dept" class="search-item"></select-department>
+      <el-input @keydown.enter.native="search" v-model="staffName" class="search-item" style="width:300px;" placeholder="搜索员工姓名">
         <template slot="prepend">员工姓名:</template>
       </el-input>
-      <auto-select title="司龄" v-model="workAge" :key="key_sel" class="search-item" style="width:300px;">
+      <el-input @keydown.enter.native="search" v-model="roleName" class="search-item" style="width:300px;" placeholder="搜索角色名">
+        <template slot="prepend">角色名:</template>
+      </el-input>
+      <auto-select @keydown.enter.native="search" title="司龄" v-model="workAge" :key="key_sel" class="search-item" style="width:300px;">
         <el-option label="3个月以上" value="3"></el-option>
         <el-option label="6个月以上" value="6"></el-option>
         <el-option label="12个月以上" value="12"></el-option>
@@ -29,29 +32,31 @@
     <el-table ref="multipleTable" :data="tableData" style="width:100%;" @selection-change="handleSelectionChange">
       <el-table-column fixed type="selection" width="55">
       </el-table-column>
-      <el-table-column prop="loginName" label="账户名" width="100">
+      <el-table-column prop="uname" label="账户名" min-width="100">
       </el-table-column>
-      <el-table-column prop="name" label="姓名" width="80">
+      <el-table-column prop="true_name" label="姓名" min-width="80">
       </el-table-column>
-      <el-table-column prop="gender" label="性别">
+      <el-table-column prop="" label="性别" min-width="50">
+        <span slot-scope="scope">{{scope.row.sex==0?'男':'女'}}</span>
       </el-table-column>
-      <el-table-column prop="mobile" label="手机号" width="160">
+      <el-table-column prop="mobile" label="手机号" min-width="100">
       </el-table-column>
-      <el-table-column prop="deptName" label="部门" width="120">
+      <el-table-column prop="deptfullname" label="部门" min-width="120">
       </el-table-column>
-      <el-table-column prop="" label="保A数量/保A配额" width="140">
+      <el-table-column prop="" label="保A数量 /保A配额" min-width="80">
         <template slot-scope="scope">
-          <span>{{scope.row.true_a+'/'+scope.row.max_a}}</span>
+          <span>{{scope.row.true_a+' / '+scope.row.max_a}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="" label="跟踪数量/跟踪配额" width="140">
+      <el-table-column prop="" label="跟踪数量 /跟踪配额" min-width="80">
         <template slot-scope="scope">
-          <span>{{scope.row.true_b+'/'+scope.row.max_b}}</span>
+          <span>{{scope.row.true_b+' / '+scope.row.max_b}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="roleName" label="角色" width="140">
+      <el-table-column prop="rname" label="角色" width="100">
       </el-table-column>
-      <el-table-column prop="isResign" label="状态" width="140">
+      <el-table-column prop="isResign" label="状态" width="50">
+        <span :class="scope.row.resignationtime!=''?'':'red'" slot-scope="scope">{{scope.row.resignationtime!=''?'在职':'离职'}}</span>
       </el-table-column>
       <el-table-column prop="" label="账号开关" width="140">
         <template slot-scope="scope">
@@ -60,70 +65,24 @@
       </el-table-column>
       <el-table-column label="操作" width="250">
         <template slot-scope="scope">
-          <el-button @click.native="editUserInfo(scope.row.id)" class="xsbtn" type="primary">编辑</el-button>
-          <el-button @click.native="editQuota(scope.row.id)" class="xsbtn" type="primary">编辑配额</el-button>
-          <el-button @click.native="editDept(scope.row.id)" class="xsbtn" type="primary">编辑管理部门</el-button>
+          <el-button @click.native="editUserInfo(scope.row.uid)" class="xsbtn" type="primary">编辑</el-button>
+          <el-button @click.native="editQuota(scope.row.uid)" class="xsbtn" type="primary">编辑配额</el-button>
+          <el-button @click.native="editDept(scope.row.uid)" class="xsbtn" type="primary">编辑管理部门</el-button>
         </template>
       </el-table-column>
     </el-table>
     <page @updateList="updateList" :url="url" :sendParams="sendParams" class="page"></page>
-    <!-- 编辑部门弹窗 -->
-    <el-dialog title="编辑部门管理" :visible.sync="deptTreeDialog" width="350px">
-      <select-dept :key="key_dept_manage" @sendDeptCodes="receiveDeptCodes" :defaultChecked="defaultChecked" :defaultExpanded="defaultExpanded"></select-dept>
-      <div style="text-align:center;padding-top:15px;">
-        <el-button @click.native="subDeptManage" type="primary" size="mini">提 交</el-button>
-      </div>
-    </el-dialog>
     <!-- 编辑人员信息弹窗 -->
     <el-dialog title="编辑人员信息" :visible.sync="userInfoDialog" width="800px">
       <add-user @closeDialog="closeDialog" :key="key_add_user" :echoUserInfo="userInfo" :editDisable="true"></add-user>
     </el-dialog>
     <!-- 编辑配额弹窗 -->
     <el-dialog title="编辑配额" :visible.sync="editQuotaDialog" width="800px">
-      <el-form ref="form" :model="form" label-width="80px">
-        <el-row :gutter="20">
-          <el-col :md="12">
-            <el-form-item label="账户名 :" :label-width="labelWidth" required>
-              <el-input v-model="form.accountName" disabled></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :md="12">
-            <el-form-item label="姓名 :" :label-width="labelWidth" required>
-              <el-input v-model="form.trueName" disabled></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :md="12">
-            <el-form-item label="工号 :" :label-width="labelWidth" required>
-              <el-input v-model="form.userNum" disabled></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :md="12">
-            <el-form-item label="性别 :" :label-width="labelWidth" required>
-              <el-select v-model="form.sex" disabled placeholder="选择性别" style="width:100%">
-                <el-option label="男" value="0"></el-option>
-                <el-option label="女" value="1"></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :md="12">
-            <el-form-item label="保A配额 :" :label-width="labelWidth">
-              <el-input v-model="form.baoAquota"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :md="12">
-            <el-form-item label="跟踪配额 :" :label-width="labelWidth">
-              <el-input v-model="form.followQuota"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <div style="text-align: center;">
-          <el-button @click.native="subQuota" type="primary">提 交</el-button>
-        </div>
-      </el-form>
+      <add-user @closeDialog="closeDialog" :key="key_add_user" :echoUserInfo="userInfo" :quotaDisable="true"></add-user>
+    </el-dialog>
+    <!-- 编辑部门弹窗 -->
+    <el-dialog title="编辑部门管理" :visible.sync="deptTreeDialog" width="350px">
+      <select-dept @subParams="subParams" :defaultChecked="defaultChecked" :key="key_dept_manage"></select-dept>
     </el-dialog>
   </div>
 </template>
@@ -146,34 +105,26 @@ export default {
       deptTreeDialog: false,
       editQuotaDialog: false,
       staffName: '',
+      roleName: '',
       workAge: '',
       deptCode: '',
-      url: '/User/search',
+      url: '/Oper.do?ListAll',
       sendParams: {},
       tableData: [],
       labelWidth: '80px',
-      form: {
-        accountName: '',
-        trueName: '',
-        userNum: '',
-        sex: '',
-        baoAquota: '',
-        followQuota: ''
-      },
       uid: '',
       deptCodes: [],
       multipleSelection: [],
       defaultChecked: [], // 部门树默认勾选
-      defaultExpanded: [], // 部门树默认展开
       componentid: '',
       key_dept_manage: ''
     }
   },
-  created () {},
-  mounted () {
+  created () {
   },
   methods: {
     // 账号开关
+    // todo
     turnOff (val) {
       if (this.multipleSelection.length === 0) {
         this.$message({
@@ -205,83 +156,74 @@ export default {
     },
     search () {
       this.sendParams = {
-        name: this.staffName,
-        deptCode: this.deptCode,
-        workTime: this.workAge
+        deptcode: this.deptCode,
+        username: this.staffName,
+        worktime: this.workAge,
+        rolename: this.roleName
       }
     },
     reset () {
       this.staffName = ''
+      this.roleName = ''
       this.workAge = ''
       this.deptCode = ''
       this.key_dept = new Date() + ''
       this.key_sel = new Date() + '1' // 重置时绑定新的key值来重新加载子组件以达到重置的目的
     },
-    updateList (data) {
-      this.tableData = data.data.data.list
+    updateList (res) {
+      this.tableData = res.data[0].data
     },
     // 编辑部门
     editDept (uid) {
-      this.key_dept_manage = uid
+      this.key_dept_manage = new Date() + ''
       this.uid = uid
       this.deptTreeDialog = true
-      this.$post('/Department/MgrDepartmentGetByUser', { uid: this.uid }).then(res => {
-        if (res.data.status === 1) {
-          this.defaultChecked = res.data.data
-          this.defaultExpanded = res.data.data
+      this.$get('/User/findManagerDeptCode.do', { uid: this.uid }).then(res => {
+        if (res.data.success && res.data.data.length) {
+          let resArr = res.data.data
+          resArr.forEach(val => {
+            this.defaultChecked.push(val.deptcode)
+          })
         }
+      })
+    },
+    // 提交部门设置
+    // todo
+    subParams (data) {
+      if (!data) {
+        return
+      }
+      let params = {codes: data, uid: this.uid}
+      this.$get('/User/managerDeptCode.do', params).then(res => {
+        console.log(res) // get请求参数有问题，可改post
       })
     },
     // 编辑配额
     editQuota (uid) {
       this.uid = uid
       this.editQuotaDialog = true
-      this.$post('/User/UserGetById', { uid: uid }).then(res => {
-        if (res.data.status === 1) {
-          this.userInfo = res.data.data
-          this.form = {
-            accountName: this.userInfo.name,
-            trueName: this.userInfo.true_name,
-            userNum: this.userInfo.workid,
-            sex: this.userInfo.sex + '',
-            baoAquota: this.userInfo.max_a,
-            followQuota: this.userInfo.max_b
-          }
-        }
-      })
+      this._getUserInfo(uid)
     },
     // 编辑人员信息
     editUserInfo (uid) {
       this.userInfoDialog = true
-      this.$post('/User/UserGetById', { uid: uid }).then(res => {
-        if (res.data.status === 1) {
-          this.userInfo = res.data.data
+      this._getUserInfo(uid)
+    },
+    _getUserInfo (uid) {
+      this.$get('/Oper.do?ListAll', { id: uid }).then(res => {
+        if (res.data[0].success) {
+          this.userInfo = res.data[0].data[0]
+          this.userInfo.id = uid // uid传过去
           this.key_add_user = new Date() + ''
         }
       })
     },
     closeDialog () {
       this.userInfoDialog = false
+      this.editQuotaDialog = false
     },
     upDeptId (id) {
       this.deptCode = id
-    },
-    // 提交配额
-    subQuota () {
-      let params = {
-        id: this.uid,
-        max_a: this.form.baoAquota,
-        max_b: this.form.followQuota
-      }
-      this.$post('/User/UserUpdateMax', params).then(res => {
-        if (res.data.status === 1) {
-          this.$message({
-            message: res.data.msg,
-            type: 'success'
-          })
-          this.editQuotaDialog = false
-        }
-      })
     },
     receiveDeptCodes (data) {
       console.log(123)

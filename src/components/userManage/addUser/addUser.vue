@@ -4,31 +4,31 @@
       <el-row :gutter="20">
         <el-col :md="12" class="maxwidth">
           <el-form-item label="账户名 :" :label-width="labelWidth" required>
-            <el-input @blur="accountNameBlur(form.accountName)" v-model="form.accountName" :disabled="editDisable" placeholder="账户名"></el-input>
+            <el-input @blur="accountNameBlur" v-model="form.accountName" :disabled="editDisable || quotaDisable" placeholder="账户名"></el-input>
           </el-form-item>
         </el-col>
         <el-col :md="12" class="maxwidth">
           <el-form-item label="真实姓名 :" :label-width="labelWidth" required>
-            <el-input v-model="form.trueName" :disabled="editDisable" placeholder="真实姓名"></el-input>
+            <el-input v-model="form.trueName" :disabled="editDisable || quotaDisable" placeholder="真实姓名"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
         <el-col :md="12" class="maxwidth">
           <el-form-item label="工号 :" :label-width="labelWidth" required>
-            <el-input @blur="accountNameBlur(form.userNum)" v-model="form.userNum" placeholder="工号"></el-input>
+            <el-input v-model="form.userNum" :disabled="quotaDisable" placeholder="工号"></el-input>
           </el-form-item>
         </el-col>
         <el-col :md="12" class="maxwidth">
           <el-form-item label="性别 :" :label-width="labelWidth" required>
-            <el-select v-model="form.sex" :disabled="repeatDisabled" placeholder="选择性别" style="width:100%;">
+            <el-select v-model="form.sex" :disabled="repeatDisabled || quotaDisable" placeholder="选择性别" style="width:100%;">
               <el-option label="男" value="0"></el-option>
               <el-option label="女" value="1"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row :gutter="20">
+      <el-row :gutter="20" v-if="!quotaDisable">
         <el-col :md="12" class="maxwidth">
           <el-form-item label="身份证号 :" :label-width="labelWidth" required>
             <el-input v-model="form.idCardNum" :disabled="repeatDisabled" placeholder="身份证号"></el-input>
@@ -40,7 +40,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row :gutter="20">
+      <el-row :gutter="20" v-if="!quotaDisable">
         <el-col :md="12" class="maxwidth">
           <el-form-item label="银行卡号 :" :label-width="labelWidth">
             <el-input v-model="form.bankCardNum" :disabled="repeatDisabled" placeholder="银行卡号"></el-input>
@@ -55,7 +55,7 @@
         </el-col>
       </el-row>
       <!-- 保A配额 -->
-      <el-row v-if="editDisable" :gutter="20">
+      <el-row v-if="editDisable || quotaDisable" :gutter="20">
         <el-col :md="12" class="maxwidth">
           <el-form-item label="保A配额 :" :label-width="labelWidth">
             <el-input v-model="form.baoAquota" placeholder="保A配额"></el-input>
@@ -67,7 +67,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row :gutter="20">
+      <el-row :gutter="20" v-if="!quotaDisable">
         <el-col :md="12" class="maxwidth">
           <el-form-item label="部门 :" :label-width="labelWidth">
             <select-department @upDeptId="upDeptId" :prepend="false" :echoDept="echoDept" :key="key_dept" v-model="form.dept" style="width:100%"></select-department>
@@ -81,7 +81,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row :gutter="20">
+      <el-row :gutter="20" v-if="!quotaDisable">
         <el-col :md="12" class="maxwidth">
           <el-form-item label="手机 :" :label-width="labelWidth">
             <el-input v-model="form.phone" :disabled="repeatDisabled" placeholder="手机号"></el-input>
@@ -93,7 +93,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row :gutter="20">
+      <el-row :gutter="20" v-if="!quotaDisable">
         <el-col :md="12" class="maxwidth">
           <el-form-item label="Hi号 :" :label-width="labelWidth">
             <el-input v-model="form.hi" :disabled="repeatDisabled" placeholder="Hi号"></el-input>
@@ -101,7 +101,7 @@
         </el-col>
         <el-col :md="12" class="maxwidth">
           <el-form-item label="入职日期 :" :label-width="labelWidth">
-            <el-date-picker v-model="form.entryDate" :disabled="repeatDisabled" value-format="yyyy-MM-dd" type="date" placeholder="选择入职日期" style="width:100%"></el-date-picker>
+            <el-date-picker v-model="form.entryDate" :disabled="repeatDisabled" value-format="yyyy/MM/dd" type="date" placeholder="选择入职日期" style="width:100%"></el-date-picker>
           </el-form-item>
         </el-col>
       </el-row>
@@ -118,7 +118,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row :gutter="20">
+      <el-row :gutter="20" v-if="!quotaDisable">
         <el-col :md="12" class="maxwidth">
           <el-form-item label="是否允许打电话 :" label-width="150px">
             <el-checkbox v-model="form.canCall" :disabled="repeatDisabled" label="允许打电话" border></el-checkbox>
@@ -131,6 +131,18 @@
           </el-form-item>
         </el-col>
       </el-row>
+      <el-row :gutter="20">
+        <el-col :md="12" class="maxwidth">
+          <el-form-item label="招行卡号 :" :label-width="labelWidth">
+            <el-input v-model="form.EX_ZHYHK" :disabled="repeatDisabled" placeholder="招行卡号"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :md="12" class="maxwidth">
+          <el-form-item label="中银卡号 :" :label-width="labelWidth">
+            <el-input v-model="form.EX_ZGYHYHK" :disabled="repeatDisabled" placeholder="中银卡号"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
       <el-row>
         <el-col :md="24" class="maxwidth">
           <el-form-item style="text-align:right;">
@@ -138,16 +150,21 @@
           </el-form-item>
         </el-col>
       </el-row>
-
     </el-form>
   </div>
 </template>
 
 <script>
 import SelectDepartment from 'base/selectDepartment/selectDepartment'
+import { getRoles, getByCode } from 'api/getOptions'
+import { timeFormat1 } from 'common/js/filters'
 export default {
   props: {
-    editDisable: {
+    editDisable: { // 编辑人员信息
+      type: Boolean,
+      default: false
+    },
+    quotaDisable: { // 编辑配额
       type: Boolean,
       default: false
     },
@@ -181,12 +198,14 @@ export default {
         extention: '',
         hi: '',
         entryDate: '',
-        canCall: '',
+        canCall: false,
         leaveDate: '',
         turnRealDate: '',
         baoAquota: '',
         followQuota: '',
-        baiduID: ''
+        baiduID: '',
+        EX_ZHYHK: '',
+        EX_ZGYHYHK: ''
       }
     }
   },
@@ -194,66 +213,68 @@ export default {
 
   // },
   created () {
-    this._getRolesAndPosition()
-    console.log(123)
-    if (!this.editDisable) {
+    this._getRoles()
+    this._getPositions()
+    if (!this.editDisable && !this.quotaDisable) {
       return
     }
-
-    this.echoDept = this.echoUserInfo.fullDeptName
+    this.echoDept = this.echoUserInfo.deptfullname
     this.key_dept = new Date() + ''
     let receiveData = {
-      dept: this.echoUserInfo.code,
-      accountName: this.echoUserInfo.name,
+      canCall: this.echoUserInfo.dept === '9999' ? true : false, //eslint-disable-line
+      baiduID: this.echoUserInfo.bdcall_id,
+      accountName: this.echoUserInfo.uname,
       trueName: this.echoUserInfo.true_name,
       userNum: this.echoUserInfo.workid,
-      sex: this.echoUserInfo.sex + '',
-      idCardNum: this.echoUserInfo.sfz,
-      password: this.echoUserInfo.pwd,
+      idCardNum: this.echoUserInfo.SFZ,
       bankCardNum: this.echoUserInfo.bankcard,
-      // role: this.echoUserInfo.roles[0].rid, //报错没提示！！！
-      job: this.echoUserInfo.position,
-      phone: this.echoUserInfo.mobile,
+      password: this.echoUserInfo.pwd, // 新密码
+      sex: this.echoUserInfo.sex + '',
       extention: this.echoUserInfo.office_phone,
-      hi: this.echoUserInfo.hi,
-      entryDate: this.echoUserInfo.hiredate,
-      canCall: this.echoUserInfo.dept,
-      leaveDate: this.echoUserInfo.resignationtime,
-      turnRealDate: this.echoUserInfo.turningtime,
-      baoAquota: this.echoUserInfo.max_a,
+      phone: this.echoUserInfo.mobile,
+      dept: this.echoUserInfo.deptcode,
+      job: this.echoUserInfo.position,
+      role: this.echoUserInfo.rid,
       followQuota: this.echoUserInfo.max_b,
-      baiduID: this.echoUserInfo.bdcall_id,
-      id: this.echoUserInfo.id
-    }
-    try {
-      receiveData.role = this.echoUserInfo.roles[0].rid
-    } catch (error) {
-      receiveData.role = ''
+      baoAquota: this.echoUserInfo.max_a,
+      hi: this.echoUserInfo.hi,
+      leaveDate: timeFormat1(this.echoUserInfo.resignationtime),
+      turnRealDate: timeFormat1(this.echoUserInfo.turningtime),
+      entryDate: timeFormat1(this.echoUserInfo.hiredate),
+      EX_ZHYHK: this.echoUserInfo.EX_ZHYHK,
+      EX_ZGYHYHK: this.echoUserInfo.EX_ZGYHYHK
     }
     this.form = Object.assign({}, this.form, receiveData)
+    console.log(this.form)
   },
   methods: {
     upDeptId (id) {
       this.form.dept = id
     },
-    accountNameBlur (name) {
-      this.$post('/User/UserIsRepeat', { param: name }).then(res => {
-        if (res.data.status === 0) {
+    accountNameBlur () {
+      this.$post('/Oper.do?SearchName', { name: this.form.accountName }).then(res => {
+        if (res.data.success && res.data.data[0].number >= 1) {
+          this.repeatDisabled = true
           this.$message({
-            message: res.data.msg,
+            message: '名称重复',
             type: 'error'
           })
-          this.repeatDisabled = true
         } else {
           this.repeatDisabled = false
         }
       })
     },
-    _getRolesAndPosition () {
-      this.$post('/User/RolesAndPosition').then(res => {
-        if (res.data.status === 1) {
-          this.form.roleList = res.data.data.roles
-          this.form.jobList = res.data.data.positions
+    _getRoles () {
+      getRoles().then(res => {
+        if (res.data.success) {
+          this.form.roleList = res.data.data
+        }
+      })
+    },
+    _getPositions () {
+      getByCode(39).then(res => {
+        if (res.data.success) {
+          this.form.jobList = res.data.data
         }
       })
     },
@@ -274,56 +295,78 @@ export default {
         return
       }
       let params = {
-        code: this.form.dept, // 部门编号
+        iscall: this.form.canCall ? '9999' : null,
+        name: this.form.accountName, // 账户名
         true_name: this.form.trueName,
-        sex: this.form.sex, // 0.男 1.女
-        name: this.form.accountName, // 登录名
         workid: this.form.userNum, // 工号
-        hi: this.form.hi, // hi号
-        position: this.form.job, // 职位
-        bankcard: this.form.bankCardNum,
-        hiredate: this.form.entryDate,
         pwd: this.form.password,
-        sfz: this.form.idCardNum,
-        office_phone: this.form.extention,
+        sex: this.form.sex, // 0.男 1.女
+        role: this.form.role,
         mobile: this.form.phone,
-        rids: [this.form.role],
-        dept: this.form.canCall
+        phone: this.form.extention,
+        code: this.form.dept, // 最下级部门编号
+        position: this.form.job, // 职位
+        hi: this.form.hi, // hi号
+        hiredate: this.form.entryDate, // 入职日期 ,格式需要后台更改，新增页和编辑页不同
+        SFZ: this.form.idCardNum,
+        // bankcard: this.form.bankCardNum
+        EX_ZHYHK: this.form.EX_ZHYHK,
+        EX_ZGYHYHK: this.form.EX_ZGYHYHK
       }
-      if (!this.editDisable) {
+      // console.log(params)
+      // return
+      if (!this.editDisable && !this.quotaDisable) {
         // 新增人员页的提交
-        this.$post('/User/UserAdd', params)
+        this.$post('/Oper.do?AddUser', params)
           .then(res => {
-            let code = res.data.status
-            this.$message({
-              message: res.data.msg,
-              type: code === 1 ? 'success' : 'error'
-            })
+            if (res.data[0].success) {
+              this.$message({
+                message: '新增成功',
+                type: 'success'
+              })
+            } else {
+              this.$message({
+                message: '新增失败',
+                type: 'error'
+              })
+            }
           })
           .catch(err => {
             console.log(err)
           })
       } else {
-        // 人员列表编辑的提交
+        // 编辑人员和编辑配额的提交
         let _params = {
-          id: this.form.id,
+          dept: this.form.canCall ? '9999' : null,
           resignationtime: this.form.leaveDate,
           turningtime: this.form.turnRealDate,
           max_a: this.form.baoAquota,
           max_b: this.form.followQuota,
-          bdcall_id: this.form.baiduID
+          update_a: this.echoUserInfo.max_a - this.form.baoAquota,
+          update_b: this.echoUserInfo.max_b - this.form.followQuota,
+          bdcall_id: this.form.baiduID,
+          urid: this.echoUserInfo.urid,
+          id: this.echoUserInfo.id,
+          rid: this.form.role,
+          role: this.echoUserInfo.urid
         }
         params = Object.assign({}, params, _params)
-        this.$post('/User/UserUpdate', params)
+        // console.log(params)
+        // return
+        this.$post('/Oper.do?EditUser', params)
           .then(res => {
-            let code = res.data.status
-            this.$message({
-              message: res.data.msg,
-              type: code === 1 ? 'success' : 'error'
-            })
-            if (code === 1) {
+            if (res.data[0].success) {
+              this.$message({
+                message: '更改成功',
+                type: 'success'
+              })
               // 派发编辑页关闭弹窗事件
               this.$emit('closeDialog', false)
+            } else {
+              this.$message({
+                message: '更改失败',
+                type: 'error'
+              })
             }
           })
           .catch(err => {

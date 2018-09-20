@@ -4,10 +4,29 @@ import { serverUrl } from '@/api/config'
 const tradeUrl = '/CompanyCat/AllCompanyCatGet'
 const areaUrl = '/Area.do?comparea'
 const sourceUrl = serverUrl + '/cd.do?get&code=27'
-const codeUrl = '/CodeDic/CodeDicgetByCode?code='
 const contractUrl = serverUrl + '/Contract.do?SearchByCatId'
 const departmentUrl = serverUrl + '/Search.do?DeptTree'
 
+const roleUrl = '/Oper.do?SearchRoles'
+const codeUrl = '/cd.do?get&code='
+
+// 获取角色
+export function getRoles (params = {}) {
+  return $post(roleUrl, params).then(res => {
+    return res
+  })
+}
+// 根据code获取各种类型（包括职位）
+export function getByCode (code, params = {}) {
+  return $post(codeUrl + code, params).then(res => {
+    return res
+  })
+}
+export function getCode (code, params = {}) {
+  return $post(codeUrl + code, params).then(res => {
+    return res
+  })
+}
 // 获取地区
 export function getArea (params = {}) {
   return $post(areaUrl, params).then(res => {
@@ -32,13 +51,6 @@ export function getDepartment (params = {}) {
 // 获取客户来源
 export function getSource (params = {}) {
   return $post(sourceUrl, params).then(res => {
-    return res
-  })
-}
-
-// 根据code获取各种类型
-export function getCode (code, params = {}) {
-  return $post(codeUrl + code, params).then(res => {
     return res
   })
 }

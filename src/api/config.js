@@ -34,6 +34,11 @@ export const navList = [
       cid: 35,
       to: '/indexPage/news',
       text: '公告管理'
+    },
+    {
+      cid: 36,
+      to: '/indexPage/activity',
+      text: '活动/产品类型'
     }
     ]
   },

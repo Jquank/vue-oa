@@ -31,6 +31,8 @@
 
 <script>
 import cookie from 'js-cookie'
+import axios from 'axios'
+import { serverUrl } from 'api/http'
 export default {
   data () {
     return {
@@ -48,10 +50,12 @@ export default {
         username: this.myName,
         password: this.myPassword
       }
-      this.$post('/User.do?login', params)
+      axios.post(serverUrl + '/User.do?login', params)
         .then(res => {
           if (res.data.success) {
+            console.log(res.data.data)
             cookie.set('tk', res.data.data.tk)
+            cookie.set('userId', res.data.data.id)
             this.$router.push('/indexPage')
             // storage.session.set('userId', res.data.data.id)
             // storage.session.set('permissions', res.data.data.permissions)

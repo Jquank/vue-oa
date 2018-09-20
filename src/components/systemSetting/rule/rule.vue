@@ -1,32 +1,28 @@
 <template>
   <div class="rule component-container media-padding">
-    <div class="rule-content media-padding">
-      <div style="padding-bottom:5px;">
-        <el-button @click.native="addRule" size="mini" type="primary" icon="fa fa-plus"> 新 增</el-button>
-        <el-button @click.native="backWard" size="mini" type="primary" icon="fa fa-step-backward"> 返回上一级</el-button>
-      </div>
-      <el-table :data="tableData" style="width: 100%">
-        <el-table-column type="index" width="100"></el-table-column>
-        <el-table-column prop="name" label="权限名称" width="200"></el-table-column>
-        <el-table-column label="操作">
-          <template slot-scope="scope">
-            <el-button size="mini" type="success" @click="handleCheckNext(scope.row.id)">查看下级权限</el-button>
-            <el-button size="mini" type="primary" @click="handleEdit(scope.row.id,scope.row.name,pid)">编辑</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
+    <div style="padding-bottom:5px;">
+      <el-button @click.native="addRule" size="mini" type="primary" icon="fa fa-plus"> 新 增</el-button>
+      <el-button @click.native="backWard" size="mini" type="primary" icon="fa fa-step-backward"> 返回上一级</el-button>
     </div>
+    <el-table :data="tableData" style="width: 100%">
+      <el-table-column type="index"></el-table-column>
+      <el-table-column prop="name" label="权限名称"></el-table-column>
+      <el-table-column label="操作" width="200">
+        <template slot-scope="scope">
+          <el-button size="mini" type="success" @click="handleCheckNext(scope.row.id)">查看下级权限</el-button>
+          <el-button size="mini" type="primary" @click="handleEdit(scope.row.id,scope.row.name,scope.row.pid)">编辑</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
   </div>
 </template>
 
 <script>
 import submitBox from 'base/submitBox/submitBox'
-const addUrl = '/User/UserAdd'
 export default {
   data () {
     return {
       tableData: [],
-      pid: '',
       lastPid: ''
     }
   },
@@ -34,24 +30,26 @@ export default {
     this._getRuleList()
   },
   methods: {
-    _getRuleList (pid) {
+    _getRuleList (pid, url = '/Permission.do?get') {
       let params = {
         permission: pid
       }
-      this.$post('/Permission.do?get&tk=' + this.$tk, params).then(res => {
+      this.$post(url, pid ? params : {}).then(res => {
         if (res.data.success) {
           this.tableData = res.data.data
+          this.lastPid = res.data.data[0].pid
         }
       })
     },
     handleCheckNext (pid) {
+      this.lastPid = pid
       this._getRuleList(pid)
     },
     handleEdit (id, preName, pid) {
       let that = this
       // 编辑弹窗
       submitBox(that, {
-        url: '/Permission.do?update&tk=' + this.$tk,
+        url: '/Permission.do?update',
         editParams: {
           name: '',
           id: id
@@ -60,29 +58,32 @@ export default {
         inputValue: preName
       }).then(res => {
         if (res) {
-          this._getRuleList(pid)
+          this._getRuleList(this.lastPid)
         }
+      }).catch(err => {
+        console.log(err)
       })
     },
     addRule (pid) {
       let that = this
       submitBox(that, {
-        url: addUrl,
+        url: '/Permission.do?set',
         editParams: {
-          code: '',
-          true_name: ''
+          name: '',
+          permission: ''
         },
         title: '新增权限名称',
         inputValue: ''
       }).then(res => {
-        console.log(res)
         if (res) {
-          this._getRuleList(pid)
+          this._getRuleList(this.lastPid)
         }
+      }).catch(err => {
+        console.log(err)
       })
     },
     backWard () {
-      this._getRuleList(this.lastPid)
+      this._getRuleList(this.lastPid, '/Permission.do?back')
     }
   },
   components: {}
@@ -90,10 +91,4 @@ export default {
 </script>
 
 <style scoped lang="less">
-.rule {
-  .rule-content {
-
-    padding: 20px;
-  }
-}
 </style>

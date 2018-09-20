@@ -182,9 +182,8 @@ export default {
       }
     },
     exitLogin () {
-      sessionStorage.setItem('token', '')
+      cookie.set('tk', '')
       this.$router.push('/login')
-      cookie.remove('userName')
       // $post('/logout').then(res => {
       //   if (res.data.status === -1) {
 

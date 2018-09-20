@@ -14,14 +14,12 @@ import './common/css/base.css'
 import 'nprogress/nprogress.css'
 
 import * as filters from '@/common/js/filters'
-import { $post } from 'api/http'
-import cookie from 'js-cookie'
+import { $post, $get } from 'api/http'
 
 Vue.config.productionTip = false
 
-const tk = cookie.get('tk')
 Vue.prototype.$post = $post
-Vue.prototype.$tk = tk
+Vue.prototype.$get = $get
 Vue.config.errorHandler = function (err, vm, info) {
   if (err === 'ignore') {
     return true

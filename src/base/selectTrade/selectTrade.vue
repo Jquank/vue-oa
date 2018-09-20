@@ -1,22 +1,27 @@
 <template>
-  <el-cascader v-model="trade" @change="$emit('input', trade)" :disabled="tradeDisable" placeholder="请选择行业" :options="options" :change-on-select="false" :props="props"></el-cascader>
+  <el-cascader v-model="trade" @change="$emit('input', trade)"  :change-on-select="false" :disabled="tradeDisable" placeholder="请选择行业" :options="options" @active-item-change="handleItemChange" :props="tradeProps"></el-cascader>
 </template>
 
 <script>
-import { getTrade } from 'api/getOptions'
-import storage from 'good-storage'
+// import storage from 'good-storage'
 export default {
   props: {
     tradeDisable: {
       type: Boolean,
       default: false
+    },
+    echoTrade: { // 回显数据
+      type: Array,
+      default: function () {
+        return []
+      }
     }
   },
   data () {
     return {
       trade: [],
       options: [],
-      props: {
+      tradeProps: {
         value: 'id',
         label: 'name',
         children: 'children'
@@ -25,20 +30,34 @@ export default {
       tradeList: []
     }
   },
-  mounted () {
-    let tradeList = storage.get('trade')
-    if (!tradeList) {
-      this._getTradeList()
-    } else {
-      this.options = tradeList
+  watch: {
+    echoTrade () {
+      this._getTradeList(this.echoTrade[0])
     }
   },
+  mounted () {
+    this._getTradeList()
+  },
   methods: {
-    _getTradeList () {
-      getTrade().then(res => {
-        if (res.data.status === 1) {
+    handleItemChange (val) {
+      this._getTradeList(val[0])
+    },
+    _getTradeList (id) {
+      this.$post('/CompanyCat.do?compcat', {parentid: id}).then(res => {
+        if (!id) {
           this.options = res.data.data
-          storage.set('trade', this.options)
+          this.options.forEach(val => {
+            val.children = []
+          })
+        } else {
+          let secondTrade = res.data.data
+          this.options.forEach((val, key) => {
+            if (val.id === id) {
+              this.index = key
+            }
+          })
+          this.options[this.index].children = secondTrade
+          this.trade = this.echoTrade // 回显行业，异步
         }
       })
     }

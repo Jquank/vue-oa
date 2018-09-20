@@ -13,6 +13,7 @@ import SystemCycle from 'components/systemSetting/systemCycle/systemCycle'
 import DepartSetNum from 'components/systemSetting/departSetNum/departSetNum'
 import AccountManage from 'components/systemSetting/accountManage/accountManage'
 import News from 'components/systemSetting/news/news'
+import Activity from 'components/systemSetting/activity/activity'
 import Editor from 'components/systemSetting/news/editor'
 // 人员管理
 import AddUser from 'components/userManage/addUser/addUser'
@@ -139,6 +140,12 @@ const router = new Router({
               component: Editor
             }
           ]
+        },
+        {
+          path: 'activity',
+          name: 'activity',
+          meta: { text: '活动/产品类型' },
+          component: Activity
         },
         // 人员管理
         {
@@ -372,8 +379,9 @@ const router = new Router({
 import Progress from 'nprogress' //进度条
 Progress.configure({ showSpinner: false })
 router.beforeEach((to, from, next) => {
-  const isLogin = cookie.get('tk')
-  // const isLogin = true
+  // const isLogin = cookie.get('tk')
+  // todo
+  const isLogin = true
   if (to.name !== 'login') {
     if (!isLogin) {
       next({

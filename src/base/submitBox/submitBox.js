@@ -10,9 +10,10 @@ ex：submitBox(that, {
         inputValue: preName
       }).then(res=>{
 
+      }).catch(err => {
+        console.log(err)
       })
 */
-import { $post } from '@/api/http'
 export default function submitBox (that, obj = {}) {
   return new Promise((resolve, reject) => {
     that.$prompt(obj.title || '', {
@@ -28,13 +29,19 @@ export default function submitBox (that, obj = {}) {
         for (var key in obj.editParams) {
           params[key] = obj.editParams[key] || value
         }
-        $post(obj.url, params).then((res) => {
-          if (res.data.status === 1) {
+        that.$post(obj.url, params).then((res) => {
+          if (res.data.success) {
             that.$message({
               type: 'success',
-              message: res.data.msg
+              message: '成功'
             })
             resolve(true)
+          } else {
+            that.$message({
+              type: 'error',
+              message: '失败'
+            })
+            resolve(false)
           }
         }).catch(err => {
           console.log(err)

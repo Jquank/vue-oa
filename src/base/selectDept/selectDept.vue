@@ -1,23 +1,20 @@
-// 部门树
 <template>
-    <el-tree :data="departmentList" :props="depProps" accordion node-key="id" ref="tree" :expand-on-click-node="true" :show-checkbox="true" @check="handleCheck" id="department" :default-expanded-keys="defaultExpanded"
-    :default-checked-keys="defaultChecked"></el-tree>
+  <div>
+    <el-tree :data="departmentList" :props="depProps" accordion node-key="code" ref="tree" id="department" :show-checkbox="true" :default-expanded-keys="defaultChecked" :default-checked-keys="defaultChecked"></el-tree>
+    <div class="confirm-tree">
+      <el-button @click.native="confirm" type="primary" size="mini">确 定</el-button>
+    </div>
+  </div>
 </template>
 
 <script>
-import { $post } from 'api/http'
+import { transTree } from 'common/js/utils'
 export default {
   props: {
-    defaultChecked: {
+    defaultChecked: { // 默认勾选
       type: Array,
       default: function () {
         return []
-      }
-    },
-    defaultExpanded: {
-      type: Array,
-      default: function () {
-        return ['KD01']
       }
     }
   },
@@ -26,64 +23,45 @@ export default {
       departmentList: [],
       depProps: {
         children: 'children',
-        label: 'name'
+        label: 'fullname'
       }
     }
   },
-  mounted () {
-    console.log(this.defaultExpanded)
+  created () {
     this._getDeptList()
   },
   methods: {
-    _getDeptList () {
-      $post('/Department/DepartmentTreeGet').then(res => {
-        if (res.data.status === 1) {
-          let dept = res.data.data
-          this.departmentList = dept
-        }
-      })
-    },
-    handleCheck (data, val) {
-      let idsArr = []
-      let node = this.$refs.tree.getCheckedNodes(false, false) // 所有打钩的节点
-      let treeNode = this._transTree(node) // node转化为树结构
-      treeNode.forEach(val => {
-        idsArr.push(val.id)
-      })
-      console.log(idsArr)
-      setTimeout(() => {
-        this.$emit('sendDeptCodes', idsArr)
-      }, 100)
-    },
-    clearChildren (arr) {
-      arr.forEach(val => {
-        if (val.children) {
-          val.children.length = 0
-        }
-      })
-    },
-    _transTree (arr) {
-      this.clearChildren(arr)
-      let r = []
+    confirm () {
       let hash = {}
-      arr.forEach((val, key) => {
+      let arr = []
+      let checkedNodes = this.$refs.tree.getCheckedNodes()
+      checkedNodes.forEach(val => {
         hash[val.code] = val
       })
-      for (let i = 0; i < arr.length; i++) {
-        let oneData = arr[i]
-        let parentcode = oneData.code.substr(0, oneData.code.length - 5)
+      checkedNodes.forEach(item => {
+        let parentcode = item.parentcode
         let hashVP = hash[parentcode]
-        if (hashVP) {
-          hashVP.children.push(oneData)
-        } else {
-          r.push(oneData)
+        if (!hashVP) {
+          arr.push(item.code)
         }
-      }
-      return r
+      })
+      this.$emit('subParams', arr)
+    },
+    _getDeptList () {
+      this.$get('/Search.do?DeptTree').then(res => {
+        if (res.data.success) {
+          let dept = res.data.data
+          this.departmentList = transTree(dept)
+        }
+      })
     }
   }
 }
 </script>
 
-<style lang="less">
+<style scoped lang="less">
+.confirm-tree{
+  padding-top: 5px;
+  text-align: center;
+}
 </style>

@@ -48,6 +48,25 @@ export function productType (num) {
   return type
 }
 
+export function cusState (num, type) {
+  if (type === 'cusType') {
+    switch (num) {
+      case 0:
+        return '新开'
+      case 10:
+        return '一户多开'
+      case 20:
+        return '老户重开'
+      case 30:
+        return '多项目'
+      case 40:
+        return '(新)'
+      case 50:
+        return '信息流'
+    }
+  }
+}
+
 export function businessStatus (num) {
   switch (num) {
     case '010':
@@ -79,6 +98,7 @@ export function businessStatus (num) {
   }
 }
 export function timeFormat (num) {
+  if (!num) { return '' }
   function add0 (m) { return m < 10 ? '0' + m : m }
   let time = new Date(num)
   let year = time.getFullYear()
@@ -90,6 +110,7 @@ export function timeFormat (num) {
   return year + '-' + add0(month) + '-' + add0(date) + ' ' + add0(hours) + ':' + add0(minutes) + ':' + add0(seconds)
 }
 export function timeFormat1 (num) {
+  if (!num) { return '' }
   function add0 (m) { return m < 10 ? '0' + m : m }
   let time = new Date(num)
   let year = time.getFullYear()

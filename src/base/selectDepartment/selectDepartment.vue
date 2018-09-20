@@ -1,20 +1,21 @@
 // 带input的部门树
 <template>
-  <div class="sel-department"  style="width:300px">
+  <div class="sel-department"  style="width:250px">
     <el-input placeholder="点击选择部门" v-model="department" @focus="showDepartment" id="dept-input">
       <template v-if="prepend" slot="prepend">{{title}}:</template>
     </el-input>
-    <el-tree :data="departmentList" :props="depProps" accordion node-key="id" ref="tree" :expand-on-click-node="false"
+    <el-tree :data="departmentList" :props="depProps" accordion node-key="code" ref="tree" :expand-on-click-node="false"
       id="department" @node-click="handleNodeClick" :default-expanded-keys="defaultExpanded"></el-tree>
   </div>
 </template>
 
 <script>
+import { transTree } from 'common/js/utils'
 export default {
   props: {
     title: { // prepend 文字
       type: String,
-      default: ''
+      default: '部门'
     },
     prepend: { // 是否显示prepend
       type: Boolean,
@@ -31,21 +32,22 @@ export default {
       departmentList: [],
       depProps: {
         children: 'children',
-        label: 'name'
+        label: 'fullname'
       },
       defaultExpanded: ['KD01'] // 默认展开
     }
   },
   methods: {
     _getDeptList () {
-      this.$post('/Department/DepartmentTreeGet').then(res => {
-        if (res.data.status === 1) {
-          this.departmentList = res.data.data
+      this.$post('/Search.do?DeptTree').then(res => {
+        if (res.data.success) {
+          let dept = res.data.data
+          this.departmentList = transTree(dept)
         }
       })
     },
     handleNodeClick (data) {
-      this.department = data.name
+      this.department = data.fullname
       this.$emit('upDeptId', data.id)
       this.$refs.tree.$el.style.display = 'none'
     },
@@ -77,7 +79,7 @@ export default {
     // left:51px;
     // width:calc(~"(100% - 52px)");
     width:100%;
-    background: rgb(240, 232, 232);
+    background: #F6F7FB;
     z-index: 10;
   }
 }

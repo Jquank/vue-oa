@@ -4,12 +4,12 @@
       <el-row :gutter="20">
         <el-col :md="12" class="maxwidth">
           <el-form-item label="客户名称 :" required>
-            <el-input @blur="accountNameBlur(form.cusName)" v-model="form.cusName" placeholder="客户名称"></el-input>
+            <el-input @blur="accountNameBlur" v-model="form.cusName" placeholder="客户名称"></el-input>
           </el-form-item>
         </el-col>
         <el-col :md="12" class="maxwidth">
           <el-form-item label="成立日期 :" required>
-            <el-date-picker v-model="form.buildDate" value-format="yyyy-MM-dd" :disabled="disabled" type="date" placeholder="选择日期" style="width:100%"></el-date-picker>
+            <el-date-picker v-model="form.buildDate" value-format="yyyy/MM/dd" :disabled="disabled" type="date" placeholder="选择日期" style="width:100%"></el-date-picker>
           </el-form-item>
         </el-col>
       </el-row>
@@ -34,7 +34,7 @@
         <el-col :md="12" class="maxwidth">
           <el-form-item label="客户来源 :" required>
             <el-select v-model="form.cusFrom" :disabled="disabled" placeholder="客户来源" style="width:100%;">
-              <el-option v-for="(item,index) in cusFromList" :key="index" :value="item.code_val" :label="item.code_desc"></el-option>
+              <el-option v-for="(item,index) in cusFromList" :key="index" :value="item.id" :label="item.code_desc"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -77,10 +77,10 @@
         </el-col>
       </el-row>
       <el-form-item label-width="0" class="btns">
-        <el-button type="primary" @click.native="submit(0)" class="btns-child">添加为公共客户</el-button>
-        <el-button type="warning" @click.native="submit(10)" class="btns-child">添加为我的跟踪客户</el-button>
+        <el-button type="primary" @click.native="submit(0)" :disabled="subDisable" class="btns-child">添加为公共客户</el-button>
+        <el-button type="warning" @click.native="submit(10)" :disabled="subDisable" class="btns-child">添加为我的跟踪客户</el-button>
         <div class="btns-child">
-          <el-button type="primary" @click.native="submit(20)">添加并申请保A</el-button>
+          <el-button type="primary" @click.native="submit(20)" :disabled="subDisable">添加并申请保A</el-button>
           <span class="red">(可保A数量：10)</span>
         </div>
       </el-form-item>
@@ -89,9 +89,10 @@
 </template>
 
 <script>
+import cookie from 'js-cookie'
 import SelectArea from 'base/selectArea/selectArea'
 import SelectTrade from 'base/selectTrade/selectTrade'
-import { getCode } from 'api/getOptions'
+const userId = cookie.get('userId')
 export default {
   data () {
     return {
@@ -112,39 +113,45 @@ export default {
         name: ''
       }],
       cusFromList: [],
-      disabled: true
+      disabled: true,
+      availableBaoA: 0,
+      availableFollow: 0,
+      subDisable: false
     }
   },
   mounted () {
-    this._getCusFrom()
+    this._getNum()
   },
   methods: {
-    _getCusFrom () {
-      getCode(27).then(res => {
-        if (res.data.status === 1) {
-          this.cusFromList = res.data.data
-        }
+    // 获取当前人的保a和跟踪可用数量
+    _getNum () {
+      this.$get('/Product.do?GetNumberById', { id: userId }).then(res => {
+        this.availableBaoA = res.data[0].data || 0
+        this.availableFollow = res.data[1].data || 0
       })
     },
-    accountNameBlur (val) {
-      if (!val) {
+    // 校验公司名
+    accountNameBlur () {
+      if (!this.form.cusName) {
         this.$message({
           type: 'error',
-          message: '名称重复'
+          message: '请填写正确的公司名'
         })
         return
       }
-      this.$post('/Company/CompanyIsRepeat', {name: val}).then(res => {
-        if (res.data.status === 1) {
+      this.$post('/Company.do?compget', {companyname: this.form.cusName}).then(res => {
+        if (!res.data[0].data.length) {
           this.disabled = false
+          this.cusFromList = res.data[1].data
         } else {
           this.$message({
             type: 'error',
-            message: '名称重复'
+            message: '该公司已被录入'
           })
         }
       })
     },
+    // 加号
     addContact (index) {
       if (index === 0) {
         this.contactList.push({
@@ -184,28 +191,43 @@ export default {
       })
       this.form.cusName = this.form.cusName.replace(/\(/g, '（').replace(/\)/g, '）')
       let params = {
-
         type: type,
         name: this.form.cusName,
-        establishment_date: this.form.buildDate,
+        establishment: this.form.buildDate,
         legal_person: this.form.cus,
         address: this.form.cusAddr,
         website: this.form.cusWeb,
         fm: this.form.cusFrom,
-        area_id: this.form.area[2],
+        area: this.form.area[2],
         cat: this.form.trade[1],
         business_scope: this.form.businessScope,
         remark: this.form.remark,
-        jsonContacts: JSON.stringify(this.contactList)
+        contact: this.contactList,
+        imgurl: ''
       }
       console.log(params)
-      this.$post('/Company/CompanySet', params).then(res => {
-        if (res.data.status === 1) {
+      // return
+      if (type === 10 && this.availableFollow <= 0) {
+        this.$message({
+          type: 'error',
+          message: '您已达到跟踪上限'
+        })
+        return
+      }
+      if (type === 20 && this.availableBaoA <= 0) {
+        this.$message({
+          type: 'error',
+          message: '您已达到保A上限'
+        })
+        return
+      }
+      this.$post('/Company.do?compset', params).then(res => {
+        if (res.data[0].success) {
           this.$message({
             type: 'success',
-            message: res.data.msg
+            message: '添加成功'
           })
-          this.$router.push('/indexPage/myCustomer')
+          this.$router.push('/indexPage/myCus')
         }
       })
     }

@@ -1,56 +1,82 @@
 <template>
-  <el-cascader v-model="selArea" @change="$emit('input', selArea)" :disabled="areaDisable"
-  :options="options" :change-on-select="false" :props="props" placeholder="请选择地区"></el-cascader>
+  <el-cascader v-model="area" @change="$emit('input', area)" placeholder="请选择地区" :options="options" :change-on-select="false" :props="areaProps"  @active-item-change="handleItemChange"></el-cascader>
 </template>
 
 <script>
-// import { getArea } from 'api/getOptions'
-import storage from 'good-storage'
+// import storage from 'good-storage'
+// import transTree from 'common/js/utils'
 export default {
   props: {
-    areaDisable: {
-      type: Boolean,
-      default: false
+    echoArea: { // 回显
+      type: Array,
+      default: function () {
+        return []
+      }
     }
   },
   data () {
     return {
-      selArea: [],
+      area: [],
       options: [],
-      props: {
+      areaProps: {
         value: 'id',
-        label: 'areaname',
+        label: 'AREANAME',
         children: 'children'
-      }
+      },
+      firstIndex: 0,
+      secondIndex: 0,
+      areaList: []
+    }
+  },
+  watch: {
+    echoArea () {
+      this._getAreaList(this.echoArea[0])
+      this._getAreaList(this.echoArea[1])
     }
   },
   mounted () {
-    let areaList = storage.get('area')
-    if (!areaList) {
-      this._getAreaList()
-    } else {
-      this.options = areaList
-    }
+    this._getAreaList(1)
   },
   methods: {
-    _getAreaList () {
-      this.$post('/Area.do?comparea', {parentid: 1}).then(res => {
-        let area = res.data.data
-        // this.clearChildren(area)
-        this.options = area
-        storage.set('area', area)
-        if (res.data.status === 1) {
-
-        }
-      })
+    handleItemChange (val) {
+      console.log(val)
+      if (val.length === 1) {
+        this._getAreaList(val[0])
+      } else {
+        this._getAreaList(val[1])
+      }
     },
-    clearChildren (arr) {
-      arr.forEach(val => {
-        if (val.children.length === 0) {
-          delete val.children
-        }
-        if (val.children) {
-          this.clearChildren(val.children)
+    _getAreaList (id) {
+      this.$post('/Area.do?comparea', {parentid: id}).then(res => {
+        if (id === 1) { // get省
+          this.options = res.data.data
+          this.options.forEach((val, key) => {
+            val.children = []
+          })
+        } else {
+          let nextArea = res.data.data
+          if (id.length === 2) { // get市
+            this.options.forEach((val, key) => {
+              if (val.id == id) { // eslint-disable-line
+                this.firstIndex = key
+              }
+            })
+            this.options[this.firstIndex].children = nextArea
+            this.options[this.firstIndex].children.forEach(val => {
+              if (!val.children) {
+                val.children = []
+              }
+            })
+            this.area = this.echoArea
+          } else { // get区
+            this.options.forEach((val, key) => {
+              if (val.id == id) { // eslint-disable-line
+                this.secondIndex = key
+              }
+            })
+            this.options[this.firstIndex].children[this.secondIndex].children = nextArea
+            this.area = this.echoArea
+          }
         }
       })
     }
