@@ -17,11 +17,11 @@
         </div>
       </div>
       <ul class="head-ul">
-        <li id="down-client">
+        <!-- <li id="down-client">
           <a href="http://bg.baijiegroup.com/BaiJieOA/bj_crm_oa.zip" title="下载客户端">
             <span class="fa fa-download"></span>
           </a>
-        </li>
+        </li> -->
         <li id="help-doc">
           <a href="http://bg.baijiegroup.com/hlp/index.html" target="_blank" title="帮助文档">
             <span class="fa fa-file"></span>
@@ -182,7 +182,9 @@ export default {
       }
     },
     exitLogin () {
-      cookie.set('tk', '')
+      cookie.remove('token')
+      cookie.remove('userId')
+      cookie.remove('permissions')
       this.$router.push('/login')
       // $post('/logout').then(res => {
       //   if (res.data.status === -1) {

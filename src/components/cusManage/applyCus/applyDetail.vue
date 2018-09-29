@@ -96,7 +96,7 @@
           <el-button class="title-btn" type="primary">跟进记录</el-button>
         </div>
         <!-- <div class="line" style="max-width:980px;"></div> -->
-        <el-table :data="followRecordData" style="max-width: 980px;">
+        <el-table border :data="followRecordData" style="max-width: 980px;">
           <el-table-column prop="" label="跟进日期" min-width="180">
             <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
           </el-table-column>
@@ -115,11 +115,11 @@
         </el-row>
       </div>
       <div class="btns mt10px">
-        <el-button type="success" @click.native="applyResult(20,200)">跟进</el-button>
-        <el-button type="primary" @click.native="applyResult(10,0)">转跟踪</el-button>
-        <el-button type="warning" @click.native="applyResult(-10,0)">暂不联系</el-button>
-        <el-button type="danger" @click.native="applyResult(-100,0)">永久放弃</el-button>
-        <el-button type="info" @click.native="applyResult(-1,0)">空号/错号</el-button>
+        <el-button type="success" @click.native="applyResult(20,200)" :disabled="btnDisabled">跟进</el-button>
+        <el-button type="primary" @click.native="applyResult(10,0)" :disabled="btnDisabled">转跟踪</el-button>
+        <el-button type="warning" @click.native="applyResult(-10,0)" :disabled="btnDisabled">暂不联系</el-button>
+        <el-button type="danger" @click.native="applyResult(-100,0)" :disabled="btnDisabled">永久放弃</el-button>
+        <el-button type="info" @click.native="applyResult(-1,0)" :disabled="btnDisabled">空号/错号</el-button>
       </div>
     </div>
   </div>
@@ -136,8 +136,8 @@ export default {
     return {
       detailInfo: {},
       form: {
-        trade: '',
-        area: ''
+        trade: [],
+        area: []
       },
       fmList: [],
       cusTypeList: [],
@@ -149,7 +149,8 @@ export default {
       ],
       followRecordData: [],
       remark: '',
-      maxFollow: 0
+      maxFollow: 0,
+      btnDisabled: false
     }
   },
   created () {
@@ -188,42 +189,59 @@ export default {
         })
         return
       }
-      if (applytype === 10) {
-        this.turnFollow()
-        return
-      }
-      this.$post('/Apply.do?limit', params).then(res => {})
+      this.$post('/Apply.do?limit', params).then(res => {
+        if (applytype === 10) {
+          this.turnFollow()
+        }
+        if (res.data.success) {
+          this.$message({
+            type: 'success',
+            message: '操作成功'
+          })
+          this.btnDisabled = true
+          // this.$router.go(0)
+        }
+      })
     },
-    turnFollow () {
+    turnFollow () { // 转跟踪
       this._isMaxFollow().then(res => {
         console.log(res)
         if (!res) {
-          this.$confirm('请确认是否转跟踪?', '', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            this.$post('/Company.do?ChangeToB', {
-              companyid: this.receiveData.companyid,
-              companylogid: this.receiveData.companylogid
-            }).then(res => {
-              if (res.data[0].data) {
-                this.$message({
-                  type: 'success',
-                  message: '跟踪成功！'
+          this.$get('/Company.do?CanChangeToB', {
+            companyid: this.receiveData.companyid,
+            companylogid: this.receiveData.companylogid
+          }).then(res => {
+            if (res.data[0].data) {
+              this.$confirm('请确认是否转跟踪?', '', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+              })
+                .then(() => {
+                  this.$post('/Company.do?ChangeToB', {
+                    companyid: this.receiveData.companyid,
+                    companylogid: this.receiveData.companylogid
+                  }).then(res => {
+                    if (res.data[0].data) {
+                      this.$message({
+                        type: 'success',
+                        message: '跟踪成功！'
+                      })
+                    }
+                  })
                 })
-              } else {
-                this.$message({
-                  type: 'error',
-                  message: '您已跟踪过该客户！'
+                .catch(() => {
+                  this.$message({
+                    type: 'info',
+                    message: '已取消'
+                  })
                 })
-              }
-            })
-          }).catch(() => {
-            this.$message({
-              type: 'info',
-              message: '已取消'
-            })
+            } else {
+              this.$message({
+                type: 'error',
+                message: '您已跟踪过该客户！'
+              })
+            }
           })
         }
       })
@@ -231,7 +249,7 @@ export default {
     // 判断是否达到跟踪上限(跟踪上限已取消)
     _isMaxFollow () {
       return new Promise(resolve => {
-        this.$get('/Product.do?GetNumberById', {id: userId}).then(res => {
+        this.$get('/Product.do?GetNumberById', { id: userId }).then(res => {
           try {
             this.maxFollow = res.data[1].data
           } catch (error) {

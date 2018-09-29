@@ -1,5 +1,5 @@
 <template>
-  <el-cascader v-model="selArea" @change="$emit('input', selArea)" :disabled="areaDisable"
+  <el-cascader v-model="selArea" @change="$emit('input', selArea)" :disabled="areaDisabled"
   :options="options" :change-on-select="false" :props="props" placeholder="请选择地区"></el-cascader>
 </template>
 
@@ -8,7 +8,7 @@
 import storage from 'good-storage'
 export default {
   props: {
-    areaDisable: {
+    areaDisabled: {
       type: Boolean,
       default: false
     }

@@ -92,38 +92,74 @@
           </el-row>
           <el-row :gutter="20">
             <el-col :md="24" style="max-width:1000px;">
-              <el-form-item label="经营范围 :">
-                <el-input v-model="cusDetail.business_scope" type="textarea" :rows="3"></el-input>
+              <el-form-item label="经营范围 :" required>
+                <el-input v-model="cusDetail.business_scope" type="textarea" :rows="4"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="20">
             <el-col :md="24" style="max-width:1000px;">
-              <el-form-item label="修改备注 :" class="redmark">
-                <el-input v-model="eidtRemark.remark" class="redmark" type="textarea" :rows="3"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="20">
-            <el-col :md="24" style="max-width:1000px;">
-              <el-form-item label="备注 :">
+              <el-form-item label="备注 :" required>
                 <el-input v-model="cusDetail.company_remark" type="textarea" :rows="3"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+      </div>
+      <div class="cus-info">
+        <div class="title">
+          <el-button class="title-btn" type="primary">待审信息</el-button>
+        </div>
+        <div class="line" style="max-width:980px;"></div>
+        <el-form ref="form" :model="form" label-width="90px">
+          <el-row :gutter="20">
+            <el-col :md="12" class="maxwidth">
+              <el-form-item label="处理类型 :">
+                <span>{{cusDetail.cltype | cusState('checkType')}}</span>
+              </el-form-item>
+            </el-col>
+            <el-col :md="12" class="maxwidth">
+              <el-form-item label="提交人 :">
+                <span>{{cusDetail.username}}</span>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :md="12" class="maxwidth">
+              <el-form-item label="提交备注 :">
+                <span>{{cusDetail.remark}}</span>
+              </el-form-item>
+            </el-col>
+            <el-col :md="12" class="maxwidth">
+              <el-form-item label="提交时间 :">
+                <span>{{cusDetail.insert_time | timeFormat}}</span>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :md="24" style="max-width:1000px;">
+              <el-form-item label="审核被拒原因 :" label-width="115px">
+                <el-select multiple v-model="reason" style="width:100%;">
+                  <el-option v-for="(item,index) in rejectData" :key="index" :value="index" :label="item.code_desc"></el-option>
+                </el-select>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="20">
             <el-col :md="24" style="max-width:1000px;">
               <el-form-item label="审核备注 :">
-                <el-input v-model="refuseRemark" clearable></el-input>
-                <el-radio-group v-model="refuseRemarkRadio" @change="refuseRemarkRadioChange">
-                  <el-radio v-for="(item,index) in rejectData" :key="index" :label="item.code_desc">{{item.code_desc}}</el-radio>
-                </el-radio-group>
+                <el-input v-model="checkRemark" type="textarea" :rows="3"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
           <div class="btns mt10px" style="max-width:1000px;text-align:center;">
-            <el-button type="success" @click.native="saveCusInfo">保存客户资料</el-button>
-            <el-button type="danger" @click.native="refuse">驳回</el-button>
+            <el-button type="success" @click.native="checkPass">审核通过</el-button>
+            <el-button type="danger" @click.native="checkFail">审核不通过</el-button>
+            <el-button type="primary" @click.native="basicCheckPass">仅基本信息通过</el-button>
+            <el-button type="success" @click.native="baoAPass">保A审核通过</el-button>
+            <el-button type="danger" @click.native="baoAFail">保A审核不通过</el-button>
+            <el-button type="danger" @click.native="allCheckFail">审核都不通过</el-button>
+            <el-button type="primary" @click.native="saveCusInfo">保存客户资料</el-button>
           </div>
         </el-form>
       </div>
@@ -193,6 +229,20 @@
               </el-table-column>
             </el-table>
             <page class="page" :url="applyChangeUrl" :sendParams="applyChangeParams" @updateList="getApplyChangeLogs"></page>
+          </el-tab-pane>
+          <el-tab-pane label="放弃保A日志" name="4">
+            <el-table :data="stopBaoALogs" style="width: 100%;">
+              <el-table-column prop="companyname" label="客户名称">
+              </el-table-column>
+              <el-table-column prop="" label="操作时间">
+                <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
+              </el-table-column>
+              <el-table-column prop="username" label="操作人">
+              </el-table-column>
+              <el-table-column prop="remark" label="备注">
+              </el-table-column>
+            </el-table>
+            <page class="page" :url="stopUrl" :sendParams="stopParams" @updateList="getStopBaoALogs"></page>
           </el-tab-pane>
         </el-tabs>
       </div>
@@ -267,7 +317,6 @@ export default {
       activeName: '1',
       receiveData: {},
       cusDetail: {},
-      eidtRemark: {},
       checkLogs: [], // 审核记录
       changeLogs: [], // 修改记录
       changeUrl: '/Company.do?EditCompanyRecord',
@@ -275,6 +324,9 @@ export default {
       applyChangeLogs: [], // 申请修改记录
       applyChangeUrl: '/Company.do?applyEditInfoRecord',
       applyChangeParams: {},
+      stopBaoALogs: [], // 放弃保A记录
+      stopUrl: '/Company.do?userCompanylogRecord',
+      stopParams: {},
 
       phoneRepeatDialog: false, // 电话查重弹窗
       repeatList: [],
@@ -285,18 +337,15 @@ export default {
 
       rejectData: [], // 待审数据
       reason: [],
-
-      realDelcontact: [], // 储存真正被删除的联系人信息
-
-      refuseRemark: '',
-      refuseRemarkRadio: ''
+      checkRemark: '',
+      realDelcontact: [] // 储存真正被删除的联系人信息
     }
   },
   created () {
     this.realDelcontact = []
     console.log(this.$route.query.data)
     this.receiveData = this.$route.query.data
-    if (!this.receiveData.editid) {
+    if (!this.receiveData.id) {
       this.$router.go(-1)
       return
     }
@@ -306,10 +355,16 @@ export default {
     getByCode(27).then(res => {
       this.fmList = res.data.data
     })
-    getByCode(29).then(res => {
-      this.rejectData = res.data.data
-    })
-    this.applyChangeParams = {
+    if (this.receiveData.cltype === 20) {
+      getByCode(30).then(res => {
+        this.rejectData = res.data.data
+      })
+    } else {
+      getByCode(29).then(res => {
+        this.rejectData = res.data.data
+      })
+    }
+    this.applyChangeParams = this.stopParams = {
       companyId: this.receiveData.id,
       companylogid: this.receiveData.companylogid
     }
@@ -321,14 +376,10 @@ export default {
     }
   },
   methods: {
-    refuseRemarkRadioChange (val) {
-      this.refuseRemark = val
-    },
     view () {
       // todo
       this.viewDialog = true
     },
-    // 搜索
     checkSearch () {
       let reg = /\d{7,}/
       let reg1 = /[\u4e00-\u9fa5]/
@@ -352,6 +403,99 @@ export default {
     getPhoneRepeatInfo (res) {
       this.repeatList = res.data[0].data
     },
+    // 审核通过
+    checkPass () {
+      let params = {
+        id: this.receiveData.id,
+        logckid: this.checkLogs[0].logckid,
+        cid: this.receiveData.check_id,
+        companylogtype: this.cusDetail.cltype,
+        reason: this.reason,
+        remark: this.checkRemark
+      }
+      this.$post('/CheckOut.do?pass', params).then(res => {
+        if (res.data[0].success) {
+          this.$message({
+            type: 'success',
+            message: '保存成功'
+          })
+          this.$router.push({
+            path: '/indexPage/dealCheck',
+            query: { data: 'fromDetail' }
+          })
+        } else {
+          this.$message({
+            type: 'error',
+            message: '保存失败'
+          })
+        }
+      })
+    },
+    // 审核不通过
+    checkFail () {
+      let params = {
+        id: this.receiveData.id,
+        logckid: this.checkLogs[0].logckid,
+        cid: this.receiveData.check_id,
+        companylogtype: this.cusDetail.cltype,
+        reason: this.reason,
+        remark: this.checkRemark
+      }
+      this.$post('/CheckOut.do?baserefuse', params).then(res => {
+        if (res.data[0].success) {
+          this.$message({
+            type: 'success',
+            message: '保存成功'
+          })
+          this.$router.push({
+            path: '/indexPage/dealCheck',
+            query: { data: 'fromDetail' }
+          })
+        }
+      })
+    },
+    // 基本资料审核通过但保A不通过
+    basicCheckPass () {
+      let params = {
+        uid: this.receiveData.uid,
+        type: this.cusDetail.ctype,
+        id: this.receiveData.id,
+        logckid: this.checkLogs[0].logckid,
+        cid: this.receiveData.check_id,
+        companylogtype: this.cusDetail.cltype,
+        reason: this.reason,
+        remark: this.checkRemark
+      }
+      this.$post('/CheckOut.do?basepass', params).then(res => {
+        if (res.data[0].success) {
+          this.$message({
+            type: 'success',
+            message: '保存成功'
+          })
+          this.$router.push({
+            path: '/indexPage/dealCheck',
+            query: { data: 'fromDetail' }
+          })
+        } else {
+          this.$message({
+            type: 'error',
+            message: '保存失败'
+          })
+        }
+      })
+    },
+    // 保A审核通过
+    baoAPass () {
+      this.checkPass()
+    },
+    // 保A审核不通过
+    baoAFail () {
+      this.basicCheckPass()
+    },
+    // 审核都不通过
+    allCheckFail () {
+      this.checkFail()
+    },
     // 保存客户资料
     saveCusInfo () {
       let newadd = []
@@ -374,8 +518,7 @@ export default {
         .replace((/\(/g, '（'))
         .replace((/\)/g, '）'))
       let params = {
-        editid: this.receiveData.editid,
-        cid: this.receiveData.companyid,
+        cid: this.receiveData.id,
         cat: this.cusDetail.bid || this.cusDetail.cid,
         fm: this.cusDetail.fm,
         name:
@@ -395,8 +538,8 @@ export default {
         delcontact: this.realDelcontact,
         oldcontact: oldcontact,
         producttype: this.cusDetail.producttype + '',
-        companyloguid: this.receiveData.companyloguid,
-        companylogid: this.receiveData.companylogid
+        companylogid: this.receiveData.check_id,
+        pid: this.receiveData.pid
       }
       this.$post('/CheckOut.do?EditCustomer', params).then(res => {
         if (res.data[0].success) {
@@ -405,7 +548,7 @@ export default {
             message: '保存成功'
           })
           this.$router.push({
-            path: '/indexPage/cusInfo',
+            path: '/indexPage/dealCheck',
             query: { data: 'fromDetail' }
           })
         } else {
@@ -416,34 +559,9 @@ export default {
         }
       })
     },
-    // 驳回
-    refuse () {
-      let params = {
-        'id': this.receiveData.editid,
-        'refuseremark': this.refuseRemark
-      }
-      this.$post('/CheckOut.do?refuseEdit', params).then(res => {
-        if (res.data.data) {
-          this.$message({
-            type: 'success',
-            message: '驳回成功'
-          })
-          this.$router.push({
-            path: '/indexPage/cusInfo',
-            query: { data: 'fromDetail' }
-          })
-        } else {
-          this.$message({
-            type: 'error',
-            message: '驳回失败'
-          })
-        }
-      })
-    },
     _getMyCusDetail () {
       this.$post('/CheckOut.do?list', {
-        editid: this.receiveData.editid,
-        cid: this.receiveData.companyid,
+        cid: this.receiveData.id,
         uid: this.receiveData.uid,
         companylogid: this.receiveData.companylogid
       }).then(res => {
@@ -458,9 +576,10 @@ export default {
         ]
         this.form.contactList =
           res.data[1].data.length === 0 ? [{}] : res.data[1].data
-        this.form.oldContactList = JSON.parse(JSON.stringify(this.form.contactList))
+        this.form.oldContactList = JSON.parse(
+          JSON.stringify(this.form.contactList)
+        )
         this.checkLogs = res.data[2].data // 审核记录
-        this.eidtRemark = res.data[3].data
       })
     },
     // 修改记录带分页
@@ -470,6 +589,10 @@ export default {
     // 申请修改记录带分页
     getApplyChangeLogs (res) {
       this.applyChangeLogs = res.data[0].data
+    },
+    // 放弃保A记录带分页
+    getStopBaoALogs (res) {
+      this.stopBaoALogs = res.data[0].data
     },
     backRouter () {
       this.$router.go(-1)
@@ -499,12 +622,6 @@ export default {
 
 <style lang="less">
 .phonered .el-input__inner {
-  color: red;
-}
-.redmark .el-form-item__label {
-  color: red;
-}
-.redmark .el-textarea__inner {
   color: red;
 }
 </style>

@@ -3,7 +3,6 @@
 //         <el-option label="3个月以上" value="3"></el-option>
 //         <el-option label="6个月以上" value="6"></el-option>
 //       </auto-select>
-// 默认选中取决于sel的值，so，默认选中的sel值需统一某个值，ex：''或'10'
 <template>
   <el-select @change="$emit('input',sel)" v-model="sel" class="auto-sel" :placeholder="placeholder">
     <span slot="prefix" class="prefix">{{title}}:</span>

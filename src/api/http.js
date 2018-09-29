@@ -8,7 +8,7 @@ export const serverUrl = 'http://172.16.11.78:8080/BaiJieOA'
 const instance = axios.create({
   baseURL: serverUrl,
   // withCredentials: true, // 跨域凭证
-  timeout: 10000
+  timeout: 8000
   // headers: {'token': tk}
 })
 let loadingInstance
@@ -36,19 +36,30 @@ instance.interceptors.response.use( // 响应拦截
     if (response.data === 'tosignin') {
       router.push('/login')
     }
+    // if (response.data instanceof Object) {
+    //   if (response.data.success) {
+    //     Message.success({
+    //       message: response.data.msg || '成功'
+    //     })
+    //   } else {
+    //     Message.error({
+    //       message: response.data.msg || '失败'
+    //     })
+    //   }
+    // }
     return response
   },
   err => {
     loadingInstance.close()
     Message.error({
-      message: '网络错误'
+      message: '请求超时'
     })
     console.log(err)
     return Promise.reject(err)
   }
 )
 export function $post (url, params = {}) {
-  let tk = cookie.get('tk')
+  let tk = cookie.get('token')
   let isQuestionMark = url.indexOf('?') > -1
   let mark = isQuestionMark ? '&' : '?'
   return new Promise((resolve, reject) => {
@@ -64,7 +75,7 @@ export function $post (url, params = {}) {
   })
 }
 export function $get (url, _params = {}) {
-  let tk = cookie.get('tk')
+  let tk = cookie.get('token')
   let isQuestionMark = url.indexOf('?') > -1
   let mark = isQuestionMark ? '&' : '?'
   return new Promise((resolve, reject) => {

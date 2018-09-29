@@ -91,7 +91,7 @@ export const navList = [
     {
       cid: 55,
       to: '/indexPage/importCus',
-      text: '市场部导入客户'
+      text: '市场部导入'
     }
     ]
   },

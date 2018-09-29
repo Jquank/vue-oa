@@ -36,7 +36,7 @@
       </div>
     </div>
     <!-- 列表 -->
-    <el-table stripe border max-height="500" :data="applyList" style="width: 100%;margin-top:10px;">
+    <el-table stripe border max-height="600" :data="applyList" style="width: 100%;margin-top:10px;">
       <el-table-column prop="companyname" label="客户名称">
       </el-table-column>
       <el-table-column prop="" label="客户类型">

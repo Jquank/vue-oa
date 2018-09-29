@@ -2,11 +2,11 @@
   <div class="my-customer component-container media-padding">
     <div>
       <div class="cus-status">
-        <el-radio-group v-model="myKind" class="cus-status-radio">
-          <el-radio-button label="10">保A客户</el-radio-button>
-          <el-radio-button label="20">录入客户</el-radio-button>
-          <el-radio-button label="30">跟踪客户</el-radio-button>
-          <el-radio-button label="40">签约客户</el-radio-button>
+        <el-radio-group @change="changeRadio" v-model="myKind" class="cus-status-radio">
+          <el-radio-button :label="30">保A客户</el-radio-button>
+          <el-radio-button :label="10">录入客户</el-radio-button>
+          <el-radio-button :label="20">跟踪客户</el-radio-button>
+          <el-radio-button :label="40">签约客户</el-radio-button>
         </el-radio-group>
         <div class="throw-order">
           <el-button @click.native="throwOrder" type="warning">保A甩单</el-button>
@@ -16,30 +16,32 @@
         <el-input placeholder="搜索客户名称" v-model="cusName" class="cus-item item-width">
           <template slot="prepend">客户名称:</template>
         </el-input>
-        <select-area v-model="area" class="cus-item item-width"></select-area>
-        <select-trade v-model="trade" class="cus-item item-width"></select-trade>
+        <select-area :key="key_area" v-model="area" class="cus-item item-width"></select-area>
+        <select-trade :key="key_trade" v-model="trade" class="cus-item item-width"></select-trade>
         <el-input placeholder="搜索录入人" v-model="inputPerson" class="cus-item item-width">
           <template slot="prepend">录入人:</template>
         </el-input>
         <el-input placeholder="搜索所属商务" v-model="shangWu" class="cus-item item-width">
           <template slot="prepend">所属商务:</template>
         </el-input>
-        <auto-select :title="'客户状态'" v-model="cusStatus" id="mycus-auto-select" class="cus-item item-width">
-          <el-option label="全部" value=""></el-option>
-          <el-option label="今日申领客户" value="10"></el-option>
-          <el-option label="今日完成客户" value="20"></el-option>
+        <auto-select :title="'客户状态'" :defaultValue="'30'" v-model="cusStatus" id="mycus-auto-select" class="cus-item item-width">
+          <el-option label="全部" value="100"></el-option>
+          <el-option label="审核通过" value="30"></el-option>
+          <el-option label="待审核" value="20"></el-option>
+          <el-option label="审核不通过" value="10"></el-option>
+          <el-option label="放弃" value="0"></el-option>
         </auto-select>
         <div class="cus-item">
           <el-button @click.native="search" type="primary">查 询</el-button>
-          <el-button type="warning">重 置</el-button>
+          <el-button @click.native="reset" type="warning">重 置</el-button>
         </div>
       </div>
 
       <!-- 列表 -->
-      <el-table @selection-change="handleSelectionChange" stripe border :data="myCusList" style="width: 100%">
+      <el-table @selection-change="handleSelectionChange" stripe border :data="myCusList" max-height="600" style="width: 100%">
         <el-table-column fixed type="selection" width="55">
         </el-table-column>
-        <el-table-column prop="companyname" label="客户名称">
+        <el-table-column prop="companyname" label="客户名称" min-width="150">
         </el-table-column>
         <el-table-column prop="companytype" label="公司状态" width="70">
           <span :class="scope.row.companytype===-10?'red':''" slot-scope="scope">
@@ -51,9 +53,9 @@
             {{scope.row.producttype | cusStatus}} {{scope.row.producttype===0?scope.row.productnumber+1:''}}
           </span>
         </el-table-column>
-        <el-table-column prop="areaname" label="地区">
+        <el-table-column prop="areaname" label="地区" min-width="150">
         </el-table-column>
-        <el-table-column prop="catname" label="行业">
+        <el-table-column prop="catname" label="行业" min-width="130">
         </el-table-column>
         <el-table-column prop="productname" label="业务类型" width="70">
         </el-table-column>
@@ -71,20 +73,25 @@
             {{scope.row.visittime | timeFormat}}
           </span>
         </el-table-column>
-        <el-table-column label="操作" width="220">
+        <el-table-column label="操作" width="290">
           <template slot-scope="scope">
-            <el-button @click.native.prevent="viewDetail(scope.row)" type="success" size="mini">查看</el-button>
+            <el-button @click.native.prevent="view(scope.row)" type="success" size="mini">查看</el-button>
             <el-button @click.native.prevent="follow(scope.row)" type="warning" size="mini">跟进</el-button>
             <el-button @click.native.prevent="visit(scope.row)" type="primary" size="mini">出访</el-button>
+            <el-button @click.native.prevent="stop(scope.row)" type="danger" size="mini">放弃</el-button>
           </template>
         </el-table-column>
       </el-table>
-      <page class="pagination" :url="myCusUrl" :sendParams="params" @updateList="updateMyCusList"></page>
+      <page class="page" :url="myCusUrl" :sendParams="sendParams" @updateList="updateMyCusList"></page>
     </div>
     <router-view></router-view>
 
+    <!-- 保A甩单弹窗 -->
+    <el-dialog title="选择" :visible.sync="throwDialog" width="520px">
+      <select-user @userId="getUserId"></select-user>
+    </el-dialog>
     <!-- 跟进弹窗 -->
-    <el-dialog title="填写出访记录" :visible.sync="followDialog" width="30%">
+    <el-dialog title="填写跟进记录" :visible.sync="followDialog" width="400px">
       <el-input v-model="followRecord" type="textarea" :rows="3"></el-input>
       <div class="follow-btns">
         <el-button @click.native="followDialog = false" type="warning">取 消</el-button>
@@ -92,132 +99,131 @@
       </div>
     </el-dialog>
     <!-- 出访弹窗 -->
-    <el-dialog title="填写出访记录" :visible.sync="visitDialog" width="700px">
+    <el-dialog title="填写出访记录" :visible.sync="visitDialog" width="750px">
       <el-form ref="form" :model="form" label-width="90px">
-          <el-row :gutter="20">
-            <el-col :md="12">
-              <el-form-item label="客户名称 :">
-                <el-input v-model="form.cusName" disabled placeholder="客户名称"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :md="12">
-              <el-form-item label="客户意向 :">
-                <el-select v-model="form.cusIntention" placeholder="客户来源" style="width:100%;">
-                  <el-option value="10" label="个人查找"></el-option>
-                  <el-option value="20" label="个人查找"></el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="20">
-            <el-col :md="12">
-              <el-form-item label="拜访人 :">
-                <el-input v-model="form.visitMan" placeholder="客户法人"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :md="12">
-              <el-form-item label="陪访人 :">
-                <el-input v-model="form.keepMan" disabled placeholder="客户地址"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="20">
-            <el-col :md="12">
-              <el-form-item label="联系电话 :">
-                <el-input v-model="form.phone" placeholder="客户网址"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :md="12">
-              <el-form-item label="联系地址 :">
-                <el-select v-model="form.addr" placeholder="客户来源" style="width:100%;">
-                  <el-option value="10" label="个人查找"></el-option>
-                  <el-option value="20" label="个人查找"></el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="20">
-            <el-col :md="12" >
-              <el-form-item label="出访时间 :">
-                <el-input v-model="form.visitTime" placeholder="客户网址"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :md="12">
-              <el-form-item label="出访类型 :">
-                <el-select v-model="form.visitType" placeholder="客户来源" style="width:100%;">
-                  <el-option value="10" label="个人查找"></el-option>
-                  <el-option value="20" label="个人查找"></el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <div class="btns mt10px" style="text-align:center;">
-            <el-button type="primary">提交</el-button>
-          </div>
-        </el-form>
+        <el-row :gutter="20">
+          <el-col :md="12">
+            <el-form-item label="客户名称 :">
+              <el-input v-model="cusDetail.name" disabled placeholder="客户名称"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :md="12">
+            <el-form-item label="客户意向 :" required>
+              <el-select v-model="form.cusIntention" placeholder="请选择客户意向" style="width:100%;">
+                <el-option value="25" label="25%"></el-option>
+                <el-option value="50" label="50%"></el-option>
+                <el-option value="75" label="75%"></el-option>
+                <el-option value="100" label="100%"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :md="12">
+            <el-form-item label="拜访人 :">
+              <el-select v-model="form.visitMan" placeholder="请选择联系人" style="width:100%;">
+                <el-option v-for="(contact,index) in contacts" :key="index" :value="contact.contactid" :label="contact.name"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :md="12">
+            <el-form-item label="陪访人 :">
+              <el-input v-model="form.keepMan" disabled></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :md="12">
+            <el-form-item label="联系电话 :">
+              <el-input v-model="form.phone"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :md="12">
+            <el-form-item label="联系地址 :">
+              <el-input v-model="cusDetail.address"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :md="12">
+            <el-form-item label="出访时间 :" required>
+              <el-date-picker v-model="form.visitTime" value-format="yyyy/MM/dd" format="yyyy-MM-dd HH:mm" type="date" placeholder="选择日期" style="width:100%"></el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :md="12">
+            <el-form-item label="出访类型 :" required>
+              <el-select v-model="form.visitType" style="width:100%;">
+                <el-option value="110" label="首访"></el-option>
+                <el-option value="120" label="二访"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <div class="btns mt10px" style="text-align:center;">
+          <el-button @click.native="subVisit" type="primary">提交</el-button>
+        </div>
+      </el-form>
     </el-dialog>
   </div>
 </template>
 
 <script>
+import cookie from 'js-cookie'
 import Page from '@/base/page/page'
 import SelectArea from 'base/selectArea/selectArea'
 import SelectTrade from 'base/selectTrade/selectTrade'
 import AutoSelect from 'base/autoSelect/autoSelect'
+import SelectUser from 'base/selectUser/selectUser'
+const userId = cookie.get('userId')
 export default {
   data () {
     return {
       refresh: true,
-      myKind: '10',
+      myKind: 30,
       cusName: '',
       area: [],
+      key_area: '',
       trade: [],
+      key_trade: '1',
       inputPerson: '',
       shangWu: '',
-      cusStatus: '',
-      params: {
-        logStatus: 100,
+      cusStatus: 30,
+      sendParams: {
+        logStatus: 30,
         myKind: 30
       },
-      myCusUrl: '/Company.do?myCustomer&tk=' + this.$tk,
+      myCusUrl: '/Company.do?myCustomer',
       pageCount: 0,
       cusType: '',
-      myCusType: [
-        { value: '选项1', label: '我的录入客户', status: 10 },
-        { value: '选项2', label: '我的跟踪客户', status: 20 },
-        { value: '选项3', label: '我的保A客户', status: 30 },
-        { value: '选项4', label: '我的签约客户', status: 40 }
-      ],
       myCusList: [],
       multipleSelection: [],
       followDialog: false,
       followRecord: '',
       visitDialog: false,
+
+      cusDetail: {}, // 出访弹窗数据
+      contacts: [],
       form: {
-        cusName: '',
         cusIntention: '',
         visitMan: '',
         keepMan: '',
         phone: '',
-        addr: '',
         visitTime: '',
         visitType: ''
-      }
+      },
+      throwDialog: false,
+      userId: '',
+      rowData: {} // 一行的数据(scope.row)
     }
   },
-  mounted () {},
+  beforeRouteUpdate (to, from, next) { // vue会复用组件，所以从详情页返回时带上搜索条件搜索
+    console.log(to)
+    if (from.meta.text.indexOf('详情') > -1 && to.query.data === 'fromDetail') {
+      this.search()
+    }
+    next()
+  },
   methods: {
-    search () {
-      this.params = Object.assign({}, this.params, {
-        myKind: this.myKind,
-        companyName: this.cusName,
-        areaId: this.area,
-        catId: this.trade,
-        businessname: this.shangWu,
-        entername: this.inputPerson,
-        logStatus: this.cusStatus
-      })
-    },
     // 甩单按钮
     throwOrder () {
       if (this.multipleSelection.length === 0) {
@@ -227,30 +233,191 @@ export default {
         })
         return
       }
-      console.log(this.multipleSelection)
+      this.throwDialog = true
+    },
+    // 获取用户id，完成甩单
+    getUserId (id) {
+      this.userId = id
+      if (id) {
+        this.$get('/Product.do?GetNumberById', {id: id}).then(res => {
+          if (res.data[0].success) {
+            let maxBaoA = res.data[0].data
+            if (this.multipleSelection.length > maxBaoA) {
+              this.$message({
+                type: 'error',
+                message: `已超出剩余保A配额数：${maxBaoA}`
+              })
+            } else {
+              let selArr = []
+              this.multipleSelection.forEach(val => {
+                selArr.push({id: val.companylogid})
+              })
+              this.$post('/Project.do?ThrowA',
+                {
+                  receiveorderuid: id,
+                  companylog: selArr
+                }
+              ).then(res => {
+                if (res.data[0].data) {
+                  this.$message({
+                    type: 'success',
+                    message: '甩单成功'
+                  })
+                  this.search()
+                  this.throwDialog = false
+                } else {
+                  this.$message({
+                    type: 'error',
+                    message: '甩单失败'
+                  })
+                }
+              })
+            }
+          }
+        })
+      }
+    },
+    changeRadio () {
+      this.sendParams = {
+        logStatus: 30,
+        myKind: this.myKind
+      }
+    },
+    search () {
+      this.sendParams = Object.assign({}, this.params, {
+        myKind: this.myKind,
+        companyName: this.cusName,
+        areaId: this.area[2],
+        catId: this.trade[1],
+        businessname: this.shangWu,
+        entername: this.inputPerson,
+        logStatus: +this.cusStatus
+      })
+    },
+    reset () {
+      this.cusName = ''
+      this.inputPerson = ''
+      this.shangWu = ''
+      this.area = []
+      this.key_area = new Date() + ''
+      this.trade = []
+      this.key_trade = new Date() + '1'
     },
     handleSelectionChange (val) {
       this.multipleSelection = val
     },
     // 查看按钮
-    viewDetail (data) {
+    view (data) {
       this.$router.push({
         path: `myCus/${data.id}`,
-        query: { data: data }
+        query: { data: data, myKind: this.myKind }
       })
     },
     // 跟进按钮
-    follow () {
+    follow (val) {
+      this.rowData = val
       this.followDialog = true
     },
-    // 跟进提交
     subFollowRecord () {
+      let params = {
+        'companylogid': this.rowData.companylogid,
+        'cat': 200,
+        'cid': this.rowData.id,
+        'uid': userId,
+        'pid': this.rowData.productid,
+        'remark': this.followRecord
+      }
+      if (!this.followRecord) {
+        this.$message({
+          type: 'warning',
+          message: '请填写跟进记录'
+        })
+        return
+      }
+      this.$post('/follow.do?visit', params).then(res => {
+        this.$message({
+          type: 'success',
+          message: '跟进成功'
+        })
+      })
       this.followDialog = false
-      console.log(this.followRecord)
     },
     // 出访按钮
-    visit () {
+    visit (val) {
+      this.form = {
+        cusIntention: '',
+        visitMan: '',
+        keepMan: '',
+        phone: '',
+        visitTime: '',
+        visitType: ''
+      }
+      this.rowData = val
       this.visitDialog = true
+      this.$post('/CustomerCheck.do?customlist', {
+        'cid': this.rowData.id,
+        'companylogid': this.rowData.companylogid
+      }).then(res => {
+        this.cusDetail = res.data[0].data[0]
+        this.contacts = res.data[1].data
+      })
+    },
+    subVisit () {
+      let params = {
+        'cat': this.form.visitType,
+        'cid': this.rowData.id,
+        'uid': userId,
+        'accompany': this.rowData.accompanyUserId,
+        'pid': this.rowData.pid,
+        'ccid': '',
+        'result': this.form.cusIntention, // 意向
+        'begin': this.form.visitTime,
+        'status': 10,
+        'addr': this.cusDetail.address
+      }
+      if (!this.form.cusIntention ||
+          !this.form.visitType ||
+          !this.form.visitTime) {
+        this.$message({
+          type: 'warning',
+          message: '请填写必填项'
+        })
+        return
+      }
+      this.visitDialog = false
+      this.$post('/follow.do?visit', params).then(res => {
+        this.$message({
+          type: 'success',
+          message: '保存成功'
+        })
+      })
+    },
+    // 放弃按钮
+    stop (val) {
+      this.$confirm('请确认是否终止该客户的保护机制?', '提示',
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+        .then(() => {
+          this.$post('/Company.do?logStop', {
+            'companyid': val.id,
+            'companylogid': val.companylogid
+          }).then(res => {
+            this.$message({
+              type: 'success',
+              message: '成功'
+            })
+            this.search()
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          })
+        })
     },
     updateMyCusList (data) {
       this.myCusList = data.data[0].data
@@ -260,7 +427,8 @@ export default {
     Page,
     SelectArea,
     SelectTrade,
-    AutoSelect
+    AutoSelect,
+    SelectUser
   }
 }
 </script>
@@ -279,7 +447,7 @@ export default {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
-    max-width: 500px;
+    max-width: 980px;
     margin-top: -10px;
     .cus-status-radio {
       margin-top: 10px;
@@ -287,11 +455,6 @@ export default {
     .throw-order {
       margin-top: 10px;
     }
-  }
-  .pagination {
-    padding-top: 10px;
-    display: flex;
-    justify-content: flex-end;
   }
   .my-list {
     margin-top: 15px;
@@ -314,7 +477,7 @@ export default {
       width: 250px;
     }
   }
-  .follow-btns{
+  .follow-btns {
     margin-top: 10px;
     text-align: right;
   }

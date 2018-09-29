@@ -33,6 +33,10 @@ export default {
       default: function () {
         return {}
       }
+    },
+    simpleLayout: {
+      type: String,
+      default: 'total, sizes, prev, pager, next, jumper'
     }
   },
   watch: {
@@ -55,7 +59,7 @@ export default {
       pageCount: 0,
       pageval: 10,
       isLoading: true,
-      layout: 'total, sizes, prev, pager, next, jumper'
+      layout: this.simpleLayout
     }
   },
   created () {

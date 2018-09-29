@@ -54,8 +54,10 @@ export default {
         .then(res => {
           if (res.data.success) {
             console.log(res.data.data)
-            cookie.set('tk', res.data.data.tk)
+            cookie.set('token', res.data.data.tk)
             cookie.set('userId', res.data.data.id)
+            cookie.set('userName', res.data.data.name)
+            cookie.set('permissions', res.data.data.permissions)
             this.$router.push('/indexPage')
             // storage.session.set('userId', res.data.data.id)
             // storage.session.set('permissions', res.data.data.permissions)

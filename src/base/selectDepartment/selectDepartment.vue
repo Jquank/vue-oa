@@ -54,10 +54,10 @@ export default {
     showDepartment () {
       this._getDeptList()
       this.$refs.tree.$el.style.display = 'block'
-      let paddingWidth = this.title ? 20 : 0
-      let width = this.title.length * 13 + 4 + paddingWidth + 'px' // 字体长度+冒号+padding
-      this.$refs.tree.$el.style.left = width
-      this.$refs.tree.$el.style.width = `calc(100% - ${width})`
+      // let paddingWidth = this.title ? 20 : 0
+      // let width = this.title.length * 13 + 4 + paddingWidth + 'px' // 字体长度+冒号+padding
+      // this.$refs.tree.$el.style.left = width
+      // this.$refs.tree.$el.style.width = `calc(100% - ${width})`
     },
     hiddenDepartment (e) { // 此方法用于调用此组件的父组件上（点击事件），或绑定body上
       // let tree = document.getElementById('department')

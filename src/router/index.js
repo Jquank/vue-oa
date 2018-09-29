@@ -29,6 +29,7 @@ import FollowRecord from 'components/cusManage/followRecord/followRecord'
 import ImportCus from 'components/cusManage/importCus/importCus'
 // 客户审核
 import DealCheck from 'components/cusCheck/dealCheck/dealCheck'
+import CheckDetail from 'components/cusCheck/dealCheck/checkDetail'
 import CheckRecord from 'components/cusCheck/checkRecord/checkRecord'
 import CusInfo from 'components/cusCheck/cusInfo/cusInfo'
 import viewCusInfo from 'components/cusCheck/cusInfo/viewCusInfo'
@@ -174,7 +175,7 @@ const router = new Router({
           component: ApplyCus,
           children: [{
             path: ':id',
-            meta: { text: '客户详情' },
+            meta: { text: '申领详情' },
             component: ApplyDetail
           }]
         },
@@ -186,7 +187,7 @@ const router = new Router({
           children: [
             {
               path: ':id',
-              meta: { text: '我的客户/客户详情' },
+              meta: { text: '客户详情' },
               component: MyCusDetail
             }
           ]
@@ -214,7 +215,14 @@ const router = new Router({
           path: 'dealCheck',
           name: 'dealCheck',
           meta: { text: '审核处理' },
-          component: DealCheck
+          component: DealCheck,
+          children: [
+            {
+              path: ':id',
+              meta: { text: '审核详情' },
+              component: CheckDetail
+            }
+          ]
         },
         {
           path: 'checkRecord',
@@ -230,7 +238,7 @@ const router = new Router({
           children: [
             {
               path: ':id',
-              meta: { text: '修改客户信息' },
+              meta: { text: '修改详情' },
               component: viewCusInfo
             }
           ]
@@ -242,7 +250,7 @@ const router = new Router({
           component: CusPoolManage,
           children : [{
             path: ':id',
-            meta: { text: '客户审核' },
+            meta: { text: '审核详情' },
             component: ViewCusInfo
           }]
         },
@@ -379,9 +387,9 @@ const router = new Router({
 import Progress from 'nprogress' //进度条
 Progress.configure({ showSpinner: false })
 router.beforeEach((to, from, next) => {
-  // const isLogin = cookie.get('tk')
+  const isLogin = cookie.get('token')
   // todo
-  const isLogin = true
+  // const isLogin = true
   if (to.name !== 'login') {
     if (!isLogin) {
       next({

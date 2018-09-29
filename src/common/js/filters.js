@@ -49,6 +49,16 @@ export function productType (num) {
 }
 
 export function cusState (num, type) {
+  if (type === 'cusStatus') {
+    switch (num) {
+      case -10:
+        return '异常'
+      case 0:
+        return '待审中'
+      case 10:
+        return '正常'
+    }
+  }
   if (type === 'cusType') {
     switch (num) {
       case 0:
@@ -63,6 +73,37 @@ export function cusState (num, type) {
         return '(新)'
       case 50:
         return '信息流'
+    }
+  }
+  if (type === 'checkType') {
+    if (num >= 0 && num < 20) {
+      return '公共库审核'
+    } else if (num >= 20 && num <= 30) {
+      return '保A审核'
+    }
+  }
+  if (type === 'checkStatus') {
+    switch (num) {
+      case 0:
+        return '撤消保A申请'
+      case 10:
+        return '审核不通过'
+      case 20:
+        return '待审核'
+      case 30:
+        return '审核通过'
+    }
+  }
+  if (type === 'end_result') {
+    switch (num) {
+      case 100:
+        return '收全款'
+      case 200:
+        return '收半款'
+      case 300:
+        return '只签合同'
+      case 400:
+        return '继续跟进'
     }
   }
 }

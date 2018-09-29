@@ -1,12 +1,12 @@
 <template>
-  <el-cascader v-model="trade" @change="$emit('input', trade)"  :change-on-select="false" :disabled="tradeDisable" placeholder="请选择行业" :options="options" @active-item-change="handleItemChange" :props="tradeProps"></el-cascader>
+  <el-cascader v-model="trade" @change="$emit('input', trade)"  :change-on-select="false" :disabled="tradeDisabled" placeholder="请选择行业" :options="options" @active-item-change="handleItemChange" :props="tradeProps"></el-cascader>
 </template>
 
 <script>
 // import storage from 'good-storage'
 export default {
   props: {
-    tradeDisable: {
+    tradeDisabled: {
       type: Boolean,
       default: false
     },
@@ -31,8 +31,8 @@ export default {
     }
   },
   watch: {
-    echoTrade () {
-      this._getTradeList(this.echoTrade[0])
+    echoTrade (newVal) {
+      this._getTradeList(newVal[0])
     }
   },
   mounted () {

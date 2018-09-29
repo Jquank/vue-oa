@@ -1,5 +1,5 @@
 <template>
-  <div class="add-contract">
+  <div class="add-contract component-container media-padding">
     <div class="contract-type">
       <auto-select title="合同类型" v-model="contractType" class="contract-item item-width">
         <el-option label="全部" value=""></el-option>
@@ -39,7 +39,6 @@ export default {
 
 <style lang="less" scoped>
 .add-contract {
-  padding: 20px;
   .contract-type {
     .contract-item {
       margin-left: 10px;

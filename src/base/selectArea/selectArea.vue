@@ -1,5 +1,5 @@
 <template>
-  <el-cascader v-model="area" @change="$emit('input', area)" placeholder="请选择地区" :options="options" :change-on-select="false" :props="areaProps"  @active-item-change="handleItemChange"></el-cascader>
+  <el-cascader v-model="area" @change="$emit('input', area)" placeholder="请选择地区" :options="options" :change-on-select="false" :props="areaProps"  @active-item-change="handleItemChange" :disabled="areaDisabled"></el-cascader>
 </template>
 
 <script>
@@ -7,6 +7,10 @@
 // import transTree from 'common/js/utils'
 export default {
   props: {
+    areaDisabled: {
+      type: Boolean,
+      default: false
+    },
     echoArea: { // 回显
       type: Array,
       default: function () {
@@ -29,9 +33,15 @@ export default {
     }
   },
   watch: {
-    echoArea () {
-      this._getAreaList(this.echoArea[0])
-      this._getAreaList(this.echoArea[1])
+    echoArea (newVal) {
+      if (newVal[1]) {
+        this._getAreaList(newVal[0])
+      }
+      if (newVal[2]) {
+        setTimeout(() => { // get区依赖于get市获取到的firstIndex值，所以加个延时，或者用promise
+          this._getAreaList(newVal[1])
+        }, 100)
+      }
     }
   },
   mounted () {
@@ -67,7 +77,9 @@ export default {
                 val.children = []
               }
             })
-            this.area = this.echoArea
+            if (this.echoArea.length === 1) { // 回显只有两级的时候赋值
+              this.area = this.echoArea
+            }
           } else { // get区
             this.options.forEach((val, key) => {
               if (val.id == id) { // eslint-disable-line
