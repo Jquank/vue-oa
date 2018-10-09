@@ -6,7 +6,7 @@
         <el-button @click="searchName" slot="append" icon="el-icon-search"></el-button>
       </el-input>
       <div class="name-container">
-        <div @click="clickName(index,item.id)" class="name-item" :class="'x'+index" v-for="(item,index) in nameList" :key="index">
+        <div @click="clickName(index,item.id,item.name)" class="name-item" :class="'x'+index" v-for="(item,index) in nameList" :key="index">
           {{item.true_name}}
         </div>
       </div>
@@ -44,7 +44,8 @@ export default {
       defaultExpanded: ['KD01'],
       nameList: [],
       name: '',
-      userId: ''
+      userId: '',
+      selectedName: ''
     }
   },
   created () {
@@ -80,13 +81,14 @@ export default {
         }
       })
     },
-    clickName (index, id) {
+    clickName (index, id, name) {
       this.userId = id
+      this.selectedName = name
       let div = document.getElementsByClassName('x' + index)[0]
       toggleClass(div, 'bgcolor')
     },
     save () {
-      this.$emit('userId', this.userId)
+      this.$emit('userId', this.userId, this.selectedName)
       if (!this.userId) {
         this.$message({
           type: 'warning',

@@ -400,9 +400,6 @@ export default {
 
 <style lang="less" scoped>
 .mycus-detail {
-  .detail-main {
-    padding: 15px;
-  }
   .maxwidth {
     max-width: 500px;
   }

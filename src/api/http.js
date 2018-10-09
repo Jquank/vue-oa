@@ -4,7 +4,7 @@ import router from '@/router'
 import cookie from 'js-cookie'
 import { Loading, Message } from 'element-ui'
 // export const serverUrl = 'http://bg.baijiegroup.com/BaiJieOA'
-export const serverUrl = 'http://172.16.11.78:8080/BaiJieOA'
+export const serverUrl = 'http://172.16.11.84:8080/BaiJieOA'
 const instance = axios.create({
   baseURL: serverUrl,
   // withCredentials: true, // 跨域凭证

@@ -145,11 +145,6 @@ export const navList = [
     text: '合同管理',
     cList: [
       {
-        cid: 60,
-        to: '/indexPage/addContract',
-        text: '新增合同'
-      },
-      {
         cid: 61,
         to: '/indexPage/allotContract',
         text: '分配合同'

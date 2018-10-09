@@ -312,9 +312,6 @@ export default {
 
 <style lang="less" scoped>
 .apply-detail {
-  .detail-main {
-    padding: 15px;
-  }
   .maxwidth {
     max-width: 500px;
   }

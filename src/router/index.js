@@ -40,7 +40,6 @@ import ViewCusInfo from 'components/cusCheck/cusPoolManage/viewCusInfo'
 import CusSearch from 'components/cusSearch/cusSearch/cusSearch'
 import CusOut from 'components/cusSearch/cusOut/cusOut'
 // 合同管理
-import AddContract from 'components/contract/addContract/addContract'
 import AllotContract from 'components/contract/allotContract/allotContract'
 import ContractList from 'components/contract/contractList/contractList'
 import ApplyContract from 'components/contract/applyContract/applyContract'
@@ -48,6 +47,9 @@ import ApplyContract from 'components/contract/applyContract/applyContract'
 import RenewApply from 'components/renew/renewApply/renewApply'
 import SalaryList from 'components/salary/salaryList'
 // 到款管理
+import MoneyRecord from 'components/moneyManage/moneyRecord/moneyRecord'
+import AddMoney from 'components/moneyManage/moneyRecord/addMoney'
+import ViewMoney from 'components/moneyManage/moneyRecord/viewMoney'
 import BankflowList from 'components/moneyManage/bankflowList/bankflowList'
 import MoneyCount from 'components/moneyManage/moneyCount/moneyCount'
 // 订单管理
@@ -269,12 +271,6 @@ const router = new Router({
         },
         // 合同管理
         {
-          path: 'addContract',
-          name: 'addContract',
-          meta: { text: '新增合同' },
-          component: AddContract
-        },
-        {
           path: 'allotContract',
           name: 'allotContract',
           meta: { text: '分配合同' },
@@ -293,6 +289,24 @@ const router = new Router({
           component: ApplyContract
         },
         // 到款管理
+        {
+          path: 'moneyRecord',
+          name: 'moneyRecord',
+          meta: { text: '到款记录' },
+          component: MoneyRecord,
+          children: [
+            {
+              path: 'add/:id',
+              meta: { text: '到款记录/添加到款' },
+              component: AddMoney
+            },
+            {
+              path: 'view/:id',
+              meta: { text: '到款记录/到款详情' },
+              component: ViewMoney
+            }
+          ]
+        },
         {
           path: 'bankflowList',
           name: 'bankflowList',

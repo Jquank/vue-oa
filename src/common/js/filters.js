@@ -106,6 +106,30 @@ export function cusState (num, type) {
         return '继续跟进'
     }
   }
+  if (type === 'contractStatus') {
+    switch (num) {
+      case 10:
+        return '未领用'
+      case 20:
+        return '已领用'
+      case 25:
+        return '已签约'
+      case 30:
+        return '已签约'
+      case 40:
+        return '作废'
+    }
+  }
+  if (type === 'applyStatus') {
+    switch (num) {
+      case 10:
+        return '被驳回'
+      case 20:
+        return '待分配'
+      case 30:
+        return '已领用'
+    }
+  }
 }
 
 export function businessStatus (num) {
