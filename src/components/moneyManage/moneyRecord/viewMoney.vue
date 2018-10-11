@@ -9,24 +9,17 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row v-for="(item,index) in productMoneyList" :key="index">
-          <el-col :md="24">
-            <el-form-item :label="item.code_desc+' :'" class="product-name">
-              <el-input v-model="item.value"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
         <el-row>
           <el-col :md="24">
             <el-form-item label="服务费 :">
-              <el-input v-model="receipt.service"></el-input>
+              <el-input v-model="receipt.service" disabled></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :md="24">
             <el-form-item label="服务年限 :" required>
-              <el-input v-model="receipt.serviceyear">
+              <el-input v-model="receipt.serviceyear" disabled>
                 <span slot="append">年</span>
               </el-input>
             </el-form-item>
@@ -34,41 +27,55 @@
         </el-row>
         <!-- 百推 -->
         <template v-if="businessType!=='ztc'">
+          <el-row v-for="(item,index) in productMoneyList" :key="index">
+            <el-col :md="24" v-if="item.type<100">
+              <el-form-item :label="item.type | productType(' :')" class="product-name">
+                <el-input v-model="item.value" disabled></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
           <el-row>
             <el-col :md="24">
               <el-form-item label="大搜现金券 :">
-                <el-input v-model="receipt.dsxjq"></el-input>
+                <el-input v-model="receipt.dsxjq" disabled></el-input>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :md="24">
               <el-form-item label="信息流现金券 :">
-                <el-input v-model="receipt.xxlxjq"></el-input>
+                <el-input v-model="receipt.xxlxjq" disabled></el-input>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :md="24">
               <el-form-item label="大搜代金券 :">
-                <el-input v-model="receipt.dsvoucher"></el-input>
+                <el-input v-model="receipt.dsvoucher" disabled></el-input>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :md="24">
               <el-form-item label="信息流代金券 :">
-                <el-input v-model="receipt.xxlvoucher"></el-input>
+                <el-input v-model="receipt.xxlvoucher" disabled></el-input>
               </el-form-item>
             </el-col>
           </el-row>
         </template>
         <!-- 直通车 -->
         <template v-if="businessType==='ztc'">
+          <el-row v-for="(item,index) in productMoneyList" :key="index">
+            <el-col :md="24" v-if="item.type<100">
+              <el-form-item :label="item.type | productType18(' :')" class="product-name">
+                <el-input v-model="item.value" disabled></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
           <el-row>
             <el-col :md="24">
               <el-form-item label="直通车代金券 :">
-                <el-input v-model="receipt.ztcvoucher"></el-input>
+                <el-input v-model="receipt.ztcvoucher" disabled></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -77,14 +84,14 @@
         <el-row>
           <el-col :md="24">
             <el-form-item label="总到款金额 :">
-              <span>{{form.receiveMoneyTotal}}</span>
+              <span>{{receipt.sum}}</span>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :md="24">
             <el-form-item label="备注 :">
-              <el-input v-model="receipt.remark" type="textarea" :rows="3"></el-input>
+              <el-input v-model="receipt.remark" disabled type="textarea" :rows="3"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -104,32 +111,12 @@
 </template>
 
 <script>
-import { getByCode } from 'api/getOptions'
 export default {
   data () {
     return {
       labelWidth: '160px',
-      form: {
-        cusName: '',
-        productList: [],
-        selProList: [],
-        bdService: 2400,
-        ztcService: 2400,
-        serviceYear: 1,
-        ds_xjq: 0,
-        ds_djq: 0,
-        xxl_xjq: 0,
-        xxl_djq: 0,
-        ztc_djq: 0,
-        remark: '',
-        receiveMoneyTotal: 0
-      },
-
-      selFlowList: [],
-      checkedFlowIds: [],
 
       businessType: '',
-      handleSelFlow: [],
       productMoneyList: [],
 
       receiveData: {},
@@ -137,26 +124,12 @@ export default {
       receipt: {}
     }
   },
-  computed: {
-    proMoneyTotal () {
-      let sum = 0
-      this.productMoneyList.forEach(val => {
-        sum += parseFloat(val.value || 0)
-      })
-      return sum + parseFloat(this.form.bdService || 0)
-    }
-  },
   created () {
     let viewWidth = document.documentElement.clientWidth
     if (viewWidth < 768) {
       this.labelWidth = '90px'
     }
-
-    this.businessType = this.$route.query.data
-    getByCode(this.businessType === 'ztc' ? 18 : 38).then(res => {
-      this.form.productList = res.data.data
-    })
-
+    this.businessType = this.$route.query.type
     this.receiveData = this.$route.query.data
     if (!this.receiveData.id) {
       this.$router.go(-1)
@@ -164,18 +137,16 @@ export default {
     }
     this._getLogs(this.receiveData.id)
   },
-  mounted () {
-  },
   methods: {
     _getLogs (id) {
-      this.$get('/receipt.do?companyreceiptdetail', {id: id}).then(res => {
+      this.$get('/receipt.do?companyreceiptdetail', { id: id }).then(res => {
         this.logs = res.data[2].data
         this.receipt = res.data[0].data[0]
+        this.productMoneyList = res.data[1].data
       })
     }
   },
-  components: {
-  }
+  components: {}
 }
 </script>
 

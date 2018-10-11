@@ -50,6 +50,7 @@ import SalaryList from 'components/salary/salaryList'
 import MoneyRecord from 'components/moneyManage/moneyRecord/moneyRecord'
 import AddMoney from 'components/moneyManage/moneyRecord/addMoney'
 import ViewMoney from 'components/moneyManage/moneyRecord/viewMoney'
+import EditMoney from 'components/moneyManage/moneyRecord/editMoney'
 import BankflowList from 'components/moneyManage/bankflowList/bankflowList'
 import MoneyCount from 'components/moneyManage/moneyCount/moneyCount'
 // 订单管理
@@ -304,6 +305,11 @@ const router = new Router({
               path: 'view/:id',
               meta: { text: '到款记录/到款详情' },
               component: ViewMoney
+            },
+            {
+              path: 'edit/:id',
+              meta: { text: '到款记录/编辑到款' },
+              component: EditMoney
             }
           ]
         },

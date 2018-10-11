@@ -37,15 +37,27 @@ export function wjType (num) {
   return type
 }
 
-export function productType (num) {
-  let productTypes = storage.get('productType')
+export function productType (num, str) {
+  let productTypes = storage.get('productType38')
   let type = ''
   productTypes.forEach(val => {
     if (num == val.code_val) { //eslint-disable-line
       type = val.code_desc
     }
   })
-  return type
+  return type + '' + (str || '')
+}
+
+// 直通车产品
+export function productType18 (num, str) {
+  let productTypes = storage.get('productType18')
+  let type = ''
+  productTypes.forEach(val => {
+    if (num == val.code_val) { //eslint-disable-line
+      type = val.code_desc
+    }
+  })
+  return type + '' + (str || '')
 }
 
 export function cusState (num, type) {
@@ -163,6 +175,7 @@ export function businessStatus (num) {
   }
 }
 export function timeFormat (num) {
+  if (num === '.') { return '.' }
   if (!num) { return '' }
   function add0 (m) { return m < 10 ? '0' + m : m }
   let time = new Date(num)
@@ -175,6 +188,7 @@ export function timeFormat (num) {
   return year + '-' + add0(month) + '-' + add0(date) + ' ' + add0(hours) + ':' + add0(minutes) + ':' + add0(seconds)
 }
 export function timeFormat1 (num) {
+  if (num === '.') { return '.' }
   if (!num) { return '' }
   function add0 (m) { return m < 10 ? '0' + m : m }
   let time = new Date(num)
@@ -184,6 +198,7 @@ export function timeFormat1 (num) {
   return year + '-' + add0(month) + '-' + add0(date)
 }
 export function currency (num) {
+  if (num === '.') { return '.' }
   num = +num
   if (num && !isNaN(num)) {
     return '¥ ' + parseFloat(num).toFixed(2)
@@ -192,6 +207,7 @@ export function currency (num) {
   }
 }
 export function currency1 (num) {
+  if (num === '.') { return '.' }
   num = +num
   if (!isNaN(num)) {
     return '¥ ' + parseFloat(num).toFixed(2)

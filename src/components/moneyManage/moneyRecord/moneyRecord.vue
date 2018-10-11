@@ -2,7 +2,7 @@
   <div class="apply-contract component-container media-padding">
     <div class="apply-btn">
       <el-button v-if="permissions.indexOf('80') < 0" @click.native="addMoneyRecord({'type':'bt'})" type="primary" icon="fa fa-plus"> 添加到款记录</el-button>
-      <el-button @click.native="addMoneyRecord({'type':'ztc'})" type="primary" icon="fa fa-plus"> 添加到款记录</el-button>
+      <el-button v-if="permissions.indexOf('80') > -1" @click.native="addMoneyRecord({'type':'ztc'})" type="primary" icon="fa fa-plus"> 添加到款记录</el-button>
     </div>
     <div class="apply-search">
       <el-input placeholder="搜索公司名/法人" v-model="cusName" class="apply-item item-width">
@@ -30,8 +30,10 @@
       </el-table-column>
       <el-table-column prop="" label="操作" min-width="80">
         <template slot-scope="scope">
-          <el-button @click.native="viewMoney(scope.row)" type="success" class="xsbtn">查看</el-button>
-          <el-button type="primary" class="xsbtn">编辑</el-button>
+          <el-button v-if="permissions.indexOf('80') < 0" @click.native="viewMoney(scope.row,'bt')" type="success" class="xsbtn">查看</el-button>
+          <el-button v-if="permissions.indexOf('80') > -1" @click.native="viewMoney(scope.row,'ztc')" type="success" class="xsbtn">查看</el-button>
+          <el-button v-if="permissions.indexOf('80') < 0 && permissions.indexOf('4r') > -1" @click.native="editMoney(scope.row,'bt')" type="primary" class="xsbtn">编辑</el-button>
+          <el-button v-if="permissions.indexOf('80') > -1 && permissions.indexOf('4r') > -1" @click.native="editMoney(scope.row,'ztc')" type="primary" class="xsbtn">编辑</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -72,10 +74,16 @@ export default {
         query: { data: val }
       })
     },
-    viewMoney (val) {
+    viewMoney (val, type) {
       this.$router.push({
         path: `moneyRecord/view/${val.id}`,
-        query: { data: val }
+        query: { data: val, type: type }
+      })
+    },
+    editMoney (val, type) {
+      this.$router.push({
+        path: `moneyRecord/edit/${val.id}`,
+        query: { data: val, type: type }
       })
     },
     search () {

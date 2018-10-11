@@ -91,6 +91,7 @@ import { enterfullscreen, exitfullscreen } from 'api/myHeader'
 import { serverUrl } from 'api/config'
 import { $post } from 'api/http'
 import cookie from 'js-cookie'
+import storage from 'good-storage'
 
 export default {
   computed: {
@@ -185,6 +186,7 @@ export default {
       cookie.remove('token')
       cookie.remove('userId')
       cookie.remove('permissions')
+      storage.remove('productType')
       this.$router.push('/login')
       // $post('/logout').then(res => {
       //   if (res.data.status === -1) {

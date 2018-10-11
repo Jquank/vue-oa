@@ -8,7 +8,7 @@ export const serverUrl = 'http://172.16.11.84:8080/BaiJieOA'
 const instance = axios.create({
   baseURL: serverUrl,
   // withCredentials: true, // 跨域凭证
-  timeout: 8000
+  timeout: 15000
   // headers: {'token': tk}
 })
 let loadingInstance

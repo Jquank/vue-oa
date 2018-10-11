@@ -1,19 +1,19 @@
 <template>
   <div class="money-detail child-component-container media-padding">
     <div class="maxwidth">
-      <el-form ref="form" :model="form" :label-width="labelWidth" size="small">
+      <el-form ref="form" :model="receipt" :label-width="labelWidth" size="small">
         <el-row>
           <el-col :md="24">
             <el-form-item label="公司名称/法人 :" required>
-              <el-input v-model="form.cusName" placeholder="公司名称/法人"></el-input>
+              <el-input v-model="receipt.companyname" placeholder="公司名称/法人"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :md="24">
             <el-form-item label="产品类型 :" required>
-              <el-checkbox-group @change="handleProChange" v-model="form.selProList">
-                <el-checkbox v-for="(item,index) in form.productList" :key="index" :label="item">
+              <el-checkbox-group @change="handleProChange" v-model="selProList">
+                <el-checkbox v-for="(item,index) in productList" :key="index" :label="item.code_val">
                   {{item.code_desc}}</el-checkbox>
               </el-checkbox-group>
             </el-form-item>
@@ -39,112 +39,97 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row v-for="(item,index) in productMoneyList" :key="index">
+        <el-row>
           <el-col :md="24">
-            <el-form-item :label="item.code_desc+' :'" class="product-name">
-              <el-input v-model="item.value"></el-input>
+            <el-form-item label="服务费 :">
+              <el-input v-model="receipt.service"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :md="24">
+            <el-form-item label="服务年限 :">
+              <el-input v-model="receipt.serviceyear">
+                <span slot="append">年</span>
+              </el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <!-- 百推 -->
         <template v-if="businessType!=='ztc'">
-          <el-row>
-            <el-col :md="24">
-              <el-form-item label="百度服务费 :">
-                <el-input v-model="form.bdService"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :md="24">
-              <el-form-item label="服务年限 :" required>
-                <el-input v-model="form.serviceYear">
-                  <span slot="append">年</span>
-                </el-input>
+          <el-row v-for="(item,index) in productMoneyList" :key="index">
+            <el-col :md="24" v-if="item.type<100">
+              <el-form-item :label="item.type | productType(' :')" class="product-name">
+                <el-input v-model="item.value"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :md="24">
               <el-form-item label="大搜现金券 :">
-                <el-input v-model="form.ds_xjq"></el-input>
+                <el-input v-model="receipt.dsxjq"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :md="24">
               <el-form-item label="信息流现金券 :">
-                <el-input v-model="form.xxl_xjq"></el-input>
+                <el-input v-model="receipt.xxlxjq"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :md="24">
               <el-form-item label="大搜代金券 :">
-                <el-input v-model="form.ds_djq"></el-input>
+                <el-input v-model="receipt.dsvoucher"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :md="24">
               <el-form-item label="信息流代金券 :">
-                <el-input v-model="form.xxl_djq"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :md="24">
-              <el-form-item label="产品总金额 :">
-                <span>{{proMoneyTotal}}</span>
+                <el-input v-model="receipt.xxlvoucher"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
         </template>
         <!-- 直通车 -->
         <template v-if="businessType==='ztc'">
-          <el-row>
-            <el-col :md="24">
-              <el-form-item label="直通车服务费 :">
-                <el-input v-model="form.ztcService"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :md="24">
-              <el-form-item label="服务年限 :" required>
-                <el-input v-model="form.serviceYear">
-                  <span slot="append">年</span>
-                </el-input>
+          <el-row v-for="(item,index) in productMoneyList" :key="index">
+            <el-col :md="24" v-if="item.type<100">
+              <el-form-item :label="item.type | productType18(' :')" class="product-name">
+                <el-input v-model="item.value"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :md="24">
               <el-form-item label="直通车代金券 :">
-                <el-input v-model="form.ztc_djq"></el-input>
+                <el-input v-model="receipt.ztcvoucher"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
-          <el-row>
-            <el-col :md="24">
-              <el-form-item label="产品总金额 :">
-                <span>{{proMoneyTotal}}</span>
-              </el-form-item>
-            </el-col>
-          </el-row>
+
         </template>
 
         <el-row>
           <el-col :md="24">
+            <el-form-item label="产品总金额 :">
+              <span>{{proMoneyTotal}}</span>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :md="24">
             <el-form-item label="总到款金额 :">
-              <span>{{form.receiveMoneyTotal}}</span>
+              <span>{{receiveMoneyTotal}}</span>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :md="24">
             <el-form-item label="备注 :">
-              <el-input v-model="form.remark" type="textarea" :rows="3"></el-input>
+              <el-input v-model="receipt.remark" type="textarea" :rows="3"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -182,22 +167,6 @@ export default {
   data () {
     return {
       labelWidth: '160px',
-      form: {
-        cusName: '',
-        productList: [],
-        selProList: [],
-        bdService: 2400,
-        ztcService: 2400,
-        serviceYear: 1,
-        ds_xjq: 0,
-        ds_djq: 0,
-        xxl_xjq: 0,
-        xxl_djq: 0,
-        ztc_djq: 0,
-        remark: '',
-        receiveMoneyTotal: 0
-      },
-
       selFlowDialog: false,
       selFlowList: [],
       checkedFlowIds: [],
@@ -206,16 +175,27 @@ export default {
 
       businessType: '',
       handleSelFlow: [],
-      productMoneyList: []
+      echoProductMoneyList: [],
+      productMoneyList: [],
+
+      receiveData: {},
+      receipt: {},
+      productList: [],
+      selProList: [],
+      echoFlowList: [],
+      receiveMoneyTotal: 0,
+      userReceiveCid: ''
     }
   },
   computed: {
     proMoneyTotal () {
       let sum = 0
       this.productMoneyList.forEach(val => {
-        sum += parseFloat(val.value || 0)
+        if (val.type < 100) {
+          sum += parseFloat(val.value || 0)
+        }
       })
-      return sum + parseFloat(this.form.bdService || 0)
+      return sum + parseFloat(this.receipt.service || 0)
     }
   },
   created () {
@@ -224,26 +204,92 @@ export default {
       this.labelWidth = '90px'
     }
 
-    this.businessType = this.$route.query.data.type
+    this.businessType = this.$route.query.type
+    this.receiveData = this.$route.query.data
+    if (!this.receiveData.id) {
+      this.$router.go(-1)
+      return
+    }
     getByCode(this.businessType === 'ztc' ? 18 : 38).then(res => {
-      this.form.productList = res.data.data
+      this.productList = res.data.data
     })
-  },
-  mounted () {
-    this._getNum()
+    this._getLogs(this.receiveData.id)
   },
   methods: {
+    _getLogs (id) {
+      this.$get('/receipt.do?companyreceiptdetail', { id: id }).then(res => {
+        this.receipt = res.data[0].data[0]
+        this.echoProductMoneyList = res.data[1].data
+        this.productMoneyList = this.productMoneyList.concat(
+          this.echoProductMoneyList
+        )
+        this.echoFlowList = res.data[3].data
+        this.handleSelFlow = this.handleSelFlow.concat(this.echoFlowList)
+        this.checkedFlowIds = []
+        this.handleSelFlow.forEach(val => {
+          this.receiveMoneyTotal += parseFloat(val.split_amount || 0)
+          if (val.cid) {
+            this.userReceiveCid = val.cid
+          }
+          this.checkedFlowIds.push(val.id)
+        })
+        this.productMoneyList.forEach(val => {
+          this.selProList.push(+val.type)
+        })
+      })
+    },
+    // 勾选产品
+    handleProChange (val) {
+      console.log(val)
+      console.log(this.echoProductMoneyList)
+      this.productMoneyList = []
+      val.forEach(item => {
+        this.productMoneyList.push({
+          id: null,
+          code_desc: '',
+          code_val: item,
+          type: item + '',
+          value: 0,
+          price: 0
+        })
+      })
+      this.echoProductMoneyList.forEach(li => {
+        this.productMoneyList.forEach((item, key) => {
+          // 保留回显数组
+          if (li.type == item.type) { //eslint-disable-line
+            this.productMoneyList.splice(key, 1)
+            this.productMoneyList.push(li)
+          }
+        })
+      })
+
+      console.log(this.productMoneyList)
+    },
+    // 勾选流水
+    handleSelectionChange (val) {
+      this.handleSelFlow = this.echoFlowList
+      this.handleSelFlow = this.handleSelFlow.concat(val)
+      this.receiveMoneyTotal = 0
+      this.checkedFlowIds = []
+      this.handleSelFlow.forEach(val => {
+        this.receiveMoneyTotal += parseFloat(val.split_amount || 0)
+        this.checkedFlowIds.push(val.id)
+      })
+      console.log(this.checkedFlowIds)
+    },
+    // todo 编辑有问题
     // 提交
     subMoneyRecord () {
+      console.log(this.productMoneyList)
       this.productMoneyList.forEach(val => {
-        if (val.type !== 8 && (!val.value || val.value === '0')) {
+        if (val.type != 8 && (!val.value || val.value === '0')) { //eslint-disable-line
           this.$message({
             type: 'warning',
             message: '请填写 ' + val.code_desc + ' 金额'
           })
           throw new Error('ignore')
         }
-        if (val.type === 8 && val.value === '') {
+        if (val.type == 8 && val.value === '') { //eslint-disable-line
           this.$message({
             type: 'warning',
             message: '请填写 ' + val.code_desc + ' 金额'
@@ -252,28 +298,34 @@ export default {
         }
       })
       let params = {
-        name: this.form.cusName,
-        service: this.form.bdService || 0,
-        serviceyear: this.form.serviceYear || 0,
-        xxlvoucher: this.form.xxl_djq || 0, // 信息流代金券
-        dsvoucher: this.form.ds_djq || 0,
-        xxlxjq: this.form.xxl_xjq || 0, // 信息流现金券
-        dsxjq: this.form.ds_xjq || 0,
+        id: this.receiveData.id,
+        name: this.receipt.companyname,
+        service: this.receipt.service || 0,
+        serviceyear: this.receipt.serviceyear || 0,
+        xxlvoucher: this.receipt.xxlvoucher || 0, // 信息流代金券
+        dsvoucher: this.receipt.dsvoucher || 0,
+        xxlxjq: this.receipt.xxlxjq || 0, // 信息流现金券
+        dsxjq: this.receipt.dsxjq || 0,
         detail: this.productMoneyList,
-        sum: this.form.receiveMoneyTotal, // 勾选总金额
+        sum: this.receiveMoneyTotal, // 总到款金额
         receiveid: this.checkedFlowIds, // 到款id
-        remark: this.form.remark // 到款备注
+        remark: this.receipt.remark, // 到款备注
+        userReceiveCid: this.userReceiveCid,
+        companylogid: this.receipt.companylogid || ''
       }
       let ztcParams = {
-        name: this.form.cusName,
-        service: this.form.bdService || 0,
-        serviceyear: this.form.serviceYear || 0,
-        ztcvoucher: this.form.ztc_djq || 0,
+        id: this.receiveData.id,
+        name: this.receipt.companyname,
+        service: this.receipt.service || 0,
+        serviceyear: this.receipt.serviceyear || 0,
+        ztcvoucher: this.receipt.ztcvoucher || 0,
         ztcxjq: 0,
         detail: this.productMoneyList,
-        sum: this.form.receiveMoneyTotal,
+        sum: this.receiveMoneyTotal,
         receiveid: this.checkedFlowIds,
-        remark: this.form.remark
+        remark: this.receipt.remark,
+        userReceiveCid: this.userReceiveCid,
+        companylogid: this.receipt.companylogid || ''
       }
       if (!params.name || !params.receiveid.length === 0) {
         this.$message({
@@ -282,43 +334,25 @@ export default {
         })
         return
       }
-      if (this.form.receiveMoneyTotal !== this.proMoneyTotal) {
+      if (this.receiveMoneyTotal !== this.proMoneyTotal) {
         this.$message({
           type: 'warning',
           message: '请保持产品总金额与到款金额一致！'
         })
         return
       }
-      this.$post('/receipt.do?companyreceipt', this.businessType === 'ztc' ? ztcParams : params).then(res => {
+      console.log(params)
+      this.$post(
+        '/receipt.do?companyreceipt',
+        this.businessType === 'ztc' ? ztcParams : params
+      ).then(res => {
         if (res.data[0].data) {
           this.$message({
             type: 'success',
-            message: '添加到款成功'
+            message: '修改到款成功'
           })
-          this.$router.go(-1)
+          this.$router.push('/moneyRecord')
         }
-      })
-    },
-    // 勾选产品
-    handleProChange (val) {
-      this.productMoneyList = []
-      val.forEach(item => {
-        this.productMoneyList.push({
-          id: null,
-          code_desc: item.code_desc,
-          type: item.code_val,
-          value: 0
-        })
-      })
-    },
-    // 勾选流水
-    handleSelectionChange (val) {
-      this.handleSelFlow = val
-      this.form.receiveMoneyTotal = 0
-      this.checkedFlowIds = []
-      this.handleSelFlow.forEach(val => {
-        this.form.receiveMoneyTotal += parseFloat(val.split_amount || 0)
-        this.checkedFlowIds.push(val.id)
       })
     },
     getFlowList (res) {

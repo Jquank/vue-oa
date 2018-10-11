@@ -32,7 +32,9 @@
 <script>
 import cookie from 'js-cookie'
 import axios from 'axios'
+import storage from 'good-storage'
 import { serverUrl } from 'api/http'
+import { getByCode } from 'api/getOptions'
 export default {
   data () {
     return {
@@ -62,10 +64,14 @@ export default {
             // storage.session.set('userId', res.data.data.id)
             // storage.session.set('permissions', res.data.data.permissions)
             // storage.session.set('token', res.data.data.tk)
-            // getCode(38).then(res => {
-            //   let data = res.data.data || []
-            //   storage.set('productType', data)
-            // })
+            getByCode(38).then(res => {
+              let data = res.data.data || []
+              storage.set('productType38', data)
+            })
+            getByCode(18).then(res => {
+              let data = res.data.data || []
+              storage.set('productType18', data)
+            })
 
             // getCode(28).then(res => {
             //   let data = res.data.data || []
@@ -75,25 +81,6 @@ export default {
             // getCode(42).then(res => {
             //   let data = res.data.data || []
             //   storage.set('bankType', data)
-            // })
-
-            // getArea({parentid: 1}).then(res => {
-            //   let data = res.data.data || []
-            //   // let data = this._transTree(res.data.data, 'id', 'parentid')
-            //   data.forEach(val => {
-            //     val.children = []
-            //     val.label = val.AREANAME
-            //   })
-            //   storage.set('province', data)
-            // })
-
-            // getTrade().then(res => {
-            //   let data = res.data.data || []
-            //   data.forEach(val => {
-            //     val.children = []
-            //     val.label = val.name
-            //   })
-            //   storage.set('trade', data)
             // })
 
             // getDepartment().then(res => {

@@ -94,7 +94,9 @@ export default {
           type: 'warning',
           message: '请点击选择人员'
         })
+        return
       }
+      this.$emit('closeDialog')
     }
   },
   components: {}
@@ -105,6 +107,7 @@ export default {
 .select-user{
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
   .name {
     width: 250px;
     min-height: 150px;
