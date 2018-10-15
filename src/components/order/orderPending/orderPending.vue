@@ -2,7 +2,7 @@
   <div class="order-pending component-container media-padding">
     <div class="pending-content">
       <div class="tab">
-        <el-radio-group v-model="tabStatus" @change="tab(tabStatus)">
+        <el-radio-group v-model="tabStatus" @change="tab">
           <el-radio-button label="0">全部</el-radio-button>
           <el-radio-button label="100">未加款</el-radio-button>
           <el-radio-button label="300">已加款</el-radio-button>
@@ -17,7 +17,7 @@
           <template slot="prepend">订单编号:</template>
         </el-input>
         <auto-select title="产品类型" v-model="productType" class="search-item item-width">
-          <el-option label="全部" value="-1"></el-option>
+          <el-option label="全部" value=""></el-option>
           <el-option label="百度推广" value="BAITUI"></el-option>
           <el-option label="网建" value="WEBSITE"></el-option>
           <el-option label="信息流" value="XXL"></el-option>
@@ -41,51 +41,47 @@
         </div>
       </div>
       <!-- 列表 -->
-      <div class="content" style="margin-top:15px;">
-        <el-row>
-          <el-table v-loading="isLoading" :data="pendingList" style="width: 100%">
-            <el-table-column prop="ordernum" label="订单ID" width="180">
-            </el-table-column>
-            <el-table-column prop="cname" label="订单名称" min-width="160">
-            </el-table-column>
-            <el-table-column prop="" label="提交时间" min-width="140">
-              <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
-            </el-table-column>
-            <el-table-column prop="username" label="下单人" width="80">
-            </el-table-column>
-            <el-table-column prop="" label="类型" width="80">
-              <template slot-scope="scope">
-                <span v-if="scope.row.pid=='WEBSITE' && scope.row.websitetype==20">WAP</span>
-                <span v-if="scope.row.pid=='WEBSITE' && scope.row.websitetype!=20">PC/WAP</span>
-                <span v-if="scope.row.pid!='WEBSITE'">{{scope.row.pname}}</span>
-              </template>
-            </el-table-column>
-            <el-table-column prop="" label="审核状态" width="120">
-              <span slot-scope="scope">
-                {{scope.row.currentname}}
-              </span>
-            </el-table-column>
-            <el-table-column prop="" label="订单状态" width="120">
-              <span slot-scope="scope">
-                {{scope.row.audittype === 0 ? "仅降E":"降E并提单"}}
-              </span>
-            </el-table-column>
-            <el-table-column prop="" label="最后操作时间" min-width="140">
-              <span slot-scope="scope">{{scope.row.opt_time | timeFormat}}</span>
-            </el-table-column>
-            <el-table-column prop="deptname" label="商务大区部门" width="150">
-            </el-table-column>
-            <el-table-column prop="" label="操作" width="180">
-              <template slot-scope="scope">
-                <el-button type="primary" size="mini" @click.native="viewOrder(scope.row)">查看</el-button>
-                <el-button v-if="scope.row.sn == 10" type="warning" size="mini" @click.native="updateOrder(scope.row)">修改订单</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-          <page class="pagination" :url="url" :sendparams="params" @updateList="updatePendingList" :key="key">
-          </page>
-        </el-row>
-      </div>
+      <el-table :data="pendingList" class="table-width">
+        <el-table-column prop="ordernum" label="订单ID" width="180">
+        </el-table-column>
+        <el-table-column prop="cname" label="订单名称" min-width="160">
+        </el-table-column>
+        <el-table-column prop="" label="提交时间" min-width="140">
+          <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
+        </el-table-column>
+        <el-table-column prop="username" label="下单人" width="80">
+        </el-table-column>
+        <el-table-column prop="" label="类型" width="80">
+          <template slot-scope="scope">
+            <span v-if="scope.row.pid=='WEBSITE' && scope.row.websitetype==20">WAP</span>
+            <span v-if="scope.row.pid=='WEBSITE' && scope.row.websitetype!=20">PC/WAP</span>
+            <span v-if="scope.row.pid!='WEBSITE'">{{scope.row.pname}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="" label="审核状态" width="120">
+          <span slot-scope="scope">
+            {{scope.row.currentname}}
+          </span>
+        </el-table-column>
+        <el-table-column prop="" label="订单状态" width="120">
+          <span slot-scope="scope">
+            {{scope.row.audittype === 0 ? "仅降E":"降E并提单"}}
+          </span>
+        </el-table-column>
+        <el-table-column prop="" label="最后操作时间" min-width="140">
+          <span slot-scope="scope">{{scope.row.opt_time | timeFormat}}</span>
+        </el-table-column>
+        <el-table-column prop="deptname" label="商务大区部门" width="150">
+        </el-table-column>
+        <el-table-column prop="" label="操作" width="180">
+          <template slot-scope="scope">
+            <el-button type="primary" size="mini" @click.native="viewOrder(scope.row)" class="xsbtn">查看</el-button>
+            <el-button v-if="scope.row.sn == 10" type="warning" size="mini" @click.native="updateOrder(scope.row)" class="xsbtn">修改订单</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <page class="pagination" :url="url" :sendParams="sendParams" @updateList="updatePendingList" :key="key">
+      </page>
     </div>
     <router-view></router-view>
   </div>
@@ -94,7 +90,6 @@
 <script>
 import Page from 'base/page/page'
 import AutoSelect from 'base/autoSelect/autoSelect'
-import { serverUrl } from 'api/config'
 export default {
   data () {
     return {
@@ -140,27 +135,26 @@ export default {
         }
       ],
       pendingList: [],
-      url: serverUrl + '/Check.do?pendding',
-      params: {
+      url: '/Check.do?pendding',
+      sendParams: {
         status: 100,
         addmoney: '0'
-      },
-      isLoading: true
+      }
     }
   },
   methods: {
-    tab (tabStatus) {
+    tab () {
       // 使用obj.key = value的方式，子组件无法监听到对象的变化
-      this.params = Object.assign({}, this.params, {addmoney: tabStatus})
+      this.sendParams = Object.assign({}, this.sendParams, {addmoney: this.tabStatus})
     },
     search () {
-      this.params = {
+      this.sendParams = {
         status: 100,
-        companyname: this.cusName || undefined, // 公司名称
-        orderid: this.orderNumber || undefined, // 订单编号
-        pid: this.productType === '-1' || this.productType === '' ? undefined : this.productType, // 产品类型
-        baiducount: this.bd_account || undefined, // 百度账号
-        baiduid: this.bd_id || undefined, // 百度id
+        companyname: this.cusName, // 公司名称
+        orderid: this.orderNumber, // 订单编号
+        pid: this.productType, // 产品类型
+        baiducount: this.bd_account, // 百度账号
+        baiduid: this.bd_id, // 百度id
         opentime: this.achievement === '-1' || this.achievement === '' ? undefined : this.achievement, // 业绩
         audittype: this.orderStatus === '-1' || this.orderStatus === '' ? undefined : this.orderStatus // 订单类型
       }
@@ -174,11 +168,8 @@ export default {
       this.achievement = ''
       this.orderStatus = ''
     },
-    updatePendingList (data, load) {
-      this.isLoading = load
-      if (!load) {
-        this.pendingList = data.data[0].data
-      }
+    updatePendingList (res) {
+      this.pendingList = res.data[0].data
     },
     viewOrder (data) {
       this.$router.push({
@@ -204,8 +195,6 @@ export default {
 .order-pending {
   // position: relative;
   .pending-content {
-
-    padding: 20px;
     .tab{
       margin-left: 10px;
     }

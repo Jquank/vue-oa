@@ -222,9 +222,9 @@ export default {
       this.rowData = data
       this.editContractDialog = true
       let params = {
-        'contractid': data.id,
-        'ctlist': 'list',
-        'paging': true
+        contractid: data.id,
+        ctlist: 'list',
+        paging: true
       }
       this.$get('/Contract.do?SearchByCatId', params).then(res => {
         this.detailInfo = res.data[0].data[0]
@@ -235,17 +235,17 @@ export default {
     // 提交修改
     subEdit () {
       let params = {
-        'contractid': this.rowData.id,
-        'contractnumber': this.detailInfo.number,
-        'status': this.detailInfo.status,
-        'statusname': '', // todo 选中后的label值？
-        'uid': this.selUserId || this.detailInfo.uid,
-        'username': this.detailInfo.username,
-        'statusnamebefore': this.detailInfo.text,
-        'uidbefore': this.detailInfo.uid,
-        'usernamebefore': this.beforeUserName,
-        'returntime': this.detailInfo.returntime || null,
-        'remark': this.detailInfo.remark
+        contractid: this.rowData.id,
+        contractnumber: this.detailInfo.number,
+        status: this.detailInfo.status,
+        statusname: '', // todo 选中后的label值？
+        uid: this.selUserId || this.detailInfo.uid,
+        username: this.detailInfo.username,
+        statusnamebefore: this.detailInfo.text,
+        uidbefore: this.detailInfo.uid,
+        usernamebefore: this.beforeUserName,
+        returntime: this.detailInfo.returntime || null,
+        remark: this.detailInfo.remark
       }
       console.log(params)
       // todo

@@ -184,6 +184,7 @@ export default {
     },
     exitLogin () {
       cookie.remove('token')
+      cookie.remove('rid')
       cookie.remove('userId')
       cookie.remove('permissions')
       storage.remove('productType')

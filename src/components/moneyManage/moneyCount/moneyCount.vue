@@ -2,27 +2,33 @@
   <div @click="hiddenDepartment" class="money-count component-container media-padding">
     <div class="top">
       <div class="btns top-item">
-        <select-department v-model="dept" :title="'部门'" style="display:inline-block"></select-department>
-        <el-button type="primary">查 询</el-button>
-        <el-button type="warning">重 置</el-button>
+        <select-department :key="key_dept" @upDeptId="getDeptId" :title="'部门'" style="display:inline-block"></select-department>
+        <el-button @click.native.prevent="search" type="primary">查 询</el-button>
+        <el-button @click.native.prevent="reset" type="warning">重 置</el-button>
       </div>
-      <auto-select :title="'时间'" class="top-item">
-        <el-option label="7天" value="10"></el-option>
-      </auto-select>
+      <div class="top-item">
+        <el-radio-group v-model="radio" @change="radioChange">
+          <el-radio-button :label="{day:7,type:'day'}">近7天</el-radio-button>
+          <el-radio-button :label="{day:30,type:'day'}">近30天</el-radio-button>
+          <el-radio-button :label="{day:0,type:'week'}">周</el-radio-button>
+          <el-radio-button :label="{day:0,type:'month'}">月</el-radio-button>
+          <el-radio-button :label="{day:0,type:'quarter'}">季度</el-radio-button>
+        </el-radio-group>
+      </div>
+
     </div>
     <div class="money-count-chart" id="money-count-chart" :style="{width:width,height:height}"></div>
   </div>
 </template>
 
 <script>
-import { $post } from 'api/http'
 import SelectDepartment from 'base/selectDepartment/selectDepartment'
-import AutoSelect from 'base/autoSelect/autoSelect'
 const Echarts = require('echarts/lib/echarts')
-require('echarts/lib/component/tooltip')
-require('echarts/lib/component/title')
-
-require('echarts/lib/chart/line')
+// todo 按需引入
+// require('echarts/lib/component/tooltip')
+// require('echarts/lib/component/title')
+// require('echarts/lib/component/dataZoom')
+// require('echarts/lib/chart/line')
 export default {
   props: {
     width: {
@@ -31,99 +37,119 @@ export default {
     },
     height: {
       type: String,
-      default: '400px'
+      default: '600px'
     }
   },
   data () {
     return {
-      dept: []
+      radio: {day: 7, type: 'day'},
+      dept: '',
+      key_dept: '',
+      dayData: [],
+      xAxiasData: [],
+      yAxiasData: [],
+      option: {},
+      lineChart: ''
+
     }
   },
   mounted () {
-    this._getChartData()
-    let that = this
-    let lineChart = Echarts.init(document.getElementById('money-count-chart'))
-    lineChart.setOption({
-      title: {
-        text: '上周业绩图'
-      },
-      tooltip: {
-        trigger: 'axis'
-      },
-      legend: {
-        data: ['期望', '完成']
-      },
-      grid: {
-        left: '3%',
-        right: '4%',
-        bottom: '3%',
-        containLabel: true
-      },
-      toolbox: {
-        feature: {
-          saveAsImage: {
-            type: 'png',
-            pixelRatio: 2,
-            backgroundColor: 'auto'
-          }
-        }
-      },
-      xAxis: {
-        type: 'time',
-        boundaryGap: false,
-        data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
-      },
-      yAxis: {
-        type: 'value'
-      },
-      series: [
-        {
-          name: '期望',
-          type: 'line',
-          stack: '期望',
-          data: that.expected,
-          smooth: true
-        },
-        {
-          name: '完成',
-          type: 'line',
-          stack: '完成',
-          data: that.done,
-          smooth: true
-        }
-      ]
-    })
+    this.lineChart = Echarts.init(document.getElementById('money-count-chart'))
+    this._getChartData('day', 7)
   },
   methods: {
-    _getChartData () {
-      $post('http://bg.baijiegroup.com/BaiJieOA/receipt.do?countbankreceipt?tk=OTA2MGBkZmEwMGNkN2UxMWQ0OGQ5OWMzNjcwMTk5MmM5NTk5ZWAxNTM1NDE2NjUwNDM0&type="day"').then(res => {
-
+    _getChartData (type, time, dept) {
+      this.$post('/receipt.do?countbankreceipt', {
+        type: type,
+        dept: dept
+      }).then(res => {
+        this.dayData = res.data[0].data
+        let arr = this.dayData.slice(this.dayData.length - (type === 'day' ? time : this.dayData.length))
+        this.xAxiasData = []
+        this.yAxiasData = []
+        arr.forEach(val => {
+          this.xAxiasData.push(val.time)
+          this.yAxiasData.push(val.count)
+        })
+        console.log(this.xAxiasData)
+        let that = this
+        this.option = {
+          title: {
+            text: '到款数量'
+          },
+          tooltip: {
+            trigger: 'axis'
+          },
+          xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: that.xAxiasData
+          },
+          yAxis: {
+            type: 'value'
+          },
+          toolbox: {
+            left: 'center',
+            feature: {
+              restore: {},
+              saveAsImage: {}
+            }
+          },
+          // todo
+          dataZoom: [
+            {
+              type: 'inside',
+              show: true,
+              xAxisIndex: 0,
+              filter: 'none',
+              startValue: 5
+            }
+          ],
+          series: [
+            {
+              data: that.yAxiasData,
+              type: 'line',
+              areaStyle: {}
+            }
+          ]
+        }
+        this.lineChart.setOption(this.option)
       })
     },
-    setXAxis () {
-      // let now = new Date()
+    radioChange (val) {
+      this._getChartData(val.type, val.day, this.dept)
+    },
+    search () {
+      this._getChartData(this.radio.type, this.radio.day, this.dept)
+    },
+    reset () {
+      this.dept = ''
+      this.key_dept = new Date() + ''
     },
     hiddenDepartment (e) {
       let tree = document.getElementById('department')
       if (tree && e.target.id !== 'dept-input') {
         tree.style.display = 'none'
       }
+    },
+    getDeptId (id) {
+      this.dept = id
     }
   },
   components: {
-    SelectDepartment, AutoSelect
+    SelectDepartment
   }
 }
 </script>
 
 <style lang="less" scoped>
-.money-count{
-  .top{
+.money-count {
+  .top {
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
     margin-top: -10px;
-    .top-item{
+    .top-item {
       margin-top: 10px;
     }
   }

@@ -177,18 +177,13 @@ export const navList = [
     },
     {
       cid: 92,
-      to: '/indexPage/myBankflow',
+      to: '/indexPage/myFlow',
       text: '我的银行流水'
     },
     {
       cid: 93,
       to: '/indexPage/moneyCount',
       text: '到款统计'
-    },
-    {
-      cid: 94,
-      to: '/indexPage/addFlow',
-      text: '录入流水'
     }
     ]
   },

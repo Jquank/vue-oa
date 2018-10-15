@@ -80,7 +80,7 @@ export function $get (url, _params = {}) {
   let mark = isQuestionMark ? '&' : '?'
   return new Promise((resolve, reject) => {
     instance
-      .get(url + mark + 'tk=' + tk, { params: _params })
+      .get(url + mark + 'tk=' + tk, {params: _params})
       .then(res => {
         resolve(res)
       })

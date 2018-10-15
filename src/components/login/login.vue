@@ -57,6 +57,7 @@ export default {
           if (res.data.success) {
             console.log(res.data.data)
             cookie.set('token', res.data.data.tk)
+            cookie.set('rid', res.data.data.rid)
             cookie.set('userId', res.data.data.id)
             cookie.set('userName', res.data.data.name)
             cookie.set('permissions', res.data.data.permissions)

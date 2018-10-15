@@ -52,6 +52,7 @@ import AddMoney from 'components/moneyManage/moneyRecord/addMoney'
 import ViewMoney from 'components/moneyManage/moneyRecord/viewMoney'
 import EditMoney from 'components/moneyManage/moneyRecord/editMoney'
 import BankflowList from 'components/moneyManage/bankflowList/bankflowList'
+import MyFlow from 'components/moneyManage/myFlow/myFlow'
 import MoneyCount from 'components/moneyManage/moneyCount/moneyCount'
 // 订单管理
 import AddBaiduOrder from 'components/order/addBaiduOrder/addBaiduOrder'
@@ -318,6 +319,12 @@ const router = new Router({
           name: 'bankflowList',
           meta: { text: '银行流水列表' },
           component: BankflowList
+        },
+        {
+          path: 'myFlow',
+          name: 'myFlow',
+          meta: { text: '我的银行流水' },
+          component: MyFlow
         },
         {
           path: 'moneyCount',
