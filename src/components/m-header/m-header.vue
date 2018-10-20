@@ -88,7 +88,6 @@
 
 <script>
 import { enterfullscreen, exitfullscreen } from 'api/myHeader'
-import { serverUrl } from 'api/config'
 import { $post } from 'api/http'
 import cookie from 'js-cookie'
 import storage from 'good-storage'
@@ -158,7 +157,7 @@ export default {
       this.form.name = this.uName
     },
     editPwd () {
-      let userUrl = serverUrl + '/Oper.do?EditPwd'
+      let userUrl = '/Oper.do?EditPwd'
       let reg = /^[0-9A-Za-z_]{4,10}$/
       let myPassword = '' + this.form.mima
       if (reg.test(myPassword)) {
@@ -187,7 +186,9 @@ export default {
       cookie.remove('rid')
       cookie.remove('userId')
       cookie.remove('permissions')
-      storage.remove('productType')
+      storage.remove('productType38')
+      storage.remove('productType18')
+      storage.remove('wjType')
       this.$router.push('/login')
       // $post('/logout').then(res => {
       //   if (res.data.status === -1) {

@@ -31,16 +31,8 @@ export default function submitBox (that, obj = {}) {
         }
         that.$post(obj.url, params).then((res) => {
           if (res.data.success) {
-            that.$message({
-              type: 'success',
-              message: '成功'
-            })
             resolve(true)
           } else {
-            that.$message({
-              type: 'error',
-              message: '失败'
-            })
             resolve(false)
           }
         }).catch(err => {

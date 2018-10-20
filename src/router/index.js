@@ -44,7 +44,9 @@ import AllotContract from 'components/contract/allotContract/allotContract'
 import ContractList from 'components/contract/contractList/contractList'
 import ApplyContract from 'components/contract/applyContract/applyContract'
 // 续费管理
+import CusList from 'components/renew/cusList/cusList'
 import RenewApply from 'components/renew/renewApply/renewApply'
+import RenewList from 'components/renew/renewList/renewList'
 import SalaryList from 'components/salary/salaryList'
 // 到款管理
 import MoneyRecord from 'components/moneyManage/moneyRecord/moneyRecord'
@@ -57,7 +59,7 @@ import MoneyCount from 'components/moneyManage/moneyCount/moneyCount'
 // 订单管理
 import AddBaiduOrder from 'components/order/addBaiduOrder/addBaiduOrder'
 import OrderPending from 'components/order/orderPending/orderPending'
-import ViewDetail from 'components/order/orderPending/viewDetail'
+import PendingDetail from 'components/order/orderPending/pendingDetail'
 import EditOrder from 'components/order/orderPending/editOrder'
 import OrderProcessed from 'components/order/orderProcessed/orderProcessed'
 
@@ -341,8 +343,8 @@ const router = new Router({
           children: [
             {
               path: 'view/:id',
-              meta: { text: '待处理订单/查看订单详情' },
-              component: ViewDetail
+              meta: { text: '待处理订单/订单详情' },
+              component: PendingDetail
             },
             {
               path: 'edit/:id',
@@ -365,10 +367,22 @@ const router = new Router({
         },
         // 续费管理
         {
+          path: 'cusList',
+          name: 'cusList',
+          meta: { text: '客户列表' },
+          component: CusList
+        },
+        {
           path: 'renewApply',
           name: 'renewApply',
           meta: { text: '续费申请' },
           component: RenewApply
+        },
+        {
+          path: 'renewList',
+          name: 'renewList',
+          meta: { text: '续费申请' },
+          component: RenewList
         },
         // 发票管理
         {

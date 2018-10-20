@@ -10,6 +10,19 @@ export function comType (num) {
       return '正常'
   }
 }
+
+export function facilitatorType (num) {
+  switch (num) {
+    case 1:
+      return '35'
+    case 2:
+      return '百度云'
+    case 3:
+      return '西部数码'
+    case 0:
+      return '自备'
+  }
+}
 export function cusStatus (num) {
   switch (num) {
     case 0:
@@ -26,8 +39,13 @@ export function cusStatus (num) {
       return '信息流'
   }
 }
-export function wjType (num) {
-  let wjTypes = storage.get('wjType')
+export function wjType (num, siteType) {
+  let wjTypes
+  if (!siteType) {
+    wjTypes = storage.get('wjType')
+  } else {
+    wjTypes = storage.get('wjType1')
+  }
   let type = ''
   wjTypes.forEach(val => {
     if (num == val.code_val) { //eslint-disable-line

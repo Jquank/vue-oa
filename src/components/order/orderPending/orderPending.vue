@@ -16,13 +16,14 @@
         <el-input placeholder="搜索订单编号" v-model="orderNumber" class="search-item item-width">
           <template slot="prepend">订单编号:</template>
         </el-input>
-        <auto-select title="产品类型" v-model="productType" class="search-item item-width">
+        <auto-select :key="key_pro" title="产品类型" v-model="productType" class="search-item item-width">
           <el-option label="全部" value=""></el-option>
           <el-option label="百度推广" value="BAITUI"></el-option>
           <el-option label="网建" value="WEBSITE"></el-option>
           <el-option label="信息流" value="XXL"></el-option>
         </auto-select>
-        <auto-select title="订单状态" v-model="orderStatus" class="search-item item-width">
+        <auto-select :key="key_order" title="订单状态" v-model="orderStatus" class="search-item item-width">
+          <el-option label="全部" value=""></el-option>
           <el-option label="仅降E" value="0"></el-option>
           <el-option label="降E并提单" value="10"></el-option>
         </auto-select>
@@ -32,7 +33,7 @@
         <el-input placeholder="搜索百度ID" v-model="bd_id" class="search-item item-width">
           <template slot="prepend">百度 ID:&nbsp;&nbsp;</template>
         </el-input>
-        <auto-select title="选择业绩" v-model="achievement" class="search-item item-width">
+        <auto-select :key="key_achievement" title="选择业绩" v-model="achievement" class="search-item item-width">
           <el-option v-for="item in achievements" :key="item.value" :label="item.label" :value="item.opentime"></el-option>
         </auto-select>
         <div class="search-item">
@@ -41,7 +42,7 @@
         </div>
       </div>
       <!-- 列表 -->
-      <el-table :data="pendingList" class="table-width">
+      <el-table :data="pendingList" class="table-width" max-height="550">
         <el-table-column prop="ordernum" label="订单ID" width="180">
         </el-table-column>
         <el-table-column prop="cname" label="订单名称" min-width="160">
@@ -80,7 +81,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <page class="pagination" :url="url" :sendParams="sendParams" @updateList="updatePendingList" :key="key">
+      <page class="page" :url="url" :sendParams="sendParams" @updateList="updatePendingList" :key="key">
       </page>
     </div>
     <router-view></router-view>
@@ -93,7 +94,9 @@ import AutoSelect from 'base/autoSelect/autoSelect'
 export default {
   data () {
     return {
-      showBread: true,
+      key_pro: '',
+      key_order: '1',
+      key_achievement: '2',
       tabStatus: '0',
       key: '',
       permission: sessionStorage.getItem('permissions'),
@@ -106,7 +109,7 @@ export default {
       bd_id: '',
       achievements: [
         {
-          opentime: '-1',
+          opentime: '',
           label: '全部'
         },
         {
@@ -142,6 +145,12 @@ export default {
       }
     }
   },
+  beforeRouteUpdate (to, from, next) { // vue会复用组件，所以从详情页返回时带上搜索条件搜索
+    if (to.query.data === 'fromDetail') {
+      this.search()
+    }
+    next()
+  },
   methods: {
     tab () {
       // 使用obj.key = value的方式，子组件无法监听到对象的变化
@@ -150,23 +159,26 @@ export default {
     search () {
       this.sendParams = {
         status: 100,
-        companyname: this.cusName, // 公司名称
-        orderid: this.orderNumber, // 订单编号
-        pid: this.productType, // 产品类型
-        baiducount: this.bd_account, // 百度账号
-        baiduid: this.bd_id, // 百度id
-        opentime: this.achievement === '-1' || this.achievement === '' ? undefined : this.achievement, // 业绩
-        audittype: this.orderStatus === '-1' || this.orderStatus === '' ? undefined : this.orderStatus // 订单类型
+        companyname: this.cusName || undefined, // 公司名称
+        orderid: this.orderNumber || undefined, // 订单编号
+        pid: this.productType || undefined, // 产品类型
+        baiducount: this.bd_account || undefined, // 百度账号
+        baiduid: this.bd_id || undefined, // 百度id
+        opentime: this.achievement || undefined, // 业绩
+        audittype: this.orderStatus || undefined // 订单类型
       }
     },
     reset () {
       this.cusName = ''
       this.orderNumber = ''
       this.productType = ''
+      this.key_pro = new Date() + ''
+      this.orderStatus = ''
+      this.key_order = new Date() + '1'
       this.bd_account = ''
       this.bd_id = ''
       this.achievement = ''
-      this.orderStatus = ''
+      this.key_achievement = new Date() + '2'
     },
     updatePendingList (res) {
       this.pendingList = res.data[0].data
@@ -176,7 +188,6 @@ export default {
         path: `orderPending/view/${data.cpid}`,
         query: {data: data}
       })
-      // this.showBread = false
     },
     updateOrder (data) {
       this.$router.push({
@@ -193,7 +204,7 @@ export default {
 
 <style lang="less" scoped>
 .order-pending {
-  // position: relative;
+  position: relative;
   .pending-content {
     .tab{
       margin-left: 10px;

@@ -414,21 +414,10 @@ export default {
         remark: this.checkRemark
       }
       this.$post('/CheckOut.do?pass', params).then(res => {
-        if (res.data[0].success) {
-          this.$message({
-            type: 'success',
-            message: '保存成功'
-          })
-          this.$router.push({
-            path: '/indexPage/dealCheck',
-            query: { data: 'fromDetail' }
-          })
-        } else {
-          this.$message({
-            type: 'error',
-            message: '保存失败'
-          })
-        }
+        this.$router.push({
+          path: '/indexPage/dealCheck',
+          query: { data: 'fromDetail' }
+        })
       })
     },
     // 审核不通过

@@ -40,13 +40,12 @@
 </template>
 
 <script>
-import { serverUrl } from 'api/config'
 import Page from 'base/page/page'
 export default {
   data () {
     return {
       newsList: [],
-      url: serverUrl + '/User.do?DisplayInfo'
+      url: '/User.do?DisplayInfo'
     }
   },
   methods: {

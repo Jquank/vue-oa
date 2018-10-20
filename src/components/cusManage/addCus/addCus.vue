@@ -81,7 +81,7 @@
         <el-button type="warning" @click.native="submit(10)" :disabled="subDisable" class="btns-child">添加为我的跟踪客户</el-button>
         <div class="btns-child">
           <el-button type="primary" @click.native="submit(20)" :disabled="subDisable">添加并申请保A</el-button>
-          <span class="red">(可保A数量：10)</span>
+          <span class="red">(可保A数量：{{availableBaoA}})</span>
         </div>
       </el-form-item>
     </el-form>
@@ -228,6 +228,11 @@ export default {
             message: '添加成功'
           })
           this.$router.push('/indexPage/myCus')
+        } else {
+          this.$message({
+            type: 'error',
+            message: '添加失败'
+          })
         }
       })
     }

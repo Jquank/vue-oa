@@ -97,10 +97,10 @@ export default {
       this.sendParams = {
         'status': this.checkStatus,
         'cltype': this.checkRadio,
-        'companyname': this.cusName,
+        'companyname': this.cusName || undefined,
         'begintime': this.subDate[0],
         'endtime': this.subDate[1],
-        'dept': this.dept
+        'dept': this.dept || undefined
       }
     },
     reset () {

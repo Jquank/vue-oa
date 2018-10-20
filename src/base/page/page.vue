@@ -21,7 +21,6 @@
 </template>
 
 <script>
-import { $post } from '@/api/http'
 export default {
   props: {
     url: {
@@ -77,7 +76,7 @@ export default {
         currentpage: 1
       }, this.sendParams)
 
-      $post(this.url, params)
+      this.$post(this.url, params)
         .then(res => {
           if (res.data[0].success) {
             try {
@@ -100,7 +99,7 @@ export default {
         pagesize: this.pageval,
         currentpage: 1
       }, this.sendParams)
-      $post(this.url, params)
+      this.$post(this.url, params)
         .then(res => {
           if (res.data[0].success) {
             this.handleList = res
@@ -120,7 +119,7 @@ export default {
         pagesize: this.pageval,
         currentpage: page
       }, this.sendParams)
-      $post(this.url, params)
+      this.$post(this.url, params)
         .then(res => {
           if (res.data[0].success) {
             this.handleList = res

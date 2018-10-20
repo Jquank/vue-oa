@@ -1,5 +1,3 @@
-export const serverUrl = 'http://172.16.11.72:88'
-export const uploadUrl = 'http://172.16.11.72:88/upload/c'
 export const navList = [
   {
     id: 1,
@@ -204,7 +202,9 @@ export const navList = [
     fontIcon: 'fa fa-credit-card',
     text: '续费管理',
     cList: [
-      { cid: 110, to: '/indexPage/renewApply', text: '续费申请' }
+      { cid: 111, to: '/indexPage/cusList', text: '客户列表' },
+      { cid: 112, to: '/indexPage/renewApply', text: '续费申请' },
+      { cid: 113, to: '/indexPage/renewList', text: '续费列表' }
     ]
   },
   {

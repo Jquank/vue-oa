@@ -36,7 +36,6 @@
 </template>
 
 <script>
-import { serverUrl } from 'api/config'
 import Page from 'base/page/page'
 import selectUser from 'base/selectUser/selectUser'
 import selectDepartment from 'base/selectDepartment/selectDepartment'
@@ -44,7 +43,7 @@ export default {
   data () {
     return {
       invoiceList: [],
-      url: serverUrl + '/Invoice.do?invoicelist',
+      url: '/Invoice.do?invoicelist',
       sendparams: {
         invoicetype: 100,
         hasinvoice: 0

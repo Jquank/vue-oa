@@ -227,10 +227,9 @@
 
 <script>
 // import { mapGetters } from 'vuex'
-import { serverUrl, uploadUrl } from 'api/config' //eslint-disable-line
+import { uploadUrl } from 'api/http' //eslint-disable-line
 import Page from 'base/page/page'
 // import ShowQualify from 'base/showQualify/showQualify'
-import { $post } from 'api/http'
 import { getCode, getMyContract } from 'api/getOptions'//eslint-disable-line
 
 const ORDER_TYPE = 'BAITUI'
@@ -308,7 +307,7 @@ export default {
         selCompanyDialog: false,
         handleCompanyName: '',
         myCompany: [],
-        url: serverUrl + '/order.do?Add',
+        url: '/order.do?Add',
         params: {pid: ORDER_TYPE},
         key: ''
       },
@@ -430,14 +429,14 @@ export default {
     },
     // 获取到款记录 和 客户地址
     _getMoneyRecord () {
-      let moneyRecordUrl = serverUrl + '/wf.do?set'
+      let moneyRecordUrl = '/wf.do?set'
       let moneyRecordParams = {
         cid: this.moneyRecord.cid,
         companylogid: this.moneyRecord.companylogid,
         uid: this.moneyRecord.uid,
         pid: ORDER_TYPE
       }
-      $post(moneyRecordUrl, moneyRecordParams).then(res => {
+      this.$post(moneyRecordUrl, moneyRecordParams).then(res => {
         let _record = res.data[2].data
         this.moneyRecord.recordList = _record
         // this.moneyRecord.recordDetail = _record.splice(1)
@@ -447,12 +446,12 @@ export default {
     },
     // 获取联系人信息
     _getContactName () {
-      let contactUrl = serverUrl + '/CustomerCheck.do?customlist'
+      let contactUrl = '/CustomerCheck.do?customlist'
       let contactParams = {
         cid: this.moneyRecord.cid,
         companylogid: this.moneyRecord.companylogid
       }
-      $post(contactUrl, contactParams).then(res => {
+      this.$post(contactUrl, contactParams).then(res => {
         this.form.contactList = res.data[1].data
       })
     },

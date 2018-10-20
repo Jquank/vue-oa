@@ -90,7 +90,6 @@
 <script>
 import Page from 'base/page/page'
 import AutoSelect from 'base/autoSelect/autoSelect'
-import { serverUrl } from 'api/config'
 export default {
   data () {
     return {
@@ -135,7 +134,7 @@ export default {
         }
       ],
       pendingList: [],
-      url: serverUrl + '/Check.do?pendding',
+      url: '/Check.do?pendding',
       params: {
         status: 100,
         addmoney: '0'

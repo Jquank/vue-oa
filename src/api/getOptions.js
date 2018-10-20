@@ -1,11 +1,10 @@
 import { $post } from 'api/http'
-import { serverUrl } from '@/api/config'
 // const detailUrl = serverUrl + '/CustomerCheck.do?customlist'
 const tradeUrl = '/CompanyCat/AllCompanyCatGet'
 const areaUrl = '/Area.do?comparea'
-const sourceUrl = serverUrl + '/cd.do?get&code=27'
-const contractUrl = serverUrl + '/Contract.do?SearchByCatId'
-const departmentUrl = serverUrl + '/Search.do?DeptTree'
+const sourceUrl = '/cd.do?get&code=27'
+const contractUrl = '/Contract.do?SearchByCatId'
+const departmentUrl = '/Search.do?DeptTree'
 
 const roleUrl = '/Oper.do?SearchRoles'
 const codeUrl = '/cd.do?get&code='
@@ -59,7 +58,7 @@ export function getSource (params = {}) {
 export function getMyContract (type, uid, state = '20') {
   let params = {
     catid: type,
-    state: state,
+    status: state,
     uid: uid,
     paging: 1
   }

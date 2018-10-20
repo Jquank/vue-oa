@@ -73,6 +73,14 @@ export default {
               let data = res.data.data || []
               storage.set('productType18', data)
             })
+            getByCode(28).then(res => {
+              let data = res.data.data || []
+              storage.set('wjType', data)
+            })
+            getByCode(88).then(res => {
+              let data = res.data.data || []
+              storage.set('wjType1', data)
+            })
 
             // getCode(28).then(res => {
             //   let data = res.data.data || []

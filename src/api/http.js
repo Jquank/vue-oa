@@ -2,7 +2,11 @@ import axios from 'axios'
 import router from '@/router'
 // import qs from 'querystring'
 import cookie from 'js-cookie'
-import { Loading, Message } from 'element-ui'
+import {
+  Loading,
+  Message
+} from 'element-ui'
+export const uploadUrl = 'http://172.16.11.84:8080/upload/c'
 // export const serverUrl = 'http://bg.baijiegroup.com/BaiJieOA'
 export const serverUrl = 'http://172.16.11.84:8080/BaiJieOA'
 const instance = axios.create({
@@ -33,26 +37,41 @@ instance.interceptors.request.use( // 请求拦截
 instance.interceptors.response.use( // 响应拦截
   response => {
     loadingInstance.close()
-    if (response.data === 'tosignin') {
+    if (response.data === 'tosignin') { // token失效
       router.push('/login')
     }
-    // if (response.data instanceof Object) {
-    //   if (response.data.success) {
-    //     Message.success({
-    //       message: response.data.msg || '成功'
-    //     })
-    //   } else {
-    //     Message.error({
-    //       message: response.data.msg || '失败'
-    //     })
-    //   }
-    // }
+    if (!Array.isArray(response.data)) { // {} res为对象
+      if (response.data.success) {
+        if (response.data.msg) {
+          Message.success({
+            message: response.data.msg || '成功'
+          })
+        }
+      } else {
+        Message.error({
+          message: response.data.msg || '失败'
+        })
+      }
+    } else { // [] res为数组
+      if (!Array.isArray(response.data[0].data)) { // {} 不带分页
+        if (response.data[0].success) {
+          Message.success({
+            message: response.data[0].msg || (response.data[1] && response.data[1].msg) ||
+            (response.data[2] && response.data[2].msg) || '成功'
+          })
+        } else {
+          Message.error({
+            message: response.data[0].msg || '失败'
+          })
+        }
+      } else {} // 带分页
+    }
     return response
   },
   err => {
     loadingInstance.close()
     Message.error({
-      message: '请求超时'
+      message: '请求出错了'
     })
     console.log(err)
     return Promise.reject(err)
@@ -80,7 +99,9 @@ export function $get (url, _params = {}) {
   let mark = isQuestionMark ? '&' : '?'
   return new Promise((resolve, reject) => {
     instance
-      .get(url + mark + 'tk=' + tk, {params: _params})
+      .get(url + mark + 'tk=' + tk, {
+        params: _params
+      })
       .then(res => {
         resolve(res)
       })

@@ -45,9 +45,7 @@
 <script>
 import cookie from 'js-cookie'
 import Page from 'base/page/page'
-import { serverUrl } from 'api/http'
 const userId = cookie.get('userId')
-const tk = cookie.get('token')
 export default {
   data () {
     return {
@@ -58,7 +56,7 @@ export default {
 
       uploadData: {},
       uploadHeaders: {},
-      actionUrl: serverUrl + '/Company.do?importcompanyinfo' + '&tk=' + tk,
+      actionUrl: '/Company.do?importcompanyinfo',
       fileList: []
     }
   },
