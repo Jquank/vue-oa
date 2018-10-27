@@ -366,7 +366,7 @@
             <el-table-column prop="data" label="详细信息">
               <div slot-scope="scope">
                 <div v-if="scope.$index===0">
-                  <div class="row-container">
+                  <div>
                     <div>
                       <b>百度订单金额：</b>
                       <span>{{orderInfo.amount_real | currency1}}</span>
@@ -384,7 +384,7 @@
                       <span>{{orderInfo.receivekind==10?"私对公":"公对公"}}</span>
                     </div>
                   </div>
-                  <div class="mt10px row-container">
+                  <div>
                     <div v-for="(item,index) in moneyInfo" :key="index">
                       <template v-if="item.type < 100 && item.type!=8">
                         <b>{{item.type | productType}}：</b>
@@ -404,7 +404,7 @@
                   </div>
                 </div>
                 <div v-if="scope.$index===1">
-                  <div class="row-container">
+                  <div>
                     <div>
                       <b>大搜续费代金券：</b>
                       <span>{{moneyRecord.dsvoucher | currency1}}</span>
@@ -424,7 +424,7 @@
                   </div>
                 </div>
                 <div v-if="scope.$index===2">
-                  <div class="row-container">
+                  <div>
                     <div>
                       <b>特殊说明：</b>
                       <span>{{moneyRecord.remark || ""}}</span>
@@ -627,16 +627,18 @@
           </el-table>
         </el-tab-pane>
         <el-tab-pane v-if="sn!==10" label="订单处理">
-          <!-- 理单员审核 -->
-          <order-keeper v-if="sn===20" title="理单员审核"></order-keeper>
+          <!-- 理单员审核(质检经理) -->
+          <order-keeper v-if="sn===20 && templateInfo.cpid" :templateInfo="templateInfo" :pid="pid" title="理单员审核"></order-keeper>
           <!-- 综合部初审 -->
-          <init-finance v-if="sn===100 && moneyInfo.length" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :sn="sn" :pid="pid"></init-finance>
+          <init-finance v-if="sn===100 && moneyInfo.length" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid"></init-finance>
           <!-- 质检外审 -->
-          <order-keeper v-if="sn===200" title="质检外审"></order-keeper>
+          <out-quality v-if="sn===200 && templateInfo.cpid" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="质检外审"></out-quality>
           <!-- 质检内审派单 -->
-          <in-quality-order v-if="sn===210"></in-quality-order>
+          <in-quality-order v-if="sn===210 && templateInfo.cpid" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="质检内审派单"></in-quality-order>
           <!-- 质检内审 -->
-          <in-quality v-if="sn===220"></in-quality>
+          <in-quality v-if="sn===220 && templateInfo.cpid" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="质检内审派单"></in-quality>
+          <!-- 质检申请加款 -->
+          <quality-add-money v-if="sn===260 && templateInfo.cpid" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="质检申请加款"></quality-add-money>
         </el-tab-pane>
         <!-- 日志 -->
         <el-tab-pane :label="logLabel">
@@ -796,6 +798,8 @@ import OrderKeeper from 'checkSteps/orderKeeper'
 import InitFinance from 'checkSteps/initFinance'
 import InQualityOrder from 'checkSteps/inQualityOrder'
 import InQuality from 'checkSteps/inQuality'
+import OutQuality from 'checkSteps/outQuality'
+import QualityAddMoney from 'checkSteps/qualityAddMoney'
 import Page from 'base/page/page'
 import cookie from 'js-cookie'
 export default {
@@ -869,6 +873,7 @@ export default {
       moneyInfo: [],
       moneyRecord: {},
       orderFlowDatas: [],
+      invoiceInfo: {},
       templateInfo: {},
       logLabel: '日志',
       logMark: '',
@@ -1064,9 +1069,10 @@ export default {
           this.originUser = res.data.data[10]
           this.cusAttrList = res.data.data[5]
           this.showQualify = res.data.data[5]
-          this.moneyInfo = res.data.data[9]
+          this.moneyInfo = res.data.data[12]
           this.moneyRecord = res.data.data[8][0]
           this.orderFlowDatas = res.data.data[13]
+          this.invoiceInfo = res.data.data[11]
         }
       })
     },
@@ -1100,6 +1106,8 @@ export default {
     InitFinance,
     InQualityOrder,
     InQuality,
+    OutQuality,
+    QualityAddMoney,
     Page
   }
 }

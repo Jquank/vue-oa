@@ -8,6 +8,8 @@ function clearLastChildren (arr) {
     }
   })
 }
+
+// 转化树结构
 export function transTree (arr) {
   let r = []
   let hash = {}
@@ -28,4 +30,16 @@ export function transTree (arr) {
   }
   clearLastChildren(r)
   return r
+}
+
+export function groupBy (array, f) {
+  let groups = {}
+  array.forEach(function (o) {
+    let group = JSON.stringify(f(o))
+    groups[group] = groups[group] || []
+    groups[group].push(o)
+  })
+  return Object.keys(groups).map(function (group) {
+    return groups[group]
+  })
 }

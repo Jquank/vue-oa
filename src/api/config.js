@@ -193,8 +193,9 @@ export const navList = [
       { cid: 100, to: '/indexPage/orderPending', text: '待处理订单' },
       { cid: 101, to: '/indexPage/orderProcessed', text: '已处理订单' },
       // { cid: 102, to: '/indexPage/orderList', text: '订单列表' },
-      { cid: 104, to: '/indexPage/addBaiduOrder', text: '新增百度订单' }
-      // { cid: 105, to: '/indexPage/news', text: '新增网建订单' }
+      { cid: 104, to: '/indexPage/addBaiduOrder', text: '新增百度订单' },
+      { cid: 105, to: '/indexPage/addWjOrder', text: '新增网建订单' },
+      { cid: 106, to: '/indexPage/addZtcOrder', text: '新增直通车订单' }
     ]
   },
   {

@@ -2,13 +2,15 @@
   <div class="show-qualify">
     <el-row class="qualify">
       <dl v-for="(s,index) in showQualify" :key="index">
-        <dt>&nbsp;{{s.val.split('#')[1]}}</dt>
-        <dd style="margin:0 auto">
-          <img style="width:180px;height:auto" @click="imgClick(s.val,index)" :src="s.val.split('#')[0]">
-        </dd>
-        <dd>
-          <el-button type="danger" size="mini" @click="delImg(index)">删除</el-button>
-        </dd>
+        <template v-if="s.val">
+          <dt>&nbsp;{{s.val.split('#')[1]}}</dt>
+          <dd style="margin:0 auto">
+            <img style="width:180px;height:auto" @click="imgClick(s.val,index)" :src="s.val.split('#')[0]">
+          </dd>
+          <dd>
+            <el-button type="danger" size="mini" @click="delImg(index)">删除</el-button>
+          </dd>
+        </template>
       </dl>
     </el-row>
     <!-- 点击图片查看大图 -->
@@ -47,11 +49,13 @@ export default {
       isBigImg: false,
       rotate: false,
       deg: 90,
-      rate: 1,
-      count1: 1,
-      count2: 1,
-      imgDom: ''
+      imgDom: '',
+      deledQualify: [],
+      newQualifyList: []
     }
+  },
+  mounted () {
+    console.log(this.showQualify)
   },
   methods: {
     open (val) {
@@ -68,11 +72,12 @@ export default {
     },
     // 删除资质图片
     delImg (index) {
-      this.showQualify.splice(index, 1)
+      this.deledQualify = this.showQualify.splice(index, 1)
+      // this.showQualify.splice(index, 1)
       this._emitQualifyList()
     },
     _emitQualifyList () {
-      this.$emit('getQualifyList', this.showQualify)
+      this.$emit('getQualifyList', this.showQualify, this.deledQualify)
     }
   }
 }
@@ -92,7 +97,7 @@ export default {
   }
   img.aa {
     height: 700px;
-    max-width:700px;
+    max-width: 700px;
     width: auto;
   }
   .change-img {
@@ -109,7 +114,7 @@ export default {
     display: flex;
     justify-content: flex-start;
     flex-wrap: wrap;
-    dl{
+    dl {
       margin-right: 8px;
     }
   }

@@ -56,7 +56,7 @@ export function wjType (num, siteType) {
 }
 
 export function productType (num, str) {
-  let productTypes = storage.get('productType38')
+  let productTypes = storage.get('productType52')
   let type = ''
   productTypes.forEach(val => {
     if (num == val.code_val) { //eslint-disable-line
@@ -217,6 +217,7 @@ export function timeFormat1 (num) {
 }
 export function currency (num) {
   if (num === '.') { return '.' }
+  if (num === 0) { return '¥ 0.00' }
   num = +num
   if (num && !isNaN(num)) {
     return '¥ ' + parseFloat(num).toFixed(2)

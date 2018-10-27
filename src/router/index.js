@@ -58,6 +58,8 @@ import MyFlow from 'components/moneyManage/myFlow/myFlow'
 import MoneyCount from 'components/moneyManage/moneyCount/moneyCount'
 // 订单管理
 import AddBaiduOrder from 'components/order/addBaiduOrder/addBaiduOrder'
+import AddWjOrder from 'components/order/addWjOrder/addWjOrder'
+import AddZtcOrder from 'components/order/addZtcOrder/addZtcOrder'
 import OrderPending from 'components/order/orderPending/orderPending'
 import PendingDetail from 'components/order/orderPending/pendingDetail'
 import EditOrder from 'components/order/orderPending/editOrder'
@@ -364,6 +366,18 @@ const router = new Router({
           name: 'addBaiduOrder',
           meta: { text: '新增百度订单' },
           component: AddBaiduOrder
+        },
+        {
+          path: 'addWjOrder',
+          name: 'addWjOrder',
+          meta: { text: '新增网建订单' },
+          component: AddWjOrder
+        },
+        {
+          path: 'addZtcOrder',
+          name: 'addZtcOrder',
+          meta: { text: '新增直通车订单' },
+          component: AddZtcOrder
         },
         // 续费管理
         {

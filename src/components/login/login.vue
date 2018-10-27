@@ -69,6 +69,10 @@ export default {
               let data = res.data.data || []
               storage.set('productType38', data)
             })
+            getByCode(52).then(res => {
+              let data = res.data.data || []
+              storage.set('productType52', data)
+            })
             getByCode(18).then(res => {
               let data = res.data.data || []
               storage.set('productType18', data)

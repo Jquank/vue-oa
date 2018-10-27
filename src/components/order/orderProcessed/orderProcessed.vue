@@ -78,7 +78,7 @@
               </template>
             </el-table-column>
           </el-table>
-          <page class="pagination" :url="url" :sendparams="params" @updateList="updatePendingList" :key="key">
+          <page class="pagination" :url="url" :sendParams="params" @updateList="updatePendingList" :key="key">
           </page>
         </el-row>
       </div>

@@ -1,208 +1,308 @@
 <template>
-  <div class="addbaidu-order">
-    <p v-if="showEditWJ" class="bread-title">
-      <span>订单管理 / 新增百度订单</span>
-    </p>
+  <div class="addbaidu-order component-container media-padding">
     <div class="order-content">
-      <el-form ref="form" :model="form" label-width="180px" >
-        <el-form-item label="公司名称" required>
-          <el-input v-model="form.cName" readonly style="width:300px" placeholder="点击选择按钮选择公司"></el-input>
-          <el-button type="primary" @click.native="selCompany" v-if="showEditWJ">选择</el-button>
-        </el-form-item>
-
-        <el-form-item label="到款记录" required v-if="showEditWJ">
-          <el-select v-model="form.record" placeholder="请选择到款记录" style="width:300px;">
-            <el-option v-for="(record,index) in moneyRecord.recordList" :key="index"
-              :label="record[0].companyname" :value="record"></el-option>
-          </el-select>
-        </el-form-item>
-
-        <el-form-item label="客户网站信息" required>
-          <el-input v-model="form.pcWeb" style="width:300px;" placeholder="pc端网址"></el-input>
-          <el-input v-model="form.phoneWeb" style="width:300px;" placeholder="手机端网址"></el-input>
-        </el-form-item>
-
-        <el-form-item label="联系人信息" required>
-          <el-row v-for="(item,index) in form.contactList" :key="index" :class="{'mt10px':index!==0}">
-            <el-input v-model="item.name" placeholder="联系人" style="width:145px;">
-              <!-- <el-select v-model="item.contact" slot="append">
-                <el-option v-for="(c,index) in contactName" :key="index"
-                  :label="c.name" :value="c.name">
-                </el-option>
-              </el-select> -->
-            </el-input>
-            <el-input v-model="item.contact" style="width:150px;" placeholder="手机号码"></el-input>
-            <el-input v-model="item.fixedNumber" style="width:150px;" placeholder="座机号码"></el-input>
-            <el-input v-model="item.email" style="width:145px;" placeholder="邮箱"></el-input>
-            <el-button :type="index===0?'success':'danger'" size="mini" circle class="ml10px"
-              :icon="index===0?isPlusIcon:isMinusIcon" @click.native="addContact(index)"></el-button>
-          </el-row>
-        </el-form-item>
-
-        <el-form-item label="客户地址" required>
-          <el-input v-model="form.cusAddress" style="width:600px;" placeholder="客户地址"></el-input>
-        </el-form-item>
-
-        <!-- <el-form-item v-if="!showEditWJ" label="PC站订单金额" required>
-          <el-input v-model="form.pcMoney" style="width:300px;"></el-input>
-        </el-form-item>
-
-        <el-form-item v-if="!showEditWJ" label="手机站订单金额" required>
-          <el-input v-model="form.mobileMoney" style="width:300px;"></el-input>
-        </el-form-item> -->
-
-        <el-form-item label="网建类型" required>
-          <el-radio-group v-model="form.wjType">
-            <el-radio v-for="(type,index) in form.wjTypeList" :key="index" :label="type.code_val">{{type.code_desc}}</el-radio>
-          </el-radio-group>
-        </el-form-item>
-
-        <el-form-item label="客户类型" required>
-          <el-radio-group v-model="form.cusType">
-            <el-radio label="0">新客户</el-radio>
-            <el-radio label="1">老客户</el-radio>
-          </el-radio-group>
-        </el-form-item>
-
-        <el-form-item label="是否需要发票" required>
-          <el-radio-group v-model="form.isInvoice">
-            <el-radio label="10">不需要</el-radio>
-            <el-radio label="20">暂不需要</el-radio>
-            <el-radio label="30">需要</el-radio>
-          </el-radio-group>
-        </el-form-item>
-
-        <el-form-item label="合同编号">
-          <el-select v-model="form.bdOrderNumber" placeholder="百度推广服务订单编号" style="width:198px;">
-            <el-option label="百度推广服务订单编号" value="0"></el-option>
-            <el-option v-for="(contract1,index) in contract.bdOrderNumber" :key="index"
-              :label="contract1.number" :value="contract1.id"></el-option>
-          </el-select>
-          <el-select v-model="form.bdProxy"  @change="selProxy(form.bdProxy)"
-              placeholder="百度推广首消授权书" style="width:198px;">
-            <el-option label="百度推广首消授权书" value="0"></el-option>
-            <el-option label="无首消授权书" value="no_proxy20180625160112"></el-option>
-            <el-option  v-for="(contract2,index) in contract.bdProxy" :key="index"
-              :label="contract2.number" :value="contract2.id"></el-option>
-          </el-select>
-          <el-select v-model="form.bdServiceProtocol" placeholder="百度推广服务协议" style="width:198px;">
-            <el-option label="百度推广服务协议" value="0"></el-option>
-            <el-option  v-for="(contract3,index) in contract.bdServiceProtocol" :key="index"
-              :label="contract3.number" :value="contract3.id"></el-option>
-          </el-select>
-          <!-- <el-select v-if="!showEditWJ" v-model="form.siteContract" placeholder="网站商务合同书" style="width:198px;">
-            <el-option label="网站商务合同书" value="0"></el-option>
-            <el-option  v-for="(contract4,index) in contract.wjContract" :key="index"
-              :label="contract4.number" :value="contract4.id"></el-option>
-          </el-select> -->
-        </el-form-item>
-
-        <el-form-item label="商务信息" required>
-          <el-input v-model="form.shangWuName" readonly style="width:300px;"></el-input>
-        </el-form-item>
-
-        <!-- <el-form-item label="网建类型" required>
-          <el-radio-group v-model="form.wjType">
-            <el-radio  label="">模板双站</el-radio>
-            <el-radio  label="">定制站</el-radio>
-            <el-radio  label="">纯移动站</el-radio>
-            <el-radio  label="">feed站</el-radio>
-          </el-radio-group>
-        </el-form-item> -->
-        <!-- 百度订单详情   -->
-        <el-form-item label="订单详情" required>
-          <el-tabs type="border-card" style="max-width:750px;">
-            <!-- 企业资质 -->
-            <el-tab-pane label="企业资质">
-              <el-card v-if="showEditWJ" shadow="always" class="card-tips">
-                [说明]：根据订单业务类型，上传需要的资质，图片格式为：jpg、png、jpeg，图片大小在3M以下。
-              </el-card>
-              <el-card v-if="!showEditWJ" shadow="always" class="card-tips">
-                [说明]：点击删除可移除不符合要求的资质，在下方重新添加并上传正确的资质。
-              </el-card>
-              <!-- 编辑页回显企业资质照片 -->
-              <slot></slot>
-              <!-- <show-qualify v-if="!showEditWJ" :showQualify="showQualify"></show-qualify> -->
-              <el-row style="margin-top:10px;" :gutter="15">
-                <el-col :sm="16">
-                  <el-input placeholder="对公账户" v-model="form.receiveAccount" style="width:100%">
-                    <template slot="prepend">对公账户 :</template>
-                  </el-input>
-                </el-col>
-                <el-col :sm="8">
-                  <el-input v-model="form.receiveBank" placeholder="开户行" style="width:100%">
-                    <el-select slot="append" v-model="form.receiveBank">
-                      <el-option v-for="(bank,index) in form.receiveBanks" :key="index"
-                        :label="bank.code_desc" :value="bank.code_desc">
-                      </el-option>
-                    </el-select>
-                  </el-input>
+      <el-form ref="form" :model="form" :label-width="labelWidth">
+        <el-row>
+          <el-col :md="24" class="maxwidth">
+            <el-form-item label="公司名称:" required>
+              <el-input v-model="form.cName" class="input-btn" disabled placeholder="点击选择按钮选择公司"></el-input>
+              <el-button type="primary" @click.native="selCompany" v-if="showEditWJ">选择</el-button>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :md="24" class="maxwidth">
+            <el-form-item label="到款记录:" required v-if="showEditWJ">
+              <el-select v-model="form.record" value-key="id" placeholder="请选择到款记录">
+                <el-option v-for="(r,index) in moneyRecord.recordList" :key="index" :label="r[0].companyname" :value="r"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :md="24" class="maxwidth">
+            <el-form-item label="客户网站信息:" class="web-info">
+              <el-row :gutter="5" type="flex" style="flex-wrap:wrap;">
+                <el-col :md="12">
+                  <el-input v-model="form.pcWeb" placeholder="pc端网址"></el-input>
                 </el-col>
               </el-row>
-              <el-row style="margin-top:10px;" :gutter="15">
-                <el-col :sm="20">
-                  <el-select v-model="form.zizhiName" placeholder="请选择上传资质类型" style="width:100%">
-                    <el-option v-for="(qualify,index) in qualifyType" :key="index"
-                      :label="qualify.code_desc" :value="qualify.code_desc"></el-option>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :md="24" class="maxwidth">
+            <el-form-item label="联系人信息:" required>
+              <el-row v-for="(item,index) in form.contactList" :key="index" :class="{'mt10px':index!==0}" :gutter="5" type="flex" style="flex-wrap:wrap;">
+                <el-col :md="5">
+                  <el-input v-model="item.name" placeholder="联系人"></el-input>
+                </el-col>
+                <el-col :md="7">
+                  <el-input v-model="item.contact" placeholder="手机号码"></el-input>
+                </el-col>
+                <el-col :md="5">
+                  <el-input v-model="item.fixedNumber" placeholder="座机号码"></el-input>
+                </el-col>
+                <el-col :md="5">
+                  <el-input v-model="item.email" placeholder="邮箱"></el-input>
+                </el-col>
+                <el-col :md="2">
+                  <el-button :type="index===0?'success':'danger'" size="mini" circle class="ml10px" :icon="index===0?isPlusIcon:isMinusIcon" @click.native="addContact(index)"></el-button>
+                </el-col>
+              </el-row>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :md="24" class="maxwidth">
+            <el-form-item label="客户地址:" required>
+              <el-input v-model="form.cusAddress" placeholder="客户地址"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :md="12" class="maxwidth">
+            <el-form-item label="PC站订单金额:" required>
+              <el-input v-model="form.pcMoney" placeholder="PC站订单金额"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :md="12" class="maxwidth">
+            <el-form-item label="手机站订单金额:" required>
+              <el-input v-model="form.appMoney" placeholder="手机站订单金额"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :md="24" class="maxwidth">
+            <el-form-item label="网建类型:" required>
+              <el-radio-group v-model="form.wjType">
+                <el-radio v-for="(type,index) in form.wjTypeList" :key="index" :label="type.code_val+''">{{type.code_desc}}</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!-- 合同 -->
+        <el-row>
+          <el-col :md="24" class="maxwidth">
+            <el-form-item label="合同编号:">
+              <el-row :gutter="5" type="flex" style="flex-wrap:wrap;">
+                <el-col :md="8">
+                  <el-select v-model="form.bdOrderNumber" placeholder="网站商务合同书">
+                    <el-option v-for="(contract0,index) in contract.bdOrderNumber" :key="index" :label="contract0.number" :value="contract0.id"></el-option>
                   </el-select>
                 </el-col>
-                <el-col :sm="4">
-                  <el-button type="primary" @click.native="addQualify(form.zizhiName)">添加资质</el-button>
-                </el-col>
               </el-row>
-              <el-row style="margin-top:10px;">
-                <el-table border :data="form.zizhiList" :key="form.zizhiList.zizhiType" style="width: 100%;min-height:200px;">
-                  <el-table-column prop="zizhiType" label="资质类型">
-                  </el-table-column>
-                  <el-table-column label="操作">
-                    <template slot-scope="scope">
-                      <!-- <el-button type="primary">上传</el-button> -->
-                      <el-upload class="upload-demo" ref="upload" :action="uploadUrl" :before-upload="beforeUpload"
-                        :on-change="aaa"
-                        :on-preview="handlePreview" :on-remove="handleRemove" :file-list="fileList" :auto-upload="false">
-                        <el-button slot="trigger"  type="primary">选取文件</el-button>
-                        <el-button style="margin-left: 10px;" type="success" @click="submitUpload">上传到服务器</el-button>
-                        <el-button style="margin-left: 30px;" circle :icon="isMinusIcon" size="mini"
-                          type="danger" @click.native="removeQualify(scope.$index)"></el-button>
-                      </el-upload>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :md="24" class="maxwidth">
+            <!-- 订单详情   -->
+            <el-form-item label="订单详情:">
+              <el-tabs type="border-card" @tab-click="handleTabClick">
+                <!-- 网建基本信息 -->
+                <el-tab-pane label="网建基本信息">
+                  <el-card shadow="always" class="card-tips">
+                    [备案资料]：提交给网建外审人员，备案资料必须齐全后，订单才会快速上线。
+                  </el-card>
+                  <el-form :model="wjForm" :label-width="labelWidth1" class="mt10px">
+                    <el-row>
+                      <el-col :md="24" class="maxwidth">
+                        <el-form-item label="网站名称:" required>
+                          <el-input v-model="wjForm.webName"></el-input>
+                        </el-form-item>
+                      </el-col>
+                    </el-row>
+                    <el-row :gutter="5">
+                      <el-form-item label="网站负责人:" required>
+                        <el-col :md="12" class="maxwidth">
+                          <el-input v-model="wjForm.webManager" placeholder="姓名(不填默认为经办人)"></el-input>
+                        </el-col>
+                        <el-col :md="12" class="maxwidth">
+                          <el-input v-model="wjForm.phone" placeholder="电话"></el-input>
+                        </el-col>
+                        <el-col :md="12" class="maxwidth mt10px">
+                          <el-input v-model="wjForm.mail" placeholder="邮箱"></el-input>
+                        </el-col>
+                        <el-col :md="12" class="maxwidth mt10px">
+                          <el-input v-model="wjForm.tel" placeholder="座机电话"></el-input>
+                        </el-col>
+                      </el-form-item>
+                    </el-row>
+                    <el-row>
+                      <el-col :md="24" class="maxwidth">
+                        <el-form-item label="空间服务商类型:" required>
+                          <el-radio-group v-model="wjForm.serviceType">
+                            <el-radio v-for="(ser,index) in wjForm.serviceTypeList" :key="index" :label="ser.code_val+''">{{ser.code_desc}}</el-radio>
+                            <el-radio label="0">自备</el-radio>
+                          </el-radio-group>
+                        </el-form-item>
+                      </el-col>
+                    </el-row>
+                    <el-row>
+                      <el-col :md="12" class="maxwidth">
+                        <el-form-item label="地域:" required>
+                          <el-radio v-model="wjForm.area" label="0">国内</el-radio>
+                          <el-radio v-model="wjForm.area" label="10">海外</el-radio>
+                        </el-form-item>
+                      </el-col>
+                      <el-col :md="12" class="maxwidth">
+                        <el-form-item label="空间大小:" required>
+                          <el-input v-model="wjForm.size">
+                            <span slot="append">MB</span>
+                          </el-input>
+                        </el-form-item>
+                      </el-col>
+                    </el-row>
+                    <el-row>
+                      <el-col :md="24" class="maxwidth">
+                        <el-form-item label="域名服务商类型:" required>
+                          <el-radio-group v-model="wjForm.domainType">
+                            <el-radio v-for="(ser,index) in wjForm.serviceTypeList" :key="index" :label="ser.code_val+''">{{ser.code_desc}}</el-radio>
+                            <el-radio label="0">自备</el-radio>
+                          </el-radio-group>
+                        </el-form-item>
+                      </el-col>
+                    </el-row>
+                    <el-row>
+                      <el-col :md="24" class="maxwidth">
+                        <el-form-item label="域名信息:" required>
+                          <el-input v-model="wjForm.info"></el-input>
+                        </el-form-item>
+                      </el-col>
+                    </el-row>
+                  </el-form>
+                </el-tab-pane>
+                <!-- 网站流程表 -->
+                <el-tab-pane :label="tabLabel">
+                  <el-form v-if="form.wjType!=30" :model="processForm" :label-width="labelWidth1" class="mt10px">
+                    <template v-if="form.wjType!=40">
+                      <el-row v-if="form.wjType==='0' || form.wjType==='20'">
+                        <el-col :md="24" class="maxwidth">
+                          <el-form-item label="模板编号:" required>
+                            <el-input v-model="processForm.pcModelNumber"></el-input>
+                          </el-form-item>
+                        </el-col>
+                      </el-row>
+                      <el-row v-if="form.wjType==='10'">
+                        <el-col :md="24" class="maxwidth">
+                          <el-form-item label="参考网站:" required>
+                            <el-input v-model="processForm.pcModelNumber"></el-input>
+                          </el-form-item>
+                        </el-col>
+                      </el-row>
                     </template>
-                  </el-table-column>
-                </el-table>
+                    <el-row :gutter="10">
+                      <el-form-item :label="'栏目'+(index+1)+':'" v-for="(c,index) in columns" :key="index">
+                        <el-col :md="8" class="maxwidth">
+                          <el-input v-model="c.webcolumn_name">
+                            <el-select v-model="c.webcolumn_name" slot="append" placeholder="请选择" style="padding:0 15px;">
+                              <el-option v-for="(name,index) in column_names" :key="index" :label="name.code_desc" :value="name.code_desc"></el-option>
+                            </el-select>
+                          </el-input>
+                        </el-col>
+                        <el-col :md="8" class="maxwidth">
+                          <el-input v-model="c.webcolumn_type">
+                            <el-select v-model="c.webcolumn_type" slot="append" placeholder="请选择" style="padding:0 15px;">
+                              <el-option v-for="(type,index) in column_types" :key="index" :label="type.code_desc" :value="type.code_desc"></el-option>
+                            </el-select>
+                          </el-input>
+                        </el-col>
+                        <el-col :md="8" class="maxwidth">
+                          <el-button :type="index?'danger':'success'" :icon="index?'el-icon-minus':'el-icon-plus'" circle size="mini" @click.native="addContact(index,'webItem')"></el-button>
+                        </el-col>
+                      </el-form-item>
+                      <el-form-item label="网站颜色及功能:">
+                        <el-input v-model="processForm.webRemark" type="textarea" :rows="4"></el-input>
+                      </el-form-item>
+                    </el-row>
+                  </el-form>
+                </el-tab-pane>
+                <!-- 企业资质 -->
+                <el-tab-pane label="企业资质">
+                  <el-card v-if="showEditWJ" shadow="always" class="card-tips">
+                    [说明]：根据订单业务类型，上传需要的资质，图片格式为：jpg、png、jpeg，图片大小在3M以下。<br />
+                    [注]：1.若为授权人备案，请再提供授权书及经办人身份证正反面。<br />
+                    2.若域名由客户提供，需提供域名证书。
+                  </el-card>
+                  <el-card v-if="!showEditWJ" shadow="always" class="card-tips">
+                    [说明]：点击删除可移除不符合要求的资质，在下方重新添加并上传正确的资质。
+                  </el-card>
+                  <!-- 编辑页回显企业资质照片 -->
+                  <slot name="echoQualify"></slot>
+                  <el-row class="mt10px" :gutter="10">
+                    <el-col :sm="16">
+                      <el-select value-key="id" @change="qualifySelectChange" v-model="form.zizhiName" placeholder="请选择上传资质类型" style="width:100%">
+                        <el-option v-for="(qualify,index) in qualifyType" :key="index" :label="qualify.code_desc" :value="qualify"></el-option>
+                      </el-select>
+                    </el-col>
+                    <el-col :sm="8">
+                      <el-button type="primary" @click.native="addQualify">添加资质</el-button>
+                    </el-col>
+                  </el-row>
+                  <el-row>
+                    <el-table border :data="form.zizhiList" :key="form.zizhiList.id" class="table-width">
+                      <el-table-column prop="code_desc" label="资质类型" width="130">
+                      </el-table-column>
+                      <el-table-column label="操作">
+                        <template slot-scope="scope">
+                          <el-upload class="upload-demo" :ref="'upload'+scope.$index" :action="uploadUrl" :on-exceed="handleExceed" :before-upload="uploadBefore" :on-success="uploadSuccess" :file-list="fileList" :auto-upload="false" :multiple="false">
+                            <el-button slot="trigger" type="primary" class="xsbtn">选取文件</el-button>
+                            <el-button type="success" @click.native="submitUpload(scope.row,scope.$index)" class="ml10px xsbtn">上传到服务器</el-button>
+                            <el-button v-if="scope.$index!==0" style="margin-left: 30px;" circle :icon="isMinusIcon" size="mini" type="danger" @click.native="removeQualify(scope.$index)"></el-button>
+                          </el-upload>
+                        </template>
+                      </el-table-column>
+                    </el-table>
+                  </el-row>
+                </el-tab-pane>
+                <!-- 到款记录 -->
+                <el-tab-pane label="到款记录">
+                  <el-card shadow="always" class="card-tips" v-if="!form.record.length">
+                    [说明]：请选择到款记录。
+                  </el-card>
+                  <el-card shadow="always" class="card-money-record" v-if="form.record.length">
+                    <el-row>
+                      <b>公司名称（法人）：</b>
+                      <span>{{form.record[0].companyname}}</span>
+                    </el-row>
+                    <el-row>
+                      <b>到款金额 ：</b>
+                      <span>{{form.record[0].sum | currency1}}</span>
+                    </el-row>
+                    <el-row>
+                      <b>服务费 ：</b>
+                      <span>{{form.record[0].service | currency1}}</span>
+                    </el-row>
+                    <el-row v-for="(rec,index) in recordDetail" :key="index">
+                      <template v-if="rec.type<100">
+                        <b>{{rec.type | productType}} ：</b>
+                        <span>{{rec.value | currency1}}</span>
+                      </template>
+                    </el-row>
+                  </el-card>
+                </el-tab-pane>
+              </el-tabs>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :md="24" class="maxwidth">
+            <el-form-item label="">
+              <el-row style="text-align:right;">
+                <el-button type="primary" @click.native="subOrder('10')">降E并提单</el-button>
               </el-row>
-            </el-tab-pane>
-            <!-- 到款记录 -->
-            <el-tab-pane label="到款记录">
-              <el-card shadow="always" class="card-tips" v-if="form.record.length===0 && showEditWJ">
-                [说明]：请选择到款记录。
-              </el-card>
-              <el-card shadow="always" class="card-money-record" v-if="form.record.length!==0">
-                <el-row><b>公司名称（法人）：</b><span>{{form.record[0].companyname}}</span></el-row>
-                <el-row><b>到款金额 ：</b><span>{{form.record[0].sum | currency1}}</span></el-row>
-                <el-row><b>服务费 ：</b><span>{{form.record[0].service | currency1}}</span></el-row>
-                <!-- <el-row><b>到款时间 ：</b><span>{{222}}</span></el-row> -->
-                <el-row v-for="(rec,index) in recordDetail" :key="index">
-                  <template v-if="rec.type!=500">
-                    <b>{{rec.type | productType}} ：</b><span>{{rec.value | currency1}}</span>
-                  </template>
-                </el-row>
-              </el-card>
-            </el-tab-pane>
-          </el-tabs>
-        </el-form-item>
-
-        <el-form-item label="">
-          <el-row style="max-width:750px;text-align:right;">
-            <el-button type="warning" @click.native="subOrder(ONLY_E)">仅降E</el-button>
-            <el-button type="primary" @click.native="subOrder(!ONLY_E)">降E并提单</el-button>
-          </el-row>
-        </el-form-item>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
 
       <!-- 选择公司弹窗 -->
       <el-dialog title="选择下单客户" :visible.sync="comDialog.selCompanyDialog" width="650px">
         <el-input placeholder="请输入公司名进行搜索" v-model="comDialog.handleCompanyName">
-          <el-button @click.native="searchCompany(comDialog.handleCompanyName)"
-            slot="append" icon="el-icon-search"></el-button>
+          <el-button @click.native="searchCompany(comDialog.handleCompanyName)" slot="append" icon="el-icon-search"></el-button>
         </el-input>
         <el-table :data=comDialog.myCompany class="mt10px">
           <el-table-column property="name" label="客户名称" width="300"></el-table-column>
@@ -216,8 +316,7 @@
             </template>
           </el-table-column>
         </el-table>
-        <page class="pagination" :url="comDialog.url" :sendparams="comDialog.params"
-          @updateList="updateMyCompanyList" :key="comDialog.key">
+        <page class="pagination" :url="comDialog.url" :sendParams="comDialog.params" @updateList="updateMyCompanyList" :key="comDialog.key">
         </page>
       </el-dialog>
 
@@ -229,40 +328,55 @@
 // import { mapGetters } from 'vuex'
 import { uploadUrl } from 'api/http' //eslint-disable-line
 import Page from 'base/page/page'
-// import ShowQualify from 'base/showQualify/showQualify'
-import { getCode, getMyContract } from 'api/getOptions'//eslint-disable-line
+import { getByCode } from 'api/getOptions' //eslint-disable-line
+import cookie from 'js-cookie'
+import { orderMixin, mobileFit } from 'common/js/mixin'
 
-const ORDER_TYPE = 'BAITUI'
+const ORDER_TYPE = 'WEBSITE'
 
 export default {
+  mixins: [orderMixin, mobileFit],
   props: {
-    showEditWJ: { // false表示跳转编辑订单页
+    showEditWJ: {
+      // false表示跳转编辑订单页
       type: Boolean,
       default: true
     },
-    editData: { // 编辑页传过来的回显数据
+    editData: {
+      // 编辑页传过来的回显数据
       type: Object,
       default: function () {
         return {}
+      }
+    },
+    showQualify: {
+      // 获取回显时原有的资质
+      type: Array,
+      default: function () {
+        return []
+      }
+    },
+    deledQualify: {
+      type: Array,
+      default: function () {
+        return []
       }
     }
   },
   data () {
     return {
+      labelWidth: '130px',
       record_detail: [], // 回显到款记录
       ONLY_E: true,
       uploadUrl: uploadUrl,
       headers: '',
       fileList: [],
-      USER_ID: '',
+      USER_ID: cookie.get('userId'),
       qualifyType: [],
       form: {
-        pcMoney: 0,
-        mobileMoney: 0,
         cName: '',
-        record: [],
+        record: [{}],
         pcWeb: '',
-        phoneWeb: '',
         contactList: [
           {
             contactid: '',
@@ -273,34 +387,15 @@ export default {
           }
         ],
         cusAddress: '',
-        wjType: -1,
+        pcMoney: '',
+        appMoney: '',
+        wjType: '0',
         wjTypeList: [],
-        cusType: '',
-        isInvoice: '',
-        bdOrderNumber: '0',
-        bdProxy: '0',
-        bdServiceProtocol: '0',
-        siteContract: '0',
-        shangWuName: '',
-        receiveAccount: '', // 对公账户
-        receiveBank: '', // 开户行
         receiveBanks: '',
         zizhiName: '',
-        zizhiList: [
-          {
-            zizhiType: '企业营业执照原件'
-          },
-          {
-            zizhiType: '百度推广服务协议'
-          },
-          {
-            zizhiType: '百度推广服务订单'
-          },
-          {
-            zizhiType: '百度推广首消授权书'
-          }
-        ]
+        zizhiList: []
       },
+      // qualifyUploaded: [], // 上传的资质照
       isPlusIcon: 'el-icon-plus',
       isMinusIcon: 'el-icon-minus',
       comDialog: {
@@ -308,7 +403,7 @@ export default {
         handleCompanyName: '',
         myCompany: [],
         url: '/order.do?Add',
-        params: {pid: ORDER_TYPE},
+        params: { pid: ORDER_TYPE },
         key: ''
       },
       moneyRecord: {
@@ -318,17 +413,71 @@ export default {
         recordList: []
       },
       contract: {
-        bdOrderNumber: [],
-        bdProxy: [],
-        bdServiceProtocol: [],
-        bdXXLProtocol: [],
-        wjContract: []
-      }
+        bdOrderNumber: []
+      },
+      cpid: '',
+      companyData: {},
+      rowData: {}, // 资质表格一行的数据
+      selectedQualify: {},
+      labelWidth1: '130px',
+      wjForm: {
+        webName: '',
+        phone: '',
+        mail: '',
+        tel: '',
+        serviceType: '1',
+        serviceTypeList: '',
+        area: '0',
+        size: '200',
+        domainType: '1',
+        info: ''
+      },
+      processForm: {
+        pcModelNumber: '',
+        webRemark: ''
+      },
+      columns: [
+        {
+          webcolumn_name: '网站首页',
+          webcolumn_type: '功能'
+        },
+        {
+          webcolumn_name: '关于我们',
+          webcolumn_type: '单页'
+        },
+        {
+          webcolumn_name: '新闻资讯',
+          webcolumn_type: '信息'
+        },
+        {
+          webcolumn_name: '产品展示',
+          webcolumn_type: '产品'
+        },
+        {
+          webcolumn_name: '案例展示',
+          webcolumn_type: '产品'
+        },
+        {
+          webcolumn_name: '在线留言',
+          webcolumn_type: '审开'
+        },
+        {
+          webcolumn_name: '联系我们',
+          webcolumn_type: '单页'
+        }
+      ],
+      column_names: [],
+      column_types: [],
+      tabLabel: '网站流程表'
     }
   },
   computed: {
+    qualifyUploaded () {
+      // 存放已上传的资质list
+      return this.showQualify // 默认资质list
+    },
     recordDetail () {
-      if (this.showEditWJ || this.showEditWJ) {
+      if (this.showEditWJ) {
         let x = this.form.record.slice(1)
         return x
       } else {
@@ -342,24 +491,30 @@ export default {
   watch: {
     editData (newval) {
       if (!this.showEditWJ) {
+        console.log(newval)
         this.form.cName = newval.cusName
         this.form.pcWeb = newval.pcsite
-        this.form.phoneWeb = newval.wapsite
         this.form.cusAddress = newval.addr
-        this.form.wjType = newval.wjType
-        this.form.cusType = newval.cusType.toString()
-        this.form.isInvoice = newval.isInvoice.toString()
-        this.form.bdOrderNumber = newval.bdOrderNumber || '0'
-        this.form.bdProxy = newval.bdProxy || '0'
-        this.form.bdServiceProtocol = newval.bdServiceProtocol || '0'
-        this.form.shangWuName = newval.user_name
-        this.form.receiveAccount = newval.receiveAccount
-        this.form.receiveBank = newval.receiveBank
+        this.form.pcMoney = newval.productInfo.pcmoney + ''
+        this.form.appMoney = newval.productInfo.appmoney + ''
+        this.form.wjType = newval.wjType + ''
+        this.form.bdOrderNumber = newval.bdOrderNumber || ''
+        this.form.zizhiList = [] // 清空默认资质列表
         this.form.record = newval.record
         this.record_detail = newval.recordDetail
         this.form.contactList = JSON.parse(JSON.stringify(newval.contacts))
-        // 编辑页默认触发一次change事件，检查是否是无首消授权书
-        this.selProxy(this.form.bdProxy)
+        this.wjForm.webName = newval.productInfo.webname
+        this.wjForm.webManager = newval.productInfo.webcontact
+        this.wjForm.phone = newval.productInfo.webcontactphone
+        this.wjForm.mail = newval.productInfo.webcontactemail
+        this.wjForm.tel = newval.productInfo.webfixphone
+        this.wjForm.serviceType = newval.productInfo.spacefacilitator + ''
+        this.wjForm.domainType = newval.productInfo.domainfacilitator + ''
+        this.wjForm.area = newval.productInfo.area + ''
+        this.wjForm.size = newval.productInfo.size
+        this.wjForm.info = newval.productInfo.domain
+        this.processForm.pcModelNumber = newval.productInfo.modelnumber
+        this.processForm.webRemark = newval.productInfo.remark
         // 更改contactList中对象的key
         let keyMap = {
           companylogid: 'contactid',
@@ -381,30 +536,168 @@ export default {
     }
   },
   created () {
-    this.USER_ID = sessionStorage.getItem('userId')
-    this._getwjType()
+    this._labelWidth(50) // 移动端labelWidth 50px
+    this._getwjType(88)
   },
   mounted () {
-    // this._getMyContract()
-    this._getQualifyType()
-    this._getReceiveBanks()
-
-    // console.log(this.productType)
+    this._getMyContract('', 'CONTRACT_WZ')
+    this._getQualifyType(32)
+    this._getServiceType() // 空间服务商类型
   },
   methods: {
     // 提交订单
-    subOrder (onlyE) {
-      // let params = {
-      //   cpid: 123,
-      //   companyid: 123,
-      //   companylogid: 123,
-      //   yn: 123,
-      //   sn: 123,
-      //   pid: ORDER_TYPE,
-      //   receiptid: 123,
-      //   companycontact: 123,
-      //   con_id: 123
-      // }
+    subOrder (subType) {
+      console.log(this.qualifyUploaded)
+      if (!this.form.record) {
+        this.$message({
+          type: 'error',
+          message: '请选择到款'
+        })
+        return
+      }
+      this.form.contactList.forEach(val => {
+        val.companylogid = this.showEditWJ
+          ? this.companyData.companylogid
+          : this.editData.rowData.companylogid
+        val.contactname = val.name
+        val.contactnumber = val.contact
+        val.mailnumber = val.email
+        val.telphone = val.fixedNumber
+      })
+      let _params = {
+        cid: this.companyData.id || this.editData.cid,
+        uid: this.showEditWJ ? this.USER_ID : this.editData.uid, // 新增和编辑订单都取下单人id
+        pcsite: this.form.pcWeb,
+        cusName: this.companyData.name || this.editData.cusName, // 公司名
+        addr: this.form.cusAddress,
+        contacts: this.form.contactList,
+        user_name: this.companyData.username || this.editData.user_name // 下单人
+      }
+      let params = {
+        cpid: this.cpid || this.editData.rowData.cpid,
+        order_id: this.editData.order_id || '',
+        companyid: this.companyData.id || this.editData.rowData.companyid,
+        companylogid: this.showEditWJ
+          ? this.companyData.companylogid
+          : this.editData.rowData.companylogid,
+        yn: 1,
+        sn: 10,
+        pid: ORDER_TYPE,
+        receiptid: this.showEditWJ
+          ? this.form.record[0].id
+          : this.editData.record[0].id, // 到款id
+        companycontact: this.form.contactList, // 联系人
+        con_id: this.form.bdOrderNumber, // 合同
+        amount: this.showEditWJ
+          ? this.form.record[0].service
+          : this.editData.record[0].service,
+        amount_real: this.showEditWJ
+          ? this.form.record[0].sum
+          : this.editData.record[0].sum,
+        audittype: subType, // 0:仅降E 10：降E并提单
+        pcwebsite: this.form.pcWeb, // PC站
+        companyaddress: this.editData.addr, // 公司地址
+        remark_order: '', // 备注
+        company_attr: this.qualifyUploaded.concat(this.deledQualify), // 公司属性(已上传资质)
+        remark: '',
+        order_attr: [], // 订单属性
+        from_val: _params, // what?
+        baitui_remark: '',
+        websitetype: this.form.wjType + '', // 网建类型
+        voucher: '0', // 代金券
+        pcmoney: this.form.pcMoney, // PC站金额
+        appmoney: this.form.appMoney, // 手机站金额
+        spacefacilitator: this.wjForm.serviceType, // 空间服务商类型 -code_name-
+        domainfacilitator: this.wjForm.domainType // 域名服务商类型 -code_name-
+      }
+      let webBasicParams = {
+        webname: this.wjForm.webName, // 网站名称
+        webcontactname: this.wjForm.webManager, // 客户网站负责人
+        webcontactphone: this.wjForm.phone, // 客户网站负责人联系电话
+        webcontactemail: this.wjForm.mail, // 客户网站负责人邮箱
+        webfixphone: this.wjForm.tel, // 座机电话
+        websitetype: this.form.wjType + '', // 网建类型
+        column: this.columns // 网站栏目
+      }
+      let defaultWebManagerInfo = this.wjForm.webManager ? {} : { // 客户网站负责人默认信息
+        webcontactname: this.form.contactList[0].contactname, // 客户网站负责人
+        webcontactphone: this.form.contactList[0].contactnumber, // 客户网站负责人联系电话
+        webcontactemail: this.form.contactList[0].mailnumber, // 客户网站负责人邮箱
+        webfixphone: this.form.contactList[0].telphone // 座机电话
+      }
+      let webInfo = { // 网站信息
+        type: 10,
+        modelnumber: this.processForm.pcModelNumber, // PC站模板编号 或者 参考网站
+        newdomain: '0', // 是否新开域名 0：新开 10：自备
+        newzone: '0', // 是否新开空间 0：新开 10：自备
+        domain: this.wjForm.info, // 网站域名
+        area: this.wjForm.area, // PC站域名国内0/海外10
+        size: this.wjForm.size, // PC空间大小
+        pcmoney: this.form.pcMoney, // PC站金额
+        appmoney: this.form.appMoney, // 手机站金额
+        websitetype: this.form.wjType + '', // 网建类型
+        websiteremark: this.processForm.webRemark // 网站功能备注
+      }
+      params = Object.assign({}, params, webBasicParams, defaultWebManagerInfo)
+      params.websiteinfo = [webInfo]
+      console.log(params)
+      if (
+        !params.companyid ||
+        !params.receiptid ||
+        !params.companyaddress ||
+        !params.pcmoney ||
+        !params.appmoney ||
+        !params.webname ||
+        !webInfo.size ||
+        !webInfo.domain
+      ) {
+        this.$message({
+          type: 'error',
+          message: '请完善带*号必填项'
+        })
+        return
+      }
+      if (this.form.wjType === '0' || this.form.wjType === '10' || this.form.wjType === '20') {
+        if (!webInfo.modelnumber) {
+          this.$message({
+            type: 'error',
+            message: '请填写模板编号或参考网站'
+          })
+          return
+        }
+      }
+      this.form.contactList.forEach(val => {
+        if (!val.contactname || !val.contactnumber) {
+          this.$message({
+            type: 'error',
+            message: '请完善联系人信息'
+          })
+          throw new Error('ignore')
+        }
+      })
+      if (subType === '10') {
+        if (!this.qualifyUploaded.length) {
+          this.$message({
+            type: 'error',
+            message: '请上传资质照'
+          })
+          return
+        }
+      }
+      this.$post('/wf.do?WebSite', params).then(res => {
+        if (res.data[0].success) {
+          if (!this.showEditWJ) {
+            this.$router.push({
+              path: '/indexPage/orderPending',
+              query: { data: 'fromDetail' }
+            })
+            return
+          }
+          this.$router.push({
+            path: '/indexPage/orderList'
+          })
+        }
+      })
     },
     // 选择公司弹窗
     selCompany () {
@@ -413,7 +706,7 @@ export default {
     },
     // 选择具体公司
     handleSelCompany (company) {
-      this.form.shangWuName = company.username
+      this.companyData = company
       this.moneyRecord.cid = company.id
       this.moneyRecord.companylogid = company.companylogid
       // this.moneyRecord.uid = company.userid
@@ -427,7 +720,7 @@ export default {
       this._getMoneyRecord()
       this._getContactName()
     },
-    // 获取到款记录 和 客户地址
+    // 获取到款记录 和 客户地址 cpid
     _getMoneyRecord () {
       let moneyRecordUrl = '/wf.do?set'
       let moneyRecordParams = {
@@ -438,6 +731,7 @@ export default {
       }
       this.$post(moneyRecordUrl, moneyRecordParams).then(res => {
         let _record = res.data[2].data
+        this.cpid = res.data[0].data[1]
         this.moneyRecord.recordList = _record
         // this.moneyRecord.recordDetail = _record.splice(1)
         // console.log(this.moneyRecord.recordDetail)
@@ -460,112 +754,49 @@ export default {
       this.comDialog.params.companyname = companyName
       this.comDialog.key = '' + new Date()
     },
-    // 添加联系人
-    addContact (index) {
-      if (index === 0) {
-        this.form.contactList.push({})
-      } else {
-        this.form.contactList.splice(index, 1)
-      }
-    },
-    // 判断是否选择无首消授权书
-    selProxy (value) {
-      let indexArr = []
-      let isProxy = false
-      this.form.zizhiList.forEach((val, key) => {
-        if (val.zizhiType === '百度推广首消授权书') {
-          indexArr.push(key)
-          isProxy = true
-        }
-      })
-      if (value === 'no_proxy20180625160112') {
-        let len = this.form.zizhiList.length - 1
-        for (let i = len; i >= 0; i--) {
-          if (indexArr.indexOf(i) > -1) {
-            this.form.zizhiList.splice(i, 1)
-          }
-        }
-      } else {
-        if (!isProxy) {
-          this.form.zizhiList.push({
-            zizhiType: '百度推广首消授权书'
-          })
-        }
-      }
-    },
-    // 添加资质
-    addQualify (type) {
-      if (this.form.zizhiName === '') {
-        this.$message({
-          message: '请选择资质类型',
-          type: 'error'
-        })
-        return
-      }
-      this.form.zizhiList.push({
-        zizhiType: type
-      })
+    qualifySelectChange (val) {
+      this.selectedQualify = val
     },
     removeQualify (index) {
       this.form.zizhiList.splice(index, 1)
     },
-    submitUpload () {
-      console.log(888)
-      this.$refs.upload.submit()
+    submitUpload (data, index) {
+      this.$refs['upload' + index].submit()
+      this.rowData = data
     },
-    aaa (file) {
-      console.log(file)
-    },
-    beforeUpload (file) {
-      console.log(file)
-    },
-    handleRemove (file, fileList) {
-      console.log(file, fileList)
-    },
-    handlePreview (file) {
-      console.log(file)
+    uploadSuccess (res, file, fileList) {
+      console.log(this.rowData)
+      this.qualifyUploaded.push({
+        id: null,
+        label: this.rowData.tb_field_name,
+        val: res.url + '#' + this.rowData.code_desc
+      })
     },
     updateMyCompanyList (data) {
       this.comDialog.myCompany = data.data[0].data
     },
-    _getwjType () {
-      getCode(28).then(res => {
-        this.form.wjTypeList = res.data.data
+    _getServiceType () {
+      getByCode(59).then(res => {
+        this.wjForm.serviceTypeList = res.data.data
       })
     },
-    _getMyContract () {
-      getMyContract('CONTRACT_BTDD', this.USER_ID).then(res => {
-        this.contract.bdOrderNumber = res.data[0].data
-      })
-      getMyContract('CONTRACT_BTSQ', this.USER_ID).then(res => {
-        this.contract.bdProxy = res.data[0].data
-      })
-      getMyContract('CONTRACT_BTXY', this.USER_ID).then(res => {
-        this.contract.bdServiceProtocol = res.data[0].data
-      })
-      getMyContract('CONTRACT_BDXXL', this.USER_ID).then(res => {
-        this.contract.bdXXLProtocol = res.data[0].data
-      })
-    },
-    _getQualifyType () {
-      getCode(32).then(res => {
-        this.qualifyType = res.data.data
-      })
-    },
-    _getReceiveBanks () {
-      getCode(60).then(res => {
-        this.form.receiveBanks = res.data.data
-      })
+    handleTabClick (val) {
+      if (val.label === this.tabLabel) {
+        getByCode(33).then(res => {
+          this.column_names = res.data.data
+        })
+        getByCode(34).then(res => {
+          this.column_types = res.data.data
+        })
+      }
     }
   },
-  components: {Page}
+  components: { Page }
 }
 </script>
 
 <style lang="less" scoped>
 .order-content {
-
-  padding: 20px;
   .card-tips {
     color: red;
     background: wheat;
@@ -578,6 +809,12 @@ export default {
     padding-top: 10px;
     display: flex;
     justify-content: flex-end;
+  }
+  .input-btn {
+    width: calc(~'(100% - 72px)');
+  }
+  .maxwidth {
+    max-width: 800px;
   }
 }
 </style>

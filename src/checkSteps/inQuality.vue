@@ -1,50 +1,102 @@
 <template>
   <div>
-    <h3 class="check-title">质检内审</h3>
-    <el-select v-model="outOrder" placeholder="请选择派单对象">
-      <el-option label="123" value="456"></el-option>
-    </el-select>
-    <el-button type="success">确认派单</el-button>
-    <!-- <div style="width:100%;border-top:1px solid #E4E7ED;margin-top:10px;"></div> -->
+    <h3 class="check-title">{{title}}</h3>
     <div class="mt10px">
-      <el-select v-model="breakReason" placeholder="请选择退回原因" style="display:block;width:215px;">
-        <el-option label="123" value="456"></el-option>
-      </el-select>
-      <div class="mt10px">
-        <el-input :rows="3" style="width:50%" size="medium" type="textarea" placeholder="填写驳回理由"></el-input>
-      </div>
-      <div class="mt10px break-step">
-        <el-select v-model="breakStep" placeholder="" style="width:215px;">
-          <span slot="prefix" style="line-height:32px;color:#606266">驳回至 :</span>
-          <el-option label="商务" value="1"></el-option>
-          <el-option label="理单员审核" value="2"></el-option>
-          <el-option label="质检外审" value="3"></el-option>
-          <el-option label="质检内审派单" value="4"></el-option>
-        </el-select>
-        <el-button type="danger">驳 回</el-button>
-      </div>
+      <auto-select v-model="dispatchValue" :defaultValue="dispatchValue" :title="'派单至'" style="width:200px;">
+        <el-option v-for="(item, index) in dispatchRoleList" :key="index" :value="item.id+'#'+item.name" :label="item.name"></el-option>
+      </auto-select>
+      <el-button @click.native="pass" type="success" style="margin-left:-6px;">派单</el-button>
     </div>
-
+    <div class="mt10px">
+      <el-input v-model="refuseRemark" style="width:80%" type="textarea" :rows="5" placeholder="请填写驳回理由！！！"></el-input>
+    </div>
+    <div class="mt10px">
+      <auto-select v-model="backValue" :defaultValue="backValue" :title="'驳回至'" style="width:200px;">
+        <el-option v-for="(item, index) in backNodeList" :key="index" :value="item.sn+'#'+item.name" :label="item.name"></el-option>
+      </auto-select>
+      <el-button @click.native="refuse" type="danger" style="margin-left:-6px;">驳回</el-button>
+    </div>
   </div>
 </template>
 
 <script>
+import AutoSelect from 'base/autoSelect/autoSelect'
+import { orderDeal } from 'common/js/mixin'
 export default {
-  data () {
-    return {
-      outOrder: '',
-      breakReason: '',
-      breakStep: '1'
+  mixins: [orderDeal],
+  props: {
+    title: {
+      type: String,
+      default: ''
+    },
+    moneyInfo: { // [12]
+      type: Array,
+      default: function () {
+        return []
+      }
+    },
+    moneyRecord: { // [8]
+      type: Object,
+      default: function () {
+        return {}
+      }
+    },
+    orderFlowDatas: { // [13]
+      type: Array,
+      default: function () {
+        return []
+      }
+    },
+    invoiceInfo: { // [11]
+      type: Array,
+      default: function () {
+        return {}
+      }
+    },
+    orderInfo: { // [1]
+      type: Object,
+      default: function () {
+        return {}
+      }
+    },
+    templateInfo: { // [0]
+      type: Object,
+      default: function () {
+        return {}
+      }
+    },
+    originUser: { // [10]
+      type: Object,
+      default: function () {
+        return {}
+      }
+    },
+    pid: {
+      type: String,
+      default: 'BAITUI'
+    },
+    sn: {
+      type: Number,
+      default: 10
     }
   },
-  components: {}
+  data () {
+    return {
+    }
+  },
+  mounted () {
+    this._getPayList()
+    this._getUrl()
+    this._getBackNode(this.sn, this.templateInfo.cpid)
+    this._getDispatchRole(this.sn, this.pid)
+  },
+  methods: {
+  },
+  components: {
+    AutoSelect
+  }
 }
 </script>
 
-<style lang="less">
-.break-step{
-  input.el-input__inner{
-    padding-left:55px;
-  }
-}
+<style>
 </style>

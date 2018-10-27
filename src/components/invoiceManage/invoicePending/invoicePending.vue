@@ -24,7 +24,7 @@
           <el-table-column prop="tnumber" label="单据号码">
           </el-table-column>
         </el-table>
-        <page class="pagination" :url="url" :sendparams="sendparams"
+        <page class="pagination" :url="url" :sendParams="sendParams"
           @updateList="updateInvoiceList" :key="key">
         </page>
       </el-row>
@@ -44,7 +44,7 @@ export default {
     return {
       invoiceList: [],
       url: '/Invoice.do?invoicelist',
-      sendparams: {
+      sendParams: {
         invoicetype: 100,
         hasinvoice: 0
       },

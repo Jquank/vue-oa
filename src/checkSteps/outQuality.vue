@@ -1,16 +1,7 @@
 <template>
   <div>
     <h3 class="check-title">{{title}}</h3>
-    <div class="mt10px">
-      <auto-select v-model="dispatchValue" :defaultValue="dispatchValue" :title="'派单至'" style="width:200px;">
-        <el-option v-for="(item, index) in dispatchRoleList" :key="index" :value="item.id+'#'+item.name" :label="item.name"></el-option>
-      </auto-select>
-      <el-button @click.native="pass" type="success" style="margin-left:-6px;">派单</el-button>
-    </div>
-    <div class="mt10px">
-      <!-- todo -->
-      <span>网建制作流程：</span>
-    </div>
+    <el-button @click.native="pass" type="success">审核通过</el-button>
     <div class="mt10px">
       <el-input v-model="refuseRemark" style="width:80%" type="textarea" :rows="5" placeholder="请填写驳回理由！！！"></el-input>
     </div>
@@ -92,7 +83,6 @@ export default {
     this._getPayList()
     this._getUrl()
     this._getBackNode(this.sn, this.templateInfo.cpid)
-    this._getDispatchRole(this.sn, this.pid)
   },
   methods: {
   },

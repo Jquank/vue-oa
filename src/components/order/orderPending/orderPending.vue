@@ -77,7 +77,7 @@
         <el-table-column prop="" label="操作" width="180">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click.native="viewOrder(scope.row)" class="xsbtn">查看</el-button>
-            <el-button v-if="scope.row.sn == 10" type="warning" size="mini" @click.native="updateOrder(scope.row)" class="xsbtn">修改订单</el-button>
+            <el-button type="warning" size="mini" @click.native="updateOrder(scope.row)" class="xsbtn">修改订单</el-button>
           </template>
         </el-table-column>
       </el-table>

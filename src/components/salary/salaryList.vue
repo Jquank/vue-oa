@@ -5,14 +5,14 @@
       <el-input v-model="workerName" class="salary-item item-width" placeholder="搜索客户名称">
         <template slot="prepend">员工姓名:</template>
       </el-input>
-      <el-date-picker v-model="date" type="datetimerange" range-separator="至" start-placeholder="出访开始日期"
-        end-placeholder="出访结束日期" class="salary-item" style="width:350px;"></el-date-picker>
+      <el-date-picker v-model="date" type="datetimerange" range-separator="至" start-placeholder="出访开始日期" end-placeholder="出访结束日期" class="salary-item" style="width:350px;"></el-date-picker>
       <div class="salary-item">
         <el-button type="primary">查 询</el-button>
         <el-button type="warning">重 置</el-button>
         <el-button type="primary">导 入</el-button>
       </div>
     </div>
+
   </div>
 </template>
 
@@ -27,9 +27,7 @@ export default {
     }
   },
   methods: {
-    upDeptId () {
-
-    }
+    upDeptId () {}
   },
   components: {
     SelectDepartment
@@ -39,7 +37,6 @@ export default {
 
 <style lang="less" scoped>
 .salary-list {
-
   padding: 20px;
   .salary-search {
     display: flex;

@@ -64,7 +64,8 @@ instance.interceptors.response.use( // 响应拦截
             message: response.data[0].msg || '失败'
           })
         }
-      } else {} // 带分页
+      } else { // [] 带分页
+      }
     }
     return response
   },
