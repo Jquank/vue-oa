@@ -30,9 +30,9 @@
 </template>
 
 <script>
-import { $post } from '@/api/http'
-import { mapMutations } from 'vuex'
-import Cookies from 'js-cookie'
+// import { $post } from '@/api/http'
+// import { mapMutations } from 'vuex'
+// import Cookies from 'js-cookie'
 // import router from '@/router/index'
 export default {
   data () {
@@ -55,46 +55,46 @@ export default {
   },
   methods: {
     login () {
-      // this.$router.push('/indexPage')
-      let params = {
-        username: this.myName,
-        password: this.myPassword
-      }
-      $post(this.serverUrl + '/login', params)
+      this.$router.push('/indexPage')
+      // let params = {
+      //   username: this.myName,
+      //   password: this.myPassword
+      // }
+      // $post(this.serverUrl + '/login', params)
 
-        .then(res => {
-          if (this.myName === 'admin') {
-            this.getUserName()
-            Cookies.set('token1', res.data.data.token)
-            Cookies.set('permission1', res.data.data.permission)
-            this.getAsyncRouter({
-              path: 'dragTable',
-              name: 'dragTable',
-              meta: { text: '可拖拽的表格' },
-              component: require('views/dragTable/dragTable')
-            })
-            setTimeout(() => {
-              this.$router.push('/indexPage')
-            })
-          } else {
-            this.$message({
-              message: '账号或密码错误！',
-              type: 'error'
-            })
-          }
-        })
-        .catch(err => {
-          this.$message({
-            message: '网络错误，请检查！',
-            type: 'error'
-          })
-          console.log(err)
-        })
-    },
-    ...mapMutations({
-      getUserName: 'GET_USERNAME',
-      getAsyncRouter: 'GET_ASYNC_ROUTER'
-    })
+      // .then(res => {
+      // if (this.myName === 'admin') {
+      // this.getUserName()
+      // Cookies.set('token1', res.data.data.token)
+      // Cookies.set('permission1', res.data.data.permission)
+      // this.getAsyncRouter({
+      //   path: 'dragTable',
+      //   name: 'dragTable',
+      //   meta: { text: '可拖拽的表格' },
+      //   component: require('views/dragTable/dragTable')
+      // })
+      // setTimeout(() => {
+      // this.$router.push('/indexPage')
+      // })
+      // } else {
+      // this.$message({
+      //       message: '账号或密码错误！',
+      //       type: 'error'
+      //     })
+      //   }
+      // })
+      // .catch(err => {
+      //   this.$message({
+      //     message: '网络错误，请检查！',
+      //     type: 'error'
+      //   })
+      //   console.log(err)
+      // })
+    }
+    // ...mapMutations({
+    //   getUserName: 'GET_USERNAME',
+    //   getAsyncRouter: 'GET_ASYNC_ROUTER'
+    // })
 
   }
 }

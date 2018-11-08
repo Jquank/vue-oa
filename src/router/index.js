@@ -30,7 +30,7 @@ export const baseRouterMap = [
   },
   {
     path: '/indexPage',
-    component: IndexPage, 
+    component: IndexPage,
     children: [
       {
         path: '',
@@ -61,20 +61,20 @@ export const baseRouterMap = [
 const router = new Router({
   routes: baseRouterMap
 })
-const asyncRouterMap = [
-  {
-    path: '/indexPage',
-    component: IndexPage,
-    children: [
-      {
-        path: 'dragTable',
-        name: 'dragTable',
-        meta: { text: '可拖拽的表格' },
-        component: DragTable
-      }
-    ]
-  }
-]
+// const asyncRouterMap = [
+//   {
+//     path: '/indexPage',
+//     component: IndexPage,
+//     children: [
+//       {
+//         path: 'dragTable',
+//         name: 'dragTable',
+//         meta: { text: '可拖拽的表格' },
+//         component: DragTable
+//       }
+//     ]
+//   }
+// ]
 Progress.configure({ showSpinner: false })
 router.beforeEach((to, from, next) => {
   const isLogin = true
@@ -88,13 +88,12 @@ router.beforeEach((to, from, next) => {
       if (to.name === from.name) { // 防止刷新的时候加载两次组件
         next(false)
       } else {
-        router.addRoutes(asyncRouterMap)
+        // router.addRoutes(asyncRouterMap)
         Progress.start()
         next()
       }
     }
   } else {
-    sessionStorage.clear()
     next()
     Progress.done()
   }
