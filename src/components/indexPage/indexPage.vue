@@ -14,9 +14,9 @@
         </el-aside>
         <!-- 主体内容 -->
         <el-main id="main">
-          <!-- <div id="call-center">
+          <div id="call-center">
             <iframe ref="iframecall" id="iframe-call" src="http://gccp.baidu.com/gaiamgmt/fe-communication/communications/index.html#/" frameborder="0"></iframe>
-          </div> -->
+          </div>
           <transition name="fade">
             <router-view></router-view>
           </transition>
@@ -32,21 +32,35 @@ import Navbar from 'components/navbar/navbar'
 import MHeader from 'components/m-header/m-header'
 // import { getArea, getSource, getTrade } from '@/api/getOptions'
 // import BScroll from 'better-scroll'
+import cookie from 'js-cookie'
 export default {
   data () {
     return {}
   },
   mounted () {
+    let allowCall = cookie.get('allowCall')
+    if (allowCall) {
+      window.agentbar.init('iframe-call')
+      let iframe = document.getElementById('iframe-call')
+      let urlParams = '/gaiaopt/rest/interface/agent/agentBarInit4H5'
+      iframe.onload = () => {
+        this.$get('/bdurl.do?init', {'url': urlParams}).then(res => {
+          if (res.data.success) {
+            window.agentbar.initial(res.data.data)
+          }
+        })
+      }
+    }
     // loadCallIframe('iframe-call')
-    let main = document.getElementById('main')
-    this.$nextTick(() => {
-      let scroll = new BScroll(main, { //eslint-disable-line
-        click: true,
-        scrollY: true,
-        scrollX: true,
-        freeScroll: true
-      })
-    })
+    // let main = document.getElementById('main')
+    // this.$nextTick(() => {
+    //   let scroll = new BScroll(main, { //eslint-disable-line
+    //     click: true,
+    //     scrollY: true,
+    //     scrollX: true,
+    //     freeScroll: true
+    //   })
+    // })
   },
   components: {
     Navbar,
@@ -70,13 +84,13 @@ export default {
   .con-bottom {
     margin-top: 50px;
     height: calc(~'(100vh - 50px)');
-    // #call-center {
-    //   width: 100%;
-    //   #iframe-call {
-    //     width: 100%;
-    //     max-height: 95px;
-    //   }
-    // }
+    #call-center {
+      width: 100%;
+      #iframe-call {
+        width: 100%;
+        max-height: 95px;
+      }
+    }
     .nav-aside {
       z-index: 1999;
       background: #19233c;

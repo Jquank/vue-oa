@@ -39,6 +39,12 @@ a {
   color:#b5b7bb !important;
 }
 
+.fr{
+  float: right;
+}
+.pr30px{
+  padding-right: 30px;
+}
 .img-responsive {
   width: 100%;
   height: auto;
@@ -68,13 +74,16 @@ a {
 .mt10px {
   margin-top: 10px;
 }
+.mt-10px {
+  margin-top: -10px;
+}
 .mb10px {
   margin-top: 10px;
 }
 /*组件容器样式*/
 .component-container{
   padding: 15px;
-  min-height: calc(~"(100% - 30px)");
+  min-height: calc(~"(100% - 130px)");
   background: #fff;
 }
 .child-component-container{
@@ -86,6 +95,10 @@ a {
   top: 0;
   left: 0;
   z-index: 200;
+}
+.call-container{
+  background: #f7f7f7;
+  padding: 0;
 }
 
 
@@ -133,9 +146,9 @@ div.el-dialog__body {
   padding:0 10px;
 }
 
-.el-loading-mask{
+// .el-loading-mask{
   /* background: rgba(0,0,0,0.2) */
-}
+// }
 // 小按钮
 .xsbtn.el-button{
     padding: 5px 8px;
@@ -166,4 +179,19 @@ div.el-dialog__body {
 // 卡片
 .el-card__body{
   padding: 2px 10px;
+}
+
+.el-icon-phone{
+  font-size: 18px;
+  color: green;
+  cursor: pointer;
+}
+.el-table__footer-wrapper tbody td{
+  color: rgb(223, 71, 71);
+  text-align: center;
+}
+.export{
+  flex-grow: 1;
+ text-align: right;
+ padding-right: 30px;
 }

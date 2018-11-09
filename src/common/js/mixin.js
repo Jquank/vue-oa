@@ -1,6 +1,17 @@
-import { getByCode, getMyContract } from 'api/getOptions'
-import { groupBy } from 'common/js/utils'
-import { timeFormat } from 'common/js/filters'
+import {
+  getByCode,
+  getMyContract
+} from 'api/getOptions'
+import {
+  groupBy
+} from 'common/js/utils'
+import {
+  timeFormat
+} from 'common/js/filters'
+import {
+  productType,
+  currency
+} from './filters'
 
 export const mobileFit = { // 移动端适配
   methods: {
@@ -86,6 +97,14 @@ export const orderDeal = { // 订单处理
   computed: {
     _moneyInfo () { // 未处理过的12数组
       return this.moneyInfo
+    },
+    _applyAddMoneyTotal () { // 加款金额总和，含冲单费
+      let sum = 0
+      this.payList.forEach(val => {
+        sum += parseFloat(val._value || 0)
+      })
+      sum += parseFloat(this.dscd || 0) + parseFloat(this.xxlcd || 0)
+      return sum
     }
   },
   data () {
@@ -100,7 +119,8 @@ export const orderDeal = { // 订单处理
       next_uid: '', // 下一步派单id
       next_name: '', // 下一步派单人
       backValue: '10#商务',
-      dispatchValue: ''
+      dispatchValue: '',
+      countTotal: 0 // count之和，预存款金额
     }
   },
   methods: {
@@ -117,6 +137,7 @@ export const orderDeal = { // 订单处理
         val.forEach(item => {
           sumValue += parseFloat(item.value)
           sumCount += parseFloat(item.count)
+          this.countTotal += parseFloat(item.count)
           sumProfit += parseFloat(item.profit)
           val[0].count = sumCount.toFixed(2)
           val[0].value = sumValue.toFixed(2)
@@ -125,7 +146,6 @@ export const orderDeal = { // 订单处理
           this.payList.push(val[0])
         })
       })
-      console.log(this.payList)
     },
     _getUrl () { // 获取url
       if (this.pid === 'BAITUI') {
@@ -200,12 +220,10 @@ export const orderDeal = { // 订单处理
         case 260:
         {
           return {
-            // todo
-            // baiduID: this.baiduID || undefined,
-            // baiduAccount: this.baiduAccount || undefined,
-            // preDeposit: this.preDeposit || undefined,
-            // applyFortime: this.applyFortime || undefined,
-            // proxyid: this.proxyid || undefined
+            baiduID: this.baiduID || undefined,
+            baiduAccount: this.baiduAccount || undefined,
+            applyFortime: this.applyFortime || undefined,
+            proxyid: this.proxyid || undefined
           }
         }
         case 170:
@@ -258,7 +276,9 @@ export const orderDeal = { // 订单处理
             if (res.data[0].success) {
               this.$router.push({
                 path: '/indexPage/orderPending',
-                query: { data: 'fromDetail' }
+                query: {
+                  data: 'fromDetail'
+                }
               })
             }
           })
@@ -277,18 +297,17 @@ export const orderDeal = { // 订单处理
           val.receivetype = (val.typeAndBsid || '').split('#')[0]
           val.bsid = (val.typeAndBsid || '').split('#')[1]
         })
-        console.log(this.payList)
         this.remark =
-        '百度订单金额：' + this.moneyRecord.sum + '----' + '\n' + '到款金额：'
+          '百度订单金额：' + this.moneyRecord.sum + '----' + '\n' + '到款金额：'
         this.orderFlowDatas.forEach(val => {
           val.split.forEach(item => {
             if (this.curid === item.curid) {
               this.remark +=
-              item.split_amount +
-              '----' +
-              val.code_desc +
-              '----' +
-              timeFormat(val.tm) + ','
+                item.split_amount +
+                '----' +
+                val.code_desc +
+                '----' +
+                timeFormat(val.tm) + ','
             }
           })
         })
@@ -303,7 +322,7 @@ export const orderDeal = { // 订单处理
             throw new Error('ignore')
           }
         })
-      if (this.allReceive && this.totalReceive != this.orderInfo.amount_real.toFixed(2)) { //eslint-disable-line
+        if (this.allReceive && this.totalReceive != this.orderInfo.amount_real.toFixed(2)) { //eslint-disable-line
           this.$message({
             type: 'warning',
             message: '请确保实际到账金额等于总到金额'
@@ -311,7 +330,7 @@ export const orderDeal = { // 订单处理
           return
         }
       }
-      if (this.sn === 210) {
+      if (this.sn === 210 || this.sn === 400) {
         if (!this.dispatchValue) {
           this.$message({
             type: 'warning',
@@ -321,6 +340,30 @@ export const orderDeal = { // 订单处理
         }
         this.next_uid = (this.dispatchValue || '').split('#')[0]
         this.next_name = (this.dispatchValue || '').split('#')[1]
+      }
+      if (this.sn === 260) {
+        if (!this.baiduID || !this.baiduAccount || !this.proxyid || !this.applyFortime || !this.dscd || !this.xxlcd) {
+          this.$message({
+            type: 'warning',
+            message: '请填写账户信息或冲单费！'
+          })
+          return
+        }
+        this.remark = '账户ID：' + this.baiduID +
+          '；账户名：' + this.baiduAccount +
+          '；代理账号：' + this.proxyid +
+          '。申请加款时间：' + this.applyFortime + '。'
+        this.payList.forEach(val => {
+          if (val.type < 100 && val.type !== 8) {
+            this.remark += productType(val.type) + '加款：' + currency(val.count) + '；'
+          }
+        })
+        if (this.dscd != 0) { // eslint-disable-line
+          this.remark += '大搜冲单费：' + this.dscd
+        }
+        if (this.xxlcd != 0) { // eslint-disable-line
+          this.remark += '信息流冲单费：' + this.xxlcd
+        }
       }
       let params = {
         curId: this.moneyRecord.id,
@@ -360,7 +403,7 @@ export const orderDeal = { // 订单处理
         applyremark: '',
         remark: this.refuseRemark,
         audittype: this.orderInfo.audittype,
-        addmoneytime: '',
+        addmoneytime: this.addMoneyTime || '',
         receivekind: this.common ? '0' : '10',
         orderreceive: this.payList,
         receive: this.payList,
@@ -377,15 +420,47 @@ export const orderDeal = { // 订单处理
       if (this.orderInfo.con_id3) {
         params.contractid.push(this.orderInfo.con_id3)
       }
-      console.log(params)
-      this.$post(this.url, params).then(res => {
-        if (res.data[0].success) {
-          this.$router.push({
-            path: '/indexPage/orderPending',
-            query: { data: 'fromDetail' }
-          })
+      if (this.sn === 260) {
+        let _params = {
+          baiduid: this.baiduID,
+          baiduaccount: this.baiduAccount,
+          proxyid: this.proxyid,
+          applytime: this.applyFortime
         }
+        params = Object.assign({}, params, _params)
+      }
+      console.log(params)
+      if (this.sn === 260) {
+        this.call('订单预存款金额为：' + this.countTotal + '，加款金额为：' + this._applyAddMoneyTotal +
+          '，请确认是否提交？', params)
+        return
+      }
+      this.call('请确认是否提交？', params)
+    },
+    call (msg, params) {
+      this.$confirm(msg, '', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
       })
+        .then(() => {
+          this.$post(this.url, params).then(res => {
+            if (res.data[0].success) {
+              this.$router.push({
+                path: '/indexPage/orderPending',
+                query: {
+                  data: 'fromDetail'
+                }
+              })
+            }
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          })
+        })
     }
   }
 }

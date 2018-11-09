@@ -162,6 +162,47 @@ export function cusState (num, type) {
   }
 }
 
+export function invoiceState (num, type) {
+  if (type === 'invoiceKind') {
+    switch (num) {
+      case '11':
+        return '电子普票'
+      case '10':
+        return '纸质普票'
+      case '20':
+        return '专票'
+    }
+  } else if (type === 'invoiceType') {
+    switch (num) {
+      case '0':
+        return '无需发票'
+      case '10':
+        return '纸质普票'
+      case '11':
+        return '电子普票'
+      case '20':
+        return '专票'
+      case '30':
+        return '暂不开发票'
+      case '40':
+        return '已开发票'
+    }
+  } else if (type === 'invoiceMoneyType') {
+    switch (num) {
+      case '0':
+        return '技术维护费'
+      case '1':
+        return '技术服务费'
+      case '2':
+        return '信息流服务费'
+      case '3':
+        return '品牌专区'
+      case '4':
+        return '网站建设'
+    }
+  }
+}
+
 export function businessStatus (num) {
   switch (num) {
     case '010':
@@ -192,9 +233,14 @@ export function businessStatus (num) {
       return '公共库客户' // 放弃跟踪
   }
 }
+
+const reg = /[\u4E00-\u9FA5]{1,}/g
 export function timeFormat (num) {
   if (num === '.') { return '.' }
   if (!num) { return '' }
+  if (reg.test(num)) {
+    return num
+  }
   function add0 (m) { return m < 10 ? '0' + m : m }
   let time = new Date(num)
   let year = time.getFullYear()
@@ -208,6 +254,9 @@ export function timeFormat (num) {
 export function timeFormat1 (num) {
   if (num === '.') { return '.' }
   if (!num) { return '' }
+  if (reg.test(num)) {
+    return num
+  }
   function add0 (m) { return m < 10 ? '0' + m : m }
   let time = new Date(num)
   let year = time.getFullYear()

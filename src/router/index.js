@@ -67,10 +67,31 @@ import OrderProcessed from 'components/order/orderProcessed/orderProcessed'
 
 // 发票管理
 import InvoicePending from 'components/invoiceManage/invoicePending/invoicePending'
+import InvoiceList from 'components/invoiceManage/invoiceList/invoiceList'
+import InvoiceHandled from 'components/invoiceManage/invoiceHandled/invoiceHandled'
+import InvoiceSend from 'components/invoiceManage/invoiceSend/invoiceSend'
+import InvoiceCheck from 'components/invoiceManage/invoiceCheck/invoiceCheck'
 
 // 图表
 import Charts from 'views/charts/charts'
 import EditTable from 'views/editTable/editTable'
+
+// 报表统计
+import ReportData from 'components/reportData/reportData'
+import AheadInvoice from 'components/reportData/aheadInvoice'
+import BranchAdd from 'components/reportData/branchAdd'
+import MoneyChart from 'components/reportData/moneyChart'
+
+// 呼叫中心
+import PhoneChange from 'components/callCenter/phoneChange'
+import _History from 'components/callCenter/history'
+import MissedCall from 'components/callCenter/missedCall'
+import CallReport from 'components/callCenter/callReport'
+import PhoneWatch from 'components/callCenter/phoneWatch'
+import AcdWatch from 'components/callCenter/acdWatch'
+import WorkerWatch from 'components/callCenter/workerWatch'
+import BlackList from 'components/callCenter/blackList'
+import CallCenter from 'components/callCenter/callCenter'
 
 // import store from '../store'
 import cookie from 'js-cookie'
@@ -400,10 +421,34 @@ const router = new Router({
         },
         // 发票管理
         {
+          path: 'invoiceList',
+          name: 'invoiceList',
+          meta: { text: '发票列表' },
+          component: InvoiceList
+        },
+        {
           path: 'invoicePending',
           name: 'invoicePending',
           meta: { text: '待开发票' },
           component: InvoicePending
+        },
+        {
+          path: 'invoiceHandled',
+          name: 'invoiceHandled',
+          meta: { text: '已开发票' },
+          component: InvoiceHandled
+        },
+        {
+          path: 'invoiceSend',
+          name: 'invoiceSend',
+          meta: { text: '邮寄发票' },
+          component: InvoiceSend
+        },
+        {
+          path: 'invoiceCheck',
+          name: 'invoiceCheck',
+          meta: { text: '邮寄发票' },
+          component: InvoiceCheck
         },
         // 工资管理
         {
@@ -424,7 +469,141 @@ const router = new Router({
           name: 'editTable',
           meta: { text: '可编辑的表格' },
           component: EditTable
-        }
+        },
+        // 报表统计
+        {
+          path: 'REP_BACUS',
+          name: 'REP_BACUS',
+          meta: { text: '保A客户统计' },
+          component: ReportData
+        },
+        {
+          path: 'REP_RECEIVE',
+          name: 'REP_RECEIVE',
+          meta: { text: '到款统计' },
+          component: ReportData
+        },
+        {
+          path: 'REP_ORDER',
+          name: 'REP_ORDER',
+          meta: { text: '订单统计' },
+          component: ReportData
+        },
+        {
+          path: 'REP_KHXQ',
+          name: 'REP_KHXQ',
+          meta: { text: '薪资计算业绩' },
+          component: ReportData
+        },
+        {
+          path: 'REP_JYJ',
+          name: 'REP_JYJ',
+          meta: { text: '外审业绩时间' },
+          component: ReportData
+        },
+        {
+          path: 'moneyChart',
+          name: 'moneyChart',
+          meta: { text: '资金明细' },
+          component: MoneyChart
+        },
+        {
+          path: 'aheadInvoice',
+          name: 'aheadInvoice',
+          meta: { text: '提前开票/加款汇总' },
+          component: AheadInvoice
+        },
+        {
+          path: 'REP_MONEY_ORDER',
+          name: 'REP_MONEY_ORDER',
+          meta: { text: '新开活动明细' },
+          component: ReportData
+        },
+        {
+          path: 'REP_ZJJLDC',
+          name: 'REP_ZJJLDC',
+          meta: { text: '质检经理导出表' },
+          component: ReportData
+        },
+        {
+          path: 'REP_PERCENTAGE',
+          name: 'REP_PERCENTAGE',
+          meta: { text: '提成统计' },
+          component: ReportData
+        },
+        {
+          path: 'REP_BUSINESS_RENEW',
+          name: 'REP_BUSINESS_RENEW',
+          meta: { text: '商务续费统计' },
+          component: ReportData
+        },
+        {
+          path: 'REP_BUSINESS_ACHIEVEMENT',
+          name: 'REP_BUSINESS_ACHIEVEMENT',
+          meta: { text: '商务业绩查看' },
+          component: ReportData
+        },
+        {
+          path: 'branchAdd',
+          name: 'branchAdd',
+          meta: { text: '分公司加款' },
+          component: BranchAdd
+        },
+        // 呼叫中心
+        {
+          path: 'phoneChange',
+          name: 'phoneChange',
+          meta: { text: '坐席分机修改' },
+          component: PhoneChange
+        },
+        {
+          path: 'history',
+          name: 'history',
+          meta: { text: '联系历史记录' },
+          component: _History
+        },
+        {
+          path: 'missedCall',
+          name: 'missedCall',
+          meta: { text: '未接来电' },
+          component: MissedCall
+        },
+        {
+          path: 'callReport',
+          name: 'callReport',
+          meta: { text: '呼叫中心报表' },
+          component: CallReport
+        },
+        {
+          path: 'phoneWatch',
+          name: 'phoneWatch',
+          meta: { text: '综合话务监控' },
+          component: PhoneWatch
+        },
+        {
+          path: 'acdWatch',
+          name: 'acdWatch',
+          meta: { text: 'ACD监控' },
+          component: AcdWatch
+        },
+        {
+          path: 'workerWatch',
+          name: 'workerWatch',
+          meta: { text: '员工工作情况' },
+          component: WorkerWatch
+        },
+        {
+          path: 'blackList',
+          name: 'blackList',
+          meta: { text: '黑名单管理' },
+          component: BlackList
+        },
+        {
+          path: 'callCenter',
+          name: 'callCenter',
+          meta: { text: '拨号中心' },
+          component: CallCenter
+        },
       ]
     }
   ],

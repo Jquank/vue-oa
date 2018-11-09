@@ -61,6 +61,7 @@ export default {
             cookie.set('userId', res.data.data.id)
             cookie.set('userName', res.data.data.name)
             cookie.set('permissions', res.data.data.permissions)
+            cookie.set('allowCall', res.data.data.dept)
             this.$router.push('/indexPage')
             // storage.session.set('userId', res.data.data.id)
             // storage.session.set('permissions', res.data.data.permissions)

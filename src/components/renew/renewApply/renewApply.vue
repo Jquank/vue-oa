@@ -4,7 +4,7 @@
       <el-row>
         <el-col :md="24" class="maxwidth">
           <el-form-item label="公司名称 :" required>
-            <el-input v-model="form.comName" disabled placeholder="客户名称" class="input-btn"></el-input>
+            <el-input v-model="form.comName" disabled placeholder="公司名称" class="input-btn"></el-input>
             <el-button @click.native="selCompanyDialog = true" type="primary">选 择</el-button>
           </el-form-item>
         </el-col>

@@ -12,6 +12,9 @@ export default {
     return {
     }
   },
+  mounted () {
+
+  },
   components: {
     MakeInvoice,
     RenewInfo

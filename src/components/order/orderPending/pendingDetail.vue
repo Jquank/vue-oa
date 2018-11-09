@@ -630,7 +630,7 @@
           <!-- 理单员审核(质检经理) -->
           <order-keeper v-if="sn===20 && templateInfo.cpid" :templateInfo="templateInfo" :pid="pid" title="理单员审核"></order-keeper>
           <!-- 综合部初审 -->
-          <init-finance v-if="sn===100 && moneyInfo.length" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid"></init-finance>
+          <init-finance v-if="sn===100 && moneyInfo.length" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="综合部初审"></init-finance>
           <!-- 质检外审 -->
           <out-quality v-if="sn===200 && templateInfo.cpid" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="质检外审"></out-quality>
           <!-- 质检内审派单 -->
@@ -639,6 +639,24 @@
           <in-quality v-if="sn===220 && templateInfo.cpid" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="质检内审派单"></in-quality>
           <!-- 质检申请加款 -->
           <quality-add-money v-if="sn===260 && templateInfo.cpid" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="质检申请加款"></quality-add-money>
+          <!-- 质检经理审核 -->
+          <quality-manager v-if="sn===300 && templateInfo.cpid" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="质检经理审核"></quality-manager>
+          <!-- 综合部复审 -->
+          <second-finance v-if="sn===305 && templateInfo.cpid" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="综合部复审"></second-finance>
+          <!-- 账户加款 -->
+          <finance-add-money v-if="sn===310 && templateInfo.cpid" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="账户加款"></finance-add-money>
+          <!-- 质检开户(加款完成) -->
+          <quality-open-account v-if="sn===320 && templateInfo.cpid" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="质检开户(加款完成)"></quality-open-account>
+          <!-- 质检一部 -->
+          <quality-one v-if="sn===330 && templateInfo.cpid" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="质检一部"></quality-one>
+          <!-- 客服提单 -->
+          <service-order v-if="sn===400 && templateInfo.cpid" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="客服提单"></service-order>
+          <!-- 客服派单 -->
+          <service-dispatch v-if="sn===410 && templateInfo.cpid" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="客服派单"></service-dispatch>
+          <!-- 提单完成 -->
+          <order-done v-if="sn===420 && templateInfo.cpid" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="提单完成"></order-done>
+          <!-- 新客内审 -->
+          <new-cus-check v-if="sn===430 && templateInfo.cpid" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="新客内审"></new-cus-check>
         </el-tab-pane>
         <!-- 日志 -->
         <el-tab-pane :label="logLabel">
@@ -800,6 +818,15 @@ import InQualityOrder from 'checkSteps/inQualityOrder'
 import InQuality from 'checkSteps/inQuality'
 import OutQuality from 'checkSteps/outQuality'
 import QualityAddMoney from 'checkSteps/qualityAddMoney'
+import QualityManager from 'checkSteps/qualityManager'
+import SecondFinance from 'checkSteps/secondFinance'
+import FinanceAddMoney from 'checkSteps/financeAddMoney'
+import QualityOpenAccount from 'checkSteps/qualityOpenAccount'
+import ServiceOrder from 'checkSteps/serviceOrder'
+import ServiceDispatch from 'checkSteps/serviceDispatch'
+import QualityOne from 'checkSteps/qualityOne'
+import OrderDone from 'checkSteps/orderDone'
+import NewCusCheck from 'checkSteps/newCusCheck'
 import Page from 'base/page/page'
 import cookie from 'js-cookie'
 export default {
@@ -1108,6 +1135,15 @@ export default {
     InQuality,
     OutQuality,
     QualityAddMoney,
+    QualityManager,
+    SecondFinance,
+    FinanceAddMoney,
+    QualityOpenAccount,
+    ServiceOrder,
+    ServiceDispatch,
+    QualityOne,
+    OrderDone,
+    NewCusCheck,
     Page
   }
 }

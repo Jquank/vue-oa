@@ -64,7 +64,7 @@
       </ul>
     </div>
     <!-- 修改个人信息弹窗 start-->
-    <el-dialog @open="open" title="修改密码" :visible.sync="dialogFormVisible">
+    <el-dialog @open="open" :append-to-body="true" title="修改密码" :visible.sync="dialogFormVisible">
       <el-form :model="form">
         <el-form-item label="用户名" :label-width="formLabelWidth">
           <el-input v-model="form.name" auto-complete="off" disabled></el-input>

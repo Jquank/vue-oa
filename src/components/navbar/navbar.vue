@@ -76,7 +76,7 @@ export default {
 <style scoped lang="less">
 
 .control-scroll{
-  height:100vh;
+  height: calc(~'(100vh - 50px)');
   width:197px;
   overflow-x: hidden;
   overflow-y: auto;

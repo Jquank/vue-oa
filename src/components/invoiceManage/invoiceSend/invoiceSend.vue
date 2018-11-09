@@ -1,6 +1,6 @@
 <template>
   <div>
-    <invoice-list :fixed="false" :mark="'pending'"></invoice-list>
+    <invoice-list :mark="'send'"></invoice-list>
   </div>
 </template>
 

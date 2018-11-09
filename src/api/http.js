@@ -1,6 +1,6 @@
 import axios from 'axios'
 import router from '@/router'
-// import qs from 'querystring'
+import qs from 'querystring'
 import cookie from 'js-cookie'
 import {
   Loading,
@@ -44,13 +44,15 @@ instance.interceptors.response.use( // 响应拦截
       if (response.data.success) {
         if (response.data.msg) {
           Message.success({
-            message: response.data.msg || '成功'
+            message: response.data.msg
           })
         }
       } else {
-        Message.error({
-          message: response.data.msg || '失败'
-        })
+        if (response.data.msg) {
+          Message.error({
+            message: response.data.msg
+          })
+        }
       }
     } else { // [] res为数组
       if (!Array.isArray(response.data[0].data)) { // {} 不带分页
@@ -110,4 +112,11 @@ export function $get (url, _params = {}) {
         reject(err)
       })
   })
+}
+
+export function $export (url, params = {}) {
+  let tk = cookie.get('token')
+  let isQuestionMark = url.indexOf('?') > -1
+  let mark = isQuestionMark ? '&' : '?'
+  window.location = serverUrl + url + mark + qs.stringify(params) + '&tk=' + tk
 }

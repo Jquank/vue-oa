@@ -11,41 +11,12 @@
           <b>{{o.type | productType}}：</b>{{o.value | currency1}}
         </template>
       </p>
-      <p v-if="pid==='WEBSITE'" v-for="(o,index) in moneyInfo" :key="index">
-        <template v-if="o.type<100">
-          <b>{{o.type | productType}}：</b>{{o.value | currency1}}
-        </template>
+      <p>
+        <b>百度账号：</b><span>{{orderInfo.baiducount}}</span>
+        <b class="ml10px">账号ID：</b><span>{{orderInfo.baiduid}}</span>
+        <b class="ml10px">代理账号：</b><span>{{orderInfo.proxyid}}</span>
       </p>
     </el-card>
-    <el-row :gutter="10" class="mt10px">
-      <el-col :md="6">
-        <el-input v-model="baiduID" placeholder="百度账户ID"></el-input>
-      </el-col>
-      <el-col :md="6">
-        <el-input v-model="baiduAccount" placeholder="百度账户名"></el-input>
-      </el-col>
-      <el-col :md="6">
-        <el-input v-model="proxyid" placeholder="代理账号"></el-input>
-      </el-col>
-      <el-col :md="6">
-        <el-date-picker v-model="applyFortime" value-format="yyyy/MM/dd HH:mm" type="datetime" placeholder="申请加款时间"></el-date-picker>
-      </el-col>
-    </el-row>
-
-    <div class="mt10px">
-      <el-form :inline="true">
-        <el-form-item label="大搜冲单费：">
-          <el-input v-model="dscd">
-            <span slot="prepend">¥</span>
-          </el-input>
-        </el-form-item>
-        <el-form-item label="信息流冲单费：">
-          <el-input v-model="xxlcd">
-            <span slot="prepend">¥</span>
-          </el-input>
-        </el-form-item>
-      </el-form>
-    </div>
 
     <el-table :data="payList" border :summary-method="getSummaries" show-summary class="table-width">
       <el-table-column prop="" label="实际到款">
@@ -65,13 +36,6 @@
           <span>{{scope.row.type>100?'':scope.row.xjq | currency}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="" label="申请加款">
-        <template slot-scope="scope">
-          <span>{{scope.row.type>100?'':scope.row.type | productType}}</span>
-          <span>{{scope.row.type>100?'':':'}}</span>
-          <el-input @change="handleChangeInput" v-model="scope.row._value" v-if="scope.row.type<100" class="apply-add-money-input"></el-input>
-        </template>
-      </el-table-column>
       <el-table-column prop="" label="已申请加款">
         <template slot-scope="scope">
           <span>{{scope.row.type>100?'':scope.row.type | productType}}</span>
@@ -81,12 +45,34 @@
       </el-table-column>
     </el-table>
 
-    <div class="mt10px">
-      <el-button @click.native="pass" type="success" size="medium">审核通过</el-button>
-    </div>
+    <el-card v-if="pid==='BAITUI'" class="mt10px card-total">
+      <div class="money-total">
+        <div>
+          <b>到款金额：</b>{{receiveMoney_total | currency1}}
+        </div>
+        <div>
+          <b>实际加款金额：</b>{{realAddMoney_total | currency1}}
+        </div>
+      </div>
+    </el-card>
 
     <div class="mt10px">
-      <el-input v-model="refuseRemark" style="width:80%" type="textarea" :rows="5" placeholder="请填写驳回理由！！！"></el-input>
+      <el-form :inline="true">
+        <el-form-item label="加款时间：">
+          <el-date-picker v-model="addMoneyTime" type="datetime" value-format="yyyy/MM/dd HH:mm" placeholder="选择日"></el-date-picker>
+        </el-form-item>
+        <el-form-item>
+          <el-button @click.native="pass" type="success" size="medium">审核通过</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+
+    <!-- <div class="mt10px">
+      <el-button @click.native="pass" type="success" size="medium">审核通过</el-button>
+    </div> -->
+
+    <div class="mt10px">
+      <el-input v-model="refuseRemark" style="width:80%" type="textarea" :rows="4" placeholder="请填写驳回理由！！！"></el-input>
     </div>
     <div class="mt10px">
       <auto-select v-model="backValue" :defaultValue="backValue" :title="'驳回至'" style="width:200px;">
@@ -176,37 +162,16 @@ export default {
       next_uid: '', // 下一步审核人
       form_val: null,
 
-      baiduID: '',
-      baiduAccount: '',
-      proxyid: '',
-      applyFortime: '',
-      dscd: '0',
-      xxlcd: '0',
       voucher_total: 0,
       xjq_total: 0,
-      applyAddMoney_total: 0,
-      applyed_total: 0
+      receiveMoney_total: 0,
+      realAddMoney_total: 0,
+      addMoneyTime: ''
     }
   },
   computed: {
     curid () {
       return this.orderInfo.curid
-    },
-    applyAddMoneyTotal () { // 加款金额总和，不含冲单费
-      let sum = 0
-      this.payList.forEach(val => {
-        sum += parseFloat(val._value || 0)
-      })
-      return sum
-    }
-  },
-  // todo
-  watch: {
-    payList: {
-      handler: function (val, oldVal) {
-        console.log(123588)
-      },
-      deep: true
     }
   },
   created () {
@@ -215,15 +180,16 @@ export default {
       if (val.type === 1) {
         val.voucher = this.moneyRecord.dsvoucher
         val.xjq = this.moneyRecord.dsxjq
-        val._value = (parseFloat(val.count || 0) + parseFloat(val.xjq || 0))
       } else if (val.type === 2) {
         val.voucher = this.moneyRecord.xxlvoucher
         val.xjq = this.moneyRecord.xxlxjq
-        val._value = (parseFloat(val.count || 0) + parseFloat(val.xjq || 0))
       } else if (val.type === 51) {
         val.voucher = this.moneyRecord.ztcvoucher
         val.xjq = this.moneyRecord.ztcxjq
-        val._value = (parseFloat(val.count || 0) + parseFloat(val.xjq || 0))
+      }
+      this.receiveMoney_total += parseFloat(val.count || 0)
+      if (val.type < 100) {
+        this.realAddMoney_total += parseFloat(val.add_money || 0)
       }
     })
   },
@@ -240,10 +206,6 @@ export default {
     })
   },
   methods: {
-    handleChangeInput (val) {
-      console.log(val)
-      console.log(this.payList)
-    },
     // 总计
     getSummaries (param) {
       const { columns, data } = param
@@ -255,12 +217,10 @@ export default {
           x['y0'] += parseFloat(item.count || 0)
           x['y1'] += parseFloat(item.voucher || 0)
           x['y2'] += parseFloat(item.xjq || 0)
-          x['y3'] += parseFloat(item._value || 0)
-          x['y4'] += parseFloat(item.add_money || 0)
+          x['y3'] += parseFloat(item.add_money || 0)
         })
         sums[index] = '总计：' + currency(x['y' + index])
       })
-      sums[3] = '总计：' + currency(this.applyAddMoneyTotal)
       return sums
     }
   },
@@ -280,6 +240,12 @@ export default {
     p {
       margin: 0;
       padding: 2px 0;
+    }
+  }
+  .card-total {
+    background: #d9edf7;
+    .el-card__body {
+      padding: 10px 20px;
     }
   }
   label.el-form-item__label {

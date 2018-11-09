@@ -4,7 +4,7 @@
 //         <el-option label="6个月以上" value="6"></el-option>
 //       </auto-select>
 <template>
-  <el-select @change="$emit('input',sel)" v-model="sel" class="auto-sel" :placeholder="placeholder">
+  <el-select @change="$emit('input',sel)" v-model="sel" :filterable="isSearch" :self-class="classMark" class="auto-sel" :placeholder="placeholder">
     <span slot="prefix" class="prefix">{{title}}:</span>
     <slot></slot>
   </el-select>
@@ -13,6 +13,10 @@
 <script>
 export default {
   props: {
+    classMark: { // 区分同一组件的auto-select，计算padding
+      type: String,
+      default: ''
+    },
     title: { // 插槽文字
       type: String,
       default: ''
@@ -24,6 +28,10 @@ export default {
     placeholder: {
       type: String,
       default: '请选择'
+    },
+    isSearch: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -32,18 +40,25 @@ export default {
     }
   },
   mounted () {
-    // let len = this.title.length
-    // let paddingWidth = this.title ? (4 + 20 + 10) : 0 // 冒号宽度+padding及其他
-    // let width = len * 13 + paddingWidth + 'px'
-    // let input = document.querySelector('.auto-sel input.el-input__inner')
-    // input.style.paddingLeft = width
+    let sels = document.getElementsByClassName('auto-sel')
+    for (let i = 0; i < sels.length; i++) {
+      if (sels[i].getAttribute('self-class') === this.classMark) {
+        sels[i].setAttribute('id', this.classMark)
+      }
+    }
+    let len = this.title.length
+    let paddingWidth = this.title ? (4 + 20 + 10) : 0 // 冒号宽度+padding及其他
+    let width = len * 13 + paddingWidth + 'px'
+    let input = document.querySelector('#' + this.classMark + '.auto-sel input.el-input__inner')
+    input.style.paddingLeft = width
   }
 }
 </script>
 <style>
 .auto-sel input.el-input__inner {
-  padding-left: 86px; /* 默认4个字的宽度+34px，如果不是4个字，需在父组件中重新定义padding值 */
-}
+  /* // 默认4个字的宽度+34px，如果不是4个字，需在父组件中重新定义padding值 */
+  padding-left: 86px;
+ }
 </style>
 
 <style lang="less" scoped>

@@ -23,7 +23,7 @@
       <el-input v-model="cusName" class="apply-item item-width" placeholder="客户名称">
         <template slot="prepend">客户名称:</template>
       </el-input>
-      <auto-select :key="key_auto_sel" :title="'状态'" v-model="applyCusStatus" :defaultValue="applyCusStatus" id="apply-auto-select" class="apply-item item-width">
+      <auto-select :key="key_auto_sel" :title="'状态'" v-model="applyCusStatus" :defaultValue="applyCusStatus" class="apply-item item-width">
         <el-option label="全部" value="300"></el-option>
         <el-option label="未完成客户" value="0"></el-option>
         <el-option label="完成客户" value="100"></el-option>
@@ -173,12 +173,6 @@ export default {
   }
 }
 </script>
-
-<style lang="less">
-#apply-auto-select {
-  .auto-select-padding(60px);
-}
-</style>
 
 <style lang="less" scoped>
 .apply-cus {

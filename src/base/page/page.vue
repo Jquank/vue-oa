@@ -9,6 +9,7 @@
 <template>
  <div class="block">
     <el-pagination
+      :key="key"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="currentPage"
@@ -33,6 +34,12 @@ export default {
         return {}
       }
     },
+    otherParams: {
+      type: Object,
+      default: function () {
+        return {}
+      }
+    },
     simpleLayout: {
       type: String,
       default: 'total, sizes, prev, pager, next, jumper'
@@ -47,12 +54,14 @@ export default {
     //   deep: true
     // }
     sendParams () {
+      this.key = new Date() + '' // 修复搜索时当前页未改变为1的bug
       this._getFirstList()
     }
 
   },
   data () {
     return {
+      key: '',
       currentPage: 1,
       handleList: [],
       pageCount: 0,
@@ -71,6 +80,7 @@ export default {
   methods: {
     // 获取列表的第一页
     _getFirstList () {
+      this.currentPage = 1
       let params = Object.assign({}, {
         pagesize: 10,
         currentpage: 1
@@ -78,7 +88,11 @@ export default {
 
       this.$post(this.url, params)
         .then(res => {
-          if (res.data[0].success) {
+          if (res.data.success) { // 万能报表的分页
+            this.pageCount = res.data.data.page_count
+            this.handleList = res
+            this._updateList()
+          } else if (res.data[0].success) {
             try {
               this.pageCount = res.data[1].data.pagecount
             } catch (e) {
@@ -95,13 +109,18 @@ export default {
     // page-size改变的回调，默认为10
     handleSizeChange (val) {
       this.pageval = val
+
+      if (this.url === '/rpt.do?get') { // 万能报表
+        this.otherParams.rpt_data.pageno = this.currentPage
+        this.otherParams.rpt_data.pagenum = this.pageval
+      }
       let params = Object.assign({}, {
         pagesize: this.pageval,
-        currentpage: 1
-      }, this.sendParams)
+        currentpage: this.currentPage
+      }, this.sendParams, this.otherParams)
       this.$post(this.url, params)
         .then(res => {
-          if (res.data[0].success) {
+          if (res.data.success || res.data[0].success) { // 前面表示万能报表
             this.handleList = res
             this._updateList()
           }
@@ -112,16 +131,23 @@ export default {
     },
     // 当前页改变的回调
     handleCurrentChange (page) {
+      this.currentPage = page
       if (!this.pageval) {
         this.pageval = 10
+      }
+
+      if (this.url === '/rpt.do?get') { // 万能报表
+        this.otherParams.rpt_data.pageno = page
+        this.otherParams.rpt_data.pagenum = this.pageval
       }
       let params = Object.assign({}, {
         pagesize: this.pageval,
         currentpage: page
-      }, this.sendParams)
+      }, this.sendParams, this.otherParams)
+      console.log(params)
       this.$post(this.url, params)
         .then(res => {
-          if (res.data[0].success) {
+          if (res.data.success || res.data[0].success) { // 前面表示万能报表
             this.handleList = res
             this._updateList()
           }

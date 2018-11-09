@@ -20,6 +20,7 @@
           <el-option label="全部" value=""></el-option>
           <el-option label="百度推广" value="BAITUI"></el-option>
           <el-option label="网建" value="WEBSITE"></el-option>
+          <el-option label="直通车" value="ZTC"></el-option>
           <el-option label="信息流" value="XXL"></el-option>
         </auto-select>
         <auto-select :key="key_order" title="订单状态" v-model="orderStatus" class="search-item item-width">
@@ -43,14 +44,14 @@
       </div>
       <!-- 列表 -->
       <el-table :data="pendingList" class="table-width" max-height="550">
-        <el-table-column prop="ordernum" label="订单ID" width="180">
+        <el-table-column prop="ordernum" label="订单ID" min-width="180">
         </el-table-column>
-        <el-table-column prop="cname" label="订单名称" min-width="160">
+        <el-table-column prop="cname" label="订单名称" min-width="150">
         </el-table-column>
-        <el-table-column prop="" label="提交时间" min-width="140">
+        <el-table-column prop="" label="提交时间" min-width="90">
           <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
         </el-table-column>
-        <el-table-column prop="username" label="下单人" width="80">
+        <el-table-column prop="username" label="下单人" min-width="80">
         </el-table-column>
         <el-table-column prop="" label="类型" width="80">
           <template slot-scope="scope">
@@ -59,7 +60,7 @@
             <span v-if="scope.row.pid!='WEBSITE'">{{scope.row.pname}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="" label="审核状态" width="120">
+        <el-table-column prop="" label="审核状态" min-width="140">
           <span slot-scope="scope">
             {{scope.row.currentname}}
           </span>
@@ -69,12 +70,12 @@
             {{scope.row.audittype === 0 ? "仅降E":"降E并提单"}}
           </span>
         </el-table-column>
-        <el-table-column prop="" label="最后操作时间" min-width="140">
+        <el-table-column prop="" label="最后操作时间" width="135">
           <span slot-scope="scope">{{scope.row.opt_time | timeFormat}}</span>
         </el-table-column>
-        <el-table-column prop="deptname" label="商务大区部门" width="150">
+        <el-table-column prop="deptname" label="商务大区部门" min-width="110">
         </el-table-column>
-        <el-table-column prop="" label="操作" width="180">
+        <el-table-column prop="" label="操作" width="150">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click.native="viewOrder(scope.row)" class="xsbtn">查看</el-button>
             <el-button type="warning" size="mini" @click.native="updateOrder(scope.row)" class="xsbtn">修改订单</el-button>

@@ -14,12 +14,13 @@ import './common/css/base.css'
 import 'nprogress/nprogress.css'
 
 import * as filters from '@/common/js/filters'
-import { $post, $get, uploadUrl } from 'api/http'
+import { $post, $get, $export, uploadUrl } from 'api/http'
 
 Vue.config.productionTip = false
 
 Vue.prototype.$post = $post
 Vue.prototype.$get = $get
+Vue.prototype.$export = $export
 Vue.prototype.uploadUrl = uploadUrl
 Vue.config.errorHandler = function (err, vm, info) {
   if (err === 'ignore') {

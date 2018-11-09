@@ -3,19 +3,26 @@
     <h3 class="check-title">{{title}}</h3>
     <el-card class="card-money">
       <p>
-        <b>百度订单金额：</b>{{moneyRecord.sum | currency1}}</p>
+        <b>百度订单金额：</b>{{moneyRecord.sum | currency1}}
+      </p>
       <p>
-        <b>服务费：</b>{{moneyRecord.service | currency1}}</p>
-      <p v-if="pid==='BAITUI'" v-for="(o,index) in moneyInfo" :key="index">
-        <template v-if="o.type<100 && o.type!=8">
-          <b>{{o.type | productType}}：</b>{{o.value | currency1}}
-        </template>
+        <b>服务费：</b>{{moneyRecord.service | currency1}}
       </p>
-      <p v-if="pid==='WEBSITE'" v-for="(o,index) in moneyInfo" :key="index">
-        <template v-if="o.type<100">
+      <div v-if="pid==='BAITUI'" v-for="(o,index) in moneyInfo" :key="index">
+        <div v-if="o.type<100 && o.type!=8">
           <b>{{o.type | productType}}：</b>{{o.value | currency1}}
-        </template>
-      </p>
+        </div>
+        <div v-if="o.type==1">
+          <b>大搜冲单金额：</b><span>{{orderInfo.dscd | currency1}}</span>
+          <b class="ml10px">大搜续费代金券：</b><span>{{moneyRecord.dsvoucher | currency1}}</span>
+          <b class="ml10px">大搜现金券：</b><span>{{moneyRecord.dsxjq | currency1}}</span>
+        </div>
+        <div v-if="o.type==2">
+          <b>大搜冲单金额：</b><span>{{orderInfo.dscd | currency1}}</span>
+          <b class="ml10px">大搜续费代金券：</b><span>{{moneyRecord.dsvoucher | currency1}}</span>
+          <b class="ml10px">大搜现金券：</b><span>{{moneyRecord.dsxjq | currency1}}</span>
+        </div>
+      </div>
     </el-card>
     <el-table :data="tableData" border class="mt10px init-table" style="width: 100%">
       <el-table-column prop="code_desc" label="银行类型" width="100">
@@ -101,40 +108,40 @@
       <el-form :inline="true" :model="p" label-position="top">
         <el-col :md="4">
           <el-form-item :label="index?'':' 产品类型'">
-            <el-select v-model="p.producttype" placeholder="选择产品类型">
+            <el-select v-model="p.producttype" placeholder="选择产品类型" :disabled="formDisable">
               <el-option v-for="(type,index) in productType" :key="index" :label="type.code_desc" :value="type.code_val"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :md="4">
           <el-form-item :label="index?'':' 金额'">
-            <el-input v-model="p.count">
+            <el-input v-model="p.count" :disabled="formDisable">
               <template slot="prepend">¥</template>
             </el-input>
           </el-form-item>
         </el-col>
         <el-col :md="4">
           <el-form-item :label="index?'':' 收款方式'">
-            <el-select v-model="p.typeAndBsid" placeholder="选择到款方式">
+            <el-select v-model="p.typeAndBsid" placeholder="选择到款方式" :disabled="formDisable">
               <el-option v-for="(type,index) in orderFlowDatas" :key="index" :label="type.code_desc" :value="type.code_val+'#'+type.bsid" ></el-option>
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :md="4">
           <el-form-item :label="index?'':' 时间'">
-            <el-select v-model="p.receivetime" placeholder="选择时间">
+            <el-select v-model="p.receivetime" placeholder="选择时间" :disabled="formDisable">
               <el-option v-for="(tm,index) in orderFlowDatas" :key="index" :label="tm.tm | timeFormat1" :value="tm.tm"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :md="4">
           <el-form-item :label="index?'':' 毛利'">
-            <el-input v-model="p.profit" placeholder="填写毛利"></el-input>
+            <el-input v-model="p.profit" placeholder="填写毛利" :disabled="formDisable"></el-input>
           </el-form-item>
         </el-col>
         <el-col :md="4">
           <el-form-item :label="index?'':'增/删'">
-          <el-button @click.native="add(index)" :type="index?'danger':'success'" :icon="index?minusIcon:addIcon" size="mini"></el-button>
+          <el-button @click.native="add(index)" :type="index?'danger':'success'" :icon="index?minusIcon:addIcon" size="mini"  :disabled="formDisable"></el-button>
           </el-form-item>
         </el-col>
       </el-form>
@@ -147,18 +154,18 @@
     <div class="mt10px">
       <el-form :inline="true">
         <el-form-item>
-          <el-checkbox v-model="allReceive">全款到账</el-checkbox>
+          <el-checkbox v-model="allReceive" :disabled="formDisable">全款到账</el-checkbox>
         </el-form-item>
         <el-form-item>
-          <el-checkbox v-if="pid==='BAITUI'" v-model="common">公对公</el-checkbox>
+          <el-checkbox v-if="pid==='BAITUI'" v-model="common" :disabled="formDisable">公对公</el-checkbox>
         </el-form-item>
         <el-form-item>
-          <el-input v-if="allReceive" v-model="profit" style="width:250px;margin-left:15px;">
+          <el-input v-if="allReceive" v-model="profit" style="width:250px;margin-left:15px;" :disabled="formDisable">
             <template slot="prepend">总毛利(¥)</template>
           </el-input>
         </el-form-item>
         <el-form-item label="提单时间：">
-          <el-date-picker v-model="billTime" type="date" value-format="yyyy-MM-dd" placeholder="选择日期">
+          <el-date-picker v-model="billTime" type="date" value-format="yyyy-MM-dd" placeholder="选择日期" :disabled="formDisable">
           </el-date-picker>
         </el-form-item>
         <el-form-item>
@@ -168,10 +175,13 @@
     </div>
 
     <div class="mt10px">
-      <el-input v-model="refuseRemark" :rows="3" style="width:50%" size="medium" type="textarea" placeholder="填写驳回/终止原因"></el-input>
-      <el-button @click.native="refuse" type="danger">驳 回</el-button>
-      <!-- todo -->
-      <el-button type="danger">终止订单</el-button>
+      <el-input v-model="refuseRemark" style="width:80%" type="textarea" :rows="4" placeholder="请填写驳回理由！！！"></el-input>
+    </div>
+    <div class="mt10px">
+      <auto-select v-model="backValue" :defaultValue="backValue" :title="'驳回至'" style="width:200px;">
+        <el-option v-for="(item, index) in backNodeList" :key="index" :value="item.sn+'#'+item.name" :label="item.name"></el-option>
+      </auto-select>
+      <el-button @click.native="refuse" type="danger" style="margin-left:-6px;">驳回</el-button>
     </div>
 
   </div>
@@ -182,6 +192,7 @@
 import { timeFormat1 } from 'common/js/filters'
 import { getByCode } from 'api/getOptions'
 import { orderDeal } from 'common/js/mixin'
+import AutoSelect from 'base/autoSelect/autoSelect'
 export default {
   mixins: [orderDeal],
   props: {
@@ -250,7 +261,8 @@ export default {
       billTime: '',
       remark: '',
       next_uid: '', // 下一步审核人
-      form_val: null
+      form_val: null,
+      formDisable: true
     }
   },
   computed: {
@@ -286,6 +298,7 @@ export default {
   mounted () {
     this._getPayList()
     this._getUrl()
+    this._getBackNode(this.sn, this.templateInfo.cpid)
     this.billTime = timeFormat1(this.orderInfo.bill_time || '')
     this.common = this.orderInfo.receivekind == 0 ? true : false // eslint-disable-line
     this.orderFlowDatas.forEach(val => { // 取出[13]飘红的bsid
@@ -312,6 +325,9 @@ export default {
         this.payList.splice(index, 1)
       }
     }
+  },
+  components: {
+    AutoSelect
   }
 }
 </script>
