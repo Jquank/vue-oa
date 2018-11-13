@@ -10,7 +10,7 @@
           {{item.true_name}}
         </div>
       </div>
-      <div class="btn-save">
+      <div v-if="showSaveBtn" class="btn-save">
         <el-button @click.native="save" type="primary">保存</el-button>
       </div>
     </el-row>

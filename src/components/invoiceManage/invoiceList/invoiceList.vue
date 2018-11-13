@@ -271,7 +271,7 @@ export default {
   },
   data () {
     return {
-      permissions: cookie.get('permissions'),
+      permissions: cookie.getJSON('permissions'),
       baoAName: '',
       invoiceName: '',
       num: '',
@@ -616,9 +616,6 @@ export default {
   .a-search-number {
     text-decoration: underline;
     color: #06c;
-  }
-  .title-btn {
-    border-top-right-radius: 15px;
   }
   .table-btns {
     display: flex;

@@ -131,6 +131,10 @@
     <div class="text-center" v-if="form.hasinvoice == 0 && permissions.indexOf('52') > -1">
       <el-button type="primary" @click.native="subChange('form')">提交修改</el-button>
     </div>
+
+    <!-- 开票审核 -->
+    <slot name="invoiceCheck"></slot>
+
     <div class="title">
       <el-button class="title-btn" type="warning">审核日志</el-button>
       <div class="line"></div>
@@ -171,7 +175,7 @@ export default {
   },
   data () {
     return {
-      permissions: cookie.get('permissions'),
+      permissions: cookie.getJSON('permissions'),
       invoiceDialog: false,
 
       rules: {

@@ -1,1 +1,1 @@
-export const userName = state => state.userName
+export const selCompanyDialog = state => state.selCompanyDialog

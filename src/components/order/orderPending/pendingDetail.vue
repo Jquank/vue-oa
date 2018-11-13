@@ -832,7 +832,7 @@ import cookie from 'js-cookie'
 export default {
   data () {
     return {
-      permissions: cookie.get('permissions'),
+      permissions: cookie.getJSON('permissions'),
       receiveData: {},
       tableFirstColumWidth: '100',
       stepList: [],

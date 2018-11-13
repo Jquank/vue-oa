@@ -71,7 +71,7 @@ export default {
   data () {
     return {
       userId: cookie.get('userId'),
-      permissions: cookie.get('permissions'),
+      permissions: cookie.getJSON('permissions'),
       cusName: '',
       bdAccount: '',
       list: [],

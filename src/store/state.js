@@ -1,5 +1,5 @@
 
 const state = {
-  userName: ''
+  selCompanyDialog: false
 }
 export default state

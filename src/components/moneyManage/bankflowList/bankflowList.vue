@@ -356,7 +356,7 @@ export default {
   data () {
     return {
       rid: cookie.get('rid'),
-      permissions: cookie.get('permissions'),
+      permissions: cookie.getJSON('permissions'),
       userId: cookie.get('userId'),
       isFixed: true,
       expandTest: [{ name: 'ddd', age: 18 }, { name: 'ccc', age: 19 }],

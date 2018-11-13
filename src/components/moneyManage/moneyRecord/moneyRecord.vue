@@ -64,7 +64,7 @@ export default {
   },
   computed: {
     permissions () {
-      return cookie.get('permissions')
+      return cookie.getJSON('permissions')
     }
   },
   methods: {

@@ -172,6 +172,17 @@ export function invoiceState (num, type) {
       case '20':
         return '专票'
     }
+  } else if (type === 'needInvoice') {
+    switch (num) {
+      case '-10':
+        return '不需要'
+      case '-1':
+        return '暂不需要'
+      case '0':
+        return '需要'
+      case '10':
+        return '已开'
+    }
   } else if (type === 'invoiceType') {
     switch (num) {
       case '0':

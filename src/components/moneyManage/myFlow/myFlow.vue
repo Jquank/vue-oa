@@ -66,7 +66,7 @@ import SelectDepartment from 'base/selectDepartment/selectDepartment'
 export default {
   data () {
     return {
-      permissions: cookie.get('permissions'),
+      permissions: cookie.getJSON('permissions'),
       businessDate: [],
       remark: '',
       receiveMan: '',

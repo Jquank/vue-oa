@@ -56,14 +56,15 @@ instance.interceptors.response.use( // 响应拦截
       }
     } else { // [] res为数组
       if (!Array.isArray(response.data[0].data)) { // {} 不带分页
+        console.log(12348996)
         if (response.data[0].success) {
           Message.success({
             message: response.data[0].msg || (response.data[1] && response.data[1].msg) ||
-            (response.data[2] && response.data[2].msg) || '成功'
+            (response.data[2] && response.data[2].msg)
           })
         } else {
           Message.error({
-            message: response.data[0].msg || '失败'
+            message: response.data[0].msg
           })
         }
       } else { // [] 带分页

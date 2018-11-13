@@ -1,27 +1,19 @@
 <template>
   <div class="control-scroll">
     <div ref="navbar" class="nav-bar">
-      <el-menu
-      :collapse="myCollapse"
-      router
-      background-color="#19233C"
-      text-color="#bfcbd9"
-      active-text-color="#fff"
-      :unique-opened="true"
-      :default-active="$router.currentRoute.fullPath">
-        <el-menu-item
-          index="/indexPage/indexContent">
+      <el-menu :collapse="myCollapse" router background-color="#19233C" text-color="#bfcbd9" active-text-color="#fff" :unique-opened="true" :default-active="$router.currentRoute.fullPath">
+        <el-menu-item index="/indexPage/indexContent">
           <i class="fa fa-home"></i>
           <span slot="title">首页</span>
         </el-menu-item>
-        <el-submenu v-for="item in navList" :key="item.id" :index="item.id+''">
-          <template slot="title">
+        <el-submenu v-for="(item, index) in navList" :key="index" :index="item.id+''"  v-if="permissions.indexOf(item.id)>-1">
+          <span slot="title">
             <i :class="item.fontIcon"></i>&nbsp;
             <span>{{item.text}}</span>
-          </template>
-            <el-menu-item class="item-active" ref="item" v-for="child in item.cList" :key="child.cid"
-              :index="child.to">{{child.text}}
-            </el-menu-item>
+          </span>
+          <el-menu-item class="item-active" ref="item" v-for="(child, index) in item.cList" :key="index" :index="child.to"  v-if="permissions.indexOf(child.cid)>-1 || child.cid === '1000' || child.cid === '1100'">{{child.text}}
+            <!-- 1000: 客户搜索，1100：工资管理 -->
+          </el-menu-item>
         </el-submenu>
       </el-menu>
     </div>
@@ -30,25 +22,26 @@
 
 <script>
 import { navList } from '@/api/config'
+import cookie from 'js-cookie'
 export default {
   data () {
     return {
+      permissions: cookie.getJSON('permissions'),
       navList: navList,
       myCollapse: false
-
     }
   },
   mounted () {
-    let that = this
-    window.onresize = function () {
-      let width = document.body.clientWidth
-      if (width < 960 && !that.myCollapse) {
-        // that.nested()
-      }
-      if (width >= 960 && that.myCollapse) {
-        // that.nested()
-      }
-    }
+    // let that = this
+    // window.onresize = function () {
+    //   let width = document.body.clientWidth
+    //   if (width < 960 && !that.myCollapse) {
+    //     that.nested()
+    //   }
+    //   if (width >= 960 && that.myCollapse) {
+    //     that.nested()
+    //   }
+    // }
   },
   methods: {
     // nested () {
@@ -74,10 +67,9 @@ export default {
 </script>
 
 <style scoped lang="less">
-
-.control-scroll{
+.control-scroll {
   height: calc(~'(100vh - 50px)');
-  width:197px;
+  width: 197px;
   overflow-x: hidden;
   overflow-y: auto;
   .nav-bar {
@@ -103,10 +95,8 @@ export default {
       background: #121929 !important;
     }
     .item-active:hover {
-      background: darken(#121929,20%) !important;
+      background: darken(#121929, 20%) !important;
     }
   }
-
 }
-
 </style>

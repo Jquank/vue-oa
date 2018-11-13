@@ -185,7 +185,7 @@ export default {
   data () {
     return {
       userId: userId,
-      permissions: cookie.get('permissions'),
+      permissions: cookie.getJSON('permissions'),
       cusName: '',
       bdAccount: '',
       baoANum: '',
@@ -193,7 +193,9 @@ export default {
 
       list: [],
       url: '/Search.do?ByCompanyName',
-      sendParams: {},
+      sendParams: {
+        'companyname': '$'
+      },
 
       cusDetailDialog: false,
       cusDetail: {},

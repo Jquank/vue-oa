@@ -71,6 +71,7 @@ import InvoiceList from 'components/invoiceManage/invoiceList/invoiceList'
 import InvoiceHandled from 'components/invoiceManage/invoiceHandled/invoiceHandled'
 import InvoiceSend from 'components/invoiceManage/invoiceSend/invoiceSend'
 import InvoiceCheck from 'components/invoiceManage/invoiceCheck/invoiceCheck'
+import ChargeOffCheck from 'components/invoiceManage/chargeOffCheck/chargeOffCheck'
 
 // 图表
 import Charts from 'views/charts/charts'
@@ -165,7 +166,12 @@ const router = new Router({
           component: News,
           children: [
             {
-              path: 'editor/:id',
+              path: 'editor/add/:id',
+              meta: { text: '新增公告' },
+              component: Editor
+            },
+            {
+              path: 'editor/editor/:id',
               meta: { text: '编辑公告' },
               component: Editor
             }
@@ -447,8 +453,14 @@ const router = new Router({
         {
           path: 'invoiceCheck',
           name: 'invoiceCheck',
-          meta: { text: '邮寄发票' },
+          meta: { text: '开票审核' },
           component: InvoiceCheck
+        },
+        {
+          path: 'chargeOffCheck',
+          name: 'chargeOffCheck',
+          meta: { text: '销账审核' },
+          component: ChargeOffCheck
         },
         // 工资管理
         {
@@ -477,12 +489,12 @@ const router = new Router({
           meta: { text: '保A客户统计' },
           component: ReportData
         },
-        {
-          path: 'REP_RECEIVE',
-          name: 'REP_RECEIVE',
-          meta: { text: '到款统计' },
-          component: ReportData
-        },
+        // {
+        //   path: 'REP_RECEIVE',
+        //   name: 'REP_RECEIVE',
+        //   meta: { text: '到款统计' },
+        //   component: ReportData
+        // },
         {
           path: 'REP_ORDER',
           name: 'REP_ORDER',

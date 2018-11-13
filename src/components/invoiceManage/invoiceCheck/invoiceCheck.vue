@@ -76,7 +76,21 @@
 
     <!-- 发票信息弹窗 -->
     <el-dialog :key="key_invoice_dialog" title="发票信息" :visible.sync="invoiceDialog" width="750px">
-      <invoice-info-dialog :form="form" :invoiceLogs="invoiceLogs"></invoice-info-dialog>
+      <invoice-info-dialog :form="form" :invoiceLogs="invoiceLogs">
+        <div slot="invoiceCheck">
+          <div class="title">
+            <el-button class="title-btn" type="warning">审核处理</el-button>
+            <div class="line"></div>
+          </div>
+          <div>
+            <el-input type="textarea" :rows="3" placeholder="请填写退回理由"></el-input>
+          </div>
+          <div class="text-center mt10px">
+            <el-button type="success" @click.native="check('1', 'single')">通过</el-button>
+            <el-button type="danger" @click.native="check('-1', 'single')">退回</el-button>
+          </div>
+        </div>
+      </invoice-info-dialog>
     </el-dialog>
   </div>
 </template>
@@ -117,7 +131,7 @@ export default {
             step: val.step
           })
         })
-      } else {
+      } else if (type === 'single') {
         arr = [{
           id: this.rowData.id,
           step: this.rowData.step,
@@ -160,11 +174,10 @@ export default {
       this.multipleSelection = val
     },
     // 查看
-    // todo invoiceid为空
     view (data) {
       this.rowData = data
       this.key_invoice_dialog = new Date() + '100'
-      this.$get('/Invoice.do?invoicebyid', { invoiceid: data.invoiceid }).then(
+      this.$get('/Invoice.do?invoicebyid', { invoiceid: data.id }).then(
         res => {
           if (res.data[0].success) {
             this.form = res.data[0].data[0]

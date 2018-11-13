@@ -56,16 +56,15 @@ export default {
         .then(res => {
           if (res.data.success) {
             console.log(res.data.data)
+            let permissions = res.data.data.permissions
+            permissions = permissions.split(',')
             cookie.set('token', res.data.data.tk)
             cookie.set('rid', res.data.data.rid)
             cookie.set('userId', res.data.data.id)
             cookie.set('userName', res.data.data.name)
-            cookie.set('permissions', res.data.data.permissions)
+            cookie.set('permissions', permissions)
             cookie.set('allowCall', res.data.data.dept)
             this.$router.push('/indexPage')
-            // storage.session.set('userId', res.data.data.id)
-            // storage.session.set('permissions', res.data.data.permissions)
-            // storage.session.set('token', res.data.data.tk)
             getByCode(38).then(res => {
               let data = res.data.data || []
               storage.set('productType38', data)
