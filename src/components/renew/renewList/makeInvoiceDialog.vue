@@ -209,6 +209,10 @@ export default {
     makeInvoiceStatus: {
       type: Number,
       default: 20 // 提前开票
+    },
+    offset: {
+      type: Number,
+      default: 20 // 提前开票
     }
   },
   watch: {
@@ -312,7 +316,7 @@ export default {
     changeSixTip () {
       let params = {
         invoiceInfoId: this.form.id,
-        offset: 0,
+        offset: this.offset,
         orderOrRenew: 'renew',
         is_advance: this.makeInvoiceStatus,
         reid: '',
@@ -331,7 +335,7 @@ export default {
     subChange (formName) {
       let params = {
         invoiceInfoId: this.form.id,
-        offset: 0,
+        offset: this.offset,
         orderOrRenew: 'renew',
         is_advance: this.makeInvoiceStatus,
         reid: '',

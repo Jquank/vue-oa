@@ -44,7 +44,6 @@ import AllotContract from 'components/contract/allotContract/allotContract'
 import ContractList from 'components/contract/contractList/contractList'
 import ApplyContract from 'components/contract/applyContract/applyContract'
 // 续费管理
-import CusList from 'components/renew/cusList/cusList'
 import RenewApply from 'components/renew/renewApply/renewApply'
 import RenewList from 'components/renew/renewList/renewList'
 import SalaryList from 'components/salary/salaryList'
@@ -407,12 +406,6 @@ const router = new Router({
           component: AddZtcOrder
         },
         // 续费管理
-        {
-          path: 'cusList',
-          name: 'cusList',
-          meta: { text: '客户列表' },
-          component: CusList
-        },
         {
           path: 'renewApply',
           name: 'renewApply',

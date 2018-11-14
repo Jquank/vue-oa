@@ -205,7 +205,6 @@ export const navList = [
     fontIcon: 'fa fa-credit-card',
     text: '续费管理',
     cList: [
-      { cid: '67', to: '/indexPage/cusList', text: '客户列表' },
       { cid: '5i', to: '/indexPage/renewApply', text: '续费申请' },
       { cid: '5h', to: '/indexPage/renewList', text: '续费列表' },
       { cid: '5j', to: '/indexPage/renewCheck', text: '续费审核' },

@@ -1,5 +1,5 @@
 <template>
-  <div class="cus-list component-container media-padding">
+  <div class="renew-list component-container media-padding">
     <div class="allot-search">
       <el-input placeholder="搜索客户名称" v-model="cus_name" class="list-item item-width">
         <template slot="prepend">公司名称:</template>
@@ -55,10 +55,15 @@
           <el-button plain type="warning" class="xsbtn">{{scope.row.step >= 100 && scope.row.checkName ? (scope.row.checkBindName?(scope.row.checkBindName): ((scope.row.checkTrueName && scope.row.checkTrueName!=scope.row.checkName)?(scope.row.checkTrueName):scope.row.checkName)) : scope.row.code_desc}}</el-button>
         </template>
       </el-table-column>
-      <el-table-column prop="" label="操作" width="190">
+      <el-table-column prop="" label="操作" width="160">
         <template slot-scope="scope">
-          <el-button @click.native="view(scope.row)" type="success" class="xsbtn">查看</el-button>
-          <el-button v-if=" ( (scope.row.invoice=='0' || scope.row.invoice=='10' || (scope.row.invoice=='-1' && scope.row.invoiceCha =='1') ) && scope.row.receiptmoney > 0 && scope.row.invoiceTmoney < scope.row.receiptmoney)" @click.native="applyInvoice(scope.row)" type="primary" class="xsbtn">申请发票</el-button>
+          <div class="btns">
+            <el-button @click.native="view(scope.row)" type="success" class="xsbtn">查看</el-button>
+            <el-button v-if=" ( (scope.row.invoice=='0' || scope.row.invoice=='10' || (scope.row.invoice=='-1' && scope.row.invoiceCha =='1') ) && scope.row.receiptmoney > 0 && scope.row.invoiceTmoney < scope.row.receiptmoney)" @click.native="applyInvoice(scope.row)" type="primary" class="xsbtn">申请发票</el-button>
+            <el-button v-if="scope.row.receiptmoney<scope.row.usemoney&&permissions.indexOf('6u')>-1" @click.native="chargeOff(scope.row)" type="danger" class="xsbtn">销账</el-button>
+            <el-button v-if="permissions.indexOf('7n') > -1&&scope.row.step!=400" @click.native="stop(scope.row)" type="danger" class="xsbtn">终止</el-button>
+            <el-button v-if="scope.row.hasinvoice >= 10 && permissions.indexOf('7d')>-1" @click.native="errInvoice(scope.row)" type="primary" class="xsbtn">发票开错冲红</el-button>
+          </div>
         </template>
       </el-table-column>
     </el-table>
@@ -68,7 +73,6 @@
     <el-dialog :modal-append-to-body="false" title="人员选择" :visible.sync="selUserDialog" width="550px">
       <select-user @userId="getUserId" @closeDialog="closeUserDialog"></select-user>
     </el-dialog>
-
     <!-- 确定选择弹窗 -->
     <el-dialog :title="'确定更换为：'+ selUserName + ' ?'" :visible.sync="confirmUserDialog" width="550px">
       <el-input v-model="remark" type="textarea" :rows="3"></el-input>
@@ -78,7 +82,7 @@
     </el-dialog>
     <!-- 开票弹窗 -->
     <el-dialog :modal-append-to-body="false" :title="makeInvoiceTitle" :visible.sync="makeInvoiceDialog" width="750px">
-      <make-invoice-dialog @closeDialog="makeInvoiceDialog=false" :key="key_dialog" :echoData="echoData" :makeInvoiceStatus="makeInvoiceStatus">
+      <make-invoice-dialog @closeDialog="makeInvoiceDialog=false" :key="key_dialog" :echoData="echoData" :makeInvoiceStatus="makeInvoiceStatus" :offset="offset">
         <el-button v-if="makeInvoiceStatus==20" slot="selBtn" @click.native="selCompanyDialog = true" type="primary">选择</el-button>
       </make-invoice-dialog>
     </el-dialog>
@@ -108,35 +112,247 @@
       <page :simpleLayout="'total, prev, next, jumper'" class="page" :url="comUrl" :sendParams="comParams" @updateList="updateMyCompanyList"></page>
     </el-dialog>
     <!-- 查看弹窗 -->
-    <el-dialog :modal-append-to-body="false" title="续费详情" :visible.sync="renewDetailDialog" width="950px">
-      <div class="title">
-        <el-button class="title-btn" type="warning">续费信息</el-button>
-        <div class="line"></div>
+    <el-dialog :modal-append-to-body="false" title="续费详情" :visible.sync="renewDetailDialog" width="1000px">
+      <!-- 续费信息 -->
+      <div>
+        <div class="title">
+          <el-button class="title-btn" type="warning">续费信息</el-button>
+          <div class="line"></div>
+        </div>
+        <el-form :model="baseInfo" label-width="134px" class="weight-label">
+          <el-row>
+            <el-col :md="9">
+              <el-form-item label="公司名称 :">
+                <div>{{baseInfo.companyname}}</div>
+              </el-form-item>
+            </el-col>
+            <el-col :md="5" class="maxwidth">
+              <el-form-item label="续费类型 :">
+                <div>{{baseInfo.addtype+'' | renewState('addType')}}</div>
+              </el-form-item>
+            </el-col>
+            <el-col :md="5" class="maxwidth">
+              <el-form-item label="续费次数 :">
+                <div>{{baseInfo.addcount}}</div>
+              </el-form-item>
+            </el-col>
+            <el-col :md="5" class="maxwidth">
+              <el-form-item label="特殊情况 :">
+                <div>{{baseInfo.special==20?'渠道加款':(baseInfo.special==30?'分公司加款':'')}}</div>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :md="9">
+              <el-form-item label="SF账号 :">
+                <div>{{baseInfo.proxy_id}}</div>
+              </el-form-item>
+            </el-col>
+            <el-col :md="5" class="maxwidth">
+              <el-form-item label="用户ID :">
+                <div>{{baseInfo.baidu_id}}</div>
+              </el-form-item>
+            </el-col>
+            <el-col :md="5" class="maxwidth">
+              <el-form-item label="服务费年限 :">
+                <div>{{baseInfo.serviceyear}}</div>
+              </el-form-item>
+            </el-col>
+            <el-col :md="5" class="maxwidth">
+              <el-form-item label="值班加款 :">
+                <div>{{baseInfo.holiday==0?'无':(baseInfo.holiday==10?'值班加款':'')}}</div>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :md="9" class="maxwidth">
+              <el-form-item label="百度账号 :">
+                <div>{{baseInfo.baidu_account}}</div>
+              </el-form-item>
+            </el-col>
+            <el-col :md="5">
+              <el-form-item label="是否需要发票 :">
+                <div>{{baseInfo.invoice | invoiceState('needInvoice')}}</div>
+              </el-form-item>
+            </el-col>
+            <el-col :md="5" class="maxwidth">
+              <el-form-item label="已开发票金额 :">
+                <div>{{baseInfo.invoice_money | currency}}</div>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :md="24" v-if="!baseInfo.order3number">
+              <el-form-item label="百度推广服务合同 :">
+                <div>{{baseInfo.ordernumber}}</div>
+              </el-form-item>
+            </el-col>
+            <template v-else>
+              <el-col :md="9">
+                <el-form-item label="百度推广服务订单编号 :">
+                  <div>{{baseInfo.ordernumber}}</div>
+                </el-form-item>
+              </el-col>
+              <el-col :md="5" class="maxwidth">
+                <el-form-item label="百度推广首消授权书 :">
+                  <div>{{baseInfo.order2number}}</div>
+                </el-form-item>
+              </el-col>
+              <el-col :md="5" class="maxwidth">
+                <el-form-item label="百度推广服务协议 :">
+                  <div>{{baseInfo.order3number}}</div>
+                </el-form-item>
+              </el-col>
+            </template>
+          </el-row>
+        </el-form>
       </div>
-      <el-form :model="baseInfo" label-width="80px">
-        <el-row>
-          <el-col :md="9">
-            <el-form-item label="公司名称 :">
-              <div>{{baseInfo.companyname}}</div>
-            </el-form-item>
-          </el-col>
-          <el-col :md="5" class="maxwidth">
-            <el-form-item label="续费类型 :">
-              <div>{{baseInfo.addtype}}</div>
-            </el-form-item>
-          </el-col>
-          <el-col :md="5" class="maxwidth">
-            <el-form-item label="续费次数 :">
-              <div>{{baseInfo.addcount}}</div>
-            </el-form-item>
-          </el-col>
-          <el-col :md="5" class="maxwidth">
-            <el-form-item label="百度账号 :">
-              <div>{{baseInfo.baidu_account}}</div>
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-form>
+      <!-- 到款信息 -->
+      <div>
+        <div class="title">
+          <el-button class="title-btn" type="warning">到款信息</el-button>
+          <div class="line"></div>
+        </div>
+        <el-table :data="moneyDetail" border>
+          <el-table-column prop="" label="实际到款">
+            <template slot-scope="scope">
+              <span v-if="!scope.row.mark">
+                <b>{{scope.row.type | productType}}</b>&nbsp;:&nbsp;
+                <span>{{scope.row.receive_money | currency}}</span>
+              </span>
+              <span v-else>
+                <b>{{scope.row._type}}</b>&nbsp;:&nbsp;
+                <span>{{scope.row.realTotal | currency}}</span>
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="" label="代金券|返款金额">
+            <template slot-scope="scope">
+              <span v-if="!scope.row.mark" v-show="scope.row.type<500">
+                <b>{{scope.row.type | productType}}</b>&nbsp;:&nbsp;
+                <span>{{scope.row.truevalue | currency}}</span>
+              </span>
+              <span v-else>
+                <b>{{scope.row._type}}</b>&nbsp;:&nbsp;
+                <span>{{scope.row.djqTotal | currency}}</span>
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="" label="申请加款">
+            <template slot-scope="scope">
+              <span v-if="!scope.row.mark" v-show="scope.row.type<500">
+                <b>{{scope.row.type | productType}}</b>&nbsp;:&nbsp;
+                <span>{{scope.row.add_money || 0 | currency}}</span>
+              </span>
+              <span v-else>
+                <b>{{scope.row._type}}</b>&nbsp;:&nbsp;
+                <span>{{scope.row.applyTotal | currency}}</span>
+              </span>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+      <!-- 操作 -->
+      <div>
+        <div class="title">
+          <el-button class="title-btn mt10px" type="warning">操作</el-button>
+          <div class="line"></div>
+        </div>
+        <el-form label-width="60px">
+          <el-row>
+            <el-col :md="24" class="maxwidth">
+              <el-form-item label="备注 :">
+                <el-input v-model="subRemark" type="textarea" placeholder="备注"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+        <div class="text-center">
+          <el-button @click.native="addCheckRemark" type="success">提 交</el-button>
+        </div>
+      </div>
+      <!-- 销账发票 -->
+      <div>
+        <div class="title">
+          <el-button class="title-btn mt10px" type="warning">销账发票</el-button>
+          <div class="line"></div>
+        </div>
+        <el-table :data="inreList" class="table-width" max-height="400">
+          <el-table-column prop="tnumber" label="单据号码"></el-table-column>
+          <el-table-column prop="companyname" label="购方名称(发票公司名)" min-width="120">
+          </el-table-column>
+          <el-table-column prop="chargename" label="货物名称"></el-table-column>
+          <el-table-column prop="tmoney" label="发票金额">
+            <span slot-scope="scope">{{scope.row.tmoney | currency}}</span>
+          </el-table-column>
+          <el-table-column prop="ttype" label="发票类型">
+            <span slot-scope="scope">{{scope.row.ttype | invoiceState('invoiceKind')}}</span>
+          </el-table-column>
+          <el-table-column prop="invoicecode" label="发票代码" width="100">
+          </el-table-column>
+          <el-table-column prop="invoicenumber" label="发票号码" width="100">
+          </el-table-column>
+          <el-table-column prop="invoicetime" label="开票日期" width="90">
+            <span slot-scope="scope">{{scope.row.invoicetime | timeFormat}}</span>
+          </el-table-column>
+          <el-table-column prop="prove_img" label="发票垫款证明" width="90">
+            <template slot-scope="scope">
+              <img :src="scope.row.prove_img">
+            </template>
+          </el-table-column>
+        </el-table>
+        <page :simpleLayout="'total, prev, next, jumper'" class="page" :url="inreUrl" :sendParams="inreParams" @updateList="updateInreList"></page>
+      </div>
+      <!-- 操作记录 -->
+      <div>
+        <div class="title">
+          <el-button class="title-btn mt10px" type="warning">操作记录</el-button>
+          <div class="line"></div>
+        </div>
+        <el-table :data="recordList" class="table-width" max-height="400">
+          <el-table-column prop="inserttime" label="操作时间" width="135">
+            <span slot-scope="scope">{{scope.row.inserttime | timeFormat}}</span>
+          </el-table-column>
+          <el-table-column prop="name" label="操作人">
+            <template slot-scope="scope">
+              <span>{{scope.row.name}}</span>
+              <span>{{scope.row.bindName?('('+scope.row.bindName+')'): ((scope.row.true_name && scope.row.true_name!=scope.row.name)?('('+scope.row.true_name+')'):'')}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="record" label="操作记录" min-width="140">
+          </el-table-column>
+          <el-table-column prop="remark" label="处理备注"></el-table-column>
+        </el-table>
+        <page :simpleLayout="'total, prev, next, jumper'" class="page" :url="recordUrl" :sendParams="recordParams" @updateList="updateRecordList"></page>
+      </div>
+    </el-dialog>
+    <!-- 销账弹窗 -->
+    <el-dialog :modal-append-to-body="false" title="销账" :visible.sync="chargeOffDialog" width="550px">
+      <el-table :data="chargeOffList" class="table-width" @selection-change="handleSelFlow">
+        <el-table-column type="selection" width="40">
+        </el-table-column>
+        <el-table-column prop="code_desc" label="银行类型" width="80">
+        </el-table-column>
+        <el-table-column prop="tm" label="时间" width="135">
+          <span slot-scope="scope">{{scope.row.tm | timeFormat}}</span>
+        </el-table-column>
+        <el-table-column prop="split_amount" label="金额" width="120">
+          <span slot-scope="scope">{{scope.row.split_amount | currency}}</span>
+        </el-table-column>
+        <el-table-column prop="allocRemark" label="备注"></el-table-column>
+      </el-table>
+      <page :simpleLayout="'total, prev, next, jumper'" class="page" :url="chargeOffUrl" :sendParams="chargeOffParams" @updateList="updateChargeOffList"></page>
+      <div class="text-center mt10px">
+        <el-button @click.native="confirmFlow" type="success">确 定</el-button>
+      </div>
+    </el-dialog>
+    <!-- 终止弹窗 -->
+    <el-dialog :modal-append-to-body="false" title="终止" :visible.sync="stopDialog" width="550px">
+      <b>填写备注：</b>
+      <el-input v-model="stopRemark" type="textarea" :rows="3"></el-input>
+      <div class="text-center mt10px">
+        <el-button @click.native="confirmStop" type="success">确 定</el-button>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -178,7 +394,6 @@ export default {
       makeInvoiceTitle: '',
       echoData: [],
       makeInvoiceStatus: 0, // 提前开票，申请发票
-      rowData: {},
 
       selCompanyDialog: false,
       handleCompanyName: '',
@@ -192,7 +407,25 @@ export default {
 
       renewDetailDialog: false,
       baseInfo: {},
-      moneyDetail: []
+      moneyDetail: [],
+      subRemark: '',
+      inreList: [],
+      inreUrl: '/Invoice.do?invoiceOffsetList',
+      inreParams: {},
+      recordList: [],
+      recordUrl: '/Renew.do?renewrecord',
+      recordParams: {},
+
+      chargeOffDialog: false,
+      chargeOffList: [],
+      chargeOffUrl: '/receipt.do?searchbankreceipt',
+      chargeOffParams: {},
+      selFlowArr: [],
+      rowData: {},
+      stopDialog: false,
+      stopRemark: '',
+
+      offset: ''
     }
   },
   created () {
@@ -201,12 +434,113 @@ export default {
     })
   },
   methods: {
+    // 终止
+    stop (data) {
+      this.stopDialog = true
+      this.rowData = data
+    },
+    confirmStop () {
+      let params = {
+        reid: this.rowData.id,
+        remark: this.stopRemark
+      }
+      this.$post('/Renew.do?renewStop', params).then(res => {
+        if (res.data.success) {
+          this.stopDialog = false
+          this.search()
+        }
+      })
+    },
+    // 销账
+    chargeOff (data) {
+      this.rowData = data
+      this.chargeOffDialog = true
+    },
+    handleSelFlow (val) {
+      this.selFlowArr = val
+    },
+    confirmFlow () {
+      if (!this.selFlowArr.length) {
+        this.$message.error('请勾选流水')
+        return
+      }
+      let arr = []
+      this.selFlowArr.forEach(val => {
+        arr.push({
+          id: val.id,
+          centerId: val.bsaid,
+          money: val.split_amount
+        })
+      })
+      let params = {
+        reId: this.rowData.id,
+        companyid: this.rowData.companyid,
+        bankReviceId: arr,
+        // todo
+        truevalue: '',
+        offsetRemark: ''
+      }
+      this.$post('/Renew.do?renewMoneyOffset', params).then(res => {
+        if (res.data.success) {
+          this.chargeOffDialog = false
+          this.search()
+        }
+      })
+    },
+    // 查看
     view (data) {
+      this.inreParams = {
+        reid: data.id,
+        status: 100
+      }
+      this.recordParams = {
+        reid: data.id
+      }
       this.$get('/Renew.do?renewdetail', { reid: data.id }).then(res => {
         this.baseInfo = res.data[0].data
         this.moneyDetail = res.data[1].data
+        let realTotal = 0
+        let djqTotal = 0
+        let applyTotal = 0
+        this.moneyDetail.push({ mark: 'last' })
+        this.moneyDetail.forEach((val, index) => {
+          realTotal += val.receive_money || 0
+          if (val.type < 500) {
+            djqTotal += val.truevalue || 0
+            applyTotal += val.add_money || 0
+          }
+        })
+        this.moneyDetail.forEach((val, index) => {
+          val._type = '总计'
+          val.realTotal = realTotal
+          val.djqTotal = djqTotal
+          val.applyTotal = applyTotal
+        })
         this.renewDetailDialog = true
+        console.log(this.moneyDetail)
       })
+    },
+    addCheckRemark () {
+      let params = {
+        reid: this.baseInfo.id,
+        checkRemark: this.subRemark
+      }
+      this.$post('/Renew.do?checkrenew', params).then(res => {
+        if (res.data.success) {
+          this.renewDetailDialog = false
+        }
+      })
+    },
+    // 发票开错冲红
+    errInvoice (data) {
+      this.key_dialog = new Date() + ''
+      this._getInvoiceData(data, data.id)
+      this.makeInvoiceTitle = '发票冲红'
+      this.makeInvoiceStatus = 10
+      this.offset = 10
+      setTimeout(() => {
+        this.makeInvoiceDialog = true
+      }, 100)
     },
     // 申请发票
     applyInvoice (data) {
@@ -214,6 +548,7 @@ export default {
       this._getInvoiceData(data, data.id)
       this.makeInvoiceTitle = '申请发票'
       this.makeInvoiceStatus = 10
+      this.offset = 0
       setTimeout(() => {
         this.makeInvoiceDialog = true
       }, 100)
@@ -223,6 +558,7 @@ export default {
       this.key_dialog = new Date() + ''
       this.makeInvoiceTitle = '提前发票'
       this.makeInvoiceStatus = 20
+      this.offset = 0
       setTimeout(() => {
         this.makeInvoiceDialog = true
       }, 200)
@@ -257,6 +593,15 @@ export default {
     },
     updateMyCompanyList (res) {
       this.myCompany = res.data[0].data
+    },
+    updateInreList (res) {
+      this.inreList = res.data[0].data
+    },
+    updateRecordList (res) {
+      this.recordList = res.data[0].data
+    },
+    updateChargeOffList (res) {
+      this.chargeOffList = res.data[0].data
     },
     // 更换责任人
     changeUser () {
@@ -321,8 +666,6 @@ export default {
       this.key_add_type = new Date() + ''
       this.key_renew_status = new Date() + '1'
     },
-    // todo
-    cusOut () {},
     getList (res) {
       this.list = res.data[0].data
     }
@@ -337,7 +680,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.cus-list {
+.renew-list {
   .allot-search {
     display: flex;
     flex-wrap: wrap;
@@ -348,6 +691,14 @@ export default {
     }
     .item-width {
       width: 280px;
+    }
+  }
+  .btns{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    .el-button{
+      margin: 3px 0 0 0;
     }
   }
 }

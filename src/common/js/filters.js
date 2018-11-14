@@ -61,6 +61,8 @@ export function productType (num, str) {
   productTypes.forEach(val => {
     if (num == val.code_val) { //eslint-disable-line
       type = val.code_desc
+    } else if (num == '1000') { //eslint-disable-line
+      type = '总计'
     }
   })
   return type + '' + (str || '')
@@ -210,6 +212,29 @@ export function invoiceState (num, type) {
         return '品牌专区'
       case '4':
         return '网站建设'
+    }
+  }
+}
+export function renewState (num, type) {
+  if (type === 'activity') {
+    switch (num) {
+      case '10':
+        return '预芽活动'
+      case '20':
+        return '短框活动'
+      case '30':
+        return '年框活动'
+      default:
+        return '无'
+    }
+  } else if (type === 'addType') {
+    switch (num) {
+      case '10':
+        return '正常加款'
+      case '20':
+        return '提前加款'
+      case '30':
+        return '返款加款'
     }
   }
 }

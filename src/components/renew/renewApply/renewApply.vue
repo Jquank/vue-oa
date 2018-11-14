@@ -4,7 +4,7 @@
       <el-row>
         <el-col :md="24" class="maxwidth">
           <el-form-item label="公司名称 :" required>
-            <el-input v-model="form.comName" disabled placeholder="公司名称" class="input-btn"></el-input>
+            <el-input v-model="form.comName" disabled class="input-btn"></el-input>
             <el-button @click.native="selCompanyDialog = true" type="primary">选 择</el-button>
           </el-form-item>
         </el-col>
@@ -111,7 +111,50 @@
       </el-row>
       <el-row>
         <el-col :md="24" class="maxwidth">
-          <el-form-item label="百度账号 :" required>
+          <el-form-item label="选择提前发票 :">
+            <el-button @click.native="selAheadInvoice" type="primary">选 择</el-button>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :md="24" class="maxwidth">
+          <el-form-item label="发票信息 :">
+            <el-table stripe border :data="handleSelInvoice">
+              <!-- <el-table-column type="selection" width="55">
+              </el-table-column> -->
+              <el-table-column prop="tnumber" label="单据号码" width="100">
+              </el-table-column>
+              <el-table-column prop="companyname" label="购方名称(发票公司名)" min-width="150">
+              </el-table-column>
+              <el-table-column prop="chargename" label="货物名称" min-width="140">
+              </el-table-column>
+              <el-table-column prop="" label="发票金额" width="100">
+                <span slot-scope="scope">{{scope.row.tmoney | currency}}</span>
+              </el-table-column>
+              <el-table-column prop="" label="已销金额" width="100">
+                <span slot-scope="scope">{{scope.row.receive_money | currency}}</span>
+              </el-table-column>
+              <el-table-column prop="" label="未销金额" width="100">
+                <span slot-scope="scope">{{scope.row.tmoney - scope.row.receive_money | currency}}</span>
+              </el-table-column>
+              <el-table-column prop="ttype" label="发票类型">
+                <span slot-scope="scope">{{scope.row.ttype | invoiceState('invoiceKind')}}</span>
+              </el-table-column>
+            </el-table>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :md="24" class="maxwidth">
+          <el-form-item label="垫款证明 :">
+            <el-button type="primary" icon="el-icon-upload">点击上传</el-button>
+            <a href="javascript:void(0)" class="a-search-number tipfont fa fa-download" @click="exportBankFlow">点击下载模板</a>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :md="24" class="maxwidth">
+          <el-form-item label="百度账号 :">
             <el-input v-model="form.bdAccount" disabled></el-input>
           </el-form-item>
         </el-col>
@@ -134,7 +177,7 @@
         <el-col :md="24" class="maxwidth">
           <el-form-item label="产品类型 :" required>
             <el-checkbox-group @change="handleProChange" v-model="form.selProList">
-              <el-checkbox v-for="(item,index) in form.productList" :key="index" :label="item">
+              <el-checkbox v-for="(item,index) in form.productList" :key="index" :label="item.code_val">
                 {{item.code_desc}}</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
@@ -142,7 +185,7 @@
       </el-row>
       <el-row>
         <el-col :md="24" class="maxwidth">
-          <el-form-item label="大搜服务费 :" required>
+          <el-form-item label="服务费 :" required>
             <el-input v-model="form.dsService" placeholder="大搜服务费"></el-input>
           </el-form-item>
         </el-col>
@@ -206,19 +249,19 @@
     </el-dialog>
 
     <!-- 选择流水弹窗 -->
-    <el-dialog :modal-append-to-body="false" title="分配合同" :visible.sync="selFlowDialog" width="600px">
+    <el-dialog :modal-append-to-body="false" title="分配合同" :visible.sync="selFlowDialog" width="700px">
       <el-table @selection-change="handleSelectionChange" stripe border :data="selFlowList">
         <el-table-column type="selection" width="55">
         </el-table-column>
-        <el-table-column prop="code_desc" label="银行类型">
+        <el-table-column prop="code_desc" label="银行类型" width="80">
         </el-table-column>
-        <el-table-column prop="" label="时间">
+        <el-table-column prop="" label="交易时间">
           <span slot-scope="scope">{{scope.row.tm | timeFormat}}</span>
         </el-table-column>
-        <el-table-column prop="allocRemark" label="预留信息">
+        <el-table-column prop="fm_name" label="付款名" min-width="140">
         </el-table-column>
-        <el-table-column prop="" label="金额">
-          <span slot-scope="scope">{{scope.row.split_amount | currency1}}</span>
+        <el-table-column prop="" label="金额" width="100">
+          <span slot-scope="scope">{{scope.row.split_amount | currency}}</span>
         </el-table-column>
         <el-table-column prop="alloc_remark" label="备注">
         </el-table-column>
@@ -226,6 +269,36 @@
       <page :simpleLayout="'total, prev, next, jumper'" class="page" :url="selFlowUrl" :sendParams="selFlowParams" @updateList="getFlowList"></page>
       <div class="text-right mt10px">
         <el-button @click.native="selFlowDialog = false" type="primary">确定</el-button>
+      </div>
+    </el-dialog>
+
+    <!-- 选择提前发票弹窗 -->
+    <el-dialog :modal-append-to-body="false" title="选择发票" :visible.sync="selInvoiceDialog" width="700px">
+      <el-table @selection-change="handleInvoiceChange" stripe border :data="invoiceList">
+        <el-table-column type="selection" width="55">
+        </el-table-column>
+        <el-table-column prop="tnumber" label="单据号码" width="100">
+        </el-table-column>
+        <el-table-column prop="companyname" label="购方名称(发票公司名)" min-width="120">
+        </el-table-column>
+        <el-table-column prop="chargename" label="货物名称" min-width="140">
+        </el-table-column>
+        <el-table-column prop="" label="发票金额" width="100">
+          <span slot-scope="scope">{{scope.row.tmoney | currency}}</span>
+        </el-table-column>
+        <el-table-column prop="" label="已销金额" width="100">
+          <span slot-scope="scope">{{scope.row.receive_money | currency}}</span>
+        </el-table-column>
+        <el-table-column prop="" label="未销金额" width="100">
+          <span slot-scope="scope">{{scope.row.tmoney - scope.row.receive_money | currency}}</span>
+        </el-table-column>
+        <el-table-column prop="ttype" label="发票类型">
+          <span slot-scope="scope">{{scope.row.ttype | invoiceState('invoiceKind')}}</span>
+        </el-table-column>
+      </el-table>
+      <page :simpleLayout="'total, prev, next, jumper'" class="page" :url="selInvoiceUrl" :sendParams="selInvoiceParams" @updateList="getInvoiceList"></page>
+      <div class="text-right mt10px">
+        <el-button @click.native="selInvoiceDialog = false" type="primary">确定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -255,7 +328,8 @@ export default {
         addTotal: '',
         remark: '',
         holiday: '0',
-        productList: []
+        productList: [],
+        selProList: []
       },
       selCompanyDialog: false,
       companyName: '',
@@ -270,6 +344,7 @@ export default {
         companyid: ''
       },
       handleSelFlow: [],
+      flowIdArr: [],
 
       contractTab: 'new',
       contract: {
@@ -279,7 +354,14 @@ export default {
         bdServiceProtocol: [],
         bdXXLProtocol: [],
         wjContract: []
-      }
+      },
+
+      selInvoiceDialog: false,
+      invoiceList: [],
+      selInvoiceUrl: '/Invoice.do?advanceInvoice',
+      selInvoiceParams: {},
+      handleSelInvoice: [],
+      invoiceIdArr: []
     }
   },
   created () {
@@ -295,6 +377,14 @@ export default {
     this._getMyContract()
   },
   methods: {
+    // 下载垫款证明模板
+    exportBankFlow () {
+      let params = {
+        receiveIds: this.flowIdArr.join(','),
+        invoiceIds: this.invoiceIdArr.join(',')
+      }
+      this.$export('/Invoice.do?invoiceCushionProof', params)
+    },
     // 勾选产品
     handleProChange (val) {
       // this.productMoneyList = []
@@ -310,12 +400,16 @@ export default {
     // 勾选流水
     handleSelectionChange (val) {
       this.handleSelFlow = val
-      // this.form.receiveMoneyTotal = 0
-      // this.checkedFlowIds = []
-      // this.handleSelFlow.forEach(val => {
-      //   this.form.receiveMoneyTotal += parseFloat(val.split_amount || 0)
-      //   this.checkedFlowIds.push(val.id)
-      // })
+      val.forEach(val => {
+        this.flowIdArr.push(val.id)
+      })
+    },
+    // 勾选发票
+    handleInvoiceChange (val) {
+      this.handleSelInvoice = val
+      val.forEach(val => {
+        this.invoiceIdArr.push(val.id)
+      })
     },
     selFlow () {
       this.selFlowDialog = true
@@ -323,10 +417,20 @@ export default {
         companyid: this.companyid
       }
     },
+    selAheadInvoice () {
+      this.selInvoiceDialog = true
+      this.selInvoiceParams = {
+        comName: this.form.comName
+      }
+    },
     selCompany (val) {
+      console.log(val)
       this.selCompanyDialog = false
       this.form.comName = val.name
       this.companyid = val.companyid
+      this.form.bdAccount = val.baiducount
+      this.form.userID = val.baiduid
+      this.form.sfAccount = val.proxyid
     },
     searchService (e, type) {
       if (type === 'enter' || e.target.nodeName !== 'INPUT') {
@@ -359,6 +463,9 @@ export default {
     },
     getFlowList (res) {
       this.selFlowList = res.data[0].data
+    },
+    getInvoiceList (res) {
+      this.invoiceList = res.data[0].data
     }
   },
   components: { Page }
