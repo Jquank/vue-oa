@@ -1,9 +1,9 @@
 <template>
   <div class="renew-apply component-container media-padding">
-    <el-form :model="form" :label-width="leftLabelWidth">
+    <el-form :model="form" ref="form" :rules="rules" :label-width="leftLabelWidth">
       <el-row>
         <el-col :md="24" class="maxwidth">
-          <el-form-item label="公司名称 :" required>
+          <el-form-item label="公司名称 :" prop="comName">
             <el-input v-model="form.comName" disabled class="input-btn"></el-input>
             <el-button @click.native="selCompanyDialog = true" type="primary">选 择</el-button>
           </el-form-item>
@@ -11,14 +11,14 @@
       </el-row>
       <el-row>
         <el-col :md="24" class="maxwidth">
-          <el-form-item label="流水 :" required>
+          <el-form-item label="流水 :">
             <el-button @click.native="selFlow" type="primary">选 择</el-button>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :md="24">
-          <el-form-item label="流水信息 :" required>
+          <el-form-item label="流水信息 :">
             <el-table border :data="handleSelFlow" style="max-width: 400px;">
               <el-table-column prop="code_desc" label="到款方式">
               </el-table-column>
@@ -76,7 +76,7 @@
       </el-row>
       <el-row>
         <el-col :md="24" class="maxwidth">
-          <el-form-item label="值班加款 :" required>
+          <el-form-item label="值班加款 :" prop="holiday">
             <el-radio v-model="form.holiday" label="10">是</el-radio>
             <el-radio v-model="form.holiday" label="0">否</el-radio>
           </el-form-item>
@@ -84,7 +84,7 @@
       </el-row>
       <el-row>
         <el-col :md="24" class="maxwidth">
-          <el-form-item label="加款类型 :" required>
+          <el-form-item label="加款类型 :" prop="addType">
             <el-radio v-model="form.addType" label="10">正常加款</el-radio>
             <el-radio v-model="form.addType" label="20">提前加款</el-radio>
             <el-radio v-model="form.addType" label="30">返款加款</el-radio>
@@ -93,16 +93,16 @@
       </el-row>
       <el-row>
         <el-col :md="24" class="maxwidth">
-          <el-form-item label="特殊情况 :" required>
-            <el-radio v-model="form.activityType" label="20">渠道</el-radio>
-            <el-radio v-model="form.activityType" label="30">分公司</el-radio>
+          <el-form-item label="特殊情况 :">
+            <el-radio v-model="form.special" label="20">渠道</el-radio>
+            <el-radio v-model="form.special" label="30">分公司</el-radio>
             <span class="red ml10px">( 请慎重选择此项！)</span>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :md="24" class="maxwidth">
-          <el-form-item label="是否需要发票 :" required>
+          <el-form-item label="是否需要发票 :" prop="isNeedInvoice">
             <el-radio v-model="form.isNeedInvoice" label="-10">不再需要</el-radio>
             <el-radio v-model="form.isNeedInvoice" label="-1">本月暂不需要</el-radio>
             <el-radio v-model="form.isNeedInvoice" label="0">需要(有效期3个月)</el-radio>
@@ -120,8 +120,6 @@
         <el-col :md="24" class="maxwidth">
           <el-form-item label="发票信息 :">
             <el-table stripe border :data="handleSelInvoice">
-              <!-- <el-table-column type="selection" width="55">
-              </el-table-column> -->
               <el-table-column prop="tnumber" label="单据号码" width="100">
               </el-table-column>
               <el-table-column prop="companyname" label="购方名称(发票公司名)" min-width="150">
@@ -147,8 +145,8 @@
       <el-row>
         <el-col :md="24" class="maxwidth">
           <el-form-item label="垫款证明 :">
-            <el-button type="primary" icon="el-icon-upload">点击上传</el-button>
-            <a href="javascript:void(0)" class="a-search-number tipfont fa fa-download" @click="exportBankFlow">点击下载模板</a>
+            <up-file @fileUrl="getFileUrl"></up-file>
+            <a @click="exportBankFlow" href="javascript:void(0)" class="a-search-number tipfont fa fa-download">点击下载模板</a>
           </el-form-item>
         </el-col>
       </el-row>
@@ -175,24 +173,40 @@
       </el-row>
       <el-row>
         <el-col :md="24" class="maxwidth">
-          <el-form-item label="产品类型 :" required>
+          <el-form-item label="产品类型 :" prop="selProList">
             <el-checkbox-group @change="handleProChange" v-model="form.selProList">
-              <el-checkbox v-for="(item,index) in form.productList" :key="index" :label="item.code_val">
+              <el-checkbox v-for="(item,index) in form.productList" :key="index" :label="item">
                 {{item.code_desc}}</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row>
-        <el-col :md="24" class="maxwidth">
-          <el-form-item label="服务费 :" required>
-            <el-input v-model="form.dsService" placeholder="大搜服务费"></el-input>
+      <el-row v-for="pro in productMoneyList" :key="pro.type" :gutter="20" class="maxwidth">
+        <el-col :md="12">
+          <el-form-item :label="pro.type | productType">
+            <el-input v-model="pro.value">
+              <span slot="prepend">¥</span>
+            </el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :md="12">
+          <el-form-item label="代金券/返款金额">
+            <el-input v-model="pro.truevalue">
+              <span slot="prepend">¥</span>
+            </el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :md="24" class="maxwidth">
-          <el-form-item label="服务费期限 :" required>
+          <el-form-item label="服务费 :" prop="serviceMoney">
+            <el-input v-model="form.serviceMoney" placeholder="服务费"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :md="24" class="maxwidth">
+          <el-form-item label="服务费期限 :"  prop="serviceYear">
             <el-input v-model="form.serviceYear" placeholder="服务费期限">
               <template slot="append">年</template>
             </el-input>
@@ -202,14 +216,30 @@
       <el-row>
         <el-col :md="24" class="maxwidth">
           <el-form-item label="到款总金额 :">
-            <span>{{form.receiveTotal | currency1}}</span>
+            <span>{{receiveTotal | currency1}}</span>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :md="24" class="maxwidth">
           <el-form-item label="加款总金额 :">
-            <span>{{form.addTotal | currency1}}</span>
+            <span>{{addTotal | currency1}}</span>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row v-if="form.special == 20" :key="form.addType==20?new Date()+'':''">
+        <el-col :md="24" class="maxwidth">
+          <el-form-item label="预计还款时间 :" :prop="form.addType==20?'expectTime':''">
+            <el-date-picker v-model="form.expectTime" value-format="yyyy/MM/dd" type="date" placeholder="选择日期">
+            </el-date-picker>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row v-if="form.special == 30">
+        <el-col :md="24" class="maxwidth">
+          <el-form-item label="分公司到款时间 :" prop="receiveTime">
+            <el-date-picker v-model="form.receiveTime" value-format="yyyy/MM/dd" type="date" placeholder="选择日期">
+            </el-date-picker>
           </el-form-item>
         </el-col>
       </el-row>
@@ -223,7 +253,7 @@
       <el-row>
         <el-col :md="24" class="maxwidth" style="text-align:right">
           <el-form-item>
-            <el-button type="primary" @click="submit">提 交</el-button>
+            <el-button type="primary" @click.native="subApply('form')">提 交</el-button>
           </el-form-item>
         </el-col>
       </el-row>
@@ -308,7 +338,31 @@
 import Page from 'base/page/page'
 import { getByCode, getMyContract } from 'api/getOptions'
 import cookie from 'js-cookie'
+import UpFile from 'base/upLoad/upFile'
 export default {
+  computed: {
+    receiveTotal () {
+      let sum = 0
+      this.handleSelFlow.forEach(val => {
+        sum += parseFloat(val.split_amount || 0)
+      })
+      return sum
+    },
+    addTotal () {
+      let sum = 0
+      this.productMoneyList.forEach(val => {
+        sum += parseFloat(val.value || 0)
+      })
+      return sum
+    },
+    truevalueTotal () {
+      let sum = 0
+      this.productMoneyList.forEach(val => {
+        sum += parseFloat(val.truevalue || 0)
+      })
+      return sum
+    }
+  },
   data () {
     return {
       USER_ID: cookie.get('userId'),
@@ -316,20 +370,20 @@ export default {
       form: {
         comName: '',
         addType: '10',
-        activityType: '',
+        special: '',
         isNeedInvoice: '',
         bdAccount: '',
         userID: '',
         sfAccount: '',
         productType: [],
-        dsService: '',
-        serviceYear: '',
-        receiveTotal: 0,
-        addTotal: '',
+        serviceMoney: '0',
+        serviceYear: '0',
         remark: '',
         holiday: '0',
         productList: [],
-        selProList: []
+        selProList: [],
+        receiveTime: '',
+        expectTime: ''
       },
       selCompanyDialog: false,
       companyName: '',
@@ -343,6 +397,7 @@ export default {
       selFlowParams: {
         companyid: ''
       },
+      rowData: {},
       handleSelFlow: [],
       flowIdArr: [],
 
@@ -361,10 +416,30 @@ export default {
       selInvoiceUrl: '/Invoice.do?advanceInvoice',
       selInvoiceParams: {},
       handleSelInvoice: [],
-      invoiceIdArr: []
+      invoiceIdArr: [],
+      fileUrl: '',
+      productMoneyList: [],
+
+      rules: {
+        holiday: [],
+        addType: [],
+        isNeedInvoice: [],
+        selProList: [],
+        serviceMoney: [],
+        serviceYear: [],
+        expectTime: [],
+        receiveTime: []
+      }
     }
   },
   created () {
+    let specialRules = {
+      comName: [{ required: true, message: '请选择公司', trigger: 'blur' }]
+    }
+    for (let key in this.rules) {
+      this.rules[key].push({ required: true, message: '请填写必填项', trigger: 'blur' })
+    }
+    this.rules = Object.assign({}, this.rules, specialRules)
     let viewWidth = document.documentElement.clientWidth
     if (viewWidth && viewWidth < 768) {
       this.leftLabelWidth = '50px'
@@ -377,6 +452,63 @@ export default {
     this._getMyContract()
   },
   methods: {
+    subApply (formName) {
+      let hasValue = this.productMoneyList.every(val => {
+        return val.value > 0
+      })
+      if (!hasValue) {
+        this.$message.error(`请填写所勾选产品的金额！`)
+        return
+      }
+      if (this.receiveTotal.toFixed(2) !== this.addTotal.toFixed(2)) {
+        this.$message.error(`下单金额与到款总金额不匹配！`)
+        return
+      }
+      if (this.truevalueTotal > 0 && !this.form.remark) {
+        this.$message.error('请填写备注！')
+        return
+      }
+      let params = {
+        prove_img: this.fileUrl,
+        comName: this.form.comName,
+        cpid: this.rowData.cpid,
+        companylogid: this.rowData.companylogid,
+        companyid: this.rowData.companyid, // 公司id
+        claim: this.flowIdArr, // 流水id
+        invoiceIds: this.invoiceIdArr, // 发票id
+        addtype: this.form.addType, // 续费类型
+        servicemoney: this.form.serviceMoney, // 服务费
+        serviceyear: this.form.serviceYear, // 服务费年限
+        remark: this.form.remark, // 备注
+        activity: this.form.special, // 活动类型
+        baiduAccount: this.form.bdAccount, // 百度账号
+        baiduId: this.form.userID, // 用户ID
+        proxyId: this.form.sfAccount, // 代理账号
+        usemoney: this.addTotal, // 产品总额
+        receiptmoney: this.receiveTotal, // 总到款
+        renewdetail: this.productMoneyList,
+        invoice_status: this.form.isNeedInvoice, // 发票状态
+        holiday: this.form.holiday,
+        special: this.form.special,
+        receive_time: this.form.receiveTime,
+        offsetTime: this.form.expectTime,
+        con_id: this.form.bdOrderNumber || undefined, // 服务订单
+        con_id2: this.form.bdProxy || undefined, // 首消授权书
+        con_id3: this.form.bdServiceProtocol || undefined // 服务协议
+      }
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          console.log(params)
+          // this.$post('/Renew.do?apply', params).then(res => {
+          // })
+        } else {
+          return false
+        }
+      })
+    },
+    getFileUrl (res) {
+      this.fileUrl = res.url
+    },
     // 下载垫款证明模板
     exportBankFlow () {
       let params = {
@@ -387,15 +519,18 @@ export default {
     },
     // 勾选产品
     handleProChange (val) {
-      // this.productMoneyList = []
-      // val.forEach(item => {
-      //   this.productMoneyList.push({
-      //     id: null,
-      //     code_desc: item.code_desc,
-      //     type: item.code_val,
-      //     value: 0
-      //   })
-      // })
+      this.productMoneyList = []
+      val.forEach(item => {
+        this.productMoneyList.push({
+          id: null,
+          code_val: item.code_val,
+          code_desc: item.code_desc,
+          type: item.code_val + '',
+          value: '0',
+          truevalue: '0',
+          bonustype: item.tb_field_name
+        })
+      })
     },
     // 勾选流水
     handleSelectionChange (val) {
@@ -414,7 +549,7 @@ export default {
     selFlow () {
       this.selFlowDialog = true
       this.selFlowParams = {
-        companyid: this.companyid
+        companyid: this.rowData.companyid
       }
     },
     selAheadInvoice () {
@@ -424,10 +559,9 @@ export default {
       }
     },
     selCompany (val) {
-      console.log(val)
+      this.rowData = val
       this.selCompanyDialog = false
       this.form.comName = val.name
-      this.companyid = val.companyid
       this.form.bdAccount = val.baiducount
       this.form.userID = val.baiduid
       this.form.sfAccount = val.proxyid
@@ -468,7 +602,7 @@ export default {
       this.invoiceList = res.data[0].data
     }
   },
-  components: { Page }
+  components: { Page, UpFile }
 }
 </script>
 

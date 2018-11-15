@@ -208,7 +208,7 @@ export const navList = [
       { cid: '5i', to: '/indexPage/renewApply', text: '续费申请' },
       { cid: '5h', to: '/indexPage/renewList', text: '续费列表' },
       { cid: '5j', to: '/indexPage/renewCheck', text: '续费审核' },
-      { cid: '5k', to: '/indexPage/renewList', text: '续费收单' },
+      { cid: '5k', to: '/indexPage/renewReceive', text: '续费收单' },
       { cid: '5l', to: '/indexPage/renewList', text: '转户出纳' },
       { cid: '5m', to: '/indexPage/renewList', text: '续费加款' },
       { cid: '6p', to: '/indexPage/renewList', text: '转出出纳' }

@@ -46,6 +46,10 @@ import ApplyContract from 'components/contract/applyContract/applyContract'
 // 续费管理
 import RenewApply from 'components/renew/renewApply/renewApply'
 import RenewList from 'components/renew/renewList/renewList'
+import RenewCheck from 'components/renew/renewCheck/renewCheck'
+import RenewReceive from 'components/renew/renewReceive/renewReceive'
+
+
 import SalaryList from 'components/salary/salaryList'
 // 到款管理
 import MoneyRecord from 'components/moneyManage/moneyRecord/moneyRecord'
@@ -417,6 +421,18 @@ const router = new Router({
           name: 'renewList',
           meta: { text: '续费申请' },
           component: RenewList
+        },
+        {
+          path: 'renewCheck',
+          name: 'renewCheck',
+          meta: { text: '续费审核' },
+          component: RenewCheck
+        },
+        {
+          path: 'renewReceive',
+          name: 'renewReceive',
+          meta: { text: '续费收单' },
+          component: RenewReceive
         },
         // 发票管理
         {
