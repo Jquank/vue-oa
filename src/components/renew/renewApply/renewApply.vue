@@ -145,7 +145,7 @@
       <el-row>
         <el-col :md="24" class="maxwidth">
           <el-form-item label="垫款证明 :">
-            <up-file @fileUrl="getFileUrl"></up-file>
+            <up-file @fileUrl="getFileUrl" :listType="'picture'" style="display:inline-block;"></up-file>
             <a @click="exportBankFlow" href="javascript:void(0)" class="a-search-number tipfont fa fa-download">点击下载模板</a>
           </el-form-item>
         </el-col>
@@ -280,7 +280,7 @@
 
     <!-- 选择流水弹窗 -->
     <el-dialog :modal-append-to-body="false" title="分配合同" :visible.sync="selFlowDialog" width="700px">
-      <el-table @selection-change="handleSelectionChange" stripe border :data="selFlowList">
+      <el-table @selection-change="handleSelectionChange" stripe border :data="selFlowList" max-height="500">
         <el-table-column type="selection" width="55">
         </el-table-column>
         <el-table-column prop="code_desc" label="银行类型" width="80">
@@ -366,7 +366,7 @@ export default {
   data () {
     return {
       USER_ID: cookie.get('userId'),
-      leftLabelWidth: '120px',
+      leftLabelWidth: '130px',
       form: {
         comName: '',
         addType: '10',
@@ -400,6 +400,7 @@ export default {
       rowData: {},
       handleSelFlow: [],
       flowIdArr: [],
+      flowArr: [],
 
       contractTab: 'new',
       contract: {
@@ -457,11 +458,11 @@ export default {
         return val.value > 0
       })
       if (!hasValue) {
-        this.$message.error(`请填写所勾选产品的金额！`)
+        this.$message.error('请填写所勾选产品的金额！')
         return
       }
       if (this.receiveTotal.toFixed(2) !== this.addTotal.toFixed(2)) {
-        this.$message.error(`下单金额与到款总金额不匹配！`)
+        this.$message.error('下单金额与到款总金额不匹配！')
         return
       }
       if (this.truevalueTotal > 0 && !this.form.remark) {
@@ -474,7 +475,7 @@ export default {
         cpid: this.rowData.cpid,
         companylogid: this.rowData.companylogid,
         companyid: this.rowData.companyid, // 公司id
-        claim: this.flowIdArr, // 流水id
+        claim: this.flowArr, // 流水id
         invoiceIds: this.invoiceIdArr, // 发票id
         addtype: this.form.addType, // 续费类型
         servicemoney: this.form.serviceMoney, // 服务费
@@ -499,8 +500,12 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           console.log(params)
-          // this.$post('/Renew.do?apply', params).then(res => {
-          // })
+          // return
+          this.$post('/Renew.do?apply', params).then(res => {
+            if (res.data.success) {
+              this.$router.push('/indexPage/renewList')
+            }
+          })
         } else {
           return false
         }
@@ -535,8 +540,17 @@ export default {
     // 勾选流水
     handleSelectionChange (val) {
       this.handleSelFlow = val
-      val.forEach(val => {
-        this.flowIdArr.push(val.id)
+      val.forEach(item => {
+        this.flowIdArr.push(item.id)
+        this.flowArr.push({
+          B_YHLX: item.code_val,
+          id: item.bsaid,
+          bkid: item.bkid,
+          bsid: item.id,
+          use: item.split_amount,
+          fm_name: item.fm_name,
+          brid: item.bsid
+        })
       })
     },
     // 勾选发票
@@ -573,10 +587,8 @@ export default {
         }
       }
     },
-    submit () {},
     // 新旧合同切换
     handleTabClick (val) {
-      console.log(val)
     },
     _getMyContract () {
       getMyContract('CONTRACT_BJHT', this.USER_ID).then(res => {

@@ -8,9 +8,11 @@
       multiple
       :limit="1"
       :on-exceed="handleExceed"
-      list-type="picture"
-      :file-list="fileList">
-      <el-button size="small" type="primary">点击上传</el-button>
+      :list-type="listType"
+      :file-list="fileList"
+      :data="otherParams"
+      :show-file-list="showFileList">
+      <el-button size="small" type="primary">{{title}}</el-button>
       <!-- <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div> -->
     </el-upload>
   </div>
@@ -19,15 +21,44 @@
 <script>
 import { uploadUrl } from 'api/http'
 export default {
+  props: {
+    uploadUrl: {
+      type: String,
+      default: uploadUrl
+    },
+    listType: {
+      type: String,
+      default: 'text'
+    },
+    title: {
+      type: String,
+      default: '点击上传'
+    },
+    otherParams: {
+      type: Object,
+      default: function () {
+        return {}
+      }
+    },
+    isHiddenFileList: {
+      type: Boolean,
+      default: false
+    }
+  },
   data () {
     return {
-      uploadUrl: uploadUrl,
-      fileList: []
+      fileList: [],
+      showFileList: true
     }
   },
   methods: {
     upSuccess (file, fileList) {
       this.$emit('fileUrl', file)
+      if (this.isHiddenFileList) {
+        setTimeout(() => {
+          this.showFileList = false
+        }, 2000)
+      }
     },
     handleExceed (files, fileList) {
       this.$message.warning('限上传一个文件，请移除后重新上传')

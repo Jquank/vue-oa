@@ -8,10 +8,6 @@
       <el-button @click.native="pass" type="success" style="margin-left:-6px;">派单</el-button>
     </div>
     <div class="mt10px">
-      <!-- todo -->
-      <span>网建制作流程：</span>
-    </div>
-    <div class="mt10px">
       <el-input v-model="refuseRemark" style="width:80%" type="textarea" :rows="5" placeholder="请填写驳回理由！！！"></el-input>
     </div>
     <div class="mt10px">

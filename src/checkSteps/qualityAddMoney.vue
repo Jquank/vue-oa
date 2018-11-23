@@ -1,17 +1,17 @@
 <template>
-  <div class="init-finance">
+  <div class="add-money">
     <h3 class="check-title">{{title}}</h3>
     <el-card class="card-money mt10px">
       <p>
-        <b>百度订单金额：</b>{{moneyRecord.sum | currency1}}</p>
+        <b>订单金额：</b>{{moneyRecord.sum | currency1}}</p>
       <p>
         <b>服务费：</b>{{moneyRecord.service | currency1}}</p>
-      <p v-if="pid==='BAITUI'" v-for="(o,index) in moneyInfo" :key="index">
+      <p v-for="o in moneyInfo" :key="o.type">
         <template v-if="o.type<100 && o.type!=8">
           <b>{{o.type | productType}}：</b>{{o.value | currency1}}
         </template>
       </p>
-      <p v-if="pid==='WEBSITE'" v-for="(o,index) in moneyInfo" :key="index">
+      <p v-if="pid==='WEBSITE'" v-for="o in moneyInfo" :key="o.type">
         <template v-if="o.type<100">
           <b>{{o.type | productType}}：</b>{{o.value | currency1}}
         </template>
@@ -19,35 +19,36 @@
     </el-card>
     <el-row :gutter="10" class="mt10px">
       <el-col :md="6">
-        <el-input v-model="baiduID" placeholder="百度账户ID"></el-input>
+        <el-input v-model="orderInfo.baiduid" placeholder="百度账户ID"></el-input>
       </el-col>
       <el-col :md="6">
-        <el-input v-model="baiduAccount" placeholder="百度账户名"></el-input>
+        <el-input v-model="orderInfo.baiducount" placeholder="百度账户名"></el-input>
       </el-col>
       <el-col :md="6">
-        <el-input v-model="proxyid" placeholder="代理账号"></el-input>
+        <el-input v-model="orderInfo.proxyid" placeholder="代理账号"></el-input>
       </el-col>
       <el-col :md="6">
-        <el-date-picker v-model="applyFortime" value-format="yyyy/MM/dd HH:mm" type="datetime" placeholder="申请加款时间"></el-date-picker>
+         <el-date-picker v-model="orderInfo.applytime" type="datetime" placeholder="申请加款时间">
+        </el-date-picker>
       </el-col>
     </el-row>
 
-    <div class="mt10px">
+    <div class="mt10px" v-if="pid === 'BAITUI'">
       <el-form :inline="true">
         <el-form-item label="大搜冲单费：">
-          <el-input v-model="dscd">
+          <el-input v-model="orderInfo.dscd">
             <span slot="prepend">¥</span>
           </el-input>
         </el-form-item>
         <el-form-item label="信息流冲单费：">
-          <el-input v-model="xxlcd">
+          <el-input v-model="orderInfo.xxlcd">
             <span slot="prepend">¥</span>
           </el-input>
         </el-form-item>
       </el-form>
     </div>
 
-    <el-table :data="payList" border :summary-method="getSummaries" show-summary class="table-width">
+    <el-table v-if="payList.length" :data="payList" border :summary-method="getSummaries" show-summary class="table-width">
       <el-table-column prop="" label="实际到款">
         <span slot-scope="scope">{{scope.row.type | productType}}：{{scope.row.count | currency}}</span>
       </el-table-column>
@@ -65,7 +66,7 @@
           <span>{{scope.row.type>100?'':scope.row.xjq | currency}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="" label="申请加款">
+      <el-table-column prop="_value" label="申请加款">
         <template slot-scope="scope">
           <span>{{scope.row.type>100?'':scope.row.type | productType}}</span>
           <span>{{scope.row.type>100?'':':'}}</span>
@@ -86,7 +87,7 @@
     </div>
 
     <div class="mt10px">
-      <el-input v-model="refuseRemark" style="width:80%" type="textarea" :rows="5" placeholder="请填写驳回理由！！！"></el-input>
+      <el-input v-model="refuseRemark" style="width:80%" type="textarea" :rows="3" placeholder="请填写驳回理由！！！"></el-input>
     </div>
     <div class="mt10px">
       <auto-select v-model="backValue" :defaultValue="backValue" :title="'驳回至'" style="width:200px;">
@@ -94,15 +95,13 @@
       </auto-select>
       <el-button @click.native="refuse" type="danger" style="margin-left:-6px;">驳回</el-button>
     </div>
-
   </div>
 </template>
 
 <script>
 // import storage from 'good-storage'
-// import { timeFormat1 } from 'common/js/filters'
 import { orderDeal } from 'common/js/mixin'
-import { currency } from 'common/js/filters'
+import { currency, timeFormat } from 'common/js/filters'
 import AutoSelect from 'base/autoSelect/autoSelect'
 export default {
   mixins: [orderDeal],
@@ -154,7 +153,7 @@ export default {
       }
     },
     originUser: {
-      // [10]
+      // [3]
       type: Object,
       default: function () {
         return {}
@@ -176,56 +175,44 @@ export default {
       next_uid: '', // 下一步审核人
       form_val: null,
 
-      baiduID: '',
-      baiduAccount: '',
       proxyid: '',
       applyFortime: '',
-      dscd: '0',
-      xxlcd: '0',
       voucher_total: 0,
       xjq_total: 0,
       applyAddMoney_total: 0,
-      applyed_total: 0
+      applyed_total: 0,
+      payList: []
     }
   },
   computed: {
     curid () {
       return this.orderInfo.curid
-    },
-    applyAddMoneyTotal () { // 加款金额总和，不含冲单费
-      let sum = 0
-      this.payList.forEach(val => {
-        sum += parseFloat(val._value || 0)
-      })
-      return sum
-    }
-  },
-  // todo
-  watch: {
-    payList: {
-      handler: function (val, oldVal) {
-        console.log(123588)
-      },
-      deep: true
     }
   },
   created () {
     this._getPayList()
     this.payList.forEach(val => {
-      if (val.type === 1) {
-        val.voucher = this.moneyRecord.dsvoucher
-        val.xjq = this.moneyRecord.dsxjq
+      if (val.type == 1) { // eslint-disable-line
+        val.voucher = this.moneyRecord.dsvoucher || 0
+        val.xjq = this.moneyRecord.dsxjq || 0
         val._value = (parseFloat(val.count || 0) + parseFloat(val.xjq || 0))
-      } else if (val.type === 2) {
-        val.voucher = this.moneyRecord.xxlvoucher
-        val.xjq = this.moneyRecord.xxlxjq
+      } else if (val.type == 2) { // eslint-disable-line
+        val.voucher = this.moneyRecord.xxlvoucher || 0
+        val.xjq = this.moneyRecord.xxlxjq || 0
         val._value = (parseFloat(val.count || 0) + parseFloat(val.xjq || 0))
-      } else if (val.type === 51) {
-        val.voucher = this.moneyRecord.ztcvoucher
-        val.xjq = this.moneyRecord.ztcxjq
+      } else if (val.type == 51) { // eslint-disable-line
+        val.voucher = this.moneyRecord.ztcvoucher || 0
+        val.xjq = this.moneyRecord.ztcxjq || 0
         val._value = (parseFloat(val.count || 0) + parseFloat(val.xjq || 0))
+      } else {
+        val.voucher = 0
+        val.xjq = 0
+        val._value = parseFloat(val.count || 0)
       }
     })
+    if (this.orderInfo.applytime) {
+      this.orderInfo.applytime = timeFormat(this.orderInfo.applytime)
+    }
   },
   mounted () {
     this._getUrl()
@@ -242,7 +229,6 @@ export default {
   methods: {
     handleChangeInput (val) {
       console.log(val)
-      console.log(this.payList)
     },
     // 总计
     getSummaries (param) {
@@ -253,14 +239,15 @@ export default {
         x['y' + index] = 0
         data.forEach((item, key) => {
           x['y0'] += parseFloat(item.count || 0)
-          x['y1'] += parseFloat(item.voucher || 0)
-          x['y2'] += parseFloat(item.xjq || 0)
-          x['y3'] += parseFloat(item._value || 0)
-          x['y4'] += parseFloat(item.add_money || 0)
+          if (item.type < 100) {
+            x['y1'] += parseFloat(item.voucher || 0)
+            x['y2'] += parseFloat(item.xjq || 0)
+            x['y3'] += parseFloat(item._value || 0)
+            x['y4'] += parseFloat(item.add_money || 0)
+          }
         })
         sums[index] = '总计：' + currency(x['y' + index])
       })
-      sums[3] = '总计：' + currency(this.applyAddMoneyTotal)
       return sums
     }
   },
@@ -271,7 +258,7 @@ export default {
 </script>
 
 <style lang="less">
-.init-finance {
+.add-money {
   .card-money {
     background: #d9edf7;
     .el-card__body {

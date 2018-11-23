@@ -65,7 +65,7 @@ export default {
         return {}
       }
     },
-    originUser: { // [10]
+    originUser: { // [3]
       type: Object,
       default: function () {
         return {}

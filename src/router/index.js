@@ -48,9 +48,14 @@ import RenewApply from 'components/renew/renewApply/renewApply'
 import RenewList from 'components/renew/renewList/renewList'
 import RenewCheck from 'components/renew/renewCheck/renewCheck'
 import RenewReceive from 'components/renew/renewReceive/renewReceive'
+import RenewDispatch from 'components/renew/renewDispatch/renewDispatch'
+import RenewAdd from 'components/renew/renewAdd/renewAdd'
+import AccountOut from 'components/renew/accountOut/accountOut'
 
-
+// 工资管理
 import SalaryList from 'components/salary/salaryList'
+import SalaryDetail from 'components/salary/salaryDetail'
+import SalaryError from 'components/salary/salaryError'
 // 到款管理
 import MoneyRecord from 'components/moneyManage/moneyRecord/moneyRecord'
 import AddMoney from 'components/moneyManage/moneyRecord/addMoney'
@@ -63,10 +68,11 @@ import MoneyCount from 'components/moneyManage/moneyCount/moneyCount'
 import AddBaiduOrder from 'components/order/addBaiduOrder/addBaiduOrder'
 import AddWjOrder from 'components/order/addWjOrder/addWjOrder'
 import AddZtcOrder from 'components/order/addZtcOrder/addZtcOrder'
+import AddKaOrder from 'components/order/addKaOrder/addKaOrder'
 import OrderPending from 'components/order/orderPending/orderPending'
 import PendingDetail from 'components/order/orderPending/pendingDetail'
 import EditOrder from 'components/order/orderPending/editOrder'
-import OrderProcessed from 'components/order/orderProcessed/orderProcessed'
+import OrderList from 'components/order/orderList/orderList'
 
 // 发票管理
 import InvoicePending from 'components/invoiceManage/invoicePending/invoicePending'
@@ -386,10 +392,10 @@ const router = new Router({
           ]
         },
         {
-          path: 'orderProcessed',
-          name: 'orderProcessed',
+          path: 'orderList',
+          name: 'orderList',
           meta: { text: '已处理订单' },
-          component: OrderProcessed
+          component: OrderList
         },
         {
           path: 'addBaiduOrder',
@@ -408,6 +414,12 @@ const router = new Router({
           name: 'addZtcOrder',
           meta: { text: '新增直通车订单' },
           component: AddZtcOrder
+        },
+        {
+          path: 'addKaOrder',
+          name: 'addKaOrder',
+          meta: { text: '新增大客订单' },
+          component: AddKaOrder
         },
         // 续费管理
         {
@@ -433,6 +445,24 @@ const router = new Router({
           name: 'renewReceive',
           meta: { text: '续费收单' },
           component: RenewReceive
+        },
+        {
+          path: 'renewDispatch',
+          name: 'renewDispatch',
+          meta: { text: '转户出纳' },
+          component: RenewDispatch
+        },
+        {
+          path: 'renewAdd',
+          name: 'renewAdd',
+          meta: { text: '续费加款' },
+          component: RenewAdd
+        },
+        {
+          path: 'accountOut',
+          name: 'accountOut',
+          meta: { text: '转出出纳' },
+          component: AccountOut
         },
         // 发票管理
         {
@@ -476,7 +506,20 @@ const router = new Router({
           path: 'salaryList',
           name: 'salaryList',
           meta: { text: '工资列表' },
-          component: SalaryList
+          component: SalaryList,
+          children: [
+            {
+              path: ':id',
+              meta: { text: '工资列表/工资详情' },
+              component: SalaryDetail
+            }
+          ]
+        },
+        {
+          path: 'salaryError',
+          name: 'salaryError',
+          meta: { text: '工资异常' },
+          component: SalaryError
         },
         // 图表
         {

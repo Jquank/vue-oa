@@ -45,6 +45,9 @@ a {
 .red {
   color: red;
 }
+.block {
+  display: block;
+}
 .text-center {
   text-align: center;
 }
@@ -152,11 +155,12 @@ div.el-dialog__body {
 }
 .el-table__footer-wrapper tbody td {
   color: #df4747;
-  text-align: center;
 }
 .export {
   flex-grow: 1;
-  text-align: right;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
   padding-right: 30px;
 }
 .input-btn {
@@ -172,6 +176,10 @@ div.el-dialog__body {
 }
 .weight-label label.el-form-item__label {
   font-weight: 600;
+  font-size: 12px;
+}
+.weight-label .el-form-item__content {
+  font-size: 12px;
 }
 .weight-label .el-form-item {
   margin-bottom: 0 !important;

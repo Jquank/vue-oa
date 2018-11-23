@@ -4,8 +4,8 @@
 </template>
 
 <script>
-// import { getArea } from 'api/getOptions'
-import storage from 'good-storage'
+import { transTree } from 'common/js/utils'
+// import storage from 'good-storage'
 export default {
   props: {
     areaDisabled: {
@@ -19,28 +19,28 @@ export default {
       options: [],
       props: {
         value: 'id',
-        label: 'areaname',
+        label: 'AREANAME',
         children: 'children'
       }
     }
   },
   mounted () {
-    let areaList = storage.get('area')
-    if (!areaList) {
-      this._getAreaList()
-    } else {
-      this.options = areaList
-    }
+    // let areaList = storage.get('area')
+    // if (!areaList) {
+    this._getAreaList()
+    // } else {
+    // this.options = areaList
+    // }
   },
   methods: {
     _getAreaList () {
       this.$post('/Area.do?comparea', {parentid: 1}).then(res => {
-        let area = res.data.data
-        // this.clearChildren(area)
-        this.options = area
-        storage.set('area', area)
-        if (res.data.status === 1) {
-
+        if (res.data.success) {
+          let area = res.data.data
+          transTree(area)
+          console.log(123)
+          this.options = area
+          // storage.set('area', area)
         }
       })
     },

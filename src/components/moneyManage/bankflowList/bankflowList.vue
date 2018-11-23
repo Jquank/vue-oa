@@ -485,6 +485,7 @@ export default {
           type: 'warning',
           message: '请完成必填项或必选项！'
         })
+        return
       }
       this.$post('/receipt.do?allocationbankreceipt', params).then(res => {
         this.$message({

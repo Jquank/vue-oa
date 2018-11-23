@@ -23,7 +23,7 @@
       <el-button class="list-item" @click.native="search" type="primary">查 询</el-button>
       <el-button class="list-item" @click.native="reset" type="warning">重 置</el-button>
       <div class="list-item export">
-        <el-button @click.native="changeUser" type="warning">更换责任人</el-button>
+        <el-button v-if="permissions.indexOf('87') > -1" @click.native="changeUser" type="warning">更换责任人</el-button>
         <el-button @click.native="aheadMakeInvoice" type="primary">提前开票</el-button>
       </div>
     </div>

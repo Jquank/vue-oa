@@ -70,7 +70,7 @@
         <template slot-scope="scopeOut">
           <el-table class="split-item" :data="scopeOut.row.split" :show-header="false">
             <el-table-column class-name="split-item-col" show-overflow-tooltip label="" prop="''">
-              <span slot-scope="scope" :class="curid===scope.row.curid?'red':''">{{scope.row.id===scope.row.bsid?scope.row.companyname:'.'}}</span>
+              <span slot-scope="scope" :class="curid===scope.row.curid?'red':''">{{scope.row.id===scope.row.bsid?scope.row.companyname||'.':'.'}}</span>
             </el-table-column>
           </el-table>
         </template>
@@ -96,8 +96,8 @@
         </div>
       </div>
     </el-card>
-
-    <el-row :class="index?'':'mt10px'" v-for="(p,index) in payList" :key="index">
+    <div v-if="payList.length">
+      <el-row :class="index?'':'mt10px'" v-for="(p,index) in payList" :key="index">
       <el-form :inline="true" :model="p" label-position="top">
         <el-col :md="4">
           <el-form-item :label="index?'':' 产品类型'">
@@ -115,8 +115,8 @@
         </el-col>
         <el-col :md="4">
           <el-form-item :label="index?'':' 收款方式'">
-            <el-select v-model="p.typeAndBsid" placeholder="选择到款方式">
-              <el-option v-for="(type,index) in orderFlowDatas" :key="index" :label="type.code_desc" :value="type.code_val+'#'+type.bsid" ></el-option>
+            <el-select v-model="p.receivetype" placeholder="选择到款方式">
+              <el-option v-for="(ty,index) in orderFlowDatas" :key="index" :label="ty.code_desc" :value="ty.code_val+'#'+ty.bsid"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -139,7 +139,7 @@
         </el-col>
       </el-form>
     </el-row>
-
+    </div>
     <el-row>
       <b>总到账金额：</b><span>{{totalReceive | currency1}}</span>
     </el-row>
@@ -225,7 +225,7 @@ export default {
         return {}
       }
     },
-    originUser: { // [10]
+    originUser: { // [3]
       type: Object,
       default: function () {
         return {}
@@ -250,7 +250,8 @@ export default {
       billTime: '',
       remark: '',
       next_uid: '', // 下一步审核人
-      form_val: null
+      form_val: null,
+      payList: []
     }
   },
   computed: {
@@ -282,9 +283,14 @@ export default {
     getByCode(52).then(res => {
       this.productType = res.data.data
     })
+    this._getPayList()
+    this.payList.forEach(val => { // 被驳回，100回显
+      if (val.receivetype !== undefined && val.receivetype !== null && val.receivetype !== '') {
+        val.receivetype = val.receivetype + '#' + val.bsid
+      }
+    })
   },
   mounted () {
-    this._getPayList()
     this._getUrl()
     this.billTime = timeFormat1(this.orderInfo.bill_time || '')
     this.common = this.orderInfo.receivekind == 0 ? true : false // eslint-disable-line
@@ -295,7 +301,6 @@ export default {
         }
       })
     })
-    console.log(this.orderFlowDatas)
   },
   methods: {
     add (index) {

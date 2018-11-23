@@ -1,5 +1,5 @@
 <template>
-  <div class="order-processed">
+  <div class="order-list component-container media-padding">
     <div class="processed-content">
       <div class="tab">
         <el-radio-group v-model="tabStatus" @change="tab(tabStatus)">
@@ -28,6 +28,21 @@
         <el-input placeholder="搜索百度ID" v-model="bd_id" class="search-item item-width">
           <template slot="prepend">百度 ID:&nbsp;&nbsp;</template>
         </el-input>
+        <auto-select title="审核状态" v-model="checkState" class="search-item item-width">
+          <el-option label="全部" value="-1"></el-option>
+          <el-option label="百度推广" value="BAITUI"></el-option>
+          <el-option label="网建" value="WEBSITE"></el-option>
+          <el-option label="信息流" value="XXL"></el-option>
+        </auto-select>
+        <el-input v-model="dept" class="search-item item-width">
+          <template slot="prepend">提交部门:</template>
+        </el-input>
+        <el-input v-model="web" class="search-item item-width">
+          <template slot="prepend">网址:</template>
+        </el-input>
+        <el-input v-model="phone" class="search-item item-width">
+          <template slot="prepend">客户电话:</template>
+        </el-input>
         <auto-select title="选择业绩" v-model="achievement" class="search-item item-width">
           <el-option v-for="item in achievements" :key="item.value" :label="item.label" :value="item.opentime"></el-option>
         </auto-select>
@@ -39,7 +54,7 @@
       <!-- 列表 -->
       <div class="content" style="margin-top:15px;">
         <el-row>
-          <el-table v-loading="isLoading" :data="pendingList" style="width: 100%">
+          <el-table :data="pendingList" style="width: 100%">
             <el-table-column prop="ordernum" label="订单ID" width="180">
             </el-table-column>
             <el-table-column prop="cname" label="订单名称" min-width="160">
@@ -93,16 +108,19 @@ import AutoSelect from 'base/autoSelect/autoSelect'
 export default {
   data () {
     return {
-      showBread: true,
       tabStatus: '0',
       key: '',
       cusName: '',
       orderNumber: '',
       productType: '',
-      orderStatus: '',
-      achievement: '',
       bd_account: '',
       bd_id: '',
+      checkState: '',
+      dept: '',
+      web: '',
+      phone: '',
+      orderStatus: '',
+      achievement: '',
       achievements: [
         {
           opentime: '-1',
@@ -138,8 +156,7 @@ export default {
       params: {
         status: 100,
         addmoney: '0'
-      },
-      isLoading: true
+      }
     }
   },
   methods: {
@@ -158,7 +175,7 @@ export default {
       this.achievement = ''
       this.orderStatus = ''
     },
-    updatePendingList (data, load) {
+    updatePendingList (res) {
     },
     viewOrder (data) {
     },
@@ -172,11 +189,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.order-processed {
+.order-list {
   // position: relative;
   .processed-content {
-
-    padding: 20px;
     .tab{
       margin-left: 10px;
     }

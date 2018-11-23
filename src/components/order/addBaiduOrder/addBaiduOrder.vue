@@ -7,6 +7,7 @@
             <el-form-item label="公司名称:" required>
               <el-input v-model="form.cName" class="input-btn" disabled placeholder="点击选择按钮选择公司"></el-input>
               <el-button type="primary" @click.native="selCompany" v-if="showEditBD">选择</el-button>
+              <el-button type="warning" @click.native="$router.go(-1)" v-else>返回</el-button>
             </el-form-item>
           </el-col>
         </el-row>
@@ -67,7 +68,7 @@
           <el-col :md="24" class="maxwidth">
             <el-form-item label="网建类型:" required>
               <el-radio-group v-model="form.wjType">
-                <el-radio v-for="(type,index) in form.wjTypeList" :key="index" :label="type.code_val">{{type.code_desc}}</el-radio>
+                <el-radio v-for="(type,index) in form.wjTypeList" :key="index" :label="type.code_val+''">{{type.code_desc}}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -179,15 +180,16 @@
                     </el-col>
                   </el-row>
                   <el-row>
-                    <el-table border :data="form.zizhiList" :key="form.zizhiList.id" class="table-width">
+                    <el-table border :data="form.zizhiList" :key="form.zizhiList.id" id="uploadImgs">
                       <el-table-column prop="code_desc" label="资质类型" width="130">
                       </el-table-column>
                       <el-table-column label="操作">
                         <template slot-scope="scope">
-                          <el-upload class="upload-demo" :ref="'upload'+scope.$index" :action="uploadUrl" :on-exceed="handleExceed" :before-upload="uploadBefore" :on-success="uploadSuccess" :file-list="fileList" :auto-upload="false" :multiple="false">
+                          <el-upload :on-change="(()=>{upChange('uploadImgs')})"
+                          class="upload-demo" :ref="'upload'+scope.$index" :action="uploadUrl" :on-exceed="handleExceed" :before-upload="uploadBefore" :on-success="uploadSuccess" :file-list="fileList" :auto-upload="false" :multiple="false" list-type="picture">
                             <el-button slot="trigger" type="primary" class="xsbtn">选取文件</el-button>
                             <el-button type="success" @click.native="submitUpload(scope.row,scope.$index)" class="ml10px xsbtn">上传到服务器</el-button>
-                            <el-button v-if="scope.$index!==0" style="margin-left: 30px;" circle :icon="isMinusIcon" size="mini" type="danger" @click.native="removeQualify(scope.$index)"></el-button>
+                            <el-button v-if="!showEditBD || scope.$index!==0" style="margin-left: 30px;" circle :icon="isMinusIcon" size="mini" type="danger" @click.native="removeQualify(scope.$index)"></el-button>
                           </el-upload>
                         </template>
                       </el-table-column>
@@ -196,7 +198,7 @@
                 </el-tab-pane>
                 <!-- 到款记录 -->
                 <el-tab-pane label="到款记录">
-                  <el-card shadow="always" class="card-tips" v-if="form.record.length && showEditBD">
+                  <el-card shadow="always" class="card-tips" v-if="!form.record.length && showEditBD">
                     [说明]：请选择到款记录。
                   </el-card>
                   <el-card shadow="always" class="card-money-record" v-if="form.record.length">
@@ -212,9 +214,13 @@
                       <b>服务费 ：</b>
                       <span>{{form.record[0].service | currency1}}</span>
                     </el-row>
+                    <el-row>
+                      <b>到款时间 ：</b>
+                      <span>{{form.record[0].inserttime | timeFormat}}</span>
+                    </el-row>
                     <!-- <el-row><b>到款时间 ：</b><span>{{222}}</span></el-row> -->
                     <el-row v-for="(rec,index) in recordDetail" :key="index">
-                      <template v-if="rec.type<500">
+                      <template v-if="rec.type<500 && rec.type!=8">
                         <b>{{rec.type | productType}} ：</b>
                         <span>{{rec.value | currency1}}</span>
                       </template>
@@ -269,7 +275,6 @@ import Page from 'base/page/page'
 import { getByCode } from 'api/getOptions' //eslint-disable-line
 import cookie from 'js-cookie'
 import { orderMixin, mobileFit } from 'common/js/mixin'
-
 const ORDER_TYPE = 'BAITUI'
 
 export default {
@@ -326,10 +331,10 @@ export default {
           }
         ],
         cusAddress: '',
-        wjType: -1,
+        wjType: '0',
         wjTypeList: [],
         cusType: '0',
-        isInvoice: '',
+        isInvoice: '0',
         newBdOrderNumber: '',
         bdProxy: '',
         bdServiceProtocol: '',
@@ -368,7 +373,8 @@ export default {
       cpid: '',
       companyData: {},
       rowData: {}, // 资质表格一行的数据
-      selectedQualify: {}
+      selectedQualify: {},
+      viewer: null
     }
   },
   computed: {
@@ -395,7 +401,7 @@ export default {
         this.form.pcWeb = newval.pcsite
         this.form.phoneWeb = newval.wapsite
         this.form.cusAddress = newval.addr
-        this.form.wjType = newval.wjType
+        this.form.wjType = newval.wjType + ''
         this.form.cusType = newval.cusType + ''
         this.form.isInvoice = newval.isInvoice + ''
         this.contractTab = newval.contractTab
@@ -450,7 +456,6 @@ export default {
   },
   methods: {
     // 提交订单
-    // todo 点击某个地方会清空联系人的bug
     subOrder (subType) {
       console.log(this.qualifyUploaded)
       if (!this.form.record) {
@@ -486,7 +491,7 @@ export default {
         yn: 1,
         sn: 10,
         pid: ORDER_TYPE,
-        receiptid: this.showEditBD ? this.form.record[0].id : this.editData.record[0].id, // 到款id
+        curId: this.showEditBD ? this.form.record[0].id : this.editData.record[0].id, // 到款id
         companycontact: this.form.contactList, // 联系人
         con_id: this.contractTab === 'old' ? this.form.bdOrderNumber : this.form.newBdOrderNumber, // 合同
         con_id2: this.form.bdProxy,
@@ -511,8 +516,7 @@ export default {
         receivebank: this.form.receiveBank // 对公账户开户行
       }
       console.log(params)
-      if (!params.companyid || !params.receiptid || !params.companyaddress ||
-          !params.websitetype || !params.invoice_status) {
+      if (!params.companyid || !params.curId || !params.companyaddress) {
         this.$message({
           type: 'error',
           message: '请完善带*号必填项'
@@ -602,7 +606,6 @@ export default {
       this.comDialog.params.companyname = companyName
       this.comDialog.key = '' + new Date()
     },
-
     // 新旧合同切换
 
     // 判断是否选择无首消授权书

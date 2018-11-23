@@ -22,7 +22,7 @@
         <el-button type="warning" @click.native="reset">重 置</el-button>
       </div>
     </div>
-    <el-table stripe border :data="myFollowList" style="width: 100%;margin-top:10px;">
+    <el-table stripe border :data="myFollowList" class="table-width" max-height="500">
       <el-table-column prop="companyname" label="公司名称" min-width="160">
       </el-table-column>
       <el-table-column prop="baidu_account" label="百度账号">
@@ -58,7 +58,7 @@
       <el-table-column prop="" label="操作" width="145">
         <template slot-scope="scope">
           <el-button @click.native="view(scope.row)" type="success" class="xsbtn">查 看</el-button>
-          <el-button @click.native="view(scope.row)" type="danger" class="xsbtn">终 止</el-button>
+          <el-button @click.native="stop(scope.row)" type="danger" class="xsbtn">终 止</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -68,6 +68,15 @@
     <el-dialog :key="key_renew_detail" :modal-append-to-body="false" title="续费详情" :visible.sync="renewDetailDialog" width="1100px">
       <renew-detail  :rowData="rowData" :toMark="'renewReceive'" @closeRenewDetailDialog="closeRenewDetailDialog"></renew-detail>
     </el-dialog>
+
+    <!-- 终止弹窗 -->
+    <el-dialog :modal-append-to-body="false" title="终止" :visible.sync="stopDialog" width="400px">
+      <el-input type="textarea" :rows="3" v-model="endRemark" placeholder="备注"></el-input>
+      <div class="text-center mt10px">
+        <el-button type="danger" @click.native="confirmStop">确认</el-button>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -94,7 +103,10 @@ export default {
 
       rowData: {},
       renewDetailDialog: false,
-      key_renew_detail: ''
+      key_renew_detail: '',
+      stopDialog: false,
+      endRemark: ''
+
     }
   },
   methods: {
@@ -104,6 +116,22 @@ export default {
       setTimeout(() => {
         this.renewDetailDialog = true
       }, 300)
+    },
+    stop (data) {
+      this.stopDialog = true
+      this.rowData = data
+    },
+    confirmStop () {
+      let params = {
+        reid: this.rowData.id,
+        remark: this.endRemark
+      }
+      this.$post('/Renew.do?renewStop', params).then(res => {
+        if (res.data.success) {
+          this.stopDialog = false
+          this.search()
+        }
+      })
     },
     closeRenewDetailDialog () {
       this.renewDetailDialog = false

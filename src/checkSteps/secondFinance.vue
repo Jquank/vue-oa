@@ -13,14 +13,14 @@
           <b>{{o.type | productType}}：</b>{{o.value | currency1}}
         </div>
         <div v-if="o.type==1">
-          <b>大搜冲单金额：</b><span>{{orderInfo.dscd | currency1}}</span>
+          <b>大搜冲单费：</b><span>{{orderInfo.dscd | currency1}}</span>
           <b class="ml10px">大搜续费代金券：</b><span>{{moneyRecord.dsvoucher | currency1}}</span>
           <b class="ml10px">大搜现金券：</b><span>{{moneyRecord.dsxjq | currency1}}</span>
         </div>
         <div v-if="o.type==2">
-          <b>大搜冲单金额：</b><span>{{orderInfo.dscd | currency1}}</span>
-          <b class="ml10px">大搜续费代金券：</b><span>{{moneyRecord.dsvoucher | currency1}}</span>
-          <b class="ml10px">大搜现金券：</b><span>{{moneyRecord.dsxjq | currency1}}</span>
+          <b>信息流冲单费：</b><span>{{orderInfo.xxlcd | currency1}}</span>
+          <b class="ml10px">信息流续费代金券：</b><span>{{moneyRecord.xxlvoucher | currency1}}</span>
+          <b class="ml10px">信息流现金券：</b><span>{{moneyRecord.xxlxjq | currency1}}</span>
         </div>
       </div>
     </el-card>

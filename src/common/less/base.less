@@ -54,7 +54,9 @@ a {
 .red {
   color: red;
 }
-
+.block{
+  display: block;
+}
 .text-center{
   text-align: center;
 }
@@ -189,12 +191,14 @@ div.el-dialog__body {
 }
 .el-table__footer-wrapper tbody td{
   color: rgb(223, 71, 71);
-  text-align: center;
+  // text-align: center;
 }
 .export{
   flex-grow: 1;
- text-align: right;
- padding-right: 30px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  padding-right: 30px;
 }
 .input-btn{
   width: calc(~"(100% - 60px)");
@@ -210,6 +214,10 @@ div.el-dialog__body {
 .weight-label{
   label.el-form-item__label{
     font-weight: 600;
+    font-size: 12px;
+  }
+  .el-form-item__content{
+    font-size: 12px;
   }
   .el-form-item{
     margin-bottom: 0 !important;

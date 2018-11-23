@@ -182,7 +182,7 @@ export function invoiceState (num, type) {
         return '暂不需要'
       case '0':
         return '需要'
-      case '10':
+      case '30':
         return '已开'
     }
   } else if (type === 'invoiceType') {
@@ -287,7 +287,7 @@ export function timeFormat (num) {
   let seconds = time.getSeconds()
   return year + '-' + add0(month) + '-' + add0(date) + ' ' + add0(hours) + ':' + add0(minutes) + ':' + add0(seconds)
 }
-export function timeFormat1 (num) {
+export function timeFormat1 (num, bool = true) {
   if (num === '.') { return '.' }
   if (!num) { return '' }
   if (reg.test(num)) {
@@ -298,7 +298,7 @@ export function timeFormat1 (num) {
   let year = time.getFullYear()
   let month = time.getMonth() + 1
   let date = time.getDate()
-  return year + '-' + add0(month) + '-' + add0(date)
+  return year + '-' + add0(month) + (bool ? ('-' + add0(date)) : '')
 }
 export function currency (num) {
   if (num === '.') { return '.' }

@@ -1,47 +1,181 @@
 <template>
   <div class="salary-list component-container media-padding">
-    <div class="salary-search">
-      <select-department :title="'部门'" @upDeptId="upDeptId" v-model="dept" class="salary-item item-width"></select-department>
-      <el-input v-model="workerName" class="salary-item item-width" placeholder="搜索客户名称">
-        <template slot="prepend">员工姓名:</template>
-      </el-input>
-      <el-date-picker v-model="date" type="datetimerange" range-separator="至" start-placeholder="出访开始日期" end-placeholder="出访结束日期" class="salary-item" style="width:350px;"></el-date-picker>
-      <div class="salary-item">
-        <el-button type="primary">查 询</el-button>
-        <el-button type="warning">重 置</el-button>
-        <el-button type="primary">导 入</el-button>
+    <div>
+      <div class="salary-search mt-10px">
+        <select-department :key="key_dept" :title="'部门'" @upDeptId="upDeptId" v-model="dept" class="salary-item item-width"></select-department>
+        <el-date-picker v-model="date" format="yyyy-MM" type="date" placeholder="选择日期"  class="salary-item item-width">
+        </el-date-picker>
+        <div class="salary-item export">
+          <up-file :uploadUrl="serverUrl + '/salary.do?import' + '&tk=' + tk" :title="'导入'" :otherParams="otherParams" @fileUrl="search()" :isHiddenFileList="true"></up-file>
+          <el-button @click.native="exportExcell" type="warning" class="ml10px">导 出</el-button>
+        </div>
+      </div>
+      <div class="salary-search">
+        <el-input v-model="workerName" placeholder="搜索员工姓名" class="salary-item item-width">
+          <template slot="prepend">员工姓名:</template>
+        </el-input>
+        <div class="salary-item item-width">
+          <el-button @click.native="search" type="primary">查 询</el-button>
+          <el-button @click.native="reset" type="warning">重 置</el-button>
+        </div>
+        <div class="salary-item export">
+          <el-button v-if="permissions.indexOf('4n') > -1" @click.native="clear" type="danger">清空数据</el-button>
+        </div>
       </div>
     </div>
 
+    <el-table stripe border :data="salaryList" class="table-width">
+      <el-table-column prop="EX_XM" label="姓名" min-width="80">
+      </el-table-column>
+      <el-table-column prop="deptname" label="部门" min-width="120">
+      </el-table-column>
+      <el-table-column prop="EX_ZHYHK" label="招行卡号" min-width="120">
+      </el-table-column>
+      <el-table-column prop="EX_ZGYHYHK" label="中行卡号" min-width="120">
+      </el-table-column>
+      <el-table-column prop="EX_YFGZ" label="应发工资" min-width="100">
+        <span slot-scope="scope">{{scope.row.EX_YFGZ | currency}}</span>
+      </el-table-column>
+      <el-table-column prop="EX_SFGZ" label="实发工资" min-width="100">
+        <span slot-scope="scope">{{scope.row.EX_SFGZ | currency}}</span>
+      </el-table-column>
+      <el-table-column prop="" label="状态" min-width="70" align="center">
+        <template slot="header" slot-scope="scope">
+          <el-dropdown @command="command" trigger="click">
+            <span>状态<i class="el-icon-arrow-down el-icon--right"></i></span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item :disabled="!canSet" command="0">无</el-dropdown-item>
+              <el-dropdown-item :disabled="!canSet" command="20">审核中</el-dropdown-item>
+              <el-dropdown-item :disabled="!canSet" command="30">确认中</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </template>
+         <span slot-scope="scope">{{scope.row.status == 0 ? "空" :(scope.row.status == 20 ? '审核中' : '确认中')}}</span>
+      </el-table-column>
+      <el-table-column prop="" label="查看详情" width="80">
+        <template slot-scope="scope">
+          <el-button @click.native="view(scope.row)" type="success" class="xsbtn">查看详情</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <page class="page" :url="salaryUrl" :sendParams="sendParams" @updateList="updateSalaryList"></page>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
 import SelectDepartment from 'base/selectDepartment/selectDepartment'
+import Page from 'base/page/page'
+import UpFile from 'base/upLoad/upFile'
+import { timeFormat1 } from 'common/js/filters'
+import { serverUrl } from 'api/http'
+import cookie from 'js-cookie'
+const nowDate = timeFormat1(new Date().setMonth(new Date().getMonth() - 1), false)
 export default {
   data () {
     return {
+      tk: cookie.get('token'),
+      serverUrl: serverUrl,
+      permissions: cookie.getJSON('permissions'),
+      canSet: true,
+      key_dept: '',
       dept: '',
       workerName: '',
-      date: ''
+      date: nowDate,
+      salaryList: [],
+      salaryUrl: '/salary.do?search',
+      sendParams: {
+        'month': nowDate
+      },
+      otherParams: {
+        'salarymonth': nowDate
+      }
     }
   },
+  created () {
+    this.canSet = this.permissions.indexOf('4n') > -1
+  },
   methods: {
-    upDeptId () {}
+    command (val) {
+      if (!this.canSet) {
+        return
+      }
+      let params = {
+        month: this.date,
+        status: val
+      }
+      this.$post('/salary.do?updateStatus', params).then(res => {
+        if (res.data.success) {
+          this.search()
+        }
+      })
+    },
+    clear () {
+      this.$confirm('确定清除全部数据吗?', '', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$post('/salary.do?delete', {'month': this.date}).then(res => {
+          if (res.data.success) {
+            this.search()
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消'
+        })
+      })
+    },
+    exportExcell () {
+      this.$export('/salary.do?export', this.sendParams)
+    },
+    view (data) {
+      data.month = timeFormat1(this.date, false)
+      this.$router.push({
+        path: `salaryList/${data.name}`,
+        query: { data: data }
+      })
+    },
+    search () {
+      this.sendParams = {
+        'dept': this.dept,
+        'name': this.workerName,
+        'month': timeFormat1(this.date, false)
+      }
+    },
+    reset () {
+      this.dept = ''
+      this.key_dept = new Date() + ''
+      this.workerName = ''
+      this.date = nowDate
+    },
+    upDeptId (id) {
+      this.dept = id
+    },
+    updateSalaryList (res) {
+      this.salaryList = res.data[0].data
+      this.salaryList.forEach(val => {
+        if (val.deptname) {
+          let arr = val.deptname.split('/')
+          val.deptname = arr[arr.length - 1]
+        }
+      })
+    }
   },
   components: {
-    SelectDepartment
+    SelectDepartment, Page, UpFile
   }
 }
 </script>
 
 <style lang="less" scoped>
 .salary-list {
-  padding: 20px;
+  position: relative;
   .salary-search {
     display: flex;
     flex-wrap: wrap;
-    margin-top: -10px;
     .salary-item {
       margin-left: 10px;
       margin-top: 10px;
@@ -49,6 +183,10 @@ export default {
     .item-width {
       width: 250px;
     }
+  }
+  .el-table th div{
+    line-height: 20px;
+    color: #909399;
   }
 }
 </style>

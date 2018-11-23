@@ -13,6 +13,8 @@ import './common/css/base.css'
 
 import 'nprogress/nprogress.css'
 
+import 'viewerjs/dist/viewer.css'
+
 import * as filters from '@/common/js/filters'
 import { $post, $get, $export, uploadUrl } from 'api/http'
 

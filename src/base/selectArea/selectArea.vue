@@ -52,7 +52,7 @@ export default {
       console.log(val)
       if (val.length === 1) {
         this._getAreaList(val[0])
-      } else {
+      } else if (val.length === 2) {
         this._getAreaList(val[1])
       }
     },
@@ -61,7 +61,9 @@ export default {
         if (id === 1) { // get省
           this.options = res.data.data
           this.options.forEach((val, key) => {
-            val.children = []
+            if (!val.children) {
+              val.children = []
+            }
           })
         } else {
           let nextArea = res.data.data
@@ -71,23 +73,30 @@ export default {
                 this.firstIndex = key
               }
             })
-            this.options[this.firstIndex].children = nextArea
-            this.options[this.firstIndex].children.forEach(val => {
-              if (!val.children) {
-                val.children = []
-              }
-            })
+            setTimeout(() => {
+              this.options[this.firstIndex].children = nextArea
+              this.options[this.firstIndex].children.forEach(val => {
+                if (!val.children) {
+                  val.children = []
+                }
+              })
+            }, 300)
+
             if (this.echoArea.length === 1) { // 回显只有两级的时候赋值
               this.area = this.echoArea
             }
           } else { // get区
-            this.options.forEach((val, key) => {
+            this.options[this.firstIndex].children.forEach((val, key) => {
               if (val.id == id) { // eslint-disable-line
                 this.secondIndex = key
               }
             })
-            this.options[this.firstIndex].children[this.secondIndex].children = nextArea
-            this.area = this.echoArea
+            setTimeout(() => {
+              this.options[this.firstIndex].children[this.secondIndex].children = nextArea
+            }, 300)
+            if (this.echoArea.length) {
+              this.area = this.echoArea
+            }
           }
         }
       })

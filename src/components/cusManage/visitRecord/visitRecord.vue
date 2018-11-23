@@ -42,9 +42,9 @@
         </el-table-column>
         <el-table-column prop="remark" label="出访结果" min-width="130">
         </el-table-column>
-        <el-table-column label="操作" width="130">
+        <el-table-column label="操作" width="120">
           <template slot-scope="scope">
-            <el-button v-if="scope.row.status==10" @click.native.prevent="writeVisitResult(scope.row)" type="primary" size="mini">填写出访结果</el-button>
+            <el-button v-if="scope.row.status==10" @click.native.prevent="writeVisitResult(scope.row)" type="primary" class="xsbtn">填写出访结果</el-button>
           </template>
         </el-table-column>
       </el-table>

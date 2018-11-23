@@ -1,26 +1,26 @@
 <template>
   <div class="add-user component-container media-padding" @click="hiddenDepartment">
-    <el-form ref="form" :model="form" label-width="80px">
+    <el-form ref="form" :model="form" :rules="rules" label-width="80px">
       <el-row :gutter="20">
         <el-col :md="12" class="maxwidth">
-          <el-form-item label="账户名 :" :label-width="labelWidth" required>
+          <el-form-item label="账户名 :" :label-width="labelWidth" prop="accountName">
             <el-input @blur="accountNameBlur" v-model="form.accountName" :disabled="editDisable || quotaDisable" placeholder="账户名"></el-input>
           </el-form-item>
         </el-col>
         <el-col :md="12" class="maxwidth">
-          <el-form-item label="真实姓名 :" :label-width="labelWidth" required>
+          <el-form-item label="真实姓名 :" :label-width="labelWidth"  prop="trueName">
             <el-input v-model="form.trueName" :disabled="editDisable || quotaDisable" placeholder="真实姓名"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
         <el-col :md="12" class="maxwidth">
-          <el-form-item label="工号 :" :label-width="labelWidth" required>
+          <el-form-item label="工号 :" :label-width="labelWidth" prop="userNum">
             <el-input v-model="form.userNum" :disabled="quotaDisable" placeholder="工号"></el-input>
           </el-form-item>
         </el-col>
         <el-col :md="12" class="maxwidth">
-          <el-form-item label="性别 :" :label-width="labelWidth" required>
+          <el-form-item label="性别 :" :label-width="labelWidth" prop="sex">
             <el-select v-model="form.sex" :disabled="repeatDisabled || quotaDisable" placeholder="选择性别" style="width:100%;">
               <el-option label="男" value="0"></el-option>
               <el-option label="女" value="1"></el-option>
@@ -30,7 +30,7 @@
       </el-row>
       <el-row :gutter="20" v-if="!quotaDisable">
         <el-col :md="12" class="maxwidth">
-          <el-form-item label="身份证号 :" :label-width="labelWidth" required>
+          <el-form-item label="身份证号 :" :label-width="labelWidth" prop="idCardNum">
             <el-input v-model="form.idCardNum" :disabled="repeatDisabled" placeholder="身份证号"></el-input>
           </el-form-item>
         </el-col>
@@ -47,7 +47,7 @@
           </el-form-item>
         </el-col>
         <el-col :md="12" class="maxwidth">
-          <el-form-item label="角色 :" :label-width="labelWidth" required>
+          <el-form-item label="角色 :" :label-width="labelWidth" prop="role">
             <el-select v-model="form.role" :disabled="repeatDisabled" placeholder="选择角色" style="width:100%;">
               <el-option v-for="item in form.roleList" :key="item.id" :label="item.name" :value="item.id"></el-option>
             </el-select>
@@ -74,7 +74,7 @@
           </el-form-item>
         </el-col>
         <el-col :md="12" class="maxwidth">
-          <el-form-item label="职位 :" :label-width="labelWidth" required>
+          <el-form-item label="职位 :" :label-width="labelWidth" prop="job">
             <el-select v-model="form.job" :disabled="repeatDisabled" placeholder="选择职位" style="width:100%">
               <el-option v-for="item in form.jobList" :key="item.id" :label="item.code_desc" :value="item.code_val"></el-option>
             </el-select>
@@ -146,7 +146,7 @@
       <el-row>
         <el-col :md="24" class="maxwidth">
           <el-form-item style="text-align:right;">
-            <el-button type="primary" @click="submit" :disabled="repeatDisabled">提 交</el-button>
+            <el-button type="primary" @click.native="submit('form')" :disabled="repeatDisabled">提 交</el-button>
           </el-form-item>
         </el-col>
       </el-row>
@@ -206,13 +206,27 @@ export default {
         baiduID: '',
         EX_ZHYHK: '',
         EX_ZGYHYHK: ''
+      },
+
+      rules: {
+        accountName: [],
+        trueName: [],
+        userNum: [],
+        sex: [],
+        idCardNum: [],
+        role: [],
+        job: []
       }
     }
   },
-  // created () {
-
-  // },
   created () {
+    for (let key in this.rules) {
+      if (key === 'sex' || key === 'role' || key === 'job') {
+        this.rules[key].push({required: true, message: '请选择必选项', trigger: 'change'})
+      } else {
+        this.rules[key].push({required: true, message: '请输入必填项内容', trigger: 'blur'})
+      }
+    }
     this._getRoles()
     this._getPositions()
     if (!this.editDisable && !this.quotaDisable) {
@@ -278,22 +292,7 @@ export default {
         }
       })
     },
-    submit () {
-      if (
-        !this.form.accountName ||
-        !this.form.trueName ||
-        !this.form.userNum ||
-        !this.form.sex ||
-        !this.form.idCardNum ||
-        !this.form.role ||
-        !this.form.job
-      ) {
-        this.$message({
-          type: 'error',
-          message: '请填写必填项！'
-        })
-        return
-      }
+    submit (formName) {
       let params = {
         iscall: this.form.canCall ? '9999' : null,
         name: this.form.accountName, // 账户名
@@ -315,64 +314,70 @@ export default {
       }
       // console.log(params)
       // return
-      if (!this.editDisable && !this.quotaDisable) {
-        // 新增人员页的提交
-        this.$post('/Oper.do?AddUser', params)
-          .then(res => {
-            if (res.data[0].success) {
-              this.$message({
-                message: '新增成功',
-                type: 'success'
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          if (!this.editDisable && !this.quotaDisable) {
+            // 新增人员页的提交
+            this.$post('/Oper.do?AddUser', params)
+              .then(res => {
+                if (res.data[0].success) {
+                  this.$message({
+                    message: '新增成功',
+                    type: 'success'
+                  })
+                } else {
+                  this.$message({
+                    message: '新增失败',
+                    type: 'error'
+                  })
+                }
               })
-            } else {
-              this.$message({
-                message: '新增失败',
-                type: 'error'
+              .catch(err => {
+                console.log(err)
               })
+          } else {
+            // 编辑人员和编辑配额的提交
+            let _params = {
+              dept: this.form.canCall ? '9999' : null,
+              resignationtime: this.form.leaveDate,
+              turningtime: this.form.turnRealDate,
+              max_a: this.form.baoAquota,
+              max_b: this.form.followQuota,
+              update_a: this.echoUserInfo.max_a - this.form.baoAquota,
+              update_b: this.echoUserInfo.max_b - this.form.followQuota,
+              bdcall_id: this.form.baiduID,
+              urid: this.echoUserInfo.urid,
+              id: this.echoUserInfo.id,
+              rid: this.form.role,
+              role: this.echoUserInfo.urid
             }
-          })
-          .catch(err => {
-            console.log(err)
-          })
-      } else {
-        // 编辑人员和编辑配额的提交
-        let _params = {
-          dept: this.form.canCall ? '9999' : null,
-          resignationtime: this.form.leaveDate,
-          turningtime: this.form.turnRealDate,
-          max_a: this.form.baoAquota,
-          max_b: this.form.followQuota,
-          update_a: this.echoUserInfo.max_a - this.form.baoAquota,
-          update_b: this.echoUserInfo.max_b - this.form.followQuota,
-          bdcall_id: this.form.baiduID,
-          urid: this.echoUserInfo.urid,
-          id: this.echoUserInfo.id,
-          rid: this.form.role,
-          role: this.echoUserInfo.urid
+            params = Object.assign({}, params, _params)
+            // console.log(params)
+            // return
+            this.$post('/Oper.do?EditUser', params)
+              .then(res => {
+                if (res.data[0].success) {
+                  this.$message({
+                    message: '更改成功',
+                    type: 'success'
+                  })
+                  // 派发编辑页关闭弹窗事件
+                  this.$emit('closeDialog', false)
+                } else {
+                  this.$message({
+                    message: '更改失败',
+                    type: 'error'
+                  })
+                }
+              })
+              .catch(err => {
+                console.log(err)
+              })
+          }
+        } else {
+          return false
         }
-        params = Object.assign({}, params, _params)
-        // console.log(params)
-        // return
-        this.$post('/Oper.do?EditUser', params)
-          .then(res => {
-            if (res.data[0].success) {
-              this.$message({
-                message: '更改成功',
-                type: 'success'
-              })
-              // 派发编辑页关闭弹窗事件
-              this.$emit('closeDialog', false)
-            } else {
-              this.$message({
-                message: '更改失败',
-                type: 'error'
-              })
-            }
-          })
-          .catch(err => {
-            console.log(err)
-          })
-      }
+      })
     },
     hiddenDepartment (e) {
       // 隐藏部门树

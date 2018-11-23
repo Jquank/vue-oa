@@ -243,12 +243,13 @@
                     </el-col>
                   </el-row>
                   <el-row>
-                    <el-table border :data="form.zizhiList" :key="form.zizhiList.id" class="table-width">
+                    <el-table id="uploadImgs" border :data="form.zizhiList" :key="form.zizhiList.id" class="table-width">
                       <el-table-column prop="code_desc" label="资质类型" width="130">
                       </el-table-column>
                       <el-table-column label="操作">
                         <template slot-scope="scope">
-                          <el-upload class="upload-demo" :ref="'upload'+scope.$index" :action="uploadUrl" :on-exceed="handleExceed" :before-upload="uploadBefore" :on-success="uploadSuccess" :file-list="fileList" :auto-upload="false" :multiple="false">
+                          <el-upload :on-change="(()=>{upChange('uploadImgs')})"
+                           :ref="'upload'+scope.$index" :action="uploadUrl" :on-exceed="handleExceed" :before-upload="uploadBefore" :on-success="uploadSuccess" :file-list="fileList" :auto-upload="false" :multiple="false" list-type="picture">
                             <el-button slot="trigger" type="primary" class="xsbtn">选取文件</el-button>
                             <el-button type="success" @click.native="submitUpload(scope.row,scope.$index)" class="ml10px xsbtn">上传到服务器</el-button>
                             <el-button v-if="scope.$index!==0" style="margin-left: 30px;" circle :icon="isMinusIcon" size="mini" type="danger" @click.native="removeQualify(scope.$index)"></el-button>
@@ -272,12 +273,8 @@
                       <b>到款金额 ：</b>
                       <span>{{form.record[0].sum | currency1}}</span>
                     </el-row>
-                    <el-row>
-                      <b>服务费 ：</b>
-                      <span>{{form.record[0].service | currency1}}</span>
-                    </el-row>
                     <el-row v-for="(rec,index) in recordDetail" :key="index">
-                      <template v-if="rec.type<100">
+                      <template v-if="rec.type==8 || rec.type==58">
                         <b>{{rec.type | productType}} ：</b>
                         <span>{{rec.value | currency1}}</span>
                       </template>
@@ -331,9 +328,8 @@ import Page from 'base/page/page'
 import { getByCode } from 'api/getOptions' //eslint-disable-line
 import cookie from 'js-cookie'
 import { orderMixin, mobileFit } from 'common/js/mixin'
-
 const ORDER_TYPE = 'WEBSITE'
-
+const ORDER_TYPE_ZTC = 'ZTC_WEBSITE'
 export default {
   mixins: [orderMixin, mobileFit],
   props: {
@@ -403,7 +399,7 @@ export default {
         handleCompanyName: '',
         myCompany: [],
         url: '/order.do?Add',
-        params: { pid: ORDER_TYPE },
+        params: {},
         key: ''
       },
       moneyRecord: {
@@ -468,7 +464,9 @@ export default {
       ],
       column_names: [],
       column_types: [],
-      tabLabel: '网站流程表'
+      tabLabel: '网站流程表',
+      viewer: null,
+      pid: 'ZTC'
     }
   },
   computed: {
@@ -540,7 +538,7 @@ export default {
     this._getwjType(88)
   },
   mounted () {
-    this._getMyContract('', 'CONTRACT_WZ')
+    this._getMyContract('', 'CONTRACT_ZTCWEB')
     this._getQualifyType(32)
     this._getServiceType() // 空间服务商类型
   },
@@ -582,8 +580,8 @@ export default {
           : this.editData.rowData.companylogid,
         yn: 1,
         sn: 10,
-        pid: ORDER_TYPE,
-        receiptid: this.showEditWJ
+        pid: this.pid,
+        curId: this.showEditWJ
           ? this.form.record[0].id
           : this.editData.record[0].id, // 到款id
         companycontact: this.form.contactList, // 联系人
@@ -596,7 +594,7 @@ export default {
           : this.editData.record[0].sum,
         audittype: subType, // 0:仅降E 10：降E并提单
         pcwebsite: this.form.pcWeb, // PC站
-        companyaddress: this.editData.addr, // 公司地址
+        companyaddress: this.form.cusAddress || this.editData.addr, // 公司地址
         remark_order: '', // 备注
         company_attr: this.qualifyUploaded.concat(this.deledQualify), // 公司属性(已上传资质)
         remark: '',
@@ -643,7 +641,7 @@ export default {
       console.log(params)
       if (
         !params.companyid ||
-        !params.receiptid ||
+        !params.curId ||
         !params.companyaddress ||
         !params.pcmoney ||
         !params.appmoney ||
@@ -701,12 +699,16 @@ export default {
     },
     // 选择公司弹窗
     selCompany () {
+      this.comDialog.params = {
+        pid: ORDER_TYPE
+      }
       this.comDialog.selCompanyDialog = true
       this.comDialog.key = '' + new Date()
     },
     // 选择具体公司
     handleSelCompany (company) {
       this.companyData = company
+      this.pid = company.pid
       this.moneyRecord.cid = company.id
       this.moneyRecord.companylogid = company.companylogid
       // this.moneyRecord.uid = company.userid
@@ -727,7 +729,7 @@ export default {
         cid: this.moneyRecord.cid,
         companylogid: this.moneyRecord.companylogid,
         uid: this.moneyRecord.uid,
-        pid: ORDER_TYPE
+        pid: this.pid === 'ZTC' ? ORDER_TYPE_ZTC : ORDER_TYPE
       }
       this.$post(moneyRecordUrl, moneyRecordParams).then(res => {
         let _record = res.data[2].data

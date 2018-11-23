@@ -7,9 +7,12 @@
       <add-wj-order v-if="pid==='WEBSITE'" :showQualify="showQualify" :deledQualify="deledQualify" :showEditWJ="false" :editData="editData">
         <show-qualify v-if="showQualify.length" slot="echoQualify" :showQualify="showQualify" @getQualifyList="getQualifyList"></show-qualify>
       </add-wj-order>
-      <add-ztc-order v-if="pid==='ZTC'" :showQualify="showQualify" :deledQualify="deledQualify" :showEditZTC="false" :editData="editData">
+      <add-ztc-order v-if="pid==='ZTC2'" :showQualify="showQualify" :deledQualify="deledQualify" :showEditZTC="false" :editData="editData">
         <show-qualify v-if="showQualify.length" slot="echoQualify" :showQualify="showQualify" @getQualifyList="getQualifyList"></show-qualify>
       </add-ztc-order>
+      <add-ka-order v-if="pid==='GD' || pid==='PZ' || pid==='KP'" :showQualify="showQualify" :deledQualify="deledQualify" :showEditKA="false" :editData="editData">
+        <show-qualify v-if="showQualify.length" slot="echoQualify" :showQualify="showQualify" @getQualifyList="getQualifyList"></show-qualify>
+      </add-ka-order>
     </div>
   </div>
 </template>
@@ -19,11 +22,13 @@ import ShowQualify from 'base/showQualify/showQualify'
 import addBaiduOrder from 'components/order/addBaiduOrder/addBaiduOrder'
 import addWjOrder from 'components/order/addWjOrder/addWjOrder'
 import addZtcOrder from 'components/order/addZtcOrder/addZtcOrder'
+import addKaOrder from 'components/order/addKaOrder/addKaOrder'
 import { uploadUrl } from 'api/config' //eslint-disable-line
 export default {
   data () {
     return {
       pid: '',
+      pid_ka: '',
       editData: {},
       showQualify: [],
       deledQualify: [],
@@ -64,6 +69,7 @@ export default {
           let productInfo = res.data.data[4][0]
           this.editData.productInfo = productInfo
           this.editData.order_id = orderInfo.id
+          this.editData.remark = orderInfo.remark
           this.editData.wjType = orderInfo.websitetype
           this.editData.rowData = this.rowData // cpid,orderid,pid,sn,uid 从列表页取，其它从接口取
           this.editData.cusType = orderInfo.custom_type
@@ -91,7 +97,7 @@ export default {
     }
   },
   components: {
-    addBaiduOrder, addWjOrder, addZtcOrder, ShowQualify
+    addBaiduOrder, addWjOrder, addZtcOrder, addKaOrder, ShowQualify
   }
 }
 </script>

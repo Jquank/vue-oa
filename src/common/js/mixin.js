@@ -12,7 +12,7 @@ import {
   productType,
   currency
 } from './filters'
-
+import Viewer from 'viewerjs'
 export const mobileFit = { // 移动端适配
   methods: {
     // element表单labelWidth
@@ -20,6 +20,9 @@ export const mobileFit = { // 移动端适配
       let viewWidth = document.documentElement.clientWidth
       if (viewWidth && viewWidth < 768) {
         this.labelWidth = num + 'px'
+        if (this.mobileMark === false) {
+          this.mobileMark = true
+        }
       }
     }
   }
@@ -36,6 +39,15 @@ export const orderMixin = { // 新增订单
         !type && this.form.contactList.splice(index, 1)
         type && this.columns.splice(index, 1)
       }
+    },
+    upChange (id) { // 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
+      setTimeout(() => {
+        if (this.viewer) {
+          this.viewer.destroy()
+        }
+        this.viewer = new Viewer(document.getElementById(id), {
+        })
+      }, 300)
     },
     // 文件上传前的回调
     uploadBefore (file) {
@@ -103,7 +115,7 @@ export const orderDeal = { // 订单处理
       this.payList.forEach(val => {
         sum += parseFloat(val._value || 0)
       })
-      sum += parseFloat(this.dscd || 0) + parseFloat(this.xxlcd || 0)
+      sum += parseFloat(this.orderInfo.dscd || 0) + parseFloat(this.orderInfo.xxlcd || 0)
       return sum
     }
   },
@@ -120,7 +132,8 @@ export const orderDeal = { // 订单处理
       next_name: '', // 下一步派单人
       backValue: '10#商务',
       dispatchValue: '',
-      countTotal: 0 // count之和，预存款金额
+      countTotal: 0, // count之和，预存款金额
+      webOrderRemark: '' // 网建经理派单备注
     }
   },
   methods: {
@@ -142,19 +155,20 @@ export const orderDeal = { // 订单处理
           val[0].count = sumCount.toFixed(2)
           val[0].value = sumValue.toFixed(2)
           val[0].profit = sumProfit.toFixed(2)
-          val[0].typeAndBsid = val[0].receivetype + '#' + val[0].bsid
+          this.$set(val[0], '_value', 0) // 触发vue的响应式（setter,getter）
           this.payList.push(val[0])
         })
       })
     },
     _getUrl () { // 获取url
-      if (this.pid === 'BAITUI') {
-        this.url = '/wf.do?go'
-      } else if (this.pid === 'WEBSITE') {
-        this.url = '/wf.do?WebSite'
-      } else if (this.pid === 'ZTC') {
-        this.url = '/wf.do?goZTC'
-      }
+      this.url = '/wf.do?go'
+      // if (this.pid === 'BAITUI') {
+      //   this.url = '/wf.do?go'
+      // } else if (this.pid === 'WEBSITE') {
+      //   this.url = '/wf.do?WebSite'
+      // } else if (this.pid === 'ZTC2') {
+      //   this.url = '/wf.do?goZTC'
+      // }
     },
     // 获取可驳回节点
     _getBackNode (sn, cpid) {
@@ -176,6 +190,9 @@ export const orderDeal = { // 订单处理
       }
       this.$get(url, params).then(res => {
         this.dispatchRoleList = res.data[0].data || []
+        if (res.data.length > 1) {
+          this.userList1 = res.data[1].data
+        }
       })
     },
     _getFromVal () {
@@ -220,21 +237,21 @@ export const orderDeal = { // 订单处理
         case 260:
         {
           return {
-            baiduID: this.baiduID || undefined,
-            baiduAccount: this.baiduAccount || undefined,
-            applyFortime: this.applyFortime || undefined,
-            proxyid: this.proxyid || undefined
+            baiduid: this.orderInfo.baiduid || undefined,
+            baiducount: this.orderInfo.baiducount || undefined,
+            applytime: this.orderInfo.applytime || undefined,
+            proxyid: this.orderInfo.proxyid || undefined
           }
         }
         case 170:
         {
           return {
             // todo
-            // baiduID: this.baiduID || undefined,
-            // baiduAccount: this.baiduAccount || undefined,
+            // baiduid: this.orderInfo.baiduid || undefined,
+            // baiducount: this.orderInfo.baiducount || undefined,
             // preDeposit: this.preDeposit || undefined,
-            // applyFortime: this.applyFortime || undefined,
-            // proxyid: this.proxyid || undefined
+            // applytime: this.orderInfo.applytime || undefined,
+            // proxyid: this.orderInfo.proxyid || undefined
           }
         }
         case 310:
@@ -294,8 +311,8 @@ export const orderDeal = { // 订单处理
     pass () {
       if (this.sn === 100) {
         this.payList.forEach(val => {
-          val.receivetype = (val.typeAndBsid || '').split('#')[0]
-          val.bsid = (val.typeAndBsid || '').split('#')[1]
+          val.bsid = (val.receivetype || '').split('#')[1]
+          val.receivetype = (val.receivetype || '').split('#')[0]
         })
         this.remark =
           '百度订单金额：' + this.moneyRecord.sum + '----' + '\n' + '到款金额：'
@@ -312,7 +329,6 @@ export const orderDeal = { // 订单处理
           })
         })
         this.remark += '。 提单时间：' + timeFormat(this.billTime)
-        console.log(this.remark)
         this.payList.forEach(item => {
           if (!item.producttype || !item.count || !item.receivetype || !item.receivetime || !this.billTime) {
             this.$message({
@@ -330,7 +346,7 @@ export const orderDeal = { // 订单处理
           return
         }
       }
-      if (this.sn === 210 || this.sn === 400) {
+      if (this.sn === 210 || this.sn === 220 || this.sn === 230 || this.sn === 320 || this.sn === 400) {
         if (!this.dispatchValue) {
           this.$message({
             type: 'warning',
@@ -341,31 +357,56 @@ export const orderDeal = { // 订单处理
         this.next_uid = (this.dispatchValue || '').split('#')[0]
         this.next_name = (this.dispatchValue || '').split('#')[1]
       }
-      if (this.sn === 260) {
-        if (!this.baiduID || !this.baiduAccount || !this.proxyid || !this.applyFortime || !this.dscd || !this.xxlcd) {
-          this.$message({
-            type: 'warning',
-            message: '请填写账户信息或冲单费！'
-          })
-          return
-        }
-        this.remark = '账户ID：' + this.baiduID +
-          '；账户名：' + this.baiduAccount +
-          '；代理账号：' + this.proxyid +
-          '。申请加款时间：' + this.applyFortime + '。'
-        this.payList.forEach(val => {
-          if (val.type < 100 && val.type !== 8) {
-            this.remark += productType(val.type) + '加款：' + currency(val.count) + '；'
+      if (this.pid === 'WEBSITE') {
+        // 网开空域
+        if (this.sn === 240) {
+          if (!this.newSpace || !this.newSpaceName) {
+            this.$message.warning('请填写域名信息！')
+            return
           }
-        })
-        if (this.dscd != 0) { // eslint-disable-line
-          this.remark += '大搜冲单费：' + this.dscd
         }
-        if (this.xxlcd != 0) { // eslint-disable-line
-          this.remark += '信息流冲单费：' + this.xxlcd
+        if (this.sn === 260) {
+          if (!this.documenter || !this.designer) {
+            this.$message.warning('请选择资料员和设计师！')
+            return
+            this.next_uid = [this.documenter.id, this.designer.id].toString()
+          }
+          this.webOrderRemark = `网建经理派单至:资料员-${this.documenter.name},设计师-${this.designer.name}；`
+        }
+        if (this.sn === 280 || this.sn === 300) {
+          if (!this.browseAddr) {
+            this.$message.warning('请填写访问地址！')
+            return
+          }
+        }
+      } else {
+        if (this.sn === 260) {
+          if (!this.orderInfo.baiduid || !this.orderInfo.baiducount || !this.orderInfo.proxyid || !this.orderInfo.applytime) {
+            this.$message({
+              type: 'warning',
+              message: '请填写账户信息！'
+            })
+            return
+          }
+          this.remark = '账户ID：' + this.orderInfo.baiduid +
+              '；账户名：' + this.orderInfo.baiducount +
+              '；代理账号：' + this.orderInfo.proxyid +
+              '。申请加款时间：' + this.orderInfo.applytime + '。'
+          this.payList.forEach(val => {
+            if (val.type < 100 && val.type !== 8) {
+              this.remark += productType(val.type) + '加款：' + currency(val.count) + '；'
+            }
+          })
+            if (this.orderInfo.dscd != 0) { // eslint-disable-line
+            this.remark += '大搜冲单费：' + this.orderInfo.dscd
+          }
+            if (this.orderInfo.xxlcd != 0) { // eslint-disable-line
+            this.remark += '信息流冲单费：' + this.orderInfo.xxlcd
+          }
         }
       }
       let params = {
+        pid: this.pid,
         curId: this.moneyRecord.id,
         curid: this.orderInfo.curid,
         cpid: this.templateInfo.cpid,
@@ -412,7 +453,12 @@ export const orderDeal = { // 订单处理
         receiveaccount: this.orderInfo.receiveaccount, // 对公账户开户行
         receivebank: this.orderInfo.receivebank, // 对公账户开户行
         order_log: this.remark,
-        billtime: this.billTime
+        billtime: this.billTime,
+        newzoneinfo: this.newSpaceName,
+        newdomaininfo: this.newSpace,
+        Designer: this.webOrderRemark,
+        visitwebsite: this.browseAddr,
+        quickwebsite: this.cdAddr
       }
       if (this.orderInfo.con_id2) {
         params.contractid.push(this.orderInfo.con_id2)
@@ -422,15 +468,14 @@ export const orderDeal = { // 订单处理
       }
       if (this.sn === 260) {
         let _params = {
-          baiduid: this.baiduID,
-          baiduaccount: this.baiduAccount,
-          proxyid: this.proxyid,
-          applytime: this.applyFortime
+          baiduid: this.orderInfo.baiduid,
+          baiduaccount: this.orderInfo.baiducount,
+          proxyid: this.orderInfo.proxyid,
+          applytime: this.orderInfo.applytime
         }
         params = Object.assign({}, params, _params)
       }
-      console.log(params)
-      if (this.sn === 260) {
+      if (this.sn === 260 && this.pid !== 'WEBSITE') {
         this.call('订单预存款金额为：' + this.countTotal + '，加款金额为：' + this._applyAddMoneyTotal +
           '，请确认是否提交？', params)
         return

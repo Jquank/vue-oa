@@ -43,7 +43,7 @@
         </div>
       </div>
       <!-- 列表 -->
-      <el-table :data="pendingList" class="table-width" max-height="550">
+      <el-table v-if="permissions.indexOf('5q')<0&&permissions.indexOf('6n')<0" :data="pendingList" class="table-width" max-height="550">
         <el-table-column prop="ordernum" label="订单ID" min-width="180">
         </el-table-column>
         <el-table-column prop="cname" label="订单名称" min-width="150">
@@ -75,14 +75,94 @@
         </el-table-column>
         <el-table-column prop="deptname" label="商务大区部门" min-width="110">
         </el-table-column>
-        <el-table-column prop="" label="操作" width="150">
+        <el-table-column prop="" label="操作" min-width="148">
           <template slot-scope="scope">
-            <el-button type="primary" size="mini" @click.native="viewOrder(scope.row)" class="xsbtn">查看</el-button>
-            <el-button type="warning" size="mini" @click.native="updateOrder(scope.row)" class="xsbtn">修改订单</el-button>
+            <el-button type="primary" @click.native="viewOrder(scope.row)" class="xsbtn">查看</el-button>
+            <el-button v-if="permissions.indexOf('5a')>-1" type="warning" @click.native="updateOrder(scope.row)" class="xsbtn">修改订单</el-button>
           </template>
         </el-table-column>
       </el-table>
-      <page class="page" :url="url" :sendParams="sendParams" @updateList="updatePendingList" :key="key">
+
+      <!-- 转户出纳列表 -->
+      <el-table v-if="permissions.indexOf('5q') > -1" :data="pendingList" class="table-width" max-height="550">
+        <el-table-column prop="" label="加款时间" min-width="90">
+          <span slot-scope="scope">{{scope.row.addMoneyTime | timeFormat}}</span>
+        </el-table-column>
+        <el-table-column prop="cname" label="订单名称" min-width="150">
+        </el-table-column>
+        <el-table-column prop="" label="客户类型" min-width="90">
+          <span slot-scope="scope">{{scope.row.producttype | cusState('cusType')}}{{scope.row.productnumber}}</span>
+        </el-table-column>
+        <el-table-column prop="pname" label="类型" min-width="80">
+        </el-table-column>
+        <el-table-column prop="username" label="商务" min-width="80">
+        </el-table-column>
+        <el-table-column prop="baiducount" label="用户名" min-width="80">
+        </el-table-column>
+        <el-table-column prop="baiduid" label="ID" min-width="80">
+        </el-table-column>
+        <el-table-column prop="proxyid" label="代理账号" min-width="80">
+        </el-table-column>
+        <el-table-column prop="" label="金额" min-width="100">
+          <span slot-scope="scope">{{scope.row.amount_real || 0 | currency}}</span>
+        </el-table-column>
+        <el-table-column prop="" label="状态" min-width="140">
+          <template slot-scope="scope">
+            <el-button type="warning" plain class="xsbtn">{{scope.row.currentname?scope.row.currentname:'订单完成'}}</el-button>
+          </template>
+        </el-table-column>
+        <el-table-column prop="" label="操作" min-width="80">
+          <template slot-scope="scope">
+            <el-button type="success" @click.native="accountOutPass(scope.row)" class="xsbtn">通过</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <!-- 客服看到的列表 -->
+      <el-table v-if="permissions.indexOf('6n') > -1" :data="pendingList" class="table-width" max-height="550">
+        <el-table-column prop="ordernum" label="订单ID" min-width="150">
+        </el-table-column>
+        <el-table-column prop="cname" label="订单名称" min-width="150">
+        </el-table-column>
+        <el-table-column prop="baiducount" label="用户名" min-width="80">
+        </el-table-column>
+        <el-table-column prop="kefu" label="维护客服" min-width="80">
+        </el-table-column>
+        <el-table-column prop="webName" label="网站维护人员" min-width="80">
+        </el-table-column>
+        <el-table-column prop="" label="提交时间" min-width="90">
+          <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
+        </el-table-column>
+        <el-table-column prop="username" label="下单人" min-width="80">
+        </el-table-column>
+        <el-table-column prop="currentname" label="类型" min-width="80">
+          <template slot-scope="scope">
+            <span v-if="scope.row.pid=='WEBSITE' && scope.row.websitetype==20">WAP</span>
+            <span v-if="scope.row.pid=='WEBSITE' && scope.row.websitetype!=20">PC/WAP</span>
+            <span v-if="scope.row.pid!='WEBSITE'">{{scope.row.pname}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="currentname" label="审核状态" min-width="80">
+          <template slot-scope="scope">
+            <el-button type="warning" plain class="xsbtn">{{scope.row.currentname}}</el-button>
+          </template>
+        </el-table-column>
+        <el-table-column prop="currentname" label="订单状态" min-width="80">
+          <span slot-scope="scope">{{scope.row.audittype == 0 ? "仅降E":"降E并提单"}}</span>
+        </el-table-column>
+        <el-table-column prop="username" label="最后操作时间" min-width="80">
+          <span slot-scope="scope">{{scope.row.opt_time | timeFormat}}</span>
+        </el-table-column>
+        <el-table-column prop="deptname" label="商务大区部门" min-width="80">
+        </el-table-column>
+        <el-table-column prop="" label="操作" min-width="148">
+          <template slot-scope="scope">
+            <el-button type="primary" @click.native="viewOrder(scope.row)" class="xsbtn">查看</el-button>
+            <el-button v-if="permissions.indexOf('5a')>-1" type="warning" @click.native="updateOrder(scope.row)" class="xsbtn">修改订单</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <page class="page" :url="pendingUrl" :sendParams="sendParams" @updateList="updatePendingList" :key="key">
       </page>
     </div>
     <router-view></router-view>
@@ -92,9 +172,13 @@
 <script>
 import Page from 'base/page/page'
 import AutoSelect from 'base/autoSelect/autoSelect'
+import cookie from 'js-cookie'
+import { orderDeal } from 'common/js/mixin'
 export default {
+  mixins: [orderDeal],
   data () {
     return {
+      permissions: cookie.getJSON('permissions'),
       key_pro: '',
       key_order: '1',
       key_achievement: '2',
@@ -139,11 +223,13 @@ export default {
         }
       ],
       pendingList: [],
-      url: '/Check.do?pendding',
+      pendingUrl: '/Check.do?pendding',
       sendParams: {
         status: 100,
         addmoney: '0'
-      }
+      },
+      pid: 'BAITUI',
+      sn: 308
     }
   },
   beforeRouteUpdate (to, from, next) { // vue会复用组件，所以从详情页返回时带上搜索条件搜索
@@ -153,6 +239,39 @@ export default {
     next()
   },
   methods: {
+    accountOutPass (data) {
+      this.pid = data.pid
+      this.sn = data.sn
+      this._getUrl()
+      this._getBasicInfo(data, this.pass)
+    },
+    // 获取订单基本信息
+    _getBasicInfo (data, fn) {
+      let baseUrl = '/wf.do?ndget'
+      let baseParams = {
+        sn: data.sn,
+        cpid: data.cpid,
+        uid: data.uid,
+        orderid: data.orderid,
+        pid: data.pid
+      }
+      this.$post(baseUrl, baseParams).then(res => {
+        if (res.data.success === true) {
+          this.templateInfo = res.data.data[0][0]
+          this.contactInfoList = res.data.data[7]
+          this.orderInfo = res.data.data[1]
+          this.productInfo = res.data.data[4]
+          this.originUser = res.data.data[3]
+          this.cusAttrList = res.data.data[5]
+          this.showQualify = res.data.data[5]
+          this.moneyInfo = res.data.data[12]
+          this.moneyRecord = res.data.data[8][0]
+          this.orderFlowDatas = res.data.data[13]
+          this.invoiceInfo = res.data.data[11]
+          fn()
+        }
+      })
+    },
     tab () {
       // 使用obj.key = value的方式，子组件无法监听到对象的变化
       this.sendParams = Object.assign({}, this.sendParams, {addmoney: this.tabStatus})

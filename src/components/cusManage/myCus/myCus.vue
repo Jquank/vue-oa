@@ -39,7 +39,7 @@
 
       <!-- 列表 -->
       <el-table @selection-change="handleSelectionChange" stripe border :data="myCusList" max-height="600" style="width: 100%">
-        <el-table-column fixed type="selection" width="55">
+        <el-table-column fixed type="selection" width="40">
         </el-table-column>
         <el-table-column prop="companyname" label="客户名称" min-width="150">
         </el-table-column>
@@ -73,12 +73,12 @@
             {{scope.row.visittime | timeFormat}}
           </span>
         </el-table-column>
-        <el-table-column label="操作" width="290">
+        <el-table-column label="操作" width="250">
           <template slot-scope="scope">
-            <el-button @click.native.prevent="view(scope.row)" type="success" size="mini">查看</el-button>
-            <el-button @click.native.prevent="follow(scope.row)" type="warning" size="mini">跟进</el-button>
-            <el-button @click.native.prevent="visit(scope.row)" type="primary" size="mini">出访</el-button>
-            <el-button @click.native.prevent="stop(scope.row)" type="danger" size="mini">放弃</el-button>
+            <el-button @click.native.prevent="view(scope.row)" type="success" class="xsbtn">查看</el-button>
+            <el-button @click.native.prevent="follow(scope.row)" type="warning" class="xsbtn">跟进</el-button>
+            <el-button @click.native.prevent="visit(scope.row)" type="primary" class="xsbtn">出访</el-button>
+            <el-button @click.native.prevent="stop(scope.row)" type="danger" class="xsbtn">放弃</el-button>
           </template>
         </el-table-column>
       </el-table>

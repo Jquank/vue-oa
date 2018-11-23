@@ -162,7 +162,7 @@ export const navList = [
   },
   {
     id: '4f',
-    fontIcon: 'fa fa-cny',
+    fontIcon: 'fa fa-money',
     text: '到款管理',
     cList: [{
       cid: '4g',
@@ -192,8 +192,7 @@ export const navList = [
     text: '订单管理',
     cList: [
       { cid: 'z', to: '/indexPage/orderPending', text: '待处理订单' },
-      { cid: '45', to: '/indexPage/orderProcessed', text: '已处理订单' },
-      // { cid: '46', to: '/indexPage/orderList', text: '订单列表' },
+      { cid: '46', to: '/indexPage/orderList', text: '订单列表' },
       { cid: '49', to: '/indexPage/addBaiduOrder', text: '新增百度订单' },
       { cid: '4b', to: '/indexPage/addWjOrder', text: '新增网建订单' },
       { cid: '4c', to: '/indexPage/addZtcOrder', text: '新增直通车订单' },
@@ -209,9 +208,9 @@ export const navList = [
       { cid: '5h', to: '/indexPage/renewList', text: '续费列表' },
       { cid: '5j', to: '/indexPage/renewCheck', text: '续费审核' },
       { cid: '5k', to: '/indexPage/renewReceive', text: '续费收单' },
-      { cid: '5l', to: '/indexPage/renewList', text: '转户出纳' },
-      { cid: '5m', to: '/indexPage/renewList', text: '续费加款' },
-      { cid: '6p', to: '/indexPage/renewList', text: '转出出纳' }
+      { cid: '5l', to: '/indexPage/renewDispatch', text: '转户出纳' },
+      { cid: '5m', to: '/indexPage/renewAdd', text: '续费加款' },
+      { cid: '6p', to: '/indexPage/accountOut', text: '转出出纳' }
     ]
   },
   {
@@ -234,7 +233,7 @@ export const navList = [
     cList: [
       // todo
       { cid: '1100', to: '/indexPage/salaryList', text: '工资列表' },
-      { cid: '4q', to: '/indexPage/salaryList', text: '工资异常' }
+      { cid: '4q', to: '/indexPage/salaryError', text: '工资异常' }
     ]
   },
   {

@@ -5,7 +5,8 @@
         <el-row>
           <el-col :md="24">
             <el-form-item label="公司名称/法人 :">
-              <el-input v-model="receipt.companyname" disabled></el-input>
+              <el-input v-model="receipt.companyname" disabled  class="input-btn"></el-input>
+              <el-button @click.native="$router.go(-1)" type="warning">返回</el-button>
             </el-form-item>
           </el-col>
         </el-row>
@@ -26,7 +27,7 @@
           </el-col>
         </el-row>
         <!-- 百推 -->
-        <template v-if="businessType!=='ztc'">
+        <template v-if="businessType==='DS'">
           <el-row v-for="(item,index) in productMoneyList" :key="index">
             <el-col :md="24" v-if="item.type<100">
               <el-form-item :label="item.type | productType(' :')" class="product-name">
@@ -64,7 +65,7 @@
           </el-row>
         </template>
         <!-- 直通车 -->
-        <template v-if="businessType==='ztc'">
+        <template v-if="businessType==='ZTC2'">
           <el-row v-for="(item,index) in productMoneyList" :key="index">
             <el-col :md="24" v-if="item.type<100">
               <el-form-item :label="item.type | productType18(' :')" class="product-name">
@@ -74,8 +75,15 @@
           </el-row>
           <el-row>
             <el-col :md="24">
-              <el-form-item label="直通车代金券 :">
+              <el-form-item label="代金券 :">
                 <el-input v-model="receipt.ztcvoucher" disabled></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :md="24">
+              <el-form-item label="现金券 :">
+                <el-input v-model="receipt.ztcxjq" disabled></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -99,12 +107,12 @@
     </div>
 
     <el-table stripe border :data="logs" class="maxwidth" style="width: 100%;margin-top:10px;">
-      <el-table-column prop="" label="操作日期">
+      <el-table-column prop="" label="操作日期" width="135">
         <span slot-scope="scope">{{scope.row.inserttime | timeFormat}}</span>
       </el-table-column>
       <el-table-column prop="remark" label="操作记录">
       </el-table-column>
-      <el-table-column prop="name" label="操作人">
+      <el-table-column prop="name" label="操作人" width="100">
       </el-table-column>
     </el-table>
   </div>
@@ -129,10 +137,10 @@ export default {
     if (viewWidth < 768) {
       this.labelWidth = '90px'
     }
-    this.businessType = this.$route.query.type
+    this.businessType = this.$route.query.data.pid
     this.receiveData = this.$route.query.data
     if (!this.receiveData.id) {
-      this.$router.go(-1)
+      this.$router.push('/indexPage/moneyRecord')
       return
     }
     this._getLogs(this.receiveData.id)
