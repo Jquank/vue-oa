@@ -329,8 +329,8 @@ export default {
       this.$post('/Invoice.do?getInvoiceInfo', params).then(res => {
         if (res.data.success) {
           this.echoData = res.data.data[0]
-          let proArr = res.data.data[1]
-          this.echoData[0].proArr = proArr
+          let productMoneyList = res.data.data[1]
+          this.echoData[0].productMoneyList = productMoneyList
           if (!this.echoData[0].companyname) {
             this.echoData[0].companyname = this.echoData[0].comName
           }

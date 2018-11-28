@@ -797,7 +797,7 @@
           </el-table>
         </el-tab-pane>
         <!-- 订单处理 -->
-        <el-tab-pane v-if="sn!==10" label="订单处理">
+        <el-tab-pane v-if="mark!=='from_orderList'" label="订单处理">
           <!-- 理单员审核(质检经理) -->
           <order-keeper v-if="sn===20 && templateInfo.cpid" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="理单员审核"></order-keeper>
           <!-- 综合部初审 -->
@@ -1094,6 +1094,7 @@ export default {
       showQualify: [],
       cusAttrList: [],
       sn: 10,
+      mark: '',
       moneyInfo: [],
       moneyRecord: {},
       orderFlowDatas: [],
@@ -1131,6 +1132,7 @@ export default {
       this.tableFirstColumWidth = '50'
     }
     this.sn = this.receiveData.sn
+    this.mark = this.receiveData._mark
     this._getBasicInfo()
   },
   mounted () {

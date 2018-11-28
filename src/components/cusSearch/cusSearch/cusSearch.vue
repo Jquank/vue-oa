@@ -22,20 +22,22 @@
     </div>
 
     <el-table stripe border :data="list" style="width: 100%;margin-top:10px;">
-      <el-table-column prop="companyname" label="客户名称" width="190">
+      <el-table-column prop="companyname" label="客户名称" min-width="150">
       </el-table-column>
-      <el-table-column prop="" label="客户类型">
+      <el-table-column prop="" label="客户类型" width="100">
         <span slot-scope="scope">{{scope.row.producttype | cusState('cusType')}}</span>
       </el-table-column>
-      <el-table-column prop="" label="公司状态">
+      <el-table-column prop="productname" label="产品类型" width="100">
+      </el-table-column>
+      <el-table-column prop="" label="公司状态" width="100">
         <span :class="scope.row.ctype==-10?'red':''" slot-scope="scope">{{scope.row.ctype | cusState('cusStatus')}}</span>
       </el-table-column>
-      <el-table-column prop="pname" label="业务状态" min-width="80">
+      <el-table-column prop="pname" label="业务状态" min-width="100">
         <span slot-scope="scope">{{scope.row.cltype+''+scope.row.clstatus | businessStatus}}</span>
       </el-table-column>
-      <el-table-column prop="areaname" label="地区" min-width="80">
+      <el-table-column prop="areaname" label="地区" min-width="120">
       </el-table-column>
-      <el-table-column prop="companycatname" label="行业" min-width="80">
+      <el-table-column prop="companycatname" label="行业" min-width="100">
       </el-table-column>
       <template v-if="permissions.indexOf('73')>-1">
         <el-table-column prop="baidu_account" label="百度账号">
@@ -51,7 +53,7 @@
         <el-table-column prop="kefuDept" label="客服部门">
         </el-table-column>
       </template>
-      <el-table-column prop="" label="操作" min-width="60px" v-if="permissions.indexOf('73')==-1">
+      <el-table-column prop="" label="操作" min-width="120px" v-if="permissions.indexOf('73')==-1">
         <template slot-scope="scope">
           <el-button @click.native="view(scope.row)" type="success" class="xsbtn">查看</el-button>
           <el-button @click.native="turnFollow(scope.row)" v-if="!(scope.row.cltype>=20&&scope.row.clstatus>=20)" type="primary" class="xsbtn">转跟踪</el-button>
@@ -72,7 +74,7 @@
           </el-col>
           <el-col :md="12" class="maxwidth">
             <el-form-item label="所属行业 :">
-              <select-trade v-model="form.trade" :tradeDisabled="true" style="width:100%"></select-trade>
+              <select-trade v-model="form.trade" :echoTrade="form.trade" style="width:100%"></select-trade>
             </el-form-item>
           </el-col>
         </el-row>
@@ -84,26 +86,26 @@
           </el-col>
           <el-col :md="12" class="maxwidth">
             <el-form-item label="客户地址 :">
-              <el-input v-model="cusDetail.address" disabled></el-input>
+              <el-input v-model="cusDetail.address"  type="textarea" disabled></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :md="12" class="maxwidth">
             <el-form-item label="成立日期 :">
-              <el-date-picker v-model="cusDetail.establishment_date" value-format="yyyy-MM-dd" type="date"  style="width:100%"></el-date-picker>
+              <el-date-picker v-model="cusDetail.establishment_date" value-format="yyyy-MM-dd" type="date" disabled style="width:100%"></el-date-picker>
             </el-form-item>
           </el-col>
           <el-col :md="12" class="maxwidth">
             <el-form-item label="所属地区 :">
-              <select-area v-model="form.area" :areaDisabled="true" style="width:100%"></select-area>
+              <select-area v-model="form.area" :areaDisabled="true" :echoArea="form.area" style="width:100%"></select-area>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :md="12" class="maxwidth">
             <el-form-item label="客户网址 :">
-              <el-input v-model="cusDetail.website" disabled></el-input>
+              <el-input v-model="cusDetail.website"></el-input>
             </el-form-item>
           </el-col>
           <el-col :md="12" class="maxwidth">
@@ -114,15 +116,16 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row v-for="(item,index) in form.contactList" :key="index" :gutter="20">
+        <el-row v-for="(item,index) in contactList" :key="index" :gutter="20">
           <el-col :md="12" class="maxwidth">
             <el-form-item label="联系人 :">
-              <el-input v-model="form.contactList[index].name" disabled=""></el-input>
+              <el-input v-model="item.name"></el-input>
             </el-form-item>
           </el-col>
           <el-col :md="12" class="maxwidth">
             <el-form-item label="联系电话 :">
-              <el-input v-model="form.contactList[index].contact" disabled></el-input>
+              <el-input v-model="item.contact" class="input-btn"></el-input>
+              <el-button @click.native="addContact(index)" size="mini" :type="index?'danger':'success'" :icon="index?'el-icon-minus':'el-icon-plus'" circle></el-button>
             </el-form-item>
           </el-col>
         </el-row>
@@ -133,31 +136,35 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <el-row>
+          <el-col :md="24" class="maxwidth">
+            <el-form-item label="产品类型 :">
+              <el-radio-group @change="changeProType" v-model="proType">
+                <el-radio  v-for="item in proTypeList" :key="item.id" :label="item.id">{{item.name}}</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :md="24" class="maxwidth">
+            <el-form-item label="客户类型 :">
+              <el-select v-model="cusType" style="width:100%;">
+                <el-option v-for="(item,index) in cusTypeList" :key="index" :value="item.producttype" :label="item.productname"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+         <el-row :gutter="20">
+          <el-col :md="24" style="max-width:1000px;">
+            <el-form-item label="备注 :">
+              <el-input v-model="viewRemark" type="textarea" :rows="3" placeholder="请填写详细修改备注;如新行业: 增加新联系人"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
       <div style="text-align: center;">
-        <el-button v-if="cusDetail.ctype==-10&&cusDetail.clstatus!=20" @click.native="changeAndApply" type="warning">修改并申请重审</el-button>
-        <el-button v-if="(((((rowData.cltype>=20&&rowData.clstatus!=20)||(rowData.cltype<20&&(rowData.clstatus==30||rowData.clstatus==0)))&&rowData.producttype==0)||(rowData.cltype==20&&rowData.clstatus<=10&&rowData.producttype!=0)))&&(cusDetail.ctype!=-10)" @click.native="applyBaoADialog = true" type="primary">申请保A</el-button>
-      </div>
-    </el-dialog>
-
-    <!-- 申请保A弹窗 -->
-    <el-dialog :modal-append-to-body="false" title="申请保A" :visible.sync="applyBaoADialog" width="400px">
-      <p>客户类型：</p>
-      <el-select v-model="productType" style="width:100%;">
-        <el-option value="" label="请选择客户类型"></el-option>
-        <el-option v-if="!(rowData.cltype>=20&&rowData.clstatus>=20)" value="0" label="新开"></el-option>
-        <template v-if="rowData.cltype==30">
-          <el-option value="10" label="一户多开"></el-option>
-          <el-option value="20" label="老户重开"></el-option>
-          <el-option value="30" label="多项目"></el-option>
-          <el-option value="40" label="(新)"></el-option>
-          <el-option value="50" label="信息流"></el-option>
-        </template>
-      </el-select>
-      <p>修改备注：</p>
-      <el-input v-model="remark" type="textarea" :rows="4"></el-input>
-      <div style="margin-top:10px;text-align:center;">
-        <el-button type="primary" @click.native="subBaoA">提 交</el-button>
+        <!-- <el-button v-if="cusDetail.ctype==-10&&cusDetail.clstatus!=20" @click.native="changeAndApply" type="warning">修改并申请重审</el-button> -->
+        <el-button @click.native="subBaoA" type="primary">申请保A</el-button>
       </div>
     </el-dialog>
 
@@ -202,8 +209,8 @@ export default {
       rowData: {},
       form: {
         cusName: '',
-        trade: '',
-        area: ''
+        trade: [],
+        area: []
       },
       fmList: [],
       contactList: [
@@ -214,9 +221,11 @@ export default {
       ],
       oldContactList: [],
 
-      applyBaoADialog: false, // 保A弹窗
-      productType: '',
-      remark: '',
+      proType: 'DS',
+      proTypeList: [],
+      cusType: '',
+      cusTypeList: [],
+      viewRemark: '',
 
       applyEditDialog: false, // 申请修改弹窗
       applyEditRemark: ''
@@ -231,6 +240,16 @@ export default {
     })
   },
   methods: {
+    addContact (index) {
+      if (index === 0) {
+        this.contactList.push({
+          concontact: '',
+          phone: ''
+        })
+      } else {
+        this.contactList.splice(index, 1)
+      }
+    },
     // 转跟踪
     turnFollow (data) {
       this.rowData = data
@@ -307,31 +326,41 @@ export default {
     },
     // 申请保A提交
     subBaoA () {
-      if (!this.productType) {
-        this.$message({
-          type: 'warning',
-          message: '请选择客户类型！'
-        })
+      if (this.contactList.some(val => !val.name || !val.contact)) {
+        this.$message.error('请填写联系人或电话！')
+        return
+      }
+      if (!this.proTypeList.some(val => this.proType === val.id)) {
+        this.$message.error('请选择产品类型！')
+        return
+      }
+      if (!this.cusType) {
+        this.$message.error('请选择客户类型！')
         return
       }
       let params = {
-        companylogid: this.rowData.companylogid,
-        companyid: this.rowData.companyid,
-        remark: this.remark,
-        type: 20,
-        producttype: this.productType
+        'pid': this.proType,
+        'companylogid': this.rowData.companylogid,
+        'companyid': this.rowData.companyid,
+        'remark': this.viewRemark,
+        'apply_A': '搜索客户申请保A',
+        'type': 20,
+        'producttype': this.cusType,
+        'website': this.cusDetail.website,
+        'cat': this.cusDetail.bid || this.cusDetail.cid,
+        'contact': this.contactList,
+        'establishment': this.cusDetail.establishment_date,
+        'legal_person': this.cusDetail.legal_person,
+        'address': this.cusDetail.address,
+        'fm': this.cusDetail.fm,
+        'area': this.cusDetail.county || this.cusDetail.city || this.cusDetail.province,
+        'business_scope': this.cusDetail.business_scope
       }
       this.$post('/Company.do?compset', params).then(res => {
         if (res.data[0].success) {
-          this.applyBaoADialog = false
           this.cusDetailDialog = false
-          this.$message({
-            type: 'success',
-            message: '申请保A成功'
-          })
           this.search()
         } else {
-          this.applyBaoADialog = false
           this.$message({
             type: 'danger',
             message: res.data[0].msg
@@ -386,7 +415,9 @@ export default {
     },
     view (data) {
       this.rowData = data
-      this._getMyCusDetail(data)
+      this.proType = data.pid
+      this._getProTypeList()
+      this._getMyCusDetail(data, this._getCusTypeList, data.pid)
       this.cusDetailDialog = true
     },
     search () {
@@ -399,7 +430,32 @@ export default {
       this.cusName = ''
       this.bdAccount = ''
     },
-    _getMyCusDetail (data) {
+    changeProType (val) {
+      this._getCusTypeList(val)
+    },
+    _getCusTypeList (pid) {
+      let params = {
+        cid: this.rowData.companyid,
+        pid: pid,
+        producttype: this.cusDetail.producttype
+      }
+      this.$get('/Company.do?checkComProtectA', params).then(res => {
+        if (res.data.success) {
+          this.cusTypeList = res.data.data
+        } else {
+          this.cusTypeList = []
+          this.$message.error(res.data.msg + '')
+        }
+      })
+    },
+    _getProTypeList () {
+      this.$get('/Product.do?proget', {parentid: 0}).then(res => {
+        if (res.data.success) {
+          this.proTypeList = res.data.data
+        }
+      })
+    },
+    _getMyCusDetail (data, fn, fnParams) {
       this.$post('/CustomerCheck.do?customlist', {
         'cid': data.companyid,
         'cltype': data.cltype,
@@ -408,6 +464,7 @@ export default {
         'companylogid': data.companylogid
       }).then(res => {
         this.cusDetail = res.data[0].data[0]
+        fn(fnParams)
         console.log(this.cusDetail)
         this.form.cusName = this.cusDetail.name
         this.form.trade = [this.cusDetail.cid, this.cusDetail.bid]
@@ -418,6 +475,7 @@ export default {
         ]
         this.contactList =
           res.data[1].data.length === 0 ? [{}] : res.data[1].data
+        console.log(this.contactList)
         this.oldContactList = JSON.parse(
           JSON.stringify(this.contactList)
         )
@@ -472,6 +530,9 @@ export default {
         padding-left: 15px;
       }
     }
+  }
+  .input-btn{
+    width: calc(~"(100% - 32px)");
   }
 }
 </style>

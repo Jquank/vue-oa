@@ -98,16 +98,16 @@
             <el-radio v-model="form.ttype" label="20">专票</el-radio>
           </el-form-item>
         </el-col>
-        <el-col :md="12" class="maxwidth">
+        <el-col :md="12" class="maxwidth" id="images">
           <el-form-item label="发票图例 :">
             <el-tooltip class="item" effect="dark" content="电子普票" placement="top-start">
-              <img class="img-invoice" src="./invoice3.jpg" alt="">
+              <img class="img-invoice" src="./invoice3.jpg" alt="电子普票">
             </el-tooltip>
             <el-tooltip class="item" effect="dark" content="纸质普票" placement="top-start">
-              <img class="img-invoice" src="./invoice3.jpg" alt="">
+              <img class="img-invoice" src="./invoice1.jpg" alt="纸质普票">
             </el-tooltip>
             <el-tooltip class="item" effect="dark" content="专票" placement="top-start">
-              <img class="img-invoice" src="./invoice3.jpg" alt="">
+              <img class="img-invoice" src="./invoice2.jpg" alt="专票">
             </el-tooltip>
           </el-form-item>
         </el-col>
@@ -122,8 +122,8 @@
       <el-row>
         <el-col class="maxwidth">
           <el-form-item label="产品类型 :" prop="proArr">
-            <el-checkbox-group v-model="form.proArr" @change="selProChange">
-              <el-checkbox v-for="(item,index) in form.productList" :key="index" :label="item">{{item.code_desc}}</el-checkbox>
+            <el-checkbox-group :key="key_sel_pro" v-model="form.proArr">
+              <el-checkbox  @change="selProChange(item)" v-for="item in form.productList" :key="item.code_val" :label="item.code_val">{{item.code_desc}}</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
         </el-col>
@@ -198,6 +198,7 @@
 
 <script>
 import { getByCode } from 'api/getOptions'
+import Viewer from 'viewerjs'
 export default {
   props: {
     echoData: {
@@ -218,10 +219,15 @@ export default {
   watch: {
     echoData: {
       handler: function (newEcho) {
+        this.form.proArr = []
         this.form.invoice = newEcho
         this.form = Object.assign(this.form, newEcho[0])
         this.key_sel_invoice = new Date() + '10'
-        console.log(this.form)
+        this.key_sel_pro = new Date() + '20'
+        this.form.productMoneyList.forEach(val => {
+          this.form.proArr.push(val.code_val)
+        })
+        console.log(this.form.proArr)
       },
       deep: true,
       immediate: true // 将立即以表达式的当前值触发回调
@@ -229,6 +235,7 @@ export default {
   },
   data () {
     return {
+      key_sel_pro: '1',
       key_sel_invoice: '',
       form: {
         invoice_com: '10',
@@ -311,6 +318,11 @@ export default {
       this.form.productList = res.data.data
     })
   },
+  mounted () {
+    const viewer = new Viewer(document.getElementById('images'),{  // eslint-disable-line
+      zIndex: 100000
+    })
+  },
   methods: {
     // 修改六要素
     changeSixTip () {
@@ -364,15 +376,22 @@ export default {
         }
       })
     },
-    selProChange (val) {
-      this.form.productMoneyList = []
-      val.forEach(val => {
+    selProChange (obj) {
+      let index = -1
+      this.form.productMoneyList.forEach((val, key) => {
+        if (val.code_val === obj.code_val) {
+          index = key
+        }
+      })
+      if (index > -1) {
+        this.form.productMoneyList.splice(index, 1)
+      } else {
         this.form.productMoneyList.push({
-          code_desc: val.code_desc,
-          code_val: val.code_val,
+          code_desc: obj.code_desc,
+          code_val: obj.code_val,
           value: 0
         })
-      })
+      }
       this.form.productMoneyList.sort(function (a, b) {
         var val1 = a.code_val
         var val2 = b.code_val

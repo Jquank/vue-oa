@@ -33,7 +33,7 @@ export default {
     }
   },
   mounted () {
-    const gallery = new Viewer(document.getElementById('images')) // eslint-disable-line
+    const viewer = new Viewer(document.getElementById('images')) // eslint-disable-line
   },
   methods: {
     open (val) {

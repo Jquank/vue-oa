@@ -1,60 +1,71 @@
 <template>
   <div class="edit-news child-component-container media-padding">
     <div class="edit-content">
-      <el-form :model="form" label-width="80px" class="max-width">
-        <el-form-item label="标题">
-          <el-input v-model="form.title" placeholder="填写标题" class="input-btn"></el-input>
-          <el-button type="primary" @click="back">返回</el-button>
+      <el-form :model="form" label-width="80px">
+        <el-form-item label="标题" required>
+          <el-col :md=24 class="maxwidth">
+            <el-input v-model="form.title" placeholder="填写标题" class="input-btn"></el-input>
+            <el-button type="primary" @click="back">返回</el-button>
+          </el-col>
         </el-form-item>
-        <el-form-item label="类型">
-          <el-select v-model="form.type">
-            <el-option label="消息通知" :value="form.info"></el-option>
-            <el-option label="重要公告" :value="form.public"></el-option>
-            <el-option label="百捷大家庭" :value="form.baijieFamily"></el-option>
-          </el-select>
+        <el-form-item label="类型" required>
+          <el-col :md=24 class="maxwidth">
+            <el-select v-model="form.type">
+              <el-option label="消息通知" :value="0"></el-option>
+              <el-option label="重要公告" :value="10"></el-option>
+              <el-option label="百捷大家庭" :value="20"></el-option>
+            </el-select>
+          </el-col>
         </el-form-item>
-        <el-form-item label="正文">
-          <div>
+        <el-form-item label="正文" required>
+          <el-col :md=24 class="maxwidth">
             <div ref="editor" class="text-left"></div>
-          </div>
+          </el-col>
         </el-form-item>
-        <el-form-item label="权限">
+        <el-form-item label="权限" required>
           <el-button @click.native="sel" type="warning">选择</el-button>
         </el-form-item>
-        <el-form-item label="状态">
-          <el-radio v-model="form.radio" label="1">发布</el-radio>
-          <el-radio v-model="form.radio" label="2">草稿</el-radio>
+        <el-form-item label="状态" required>
+          <el-radio v-model="form.newsstatus" :label="0">发布</el-radio>
+          <el-radio v-model="form.newsstatus" :label="10">草稿</el-radio>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary">发布</el-button>
+          <el-button @click.native="sub" type="primary">发布</el-button>
         </el-form-item>
       </el-form>
     </div>
-    <el-dialog :append-to-body="true" :visible.sync="selUserDialog">
-      <select-user ref="seluser" :showSaveBtn="false" :showSearch="false"
-      title="选择部门"></select-user>
+    <el-dialog :append-to-body="true" :visible.sync="selUserDialog" width="400px">
+      <select-dept @subParams="getDept"></select-dept>
     </el-dialog>
   </div>
 </template>
 
 <script>
 import E from 'wangeditor'
-import selectUser from 'base/selectUser/selectUser'
+import SelectDept from 'base/selectDept/selectDept'
 export default {
   name: 'editor',
   data () {
     return {
+      editor: null,
       selUserDialog: false,
-      editorContent: '',
       form: {
+        id: undefined,
+        content: '',
         title: '',
-        type: '0',
-        info: '0',
-        public: '10',
-        baijieFamily: '20',
-        radio: '1'
-      }
+        type: 0,
+        newsstatus: 0
+      },
+      dept: '',
+      echoData: {}
     }
+  },
+  created () {
+    this.echoData = this.$route.query.data
+    if (!this.echoData) {
+      return
+    }
+    this.form = Object.assign({}, this.form, this.echoData)
   },
   methods: {
     sel () {
@@ -62,17 +73,44 @@ export default {
     },
     back () {
       this.$router.go(-1)
+    },
+    getDept (res) {
+      this.dept = res
+      this.selUserDialog = false
+    },
+    sub () {
+      let params = {
+        'id': this.form.id,
+        'title': this.form.title,
+        'content': this.form.content,
+        'newsstatus': this.form.newsstatus,
+        'type': this.form.type,
+        'userid': this.dept
+      }
+      if (!params.title || !params.content || !params.userid) {
+        this.$message.error('请填写或选择带*项！')
+        return
+      }
+      this.$post('/User.do?AddOrUpdateInfo', params).then(res => {
+        if (res.data.success) {
+          this.$router.push({
+            path: '/indexPage/news',
+            query: {data: 'fromDetail'}
+          })
+        }
+      })
     }
   },
   mounted () {
-    let editor = new E(this.$refs.editor)
-    editor.customConfig.onchange = html => {
-      this.editorContent = html
+    this.editor = new E(this.$refs.editor)
+    this.editor.customConfig.onchange = html => {
+      this.form.content = html
     }
-    editor.create()
+    this.editor.create()
+    this.editor.txt.html(this.form.content)
   },
   components: {
-    selectUser
+    SelectDept
   }
 }
 </script>
@@ -80,8 +118,8 @@ export default {
 <style lang="less">
 .edit-news {
   .edit-content {
-    .max-width{
-      width: 980px;
+    .maxwidth{
+      width: 900px;
     }
   }
 }

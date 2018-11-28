@@ -82,32 +82,23 @@
           <div class="btns mt10px" style="max-width:1000px;text-align:center;">
             <!-- <el-button type="success" @click.native="applyBaoADialog=true"
             v-if="((cusDetail.cltype==20&&cusDetail.clstatus>20&&cusDetail.uid==userId)||(!(cusDetail.cltype==20&&cusDetail.clstatus>=20)&&(cusDetail.ctype>=10)))"
-            >申请保A</el-button>
+            >申请保A</el-button> -->
 
-            <el-button type="primary" @click.native="aaa"
+            <el-button type="primary" @click.native="applyEditDialog=true"
             v-if="((cusDetail.cltype==20&&cusDetail.clstatus>20&&cusDetail.uid==userId)||(cusDetail.cltype<20&&cusDetail.clstatus>20)||(cusDetail.cltype==20&&cusDetail.clstatus==0))"
             >申请修改</el-button>
 
-            <el-button  type="success" @click.native="aaa"
-            v-if="cusDetail.ctype==-10&&cusDetail.clstatus!=20">修改并申请重审</el-button>
+            <!-- <el-button  type="success" @click.native="aaa"
+            v-if="cusDetail.ctype==-10&&cusDetail.clstatus!=20">修改并申请重审</el-button> -->
 
-            <el-button type="warning" @click.native="aaa"
+            <el-button type="warning" @click.native="stopFollow"
             v-if="(cusDetail.traceId!=null&&cusDetail.traceUid==userId)"
             >放弃跟踪</el-button>
 
-            <el-button type="danger" @click.native="aaa"
+            <el-button type="danger" @click.native="stopBaoA"
             v-if="(myKind==30&&cusDetail.cltype==20&&cusDetail.clstatus>=20&&cusDetail.uid==userId)"
-            >放弃保A</el-button> -->
+            >放弃保A</el-button>
 
-            <el-button type="success" @click.native="applyBaoADialog=true">申请保A</el-button>
-
-            <el-button type="primary" @click.native="applyEditDialog=true">申请修改</el-button>
-
-            <el-button type="success" @click.native="applyRepeatCheck">修改并申请重审</el-button>
-
-            <el-button type="warning" @click.native="stopFollow">放弃跟踪</el-button>
-
-            <el-button type="danger" @click.native="stopBaoA">放弃保A</el-button>
           </div>
         </el-form>
       </div>

@@ -32,7 +32,7 @@
             </el-col>
             <el-col :md="12" class="maxwidth">
               <el-form-item label="客户地址 :">
-                <el-input v-model="cusDetail.address"></el-input>
+                <el-input type="textarea" v-model="cusDetail.address"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -66,12 +66,12 @@
           <el-row v-for="(item,index) in form.contactList" :key="index" :gutter="20">
             <el-col :md="12" class="maxwidth">
               <el-form-item label="联系人 :" required>
-                <el-input v-model="form.contactList[index].name"></el-input>
+                <el-input v-model="item.name"></el-input>
               </el-form-item>
             </el-col>
             <el-col :md="12" class="maxwidth">
               <el-form-item label="联系电话 :" required>
-                <el-input v-model="form.contactList[index].contact" class="contact-phone" :class="form.contactList[index].red ?'phonered': ''"></el-input>
+                <el-input v-model="item.contact" class="contact-phone" :class="item.red ?'phonered': ''"></el-input>
                 <el-button @click.native="addContact(index)" class="circle-btn" :type="index===0?'success':'danger'" size="mini" :icon="index===0?'fa fa-plus':'fa fa-minus'" circle></el-button>
               </el-form-item>
             </el-col>
@@ -106,12 +106,13 @@
           </el-row>
         </el-form>
       </div>
+      <!-- 待审信息 -->
       <div class="cus-info">
         <div class="title">
           <el-button class="title-btn" type="primary">待审信息</el-button>
         </div>
         <div class="line" style="max-width:980px;"></div>
-        <el-form ref="form" :model="form" label-width="90px">
+        <el-form ref="form" :model="form" label-width="115px">
           <el-row :gutter="20">
             <el-col :md="12" class="maxwidth">
               <el-form-item label="处理类型 :">
@@ -138,7 +139,7 @@
           </el-row>
           <el-row :gutter="20">
             <el-col :md="24" style="max-width:1000px;">
-              <el-form-item label="审核被拒原因 :" label-width="115px">
+              <el-form-item label="审核被拒原因 :">
                 <el-select multiple v-model="reason" style="width:100%;">
                   <el-option v-for="(item,index) in rejectData" :key="index" :value="index" :label="item.code_desc"></el-option>
                 </el-select>
@@ -153,16 +154,17 @@
             </el-col>
           </el-row>
           <div class="btns mt10px" style="max-width:1000px;text-align:center;">
-            <el-button type="success" @click.native="checkPass">审核通过</el-button>
-            <el-button type="danger" @click.native="checkFail">审核不通过</el-button>
-            <el-button type="primary" @click.native="basicCheckPass">仅基本信息通过</el-button>
-            <el-button type="success" @click.native="baoAPass">保A审核通过</el-button>
-            <el-button type="danger" @click.native="baoAFail">保A审核不通过</el-button>
-            <el-button type="danger" @click.native="allCheckFail">审核都不通过</el-button>
+            <el-button v-if="receiveData.cltype!=20" type="success" @click.native="checkPass">审核通过</el-button>
+            <el-button v-if="receiveData.cltype!=20" type="danger" @click.native="checkFail">审核不通过</el-button>
+            <el-button v-if="receiveData.cltype==20&&cusDetail.ctype<=0" type="primary" @click.native="basicCheckPass">仅基本信息通过</el-button>
+            <el-button v-if="receiveData.cltype==20" type="success" @click.native="baoAPass">保A审核通过</el-button>
+            <el-button v-if="receiveData.cltype==20&&cusDetail.ctype>0" type="danger" @click.native="baoAFail">保A审核不通过</el-button>
+            <el-button v-if="receiveData.cltype==20&&cusDetail.ctype<=0" type="danger" @click.native="allCheckFail">审核都不通过</el-button>
             <el-button type="primary" @click.native="saveCusInfo">保存客户资料</el-button>
           </div>
         </el-form>
       </div>
+      <!-- 日志记录 -->
       <div class="follow-record mt10px">
         <div class="title">
           <el-button class="title-btn" type="primary">日志记录</el-button>
@@ -269,7 +271,7 @@
         </el-table-column>
         <el-table-column prop="" label="操作" width="80px">
           <template slot-scope="scope">
-            <el-button type="success" size="mini" @click.native="view">查看</el-button>
+            <el-button type="success" size="mini" @click.native="view(scope.row)">查看</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -277,11 +279,66 @@
     </el-dialog>
 
     <!-- 查看弹窗 -->
-    <el-dialog :modal-append-to-body="false" title="客户信息" :visible.sync="viewDialog" width="400px">
-      <p>修改备注：</p>
-      <div style="margin-top:10px;text-align:center;">
-        <el-button type="primary" @click.native="subApplyEdit">提 交</el-button>
-      </div>
+    <el-dialog :modal-append-to-body="false" title="客户信息" :visible.sync="viewDialog" width="700px">
+      <el-form ref="form" :model="form" label-width="90px">
+          <el-row :gutter="20">
+            <el-col :md="12" class="maxwidth">
+              <el-form-item label="客户名称 :">
+                <el-input v-model="cusDetail2.name"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :md="12" class="maxwidth">
+              <el-form-item label="所属行业 :" required>
+                <select-trade :echoTrade="[cusDetail2.cid,cusDetail2.bid]" style="width:100%"></select-trade>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :md="12" class="maxwidth">
+              <el-form-item label="客户法人 :">
+                <el-input v-model="cusDetail2.legal_person"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :md="12" class="maxwidth">
+              <el-form-item label="客户地址 :">
+                <el-input type="textarea" v-model="cusDetail2.address"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :md="12" class="maxwidth">
+              <el-form-item label="客户网址 :">
+                <el-input v-model="cusDetail2.website"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :md="12" class="maxwidth">
+              <el-form-item label="客户来源 :">
+                <el-select v-model="cusDetail2.fm" style="width:100%;">
+                  <el-option v-for="(item,index) in fmList" :key="index" :value="item.id" :label="item.code_desc"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row v-for="(item,index) in form.contactList2" :key="index" :gutter="20">
+            <el-col :md="12" class="maxwidth">
+              <el-form-item label="联系人 :" required>
+                <el-input v-model="item.name"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :md="12" class="maxwidth">
+              <el-form-item label="联系电话 :" required>
+                <el-input v-model="item.contact" :class="item.red ?'phonered': ''"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :md="24" style="max-width:1000px;">
+              <el-form-item label="经营范围 :" required>
+                <el-input v-model="cusDetail.business_scope" type="textarea" :rows="4"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
     </el-dialog>
   </div>
 </template>
@@ -309,7 +366,8 @@ export default {
             contact: '',
             phone: ''
           }
-        ]
+        ],
+        contactList2: []
       },
       fmList: [],
       // disabled: true,
@@ -317,6 +375,7 @@ export default {
       activeName: '1',
       receiveData: {},
       cusDetail: {},
+      cusDetail2: {},
       checkLogs: [], // 审核记录
       changeLogs: [], // 修改记录
       changeUrl: '/Company.do?EditCompanyRecord',
@@ -376,8 +435,16 @@ export default {
     }
   },
   methods: {
-    view () {
-      // todo
+    view (data) {
+      let params = {
+        'cid': data.companyid,
+        'companylogid': data.logid,
+        'uid': data.userid
+      }
+      this.$post('/CheckOut.do?list', params).then(res => {
+        this.cusDetail2 = res.data[0].data[0]
+        this.contactList2 = res.data[1].data
+      })
       this.viewDialog = true
     },
     checkSearch () {
@@ -457,18 +524,9 @@ export default {
       }
       this.$post('/CheckOut.do?basepass', params).then(res => {
         if (res.data[0].success) {
-          this.$message({
-            type: 'success',
-            message: '保存成功'
-          })
           this.$router.push({
             path: '/indexPage/dealCheck',
             query: { data: 'fromDetail' }
-          })
-        } else {
-          this.$message({
-            type: 'error',
-            message: '保存失败'
           })
         }
       })
@@ -637,6 +695,9 @@ export default {
     .title-btn {
       border-top-right-radius: 15px;
     }
+  }
+  .el-form-item{
+    margin-bottom: 5px;
   }
 }
 </style>

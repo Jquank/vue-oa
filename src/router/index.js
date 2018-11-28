@@ -15,6 +15,7 @@ import AccountManage from 'components/systemSetting/accountManage/accountManage'
 import News from 'components/systemSetting/news/news'
 import Activity from 'components/systemSetting/activity/activity'
 import Editor from 'components/systemSetting/news/editor'
+import ViewNews from 'components/systemSetting/news/viewNews'
 // 人员管理
 import AddUser from 'components/userManage/addUser/addUser'
 import UserList from 'components/userManage/userList/userList'
@@ -73,6 +74,7 @@ import OrderPending from 'components/order/orderPending/orderPending'
 import PendingDetail from 'components/order/orderPending/pendingDetail'
 import EditOrder from 'components/order/orderPending/editOrder'
 import OrderList from 'components/order/orderList/orderList'
+import Print from 'components/order/print/print'
 
 // 发票管理
 import InvoicePending from 'components/invoiceManage/invoicePending/invoicePending'
@@ -175,14 +177,19 @@ const router = new Router({
           component: News,
           children: [
             {
-              path: 'editor/add/:id',
+              path: 'add/:id',
               meta: { text: '新增公告' },
               component: Editor
             },
             {
-              path: 'editor/editor/:id',
+              path: 'edit/:id',
               meta: { text: '编辑公告' },
               component: Editor
+            },
+            {
+              path: 'view/:id',
+              meta: { text: '公告详情' },
+              component: ViewNews
             }
           ]
         },
@@ -394,8 +401,15 @@ const router = new Router({
         {
           path: 'orderList',
           name: 'orderList',
-          meta: { text: '已处理订单' },
-          component: OrderList
+          meta: { text: '订单列表' },
+          component: OrderList,
+          children: [
+            {
+              path: 'print/:id',
+              meta: { text: '打印' },
+              component: Print
+            },
+          ]
         },
         {
           path: 'addBaiduOrder',
@@ -667,7 +681,7 @@ const router = new Router({
           name: 'callCenter',
           meta: { text: '拨号中心' },
           component: CallCenter
-        },
+        }
       ]
     }
   ],

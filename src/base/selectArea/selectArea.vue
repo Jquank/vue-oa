@@ -3,7 +3,7 @@
 </template>
 
 <script>
-// import storage from 'good-storage'
+import storage from 'good-storage'
 // import transTree from 'common/js/utils'
 export default {
   props: {
@@ -33,72 +33,123 @@ export default {
     }
   },
   watch: {
-    echoArea (newVal) {
-      if (newVal[1]) {
-        this._getAreaList(newVal[0])
-      }
-      if (newVal[2]) {
-        setTimeout(() => { // get区依赖于get市获取到的firstIndex值，所以加个延时，或者用promise
-          this._getAreaList(newVal[1])
-        }, 100)
-      }
+    echoArea: {
+      handler (newVal) {
+        this._echoArea(newVal)
+      },
+      deep: true
     }
   },
-  mounted () {
-    this._getAreaList(1)
+  created () {
+    this._getFirstArea()
   },
   methods: {
-    handleItemChange (val) {
-      console.log(val)
-      if (val.length === 1) {
-        this._getAreaList(val[0])
-      } else if (val.length === 2) {
-        this._getAreaList(val[1])
+    _getFirstArea () {
+      let area = storage.get('area')
+      if (area) {
+        this.options = area
+      } else {
+        this.getFirstArea(1)
       }
     },
-    _getAreaList (id) {
+    _echoArea (newVal) {
+      if (this.echoArea.length === 1) { // 只回显一级
+        this.area = newVal
+      } else if (this.echoArea.length === 2) { // 只回显二级
+        if (this._isHasSecondArea(newVal[0])) {
+          this.area = newVal
+        } else {
+          this.getSecondArea(newVal[0])
+        }
+      } else if (this.echoArea.length === 3) { // 回显三级
+        if (this._isHasSecondArea(newVal[0])) {
+          if (this._isHasThirdArea(newVal[0], newVal[1])) {
+            this.area = newVal
+          } else {
+            this.getThirdArea(newVal[1])
+            this.area = newVal
+          }
+        } else {
+          this.getSecondArea(newVal[0]).then(res => {
+            this.getThirdArea(newVal[1]) // 依赖getSecondArea的firstIndex值
+            this.area = newVal
+          })
+        }
+      }
+    },
+    handleItemChange (val) {
+      if (val.length === 1) {
+        if (!this._isHasSecondArea(val[0])) {
+          this.getSecondArea(val[0])
+        }
+      } else if (val.length === 2) {
+        if (!this._isHasThirdArea(val[0], val[1])) {
+          this.getThirdArea(val[1])
+        }
+      }
+    },
+    _isHasSecondArea (pid) { // 是否有二级地区
+      this.options.forEach((val, key) => {
+        if (val.id == pid) { // eslint-disable-line
+          this.firstIndex = key
+        }
+      })
+      return !!this.options[this.firstIndex].children.length
+    },
+    _isHasThirdArea (pid, rpid) { // 是否有三级地区
+      this.options.forEach((item, key) => {
+        if(item.id == pid){ // eslint-disable-line
+          this.firstIndex = key
+        }
+      })
+      this.options[this.firstIndex].children.forEach((val, key) => {
+        if (val.id == rpid) { // eslint-disable-line
+          this.secondIndex = key
+        }
+      })
+      return !!this.options[this.firstIndex].children[this.secondIndex].children.length
+    },
+    getFirstArea (id) {
       this.$post('/Area.do?comparea', {parentid: id}).then(res => {
-        if (id === 1) { // get省
-          this.options = res.data.data
+        this.options = res.data.data
+        this.options.forEach((val, key) => {
+          if (!val.children) {
+            this.$set(val, 'children', [])
+          }
+        })
+        storage.set('area', this.options)
+      })
+    },
+    getSecondArea (id) {
+      return new Promise((resolve, reject) => {
+        this.$post('/Area.do?comparea', {parentid: id}).then(res => {
+          let nextArea = res.data.data
           this.options.forEach((val, key) => {
-            if (!val.children) {
-              val.children = []
+          if (val.id == id) { // eslint-disable-line
+              this.firstIndex = key
             }
           })
-        } else {
-          let nextArea = res.data.data
-          if (id.length === 2) { // get市
-            this.options.forEach((val, key) => {
-              if (val.id == id) { // eslint-disable-line
-                this.firstIndex = key
-              }
-            })
-            setTimeout(() => {
-              this.options[this.firstIndex].children = nextArea
-              this.options[this.firstIndex].children.forEach(val => {
-                if (!val.children) {
-                  val.children = []
-                }
-              })
-            }, 300)
-
-            if (this.echoArea.length === 1) { // 回显只有两级的时候赋值
-              this.area = this.echoArea
+          this.options[this.firstIndex].children = nextArea
+          this.options[this.firstIndex].children.forEach(val => {
+            if (!val.children) {
+              this.$set(val, 'children', [])
             }
-          } else { // get区
-            this.options[this.firstIndex].children.forEach((val, key) => {
-              if (val.id == id) { // eslint-disable-line
-                this.secondIndex = key
-              }
-            })
-            setTimeout(() => {
-              this.options[this.firstIndex].children[this.secondIndex].children = nextArea
-            }, 300)
-            if (this.echoArea.length) {
-              this.area = this.echoArea
-            }
+          })
+          storage.set('area', this.options)
+          resolve(this.options)
+        })
+      })
+    },
+    getThirdArea (id) {
+      this.$post('/Area.do?comparea', {parentid: id}).then(res => {
+        let nextArea = res.data.data
+        this.options[this.firstIndex].children.forEach((val, key) => {
+        if (val.id == id) { // eslint-disable-line
+            this.secondIndex = key
           }
-        }
+        })
+        this.options[this.firstIndex].children[this.secondIndex].children = nextArea
+        storage.set('area', this.options)
       })
     }
   }

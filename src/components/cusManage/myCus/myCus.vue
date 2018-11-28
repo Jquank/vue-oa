@@ -73,12 +73,15 @@
             {{scope.row.visittime | timeFormat}}
           </span>
         </el-table-column>
-        <el-table-column label="操作" width="250">
+        <el-table-column label="操作" width="180">
           <template slot-scope="scope">
             <el-button @click.native.prevent="view(scope.row)" type="success" class="xsbtn">查看</el-button>
-            <el-button @click.native.prevent="follow(scope.row)" type="warning" class="xsbtn">跟进</el-button>
-            <el-button @click.native.prevent="visit(scope.row)" type="primary" class="xsbtn">出访</el-button>
-            <el-button @click.native.prevent="stop(scope.row)" type="danger" class="xsbtn">放弃</el-button>
+
+            <el-button v-if="((myKind==20&&scope.row.companylogtype==10&&(scope.row.companylogstatus>20||scope.row.companylogstatus==0))||(myKind==30&&scope.row.companylogtype>=20&&scope.row.companylogstatus>20))" @click.native.prevent="follow(scope.row)" type="warning" class="xsbtn">跟进</el-button>
+
+            <el-button v-if="((myKind==20&&scope.row.companylogtype==10&&(scope.row.companylogstatus>20||scope.row.companylogstatus==0))||(myKind==30&&scope.row.companylogtype>=20&&scope.row.companylogstatus>20))" @click.native.prevent="visit(scope.row)" type="primary" class="xsbtn">出访</el-button>
+
+            <el-button v-if="(scope.row.userid==USER_ID)&&scope.row.companylogtype==20&&scope.row.companylogstatus==10&&scope.row.companytype==10&&scope.row.auditor_now_h!==null&&(scope.row.tb_field_name-scope.row.auditor_now_h>=0)" @click.native.prevent="stop(scope.row)" type="danger" class="xsbtn">放弃</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -174,10 +177,11 @@ import SelectArea from 'base/selectArea/selectArea'
 import SelectTrade from 'base/selectTrade/selectTrade'
 import AutoSelect from 'base/autoSelect/autoSelect'
 import SelectUser from 'base/selectUser/selectUser'
-const userId = cookie.get('userId')
+const USER_ID = cookie.get('userId')
 export default {
   data () {
     return {
+      USER_ID: USER_ID,
       refresh: true,
       myKind: 30,
       cusName: '',
@@ -323,7 +327,7 @@ export default {
         'companylogid': this.rowData.companylogid,
         'cat': 200,
         'cid': this.rowData.id,
-        'uid': userId,
+        'uid': USER_ID,
         'pid': this.rowData.productid,
         'remark': this.followRecord
       }
@@ -366,7 +370,7 @@ export default {
       let params = {
         'cat': this.form.visitType,
         'cid': this.rowData.id,
-        'uid': userId,
+        'uid': USER_ID,
         'accompany': this.rowData.accompanyUserId,
         'pid': this.rowData.pid,
         'ccid': '',
