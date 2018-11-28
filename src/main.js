@@ -17,7 +17,8 @@ import 'nprogress/nprogress.css'
 
 import * as filters from '@/common/js/filters'
 
-Vue.prototype.serverUrl = 'https://www.easy-mock.com/mock/5b2602e50f6ae915edc0fbb5/api'
+Vue.prototype.serverUrl =
+  'https://www.easy-mock.com/mock/5b2602e50f6ae915edc0fbb5/api'
 
 Vue.config.productionTip = false
 
@@ -26,7 +27,8 @@ Vue.config.errorHandler = function (err, vm, info) {
     return true
   }
 }
-Vue.use(ElementUI, {size: 'small'})
+Vue.use(ElementUI, { size: 'small' })
+
 // 全局注册所有过滤器
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])

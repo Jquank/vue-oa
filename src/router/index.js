@@ -6,16 +6,18 @@ import Login from 'components/login/login'
 // 首页
 import IndexPage from 'components/indexPage/indexPage'
 import IndexContent from 'components/indexContent/indexContent'
+import Transition from 'components/funcs/transition'
+import Flex from 'components/funcs/flex'
 
 import Charts from 'views/charts/charts'
 // import EditTable from 'views/editTable/editTable'
 const EditTable = () => import('views/editTable/editTable')
 
-import DragTable from 'views/dragTable/dragTable'
+// import DragTable from 'views/dragTable/dragTable'
 
 // import store from '../store'
 
-import Progress from 'nprogress'
+// import Progress from 'nprogress'
 Vue.use(Router)
 
 export const baseRouterMap = [
@@ -27,6 +29,10 @@ export const baseRouterMap = [
     path: '/login',
     name: 'login',
     component: Login
+  },
+  {
+    path: '*',
+    redirect: Login
   },
   {
     path: '/indexPage',
@@ -49,11 +55,23 @@ export const baseRouterMap = [
         meta: { text: '图表' },
         component: Charts
       },
+      // {
+      //   path: 'editTable',
+      //   name: 'editTable',
+      //   meta: { text: '编辑表格' },
+      //   component: EditTable
+      // },
       {
-        path: 'editTable',
-        name: 'editTable',
-        meta: { text: '编辑表格' },
-        component: EditTable
+        path: 'transition',
+        name: 'transition',
+        meta: { text: '动画' },
+        component: Transition
+      },
+      {
+        path: 'flex',
+        name: 'flex',
+        meta: { text: '布局' },
+        component: Flex
       }
     ]
   }
@@ -75,31 +93,31 @@ const router = new Router({
 //     ]
 //   }
 // ]
-Progress.configure({ showSpinner: false })
-router.beforeEach((to, from, next) => {
-  const isLogin = true
-  if (to.name !== 'login') {
-    if (!isLogin) {
-      next({
-        path: '/login'
-      })
-      Progress.done()
-    } else {
-      if (to.name === from.name) { // 防止刷新的时候加载两次组件
-        next(false)
-      } else {
-        // router.addRoutes(asyncRouterMap)
-        Progress.start()
-        next()
-      }
-    }
-  } else {
-    next()
-    Progress.done()
-  }
-})
-router.afterEach((to, from) => {
-  Progress.done()
-})
+// Progress.configure({ showSpinner: false })
+// router.beforeEach((to, from, next) => {
+//   const isLogin = true
+//   if (to.name !== 'login') {
+//     if (!isLogin) {
+//       next({
+//         path: '/login'
+//       })
+//       Progress.done()
+//     } else {
+//       if (to.name === from.name) { // 防止刷新的时候加载两次组件
+//         next(false)
+//       } else {
+//         // router.addRoutes(asyncRouterMap)
+//         Progress.start()
+//         next()
+//       }
+//     }
+//   } else {
+//     next()
+//     Progress.done()
+//   }
+// })
+// router.afterEach((to, from) => {
+//   Progress.done()
+// })
 
 export default router

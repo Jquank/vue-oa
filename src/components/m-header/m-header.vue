@@ -75,17 +75,17 @@
 
 <script>
 import { enterfullscreen, exitfullscreen } from 'api/myHeader'
-import { serverUrl } from 'api/config'
-import { $post } from 'api/http'
-import { mapMutations, mapGetters } from 'vuex'
+// import { serverUrl } from 'api/config'
+// import { $post } from 'api/http'
+// import { mapMutations, mapGetters } from 'vuex'
 export default {
   computed: {
     uName () {
       return this.userName
-    },
-    ...mapGetters([
-      'userName'
-    ])
+    }
+    // ...mapGetters([
+    //   'userName'
+    // ])
   },
   data () {
     return {
@@ -120,31 +120,31 @@ export default {
       this.form.name = this.uName
     },
     editPwd () {
-      let userUrl = serverUrl + '/Oper.do?EditPwd'
-      let userId = sessionStorage.getItem('userId')
-      let reg = /^[0-9A-Za-z_]{4,10}$/
-      let myPassword = '' + this.form.mima
-      if (reg.test(myPassword)) {
-        $post(userUrl, {'id': userId, 'pwd': myPassword}).then((res) => {
-          if (res.data[0].success === true) {
-            this.$message({
-              message: '修改成功,请重新登录',
-              type: 'success'
-            })
-            this.dialogFormVisible = false
-            setTimeout(() => {
-              sessionStorage.clear()
-              this.getUserName()
-              this.$router.push('/login')
-            }, 800)
-          }
-        })
-      } else {
-        this.$message({
-          message: '密码请填写4到8位的数字、字母、下划线组合',
-          type: 'error'
-        })
-      }
+      // let userUrl = serverUrl + '/Oper.do?EditPwd'
+      // let userId = sessionStorage.getItem('userId')
+      // let reg = /^[0-9A-Za-z_]{4,10}$/
+      // let myPassword = '' + this.form.mima
+      // if (reg.test(myPassword)) {
+      //   $post(userUrl, {'id': userId, 'pwd': myPassword}).then((res) => {
+      //     if (res.data[0].success === true) {
+      //       this.$message({
+      //         message: '修改成功,请重新登录',
+      //         type: 'success'
+      //       })
+      //       this.dialogFormVisible = false
+      //       setTimeout(() => {
+      //         sessionStorage.clear()
+      //         this.getUserName()
+      //         this.$router.push('/login')
+      //       }, 800)
+      //     }
+      //   })
+      // } else {
+      //   this.$message({
+      //     message: '密码请填写4到8位的数字、字母、下划线组合',
+      //     type: 'error'
+      //   })
+      // }
     },
     exitLogin () {
       sessionStorage.clear()
@@ -159,10 +159,10 @@ export default {
       let bread = text.split('/')
       this.secondTitle = bread[0] === '首页' ? '' : bread[0]
       this.thirdTitle = bread[1]
-    },
-    ...mapMutations({
-      getUserName: 'GET_USERNAME'
-    })
+    }
+    // ...mapMutations({
+    //   getUserName: 'GET_USERNAME'
+    // })
   }
 }
 </script>
