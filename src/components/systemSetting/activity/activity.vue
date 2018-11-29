@@ -10,7 +10,7 @@
       </el-table-column>
       <el-table-column prop="" label="操作" width="80">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click.native="editName('activity',scope.row.id,scope.row.code_desc)">修改
+          <el-button type="primary" class="xsbtn" @click.native="editName('activity',scope.row.id,scope.row.code_desc)">修改
           </el-button>
         </template>
       </el-table-column>
@@ -28,7 +28,7 @@
       </el-table-column>
       <el-table-column prop="" label="操作" width="80">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click.native="editName('pro',scope.row.id,scope.row.code_desc)">修改
+          <el-button type="primary" class="xsbtn" @click.native="editName('pro',scope.row.id,scope.row.code_desc)">修改
           </el-button>
         </template>
       </el-table-column>

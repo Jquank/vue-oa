@@ -68,7 +68,7 @@
         <template v-if="businessType==='ZTC2'">
           <el-row v-for="(item,index) in productMoneyList" :key="index">
             <el-col :md="24" v-if="item.type<100">
-              <el-form-item :label="item.type | productType18(' :')" class="product-name">
+              <el-form-item :label="item.type | productType(' :')" class="product-name">
                 <el-input v-model="item.value" disabled></el-input>
               </el-form-item>
             </el-col>

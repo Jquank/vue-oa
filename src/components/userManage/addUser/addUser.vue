@@ -143,13 +143,9 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row>
-        <el-col :md="24" class="maxwidth">
-          <el-form-item style="text-align:right;">
-            <el-button type="primary" @click.native="submit('form')" :disabled="repeatDisabled">提 交</el-button>
-          </el-form-item>
-        </el-col>
-      </el-row>
+      <div class="text-right" style="max-width:900px;">
+        <el-button type="primary" @click.native="submit('form')" :disabled="repeatDisabled">提 交</el-button>
+      </div>
     </el-form>
   </div>
 </template>
@@ -287,6 +283,7 @@ export default {
     },
     _getPositions () {
       getByCode(39).then(res => {
+        console.log(res.data.data)
         if (res.data.success) {
           this.form.jobList = res.data.data
         }

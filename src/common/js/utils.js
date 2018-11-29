@@ -69,3 +69,12 @@ export function rowSpan (id, row, cols, standardCol) {
     }
   }
 }
+
+export function appMark () {
+  let viewWidth = document.documentElement.clientWidth
+  if (viewWidth && viewWidth < 768) {
+    return true
+  } else {
+    return false
+  }
+}

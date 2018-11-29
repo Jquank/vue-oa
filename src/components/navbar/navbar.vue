@@ -3,7 +3,7 @@
     <div ref="navbar" class="nav-bar">
       <el-menu :collapse="myCollapse" router background-color="#19233C" text-color="#bfcbd9" active-text-color="#fff" :unique-opened="true" :default-active="$router.currentRoute.fullPath">
         <el-menu-item index="/indexPage/indexContent">
-          <i class="fa fa-home"></i>
+          <i class="fa fa-home fa-fw"></i>
           <span slot="title">首页</span>
         </el-menu-item>
         <el-submenu v-for="(item, index) in navList" :key="index" :index="item.id+''"  v-if="permissions.indexOf(item.id)>-1">

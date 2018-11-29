@@ -3,25 +3,42 @@
     <div class="background">
       <div class="top">
         <div class="logo">
-          <img src="../../common/img/main_logo.png" alt="">
+          <img src="../../common/img/main_logo.png">
         </div>
       </div>
       <div class="bottom">
         <div class="cloud">
-          <img src="../../common/img/cloud2.jpg" alt="">
+          <img src="../../common/img/cloud2.jpg">
           <div class="login">
-            <div>
-              <el-input v-model="myName" size="medium" placeholder=" 请输入用户名" prefix-icon="fa fa-user"></el-input>
-            </div>
-            <div class="in-password">
-              <el-input @keyup.native.enter="login" v-model="myPassword" type="password" size="medium" placeholder=" 请输入密码" prefix-icon="fa fa-lock"></el-input>
-            </div>
-            <div class="btn-login">
-              <el-button @click="login" type="primary" style="width:100%;">登 录</el-button>
-            </div>
-            <div class="download">
-              <a href="http://bg.baijiegroup.com/BaiJieOA/bj_crm_oa.zip">下载客户端</a>
-            </div>
+            <el-form :model="form" :rules="rules" ref="ruleForm">
+              <el-form-item prop="myName">
+                <el-input
+                  v-model="form.myName"
+                  size="medium"
+                  placeholder=" 请输入用户名"
+                  prefix-icon="fa fa-user">
+                </el-input>
+              </el-form-item>
+              <el-form-item prop="myPassword">
+                <el-input
+                  @keyup.native.enter="login"
+                  v-model="form.myPassword"
+                  type="password"
+                  size="medium"
+                  placeholder=" 请输入密码"
+                  prefix-icon="fa fa-lock">
+                </el-input>
+              </el-form-item>
+              <el-form-item>
+                <div class="btn-login">
+                  <el-button
+                    @click.native="submitForm('ruleForm')"
+                    type="primary"
+                    style="width:100%;">登 录
+                  </el-button>
+                </div>
+              </el-form-item>
+            </el-form>
           </div>
         </div>
       </div>
@@ -32,27 +49,51 @@
 <script>
 import cookie from 'js-cookie'
 import axios from 'axios'
-import storage from 'good-storage'
 import { serverUrl } from 'api/http'
-import { getByCode } from 'api/getOptions'
+const REG = /^[\w-_]{6,16}$/
 export default {
   data () {
+    var validatePass = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入密码'))
+      } else if (!REG.test(value)) {
+        callback(new Error('密码格式错误，由字母、数字、下划线组成，6到16位'))
+      } else {
+        callback()
+      }
+    }
     return {
-      myName: 'admin',
-      myPassword: '1234rfv'
+      form: {
+        myName: 'admin',
+        myPassword: '1234rfv'
+      },
+      rules: {
+        myName: [
+          { required: true, message: '请输入登录名', trigger: 'blur' }
+        ],
+        myPassword: [
+          { validator: validatePass, trigger: 'blur' }
+        ]
+      }
     }
   },
-  created () {
-  },
-  mounted () {
-  },
   methods: {
+    submitForm (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.login()
+        } else {
+          return false
+        }
+      })
+    },
     login () {
       let params = {
-        username: this.myName,
-        password: this.myPassword
+        username: this.form.myName,
+        password: this.form.myPassword
       }
-      axios.post(serverUrl + '/User.do?login', params)
+      axios
+        .post(serverUrl + '/User.do?login', params)
         .then(res => {
           if (res.data.success) {
             console.log(res.data.data)
@@ -65,42 +106,6 @@ export default {
             cookie.set('permissions', permissions)
             cookie.set('allowCall', res.data.data.dept)
             this.$router.push('/indexPage')
-            getByCode(38).then(res => {
-              let data = res.data.data || []
-              storage.set('productType38', data)
-            })
-            getByCode(52).then(res => {
-              let data = res.data.data || []
-              storage.set('productType52', data)
-            })
-            getByCode(18).then(res => {
-              let data = res.data.data || []
-              storage.set('productType18', data)
-            })
-            getByCode(28).then(res => {
-              let data = res.data.data || []
-              storage.set('wjType', data)
-            })
-            getByCode(88).then(res => {
-              let data = res.data.data || []
-              storage.set('wjType1', data)
-            })
-
-            // getCode(28).then(res => {
-            //   let data = res.data.data || []
-            //   storage.set('wjType', data)
-            // })
-
-            // getCode(42).then(res => {
-            //   let data = res.data.data || []
-            //   storage.set('bankType', data)
-            // })
-
-            // getDepartment().then(res => {
-            //   let data = res.data.data || []
-            //   let department = this._transTree(data)
-            //   storage.set('department', department)
-            // })
           } else {
             this.$message({
               message: res.data.msg,
@@ -116,7 +121,6 @@ export default {
           console.log(err)
         })
     }
-
   }
 }
 </script>
@@ -156,15 +160,6 @@ export default {
         .el-input,
         .el-button {
           font-size: 15px;
-        }
-        .in-password,
-        .btn-login {
-          margin-top: 10px;
-        }
-        .download {
-          margin-top: 5px;
-          display: flex;
-          justify-content: flex-end;
         }
       }
       img {

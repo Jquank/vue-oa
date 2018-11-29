@@ -16,10 +16,10 @@
         </el-table-column>
         <el-table-column prop="" label="操作">
           <template slot-scope="scope">
-            <el-button type="success" size="mini"
+            <el-button type="success" class="xsbtn"
               @click.native="editRoleName(scope.row.name,scope.row.id)">修改名称
             </el-button>
-            <el-button type="primary" size="mini"
+            <el-button type="primary" class="xsbtn"
               @click.native="editRoleAuth(scope.row.name,scope.row.id)">编辑角色权限
             </el-button>
           </template>

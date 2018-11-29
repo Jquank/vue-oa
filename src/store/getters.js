@@ -1,1 +1,1 @@
-export const selCompanyDialog = state => state.selCompanyDialog
+export const collapseCount = state => state.collapseCount

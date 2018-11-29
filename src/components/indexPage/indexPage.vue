@@ -9,7 +9,7 @@
       <!-- 左侧边栏和主体内容 -->
       <el-container class="con-bottom">
         <!-- 左侧边栏 -->
-        <el-aside id="nav-aside" class="nav-aside" width="180px">
+        <el-aside @touchstart.native="touchStart" @touchmove.native="touchMove" @touchend.native="touchEnd" id="nav-aside" class="nav-aside" width="180px">
           <navbar></navbar>
         </el-aside>
         <!-- 主体内容 -->
@@ -33,9 +33,18 @@ import MHeader from 'components/m-header/m-header'
 // import { getArea, getSource, getTrade } from '@/api/getOptions'
 // import BScroll from 'better-scroll'
 import cookie from 'js-cookie'
+import { mapMutations } from 'vuex'
+let startX = 0
+let startY = 0
+let endX = 0
+let endY = 0
 export default {
   data () {
-    return {}
+    return {
+      nav: null,
+      logo: null,
+      nested: null
+    }
   },
   mounted () {
     let allowCall = cookie.get('allowCall')
@@ -51,6 +60,9 @@ export default {
         })
       }
     }
+    this.nav = document.getElementById('nav-aside')
+    this.logo = document.getElementById('logo-img')
+    this.nested = document.getElementById('nested')
     // loadCallIframe('iframe-call')
     // let main = document.getElementById('main')
     // this.$nextTick(() => {
@@ -61,6 +73,29 @@ export default {
     //     freeScroll: true
     //   })
     // })
+  },
+  methods: {
+    touchStart (e) {
+      startX = e.changedTouches[0].pageX
+      startY = e.changedTouches[0].pageY
+    },
+    touchEnd (e) {
+      endX = e.changedTouches[0].pageX
+      endY = e.changedTouches[0].pageY
+      const X = endX - startX
+      const Y = endY - startY
+      if (Math.abs(X) > Math.abs(Y) && X < 0) { // 导航栏向左划入
+        this.nav.setAttribute('style', 'width:0 !important')
+        this.logo.setAttribute('style', 'width:0 !important')
+        this.nested.setAttribute('style', 'left:10px')
+        this.changeCollapseCount() // 触发一次折叠标志
+      }
+    },
+    touchMove (e) {
+    },
+    ...mapMutations({
+      changeCollapseCount: 'CHANGE_COLLAPSE_COUNT'
+    })
   },
   components: {
     Navbar,
@@ -104,12 +139,19 @@ export default {
       // -webkit-overflow-scrolling: touch;
     }
   }
-  .fade-enter-active {
-    transition: all 0.5s cubic-bezier(1, 0.5, 0.8, 1);
+  .fade-enter-active{
+    transition: all .5s cubic-bezier(0.3, 0.5, 0.8, 1.15);
   }
-  .fade-enter {
+  .fade-leave-active {
+    transition: all .3s cubic-bezier(0.3, 0.5, 0.8, 1.0);
+  }
+  .fade-enter{
     opacity: 0;
-    transform: translate3d(100%, 0, 0);
+    transform: translateX(-300px);
+  }
+  .fade-leave-to{
+    opacity: 0;
+    transform: translateX(100px);
   }
 }
 </style>

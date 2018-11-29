@@ -217,7 +217,7 @@
                     <!-- <el-row><b>到款时间 ：</b><span>{{222}}</span></el-row> -->
                     <el-row v-for="(rec,index) in recordDetail" :key="index">
                       <template v-if="rec.type<500">
-                        <b>{{rec.type | productType18}} ：</b>
+                        <b>{{rec.type | productType}} ：</b>
                         <span>{{rec.value | currency1}}</span>
                       </template>
                     </el-row>

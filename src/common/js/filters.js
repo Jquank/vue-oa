@@ -1,5 +1,25 @@
 
-import storage from 'good-storage'
+// import storage from 'good-storage'
+import { getByCode } from 'api/getOptions'
+
+export function productType (num, str) {
+  let productTypes = []
+  getByCode(52).then(res => {
+    if (res.data.success) {
+      productTypes = res.data.data
+    }
+  })
+  let type = ''
+  productTypes.forEach(val => {
+    if (num == val.code_val) { //eslint-disable-line
+      type = val.code_desc
+    } else if (num == '1000') { //eslint-disable-line
+      type = '总计'
+    }
+  })
+  return type + '' + (str || '')
+}
+
 export function comType (num) {
   switch (num) {
     case -10:
@@ -38,46 +58,6 @@ export function cusStatus (num) {
     case 50:
       return '信息流'
   }
-}
-export function wjType (num, siteType) {
-  let wjTypes
-  if (!siteType) {
-    wjTypes = storage.get('wjType')
-  } else {
-    wjTypes = storage.get('wjType1')
-  }
-  let type = ''
-  wjTypes.forEach(val => {
-    if (num == val.code_val) { //eslint-disable-line
-      type = val.code_desc
-    }
-  })
-  return type
-}
-
-export function productType (num, str) {
-  let productTypes = storage.get('productType52')
-  let type = ''
-  productTypes.forEach(val => {
-    if (num == val.code_val) { //eslint-disable-line
-      type = val.code_desc
-    } else if (num == '1000') { //eslint-disable-line
-      type = '总计'
-    }
-  })
-  return type + '' + (str || '')
-}
-
-// 直通车产品
-export function productType18 (num, str) {
-  let productTypes = storage.get('productType18')
-  let type = ''
-  productTypes.forEach(val => {
-    if (num == val.code_val) { //eslint-disable-line
-      type = val.code_desc
-    }
-  })
-  return type + '' + (str || '')
 }
 
 export function cusState (num, type) {

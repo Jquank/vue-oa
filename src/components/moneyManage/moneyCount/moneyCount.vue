@@ -2,11 +2,13 @@
   <div @click="hiddenDepartment" class="money-count component-container media-padding">
     <div class="top">
       <div class="btns top-item">
-        <select-department :key="key_dept" @upDeptId="getDeptId" :title="'部门'" style="display:inline-block"></select-department>
-        <el-button @click.native.prevent="search" type="primary">查 询</el-button>
-        <el-button @click.native.prevent="reset" type="warning">重 置</el-button>
+        <select-department :key="key_dept" @upDeptId="getDeptId" :title="'部门'" class="left-item"></select-department>
+        <div class="left-item">
+          <el-button @click.native.prevent="search" type="primary" size="mini">查 询</el-button>
+        <el-button @click.native.prevent="reset" type="warning" size="mini">重 置</el-button>
+        </div>
       </div>
-      <div class="top-item">
+      <div class="top-item radio">
         <el-radio-group v-model="radio" @change="radioChange">
           <el-radio-button :label="{day:7,type:'day'}">近7天</el-radio-button>
           <el-radio-button :label="{day:30,type:'day'}">近30天</el-radio-button>
@@ -15,33 +17,27 @@
           <el-radio-button :label="{day:0,type:'quarter'}">季度</el-radio-button>
         </el-radio-group>
       </div>
-
     </div>
-    <div class="money-count-chart" id="money-count-chart" :style="{width:width,height:height}"></div>
+    <div class="money-count-chart mt10px" id="money-count-chart" :style="{width:width,height:height}"></div>
   </div>
 </template>
 
 <script>
+import { appMark } from 'common/js/utils'
 import SelectDepartment from 'base/selectDepartment/selectDepartment'
 const Echarts = require('echarts/lib/echarts')
 // todo 按需引入
-// require('echarts/lib/component/tooltip')
-// require('echarts/lib/component/title')
+require('echarts/lib/chart/line')
+require('echarts/lib/component/tooltip')
+require('echarts/lib/component/title')
+require('echarts/lib/component/toolbox')
 // require('echarts/lib/component/dataZoom')
-// require('echarts/lib/chart/line')
+require('echarts/lib/component/legend')
 export default {
-  props: {
-    width: {
-      type: String,
-      default: '1000px'
-    },
-    height: {
-      type: String,
-      default: '600px'
-    }
-  },
   data () {
     return {
+      width: '1000px',
+      height: '600px',
       radio: {day: 7, type: 'day'},
       dept: '',
       key_dept: '',
@@ -50,7 +46,12 @@ export default {
       yAxiasData: [],
       option: {},
       lineChart: ''
-
+    }
+  },
+  created () {
+    if (appMark()) {
+      this.width = document.documentElement.clientWidth - 15 + 'px'
+      this.height = '400px'
     }
   },
   mounted () {
@@ -95,16 +96,15 @@ export default {
               saveAsImage: {}
             }
           },
-          // todo
-          dataZoom: [
-            {
-              type: 'inside',
-              show: true,
-              xAxisIndex: 0,
-              filter: 'none',
-              startValue: 5
-            }
-          ],
+          // dataZoom: [
+          //   {
+          //     type: 'inside',
+          //     show: true,
+          //     xAxisIndex: 0,
+          //     filter: 'none',
+          //     startValue: 5
+          //   }
+          // ],
           series: [
             {
               data: that.yAxiasData,
@@ -148,9 +148,23 @@ export default {
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
+    align-items: center;
     margin-top: -10px;
-    .top-item {
+    .top-item{
       margin-top: 10px;
+    }
+    .radio{
+      margin-left: -30px;
+    }
+    .btns{
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 10px;
+      .left-item{
+        margin-left: 10px;
+        margin-top: 10px;
+      }
     }
   }
 }

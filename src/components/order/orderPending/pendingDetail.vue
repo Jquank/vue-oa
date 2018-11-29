@@ -70,7 +70,7 @@
                   <div class="row-container">
                     <div>
                       <b>网建类型：</b>
-                      <span>{{productInfo[0].websitetype | wjType}}</span>
+                      <span>{{productInfo[0].websitetype | productType}}</span>
                     </div>
                   </div>
                 </div>
@@ -572,7 +572,7 @@
                   <div class="mt10px row-container">
                     <div v-for="(item,index) in moneyInfo" :key="index">
                       <template v-if="item.type < 100 && item.type!=8">
-                        <b>{{item.type | productType18}}：</b>
+                        <b>{{item.type | productType}}：</b>
                         <span>{{item.value | currency1}}</span>
                       </template>
                     </div>
@@ -627,7 +627,7 @@
                       </div>
                       <div>
                         <b>网站类型：</b>
-                        <span>{{productInfo[0].websitetype | wjType('siteType')}}</span>
+                        <span>{{productInfo[0].websitetype | productType}}</span>
                       </div>
                       <div>
                         <b>网站名称：</b>

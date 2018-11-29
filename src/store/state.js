@@ -1,5 +1,5 @@
 
 const state = {
-  selCompanyDialog: false
+  collapseCount: 0
 }
 export default state

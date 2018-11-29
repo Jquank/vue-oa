@@ -17,7 +17,7 @@
       </el-table-column>
       <el-table-column prop="" label="操作" width="80">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click.native="editCycle(scope.row.id,scope.row.dept_max_a)">编辑
+          <el-button type="primary" class="xsbtn" @click.native="editCycle(scope.row.id,scope.row.dept_max_a)">编辑
           </el-button>
         </template>
       </el-table-column>

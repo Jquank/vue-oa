@@ -6,7 +6,7 @@
     <div class="m-header">
       <div class="header-left">
         <div>
-          <img ref="logoimg" class="logo-img" src="../../common/img/logo.jpg" alt="">
+          <img ref="logoimg" id="logo-img" class="logo-img" src="../../common/img/logo.jpg" alt="">
         </div>
         <div class="m-bread" id="m-bread">
           <span>{{firstTitle}}</span>
@@ -90,13 +90,15 @@
 import { enterfullscreen, exitfullscreen } from 'api/myHeader'
 import { $post } from 'api/http'
 import cookie from 'js-cookie'
-import storage from 'good-storage'
-
+import { mapGetters, mapMutations } from 'vuex'
 export default {
   computed: {
     uName () {
       return cookie.get('userName')
-    }
+    },
+    ...mapGetters([
+      'collapseCount'
+    ])
   },
   data () {
     return {
@@ -109,7 +111,6 @@ export default {
       },
       formLabelWidth: '75px',
       count: 0,
-      collapseCount: 0,
       firstTitle: '首页',
       secondTitle: '',
       thirdTitle: '',
@@ -130,7 +131,7 @@ export default {
   methods: {
     // 侧边栏折叠
     nested () {
-      this.collapseCount++
+      this.changeCollapseCount()
       let result = this.collapseCount % 2 === 0
       let width = document.documentElement.clientWidth
       width < 768 ? this.phoneCollapse(width, result) : this.pcCollapse(width, result)
@@ -186,9 +187,6 @@ export default {
       cookie.remove('rid')
       cookie.remove('userId')
       cookie.remove('permissions')
-      storage.remove('productType38')
-      storage.remove('productType18')
-      storage.remove('wjType')
       this.$router.push('/login')
       // $post('/logout').then(res => {
       //   if (res.data.status === -1) {
@@ -204,7 +202,10 @@ export default {
       let bread = text.split('/')
       this.secondTitle = bread[0] === '首页' ? '' : bread[0]
       this.thirdTitle = bread[1]
-    }
+    },
+    ...mapMutations({
+      changeCollapseCount: 'CHANGE_COLLAPSE_COUNT'
+    })
   }
 }
 </script>

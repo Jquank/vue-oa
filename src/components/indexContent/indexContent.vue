@@ -20,28 +20,28 @@
     </el-row>
     <el-row :gutter="20">
       <el-col :md="8" :xs="24">
-        <el-table :data="news" border class="table-width" height="500" max-height="600">
+        <el-table :data="news" border class="table-width" :height="listHeight" max-height="600">
           <el-table-column prop="title" label="消息通知">
             <template slot-scope="scope">
-              <a>{{scope.row.title}}</a>
+              <span @click="jump(scope.row)" class="jump">{{scope.row.title}}</span>
             </template>
           </el-table-column>
         </el-table>
       </el-col>
       <el-col :md="8" :xs="24">
-        <el-table :data="importInfo" border class="table-width" height="500" max-height="600">
+        <el-table :data="importInfo" border class="table-width" :height="listHeight" max-height="600">
           <el-table-column prop="title" label="业务公告">
             <template slot-scope="scope">
-              <a>{{scope.row.title}}</a>
+              <span @click="jump(scope.row)" class="jump">{{scope.row.title}}</span>
             </template>
           </el-table-column>
         </el-table>
       </el-col>
       <el-col :md="8" :xs="24">
-        <el-table :data="bjFamily" border class="table-width" height="500" max-height="600">
+        <el-table :data="bjFamily" border class="table-width" :height="listHeight" max-height="600">
           <el-table-column prop="title" label="百捷大家庭">
             <template slot-scope="scope">
-              <a>{{scope.row.title}}</a>
+              <span @click="jump(scope.row)" class="jump">{{scope.row.title}}</span>
             </template>
           </el-table-column>
         </el-table>
@@ -51,9 +51,11 @@
 </template>
 
 <script>
+import { appMark } from 'common/js/utils'
 export default {
   data () {
     return {
+      listHeight: 500,
       cardList: [
         {
           icon: 'fa fa-file-text',
@@ -85,10 +87,21 @@ export default {
       bjFamily: []
     }
   },
+  created () {
+    if (appMark()) {
+      this.listHeight = 300
+    }
+  },
   mounted () {
     this._getMessage()
   },
   methods: {
+    jump (data) {
+      this.$router.push({
+        path: 'news/view/555',
+        query: {data: data}
+      })
+    },
     _getMessage () {
       this.$get('/User.do?DisAllInfo').then(res => {
         this.news = res.data[0].data
@@ -108,6 +121,10 @@ export default {
 }
 </script>
 <style lang="less">
+  .index-content{
+    .jump{
+      cursor: pointer;
+    }
   .el-card__body{
     padding: 10px 5px;
   }
@@ -138,11 +155,5 @@ export default {
         }
       }
     }
-
-</style>
-
-<style lang="less">
-  .index-context{
-
   }
 </style>

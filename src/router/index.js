@@ -2,97 +2,461 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-import Login from 'components/login/login'
+// 登录页
+const Login = (resolve) => {
+  import('components/login/login').then((module) => {
+    resolve(module)
+  })
+}
 // 首页
-import IndexPage from 'components/indexPage/indexPage'
-import IndexContent from 'components/indexContent/indexContent'
+const IndexPage = (resolve) => {
+  import('components/indexPage/indexPage').then((module) => {
+    resolve(module)
+  })
+}
+const IndexContent = (resolve) => {
+  import('components/indexContent/indexContent').then((module) => {
+    resolve(module)
+  })
+}
 // 系统配置
-import Rule from 'components/systemSetting/rule/rule'
-import Auth from 'components/systemSetting/auth/auth'
-import SystemCycle from 'components/systemSetting/systemCycle/systemCycle'
-import DepartSetNum from 'components/systemSetting/departSetNum/departSetNum'
-import AccountManage from 'components/systemSetting/accountManage/accountManage'
-import News from 'components/systemSetting/news/news'
-import Activity from 'components/systemSetting/activity/activity'
-import Editor from 'components/systemSetting/news/editor'
-import ViewNews from 'components/systemSetting/news/viewNews'
+const Rule = (resolve) => {
+  import('components/systemSetting/rule/rule').then((module) => {
+    resolve(module)
+  })
+}
+const Auth = (resolve) => {
+  import('components/systemSetting/auth/auth').then((module) => {
+    resolve(module)
+  })
+}
+const SystemCycle = (resolve) => {
+  import('components/systemSetting/systemCycle/systemCycle').then((module) => {
+    resolve(module)
+  })
+}
+const DepartSetNum = (resolve) => {
+  import('components/systemSetting/departSetNum/departSetNum').then((module) => {
+    resolve(module)
+  })
+}
+const AccountManage = (resolve) => {
+  import('components/systemSetting/accountManage/accountManage').then((module) => {
+    resolve(module)
+  })
+}
+const News = (resolve) => {
+  import('components/systemSetting/news/news').then((module) => {
+    resolve(module)
+  })
+}
+const Activity = (resolve) => {
+  import('components/systemSetting/activity/activity').then((module) => {
+    resolve(module)
+  })
+}
+const Editor = (resolve) => {
+  import('components/systemSetting/news/editor').then((module) => {
+    resolve(module)
+  })
+}
+const ViewNews = (resolve) => {
+  import('components/systemSetting/news/viewNews').then((module) => {
+    resolve(module)
+  })
+}
 // 人员管理
-import AddUser from 'components/userManage/addUser/addUser'
-import UserList from 'components/userManage/userList/userList'
+const AddUser = (resolve) => {
+  import('components/userManage/addUser/addUser').then((module) => {
+    resolve(module)
+  })
+}
+const UserList = (resolve) => {
+  import('components/userManage/userList/userList').then((module) => {
+    resolve(module)
+  })
+}
 // 客户管理
-import AddCus from 'components/cusManage/addCus/addCus'
-import ApplyCus from 'components/cusManage/applyCus/applyCus'
-import ApplyDetail from 'components/cusManage/applyCus/applyDetail'
-import MyCus from 'components/cusManage/myCus/myCus'
-import MyCusDetail from 'components/cusManage/myCus/myCusDetail'
-import VisitRecord from 'components/cusManage/visitRecord/visitRecord'
-import FollowRecord from 'components/cusManage/followRecord/followRecord'
-import ImportCus from 'components/cusManage/importCus/importCus'
+const AddCus = (resolve) => {
+  import('components/cusManage/addCus/addCus').then((module) => {
+    resolve(module)
+  })
+}
+const ApplyCus = (resolve) => {
+  import('components/cusManage/applyCus/applyCus').then((module) => {
+    resolve(module)
+  })
+}
+const ApplyDetail = (resolve) => {
+  import('components/cusManage/applyCus/applyDetail').then((module) => {
+    resolve(module)
+  })
+}
+const MyCus = (resolve) => {
+  import('components/cusManage/myCus/myCus').then((module) => {
+    resolve(module)
+  })
+}
+const MyCusDetail = (resolve) => {
+  import('components/cusManage/myCus/myCusDetail').then((module) => {
+    resolve(module)
+  })
+}
+const VisitRecord = (resolve) => {
+  import('components/cusManage/visitRecord/visitRecord').then((module) => {
+    resolve(module)
+  })
+}
+const FollowRecord = (resolve) => {
+  import('components/cusManage/followRecord/followRecord').then((module) => {
+    resolve(module)
+  })
+}
+const ImportCus = (resolve) => {
+  import('components/cusManage/importCus/importCus').then((module) => {
+    resolve(module)
+  })
+}
 // 客户审核
-import DealCheck from 'components/cusCheck/dealCheck/dealCheck'
-import CheckDetail from 'components/cusCheck/dealCheck/checkDetail'
-import CheckRecord from 'components/cusCheck/checkRecord/checkRecord'
-import CusInfo from 'components/cusCheck/cusInfo/cusInfo'
-import viewCusInfo from 'components/cusCheck/cusInfo/viewCusInfo'
-import CusPoolManage from 'components/cusCheck/cusPoolManage/cusPoolManage'
-import ViewCusInfo from 'components/cusCheck/cusPoolManage/viewCusInfo'
+const DealCheck = (resolve) => {
+  import('components/cusCheck/dealCheck/dealCheck').then((module) => {
+    resolve(module)
+  })
+}
+const CheckDetail = (resolve) => {
+  import('components/cusCheck/dealCheck/checkDetail').then((module) => {
+    resolve(module)
+  })
+}
+const CheckRecord = (resolve) => {
+  import('components/cusCheck/checkRecord/checkRecord').then((module) => {
+    resolve(module)
+  })
+}
+const CusInfo = (resolve) => {
+  import('components/cusCheck/cusInfo/cusInfo').then((module) => {
+    resolve(module)
+  })
+}
+const viewCusInfo = (resolve) => {
+  import('components/cusCheck/cusInfo/viewCusInfo').then((module) => {
+    resolve(module)
+  })
+}
+const CusPoolManage = (resolve) => {
+  import('components/cusCheck/cusPoolManage/cusPoolManage').then((module) => {
+    resolve(module)
+  })
+}
+const ViewCusInfo = (resolve) => {
+  import('components/cusCheck/cusPoolManage/viewCusInfo').then((module) => {
+    resolve(module)
+  })
+}
+// 客户搜索
+const CusSearch = (resolve) => {
+  import('components/cusSearch/cusSearch/cusSearch').then((module) => {
+    resolve(module)
+  })
+}
+const CusOut = (resolve) => {
+  import('components/cusSearch/cusOut/cusOut').then((module) => {
+    resolve(module)
+  })
+}
+// 合同管理
+const AllotContract = (resolve) => {
+  import('components/contract/allotContract/allotContract').then((module) => {
+    resolve(module)
+  })
+}
+const ContractList = (resolve) => {
+  import('components/contract/contractList/contractList').then((module) => {
+    resolve(module)
+  })
+}
+const ApplyContract = (resolve) => {
+  import('components/contract/applyContract/applyContract').then((module) => {
+    resolve(module)
+  })
+}
+// 续费管理
+const RenewApply = (resolve) => {
+  import('components/renew/renewApply/renewApply').then((module) => {
+    resolve(module)
+  })
+}
+const RenewList = (resolve) => {
+  import('components/renew/renewList/renewList').then((module) => {
+    resolve(module)
+  })
+}
+const RenewCheck = (resolve) => {
+  import('components/renew/renewCheck/renewCheck').then((module) => {
+    resolve(module)
+  })
+}
+const RenewReceive = (resolve) => {
+  import('components/renew/renewReceive/renewReceive').then((module) => {
+    resolve(module)
+  })
+}
+const RenewDispatch = (resolve) => {
+  import('components/renew/renewDispatch/renewDispatch').then((module) => {
+    resolve(module)
+  })
+}
+const RenewAdd = (resolve) => {
+  import('components/renew/renewAdd/renewAdd').then((module) => {
+    resolve(module)
+  })
+}
+const AccountOut = (resolve) => {
+  import('components/renew/accountOut/accountOut').then((module) => {
+    resolve(module)
+  })
+}
+// 工资管理
+const SalaryList = (resolve) => {
+  import('components/salary/salaryList').then((module) => {
+    resolve(module)
+  })
+}
+const SalaryDetail = (resolve) => {
+  import('components/salary/salaryDetail').then((module) => {
+    resolve(module)
+  })
+}
+const SalaryError = (resolve) => {
+  import('components/salary/salaryError').then((module) => {
+    resolve(module)
+  })
+}
+// 到款管理
+const MoneyRecord = (resolve) => {
+  import('components/moneyManage/moneyRecord/moneyRecord').then((module) => {
+    resolve(module)
+  })
+}
+const AddMoney = (resolve) => {
+  import('components/moneyManage/moneyRecord/addMoney').then((module) => {
+    resolve(module)
+  })
+}
+const ViewMoney = (resolve) => {
+  import('components/moneyManage/moneyRecord/viewMoney').then((module) => {
+    resolve(module)
+  })
+}
+const EditMoney = (resolve) => {
+  import('components/moneyManage/moneyRecord/editMoney').then((module) => {
+    resolve(module)
+  })
+}
+const BankflowList = (resolve) => {
+  import('components/moneyManage/bankflowList/bankflowList').then((module) => {
+    resolve(module)
+  })
+}
+const MyFlow = (resolve) => {
+  import('components/moneyManage/myFlow/myFlow').then((module) => {
+    resolve(module)
+  })
+}
+const MoneyCount = (resolve) => {
+  import('components/moneyManage/moneyCount/moneyCount').then((module) => {
+    resolve(module)
+  })
+}
+// 订单管理
+const AddBaiduOrder = (resolve) => {
+  import('components/order/addBaiduOrder/addBaiduOrder').then((module) => {
+    resolve(module)
+  })
+}
+const AddWjOrder = (resolve) => {
+  import('components/order/addWjOrder/addWjOrder').then((module) => {
+    resolve(module)
+  })
+}
+const AddZtcOrder = (resolve) => {
+  import('components/order/addZtcOrder/addZtcOrder').then((module) => {
+    resolve(module)
+  })
+}
+const AddKaOrder = (resolve) => {
+  import('components/order/addKaOrder/addKaOrder').then((module) => {
+    resolve(module)
+  })
+}
+const OrderPending = (resolve) => {
+  import('components/order/orderPending/orderPending').then((module) => {
+    resolve(module)
+  })
+}
+const PendingDetail = (resolve) => {
+  import('components/order/orderPending/pendingDetail').then((module) => {
+    resolve(module)
+  })
+}
+const EditOrder = (resolve) => {
+  import('components/order/orderPending/editOrder').then((module) => {
+    resolve(module)
+  })
+}
+const OrderList = (resolve) => {
+  import('components/order/orderList/orderList').then((module) => {
+    resolve(module)
+  })
+}
+const Print = (resolve) => {
+  import('components/order/print/print').then((module) => {
+    resolve(module)
+  })
+}
+// 发票管理
+const InvoicePending = (resolve) => {
+  import('components/invoiceManage/invoicePending/invoicePending').then((module) => {
+    resolve(module)
+  })
+}
+const InvoiceList = (resolve) => {
+  import('components/invoiceManage/invoiceList/invoiceList').then((module) => {
+    resolve(module)
+  })
+}
+const InvoiceHandled = (resolve) => {
+  import('components/invoiceManage/invoiceHandled/invoiceHandled').then((module) => {
+    resolve(module)
+  })
+}
+const InvoiceSend = (resolve) => {
+  import('components/invoiceManage/invoiceSend/invoiceSend').then((module) => {
+    resolve(module)
+  })
+}
+const InvoiceCheck = (resolve) => {
+  import('components/invoiceManage/invoiceCheck/invoiceCheck').then((module) => {
+    resolve(module)
+  })
+}
+const ChargeOffCheck = (resolve) => {
+  import('components/invoiceManage/chargeOffCheck/chargeOffCheck').then((module) => {
+    resolve(module)
+  })
+}
+// 报表统计
+const ReportData = (resolve) => {
+  import('components/reportData/reportData').then((module) => {
+    resolve(module)
+  })
+}
+const AheadInvoice = (resolve) => {
+  import('components/reportData/aheadInvoice').then((module) => {
+    resolve(module)
+  })
+}
+const BranchAdd = (resolve) => {
+  import('components/reportData/branchAdd').then((module) => {
+    resolve(module)
+  })
+}
+const MoneyChart = (resolve) => {
+  import('components/reportData/moneyChart').then((module) => {
+    resolve(module)
+  })
+}
+// import Login from 'components/login/login'
+// 首页
+// import IndexPage from 'components/indexPage/indexPage'
+// import IndexContent from 'components/indexContent/indexContent'
+// 系统配置
+// import Rule from 'components/systemSetting/rule/rule'
+// import Auth from 'components/systemSetting/auth/auth'
+// import SystemCycle from 'components/systemSetting/systemCycle/systemCycle'
+// import DepartSetNum from 'components/systemSetting/departSetNum/departSetNum'
+// import AccountManage from 'components/systemSetting/accountManage/accountManage'
+// import News from 'components/systemSetting/news/news'
+// import Activity from 'components/systemSetting/activity/activity'
+// import Editor from 'components/systemSetting/news/editor'
+// import ViewNews from 'components/systemSetting/news/viewNews'
+// 人员管理
+// import AddUser from 'components/userManage/addUser/addUser'
+// import UserList from 'components/userManage/userList/userList'
+// 客户管理
+// import AddCus from 'components/cusManage/addCus/addCus'
+// import ApplyCus from 'components/cusManage/applyCus/applyCus'
+// import ApplyDetail from 'components/cusManage/applyCus/applyDetail'
+// import MyCus from 'components/cusManage/myCus/myCus'
+// import MyCusDetail from 'components/cusManage/myCus/myCusDetail'
+// import VisitRecord from 'components/cusManage/visitRecord/visitRecord'
+// import FollowRecord from 'components/cusManage/followRecord/followRecord'
+// import ImportCus from 'components/cusManage/importCus/importCus'
+// 客户审核
+// import DealCheck from 'components/cusCheck/dealCheck/dealCheck'
+// import CheckDetail from 'components/cusCheck/dealCheck/checkDetail'
+// import CheckRecord from 'components/cusCheck/checkRecord/checkRecord'
+// import CusInfo from 'components/cusCheck/cusInfo/cusInfo'
+// import viewCusInfo from 'components/cusCheck/cusInfo/viewCusInfo'
+// import CusPoolManage from 'components/cusCheck/cusPoolManage/cusPoolManage'
+// import ViewCusInfo from 'components/cusCheck/cusPoolManage/viewCusInfo'
 
 // 客户搜索
-import CusSearch from 'components/cusSearch/cusSearch/cusSearch'
-import CusOut from 'components/cusSearch/cusOut/cusOut'
+// import CusSearch from 'components/cusSearch/cusSearch/cusSearch'
+// import CusOut from 'components/cusSearch/cusOut/cusOut'
 // 合同管理
-import AllotContract from 'components/contract/allotContract/allotContract'
-import ContractList from 'components/contract/contractList/contractList'
-import ApplyContract from 'components/contract/applyContract/applyContract'
+// import AllotContract from 'components/contract/allotContract/allotContract'
+// import ContractList from 'components/contract/contractList/contractList'
+// import ApplyContract from 'components/contract/applyContract/applyContract'
 // 续费管理
-import RenewApply from 'components/renew/renewApply/renewApply'
-import RenewList from 'components/renew/renewList/renewList'
-import RenewCheck from 'components/renew/renewCheck/renewCheck'
-import RenewReceive from 'components/renew/renewReceive/renewReceive'
-import RenewDispatch from 'components/renew/renewDispatch/renewDispatch'
-import RenewAdd from 'components/renew/renewAdd/renewAdd'
-import AccountOut from 'components/renew/accountOut/accountOut'
+// import RenewApply from 'components/renew/renewApply/renewApply'
+// import RenewList from 'components/renew/renewList/renewList'
+// import RenewCheck from 'components/renew/renewCheck/renewCheck'
+// import RenewReceive from 'components/renew/renewReceive/renewReceive'
+// import RenewDispatch from 'components/renew/renewDispatch/renewDispatch'
+// import RenewAdd from 'components/renew/renewAdd/renewAdd'
+// import AccountOut from 'components/renew/accountOut/accountOut'
 
 // 工资管理
-import SalaryList from 'components/salary/salaryList'
-import SalaryDetail from 'components/salary/salaryDetail'
-import SalaryError from 'components/salary/salaryError'
+// import SalaryList from 'components/salary/salaryList'
+// import SalaryDetail from 'components/salary/salaryDetail'
+// import SalaryError from 'components/salary/salaryError'
 // 到款管理
-import MoneyRecord from 'components/moneyManage/moneyRecord/moneyRecord'
-import AddMoney from 'components/moneyManage/moneyRecord/addMoney'
-import ViewMoney from 'components/moneyManage/moneyRecord/viewMoney'
-import EditMoney from 'components/moneyManage/moneyRecord/editMoney'
-import BankflowList from 'components/moneyManage/bankflowList/bankflowList'
-import MyFlow from 'components/moneyManage/myFlow/myFlow'
-import MoneyCount from 'components/moneyManage/moneyCount/moneyCount'
+// import MoneyRecord from 'components/moneyManage/moneyRecord/moneyRecord'
+// import AddMoney from 'components/moneyManage/moneyRecord/addMoney'
+// import ViewMoney from 'components/moneyManage/moneyRecord/viewMoney'
+// import EditMoney from 'components/moneyManage/moneyRecord/editMoney'
+// import BankflowList from 'components/moneyManage/bankflowList/bankflowList'
+// import MyFlow from 'components/moneyManage/myFlow/myFlow'
+// import MoneyCount from 'components/moneyManage/moneyCount/moneyCount'
 // 订单管理
-import AddBaiduOrder from 'components/order/addBaiduOrder/addBaiduOrder'
-import AddWjOrder from 'components/order/addWjOrder/addWjOrder'
-import AddZtcOrder from 'components/order/addZtcOrder/addZtcOrder'
-import AddKaOrder from 'components/order/addKaOrder/addKaOrder'
-import OrderPending from 'components/order/orderPending/orderPending'
-import PendingDetail from 'components/order/orderPending/pendingDetail'
-import EditOrder from 'components/order/orderPending/editOrder'
-import OrderList from 'components/order/orderList/orderList'
-import Print from 'components/order/print/print'
+// import AddBaiduOrder from 'components/order/addBaiduOrder/addBaiduOrder'
+// import AddWjOrder from 'components/order/addWjOrder/addWjOrder'
+// import AddZtcOrder from 'components/order/addZtcOrder/addZtcOrder'
+// import AddKaOrder from 'components/order/addKaOrder/addKaOrder'
+// import OrderPending from 'components/order/orderPending/orderPending'
+// import PendingDetail from 'components/order/orderPending/pendingDetail'
+// import EditOrder from 'components/order/orderPending/editOrder'
+// import OrderList from 'components/order/orderList/orderList'
+// import Print from 'components/order/print/print'
 
 // 发票管理
-import InvoicePending from 'components/invoiceManage/invoicePending/invoicePending'
-import InvoiceList from 'components/invoiceManage/invoiceList/invoiceList'
-import InvoiceHandled from 'components/invoiceManage/invoiceHandled/invoiceHandled'
-import InvoiceSend from 'components/invoiceManage/invoiceSend/invoiceSend'
-import InvoiceCheck from 'components/invoiceManage/invoiceCheck/invoiceCheck'
-import ChargeOffCheck from 'components/invoiceManage/chargeOffCheck/chargeOffCheck'
+// import InvoicePending from 'components/invoiceManage/invoicePending/invoicePending'
+// import InvoiceList from 'components/invoiceManage/invoiceList/invoiceList'
+// import InvoiceHandled from 'components/invoiceManage/invoiceHandled/invoiceHandled'
+// import InvoiceSend from 'components/invoiceManage/invoiceSend/invoiceSend'
+// import InvoiceCheck from 'components/invoiceManage/invoiceCheck/invoiceCheck'
+// import ChargeOffCheck from 'components/invoiceManage/chargeOffCheck/chargeOffCheck'
 
 // 图表
 import Charts from 'views/charts/charts'
 import EditTable from 'views/editTable/editTable'
 
 // 报表统计
-import ReportData from 'components/reportData/reportData'
-import AheadInvoice from 'components/reportData/aheadInvoice'
-import BranchAdd from 'components/reportData/branchAdd'
-import MoneyChart from 'components/reportData/moneyChart'
+// import ReportData from 'components/reportData/reportData'
+// import AheadInvoice from 'components/reportData/aheadInvoice'
+// import BranchAdd from 'components/reportData/branchAdd'
+// import MoneyChart from 'components/reportData/moneyChart'
 
 // 呼叫中心
 import PhoneChange from 'components/callCenter/phoneChange'

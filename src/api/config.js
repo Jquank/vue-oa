@@ -1,7 +1,7 @@
 export const navList = [
   {
     id: '2u',
-    fontIcon: 'fa fa-cogs',
+    fontIcon: 'fa fa-cogs fa-fw',
     text: '系统配置',
     cList: [{
       cid: '3d',
@@ -42,7 +42,7 @@ export const navList = [
   },
   {
     id: '3v',
-    fontIcon: 'fa fa-street-view',
+    fontIcon: 'fa fa-street-view fa-fw',
     text: '人员管理',
     cList: [
       {
@@ -59,7 +59,7 @@ export const navList = [
   },
   {
     id: '3h',
-    fontIcon: 'fa fa-user',
+    fontIcon: 'fa fa-user fa-fw',
     text: '客户管理',
     cList: [{
       cid: '3i',
@@ -95,7 +95,7 @@ export const navList = [
   },
   {
     id: '1',
-    fontIcon: 'fa fa-calendar-check-o',
+    fontIcon: 'fa fa-calendar-check-o fa-fw',
     text: '客户审核',
     cList: [
       {
@@ -122,7 +122,7 @@ export const navList = [
   },
   {
     id: '40',
-    fontIcon: 'fa fa-search-plus',
+    fontIcon: 'fa fa-search-plus fa-fw',
     text: '客户搜索',
     cList: [
       {
@@ -140,7 +140,7 @@ export const navList = [
   },
   {
     id: '42',
-    fontIcon: 'fa fa-file',
+    fontIcon: 'fa fa-file fa-fw',
     text: '合同管理',
     cList: [
       {
@@ -162,7 +162,7 @@ export const navList = [
   },
   {
     id: '4f',
-    fontIcon: 'fa fa-money',
+    fontIcon: 'fa fa-money fa-fw',
     text: '到款管理',
     cList: [{
       cid: '4g',
@@ -188,7 +188,7 @@ export const navList = [
   },
   {
     id: 'y',
-    fontIcon: 'fa fa-clipboard',
+    fontIcon: 'fa fa-clipboard fa-fw',
     text: '订单管理',
     cList: [
       { cid: 'z', to: '/indexPage/orderPending', text: '待处理订单' },
@@ -201,7 +201,7 @@ export const navList = [
   },
   {
     id: '5f',
-    fontIcon: 'fa fa-credit-card',
+    fontIcon: 'fa fa-credit-card fa-fw',
     text: '续费管理',
     cList: [
       { cid: '5i', to: '/indexPage/renewApply', text: '续费申请' },
@@ -215,7 +215,7 @@ export const navList = [
   },
   {
     id: '4v',
-    fontIcon: 'fa fa-newspaper-o',
+    fontIcon: 'fa fa-newspaper-o fa-fw',
     text: '发票管理',
     cList: [
       { cid: '7w', to: '/indexPage/invoiceList', text: '发票列表' },
@@ -228,7 +228,7 @@ export const navList = [
   },
   {
     id: '4e',
-    fontIcon: 'fa fa-money',
+    fontIcon: 'fa fa-money fa-fw',
     text: '工资管理',
     cList: [
       // todo
@@ -238,7 +238,7 @@ export const navList = [
   },
   {
     id: '12',
-    fontIcon: 'fa fa-line-chart',
+    fontIcon: 'fa fa-line-chart fa-fw',
     text: '图表',
     cList: [
       { cid: '140', to: '/indexPage/charts', text: '图表实例' },
@@ -247,7 +247,7 @@ export const navList = [
   },
   {
     id: '14',
-    fontIcon: 'fa fa-line-chart',
+    fontIcon: 'fa fa-line-chart fa-fw',
     text: '报表统计',
     cList: [
       { cid: '7e', to: '/indexPage/REP_BACUS', text: '保A客户统计' },
@@ -268,7 +268,7 @@ export const navList = [
   },
   {
     id: '7o',
-    fontIcon: 'fa fa-phone',
+    fontIcon: 'fa fa-phone fa-fw',
     text: '呼叫中心',
     cList: [
       { cid: '7p', to: '/indexPage/phoneChange', text: '坐席分机修改' },
