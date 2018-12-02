@@ -1,8 +1,9 @@
 <template>
   <div class="activity component-container media-padding">
     <div>
-      <el-button type="success" @click.native="add('activity')">新增活动</el-button>
+      <el-button icon="el-icon-plus" type="success" @click.native="add('activity')">新增活动</el-button>
     </div>
+    <div class="line"></div>
     <el-table stripe :data="acList" style="width: 100%">
       <el-table-column type="index">
       </el-table-column>
@@ -15,12 +16,10 @@
         </template>
       </el-table-column>
     </el-table>
-    <br/>
-    <br/>
-    <div class="line"></div>
     <div class="mt10px">
-      <el-button type="success" @click.native="add('pro')">新增产品</el-button>
+      <el-button icon="el-icon-plus" type="success" @click.native="add('pro')">新增产品</el-button>
     </div>
+    <div class="line"></div>
     <el-table stripe :data="proList" style="width: 100%">
       <el-table-column type="index">
       </el-table-column>

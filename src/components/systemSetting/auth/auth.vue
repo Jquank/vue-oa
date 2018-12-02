@@ -10,9 +10,9 @@
         stripe
         :data="authList"
         style="width: 100%">
-        <el-table-column type="index" width="100">
+        <el-table-column type="index">
         </el-table-column>
-        <el-table-column prop="name" label="角色名称" width="200">
+        <el-table-column prop="name" label="角色名称">
         </el-table-column>
         <el-table-column prop="" label="操作">
           <template slot-scope="scope">

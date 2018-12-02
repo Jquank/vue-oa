@@ -31,7 +31,7 @@
     width: 98% !important;
   }
   .el-message {
-    min-width: 100px;
+    width: 90%;
     top: 50px;
   }
   div.export {

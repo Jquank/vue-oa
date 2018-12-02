@@ -448,10 +448,6 @@ const MoneyChart = (resolve) => {
 // import InvoiceCheck from 'components/invoiceManage/invoiceCheck/invoiceCheck'
 // import ChargeOffCheck from 'components/invoiceManage/chargeOffCheck/chargeOffCheck'
 
-// 图表
-import Charts from 'views/charts/charts'
-import EditTable from 'views/editTable/editTable'
-
 // 报表统计
 // import ReportData from 'components/reportData/reportData'
 // import AheadInvoice from 'components/reportData/aheadInvoice'
@@ -898,19 +894,6 @@ const router = new Router({
           name: 'salaryError',
           meta: { text: '工资异常' },
           component: SalaryError
-        },
-        // 图表
-        {
-          path: 'charts',
-          name: 'charts',
-          meta: { text: '图表' },
-          component: Charts
-        },
-        {
-          path: 'editTable',
-          name: 'editTable',
-          meta: { text: '可编辑的表格' },
-          component: EditTable
         },
         // 报表统计
         {

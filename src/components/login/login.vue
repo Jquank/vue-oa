@@ -104,7 +104,7 @@ export default {
             cookie.set('userId', res.data.data.id)
             cookie.set('userName', res.data.data.name)
             cookie.set('permissions', permissions)
-            cookie.set('allowCall', res.data.data.dept)
+            cookie.set('allowBar', res.data.data.dept)
             this.$router.push('/indexPage')
           } else {
             this.$message({

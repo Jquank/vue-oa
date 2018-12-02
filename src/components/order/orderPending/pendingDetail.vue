@@ -995,26 +995,98 @@
 <script>
 import { cusStatus } from 'common/js/filters'
 import ShowQualify from 'base/showQualify/showQualify'
-import OrderKeeper from 'checkSteps/orderKeeper'
-import InitFinance from 'checkSteps/initFinance'
-import InQualityOrder from 'checkSteps/inQualityOrder'
-import InQuality from 'checkSteps/inQuality'
-import OutQuality from 'checkSteps/outQuality'
-import QualityAddMoney from 'checkSteps/qualityAddMoney'
-import QualityManager from 'checkSteps/qualityManager'
-import SecondFinance from 'checkSteps/secondFinance'
-import FinanceAddMoney from 'checkSteps/financeAddMoney'
-import QualityOpenAccount from 'checkSteps/qualityOpenAccount'
-import ServiceOrder from 'checkSteps/serviceOrder'
-import ServiceDispatch from 'checkSteps/serviceDispatch'
-import QualityOne from 'checkSteps/qualityOne'
-import OrderDone from 'checkSteps/orderDone'
-import NewCusCheck from 'checkSteps/newCusCheck'
-import WebSpace from 'checkSteps/webSpace'
-import WebOrder from 'checkSteps/webOrder'
-import WebMake from 'checkSteps/webMake'
 import Page from 'base/page/page'
 import cookie from 'js-cookie'
+const OrderKeeper = (resolve) => {
+  import('checkSteps/orderKeeper').then((module) => {
+    resolve(module)
+  })
+}
+const InitFinance = (resolve) => {
+  import('checkSteps/initFinance').then((module) => {
+    resolve(module)
+  })
+}
+const InQualityOrder = (resolve) => {
+  import('checkSteps/inQualityOrder').then((module) => {
+    resolve(module)
+  })
+}
+const InQuality = (resolve) => {
+  import('checkSteps/inQuality').then((module) => {
+    resolve(module)
+  })
+}
+const OutQuality = (resolve) => {
+  import('checkSteps/outQuality').then((module) => {
+    resolve(module)
+  })
+}
+const QualityAddMoney = (resolve) => {
+  import('checkSteps/qualityAddMoney').then((module) => {
+    resolve(module)
+  })
+}
+const QualityManager = (resolve) => {
+  import('checkSteps/qualityManager').then((module) => {
+    resolve(module)
+  })
+}
+const SecondFinance = (resolve) => {
+  import('checkSteps/secondFinance').then((module) => {
+    resolve(module)
+  })
+}
+const FinanceAddMoney = (resolve) => {
+  import('checkSteps/financeAddMoney').then((module) => {
+    resolve(module)
+  })
+}
+const QualityOpenAccount = (resolve) => {
+  import('checkSteps/qualityOpenAccount').then((module) => {
+    resolve(module)
+  })
+}
+const ServiceOrder = (resolve) => {
+  import('checkSteps/serviceOrder').then((module) => {
+    resolve(module)
+  })
+}
+const ServiceDispatch = (resolve) => {
+  import('checkSteps/serviceDispatch').then((module) => {
+    resolve(module)
+  })
+}
+const QualityOne = (resolve) => {
+  import('checkSteps/qualityOne').then((module) => {
+    resolve(module)
+  })
+}
+const OrderDone = (resolve) => {
+  import('checkSteps/orderDone').then((module) => {
+    resolve(module)
+  })
+}
+const NewCusCheck = (resolve) => {
+  import('checkSteps/newCusCheck').then((module) => {
+    resolve(module)
+  })
+}
+const WebSpace = (resolve) => {
+  import('checkSteps/webSpace').then((module) => {
+    resolve(module)
+  })
+}
+const WebOrder = (resolve) => {
+  import('checkSteps/webOrder').then((module) => {
+    resolve(module)
+  })
+}
+const WebMake = (resolve) => {
+  import('checkSteps/webMake').then((module) => {
+    resolve(module)
+  })
+}
 export default {
   data () {
     return {

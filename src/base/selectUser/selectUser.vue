@@ -21,6 +21,7 @@
 <script>
 import { transTree } from 'common/js/utils'
 import { removeClass, toggleClass } from 'common/js/dom'
+import storage from 'good-storage'
 const DEPT_URL = '/Search.do?DeptEmployer'
 const SEARCH_URL = '/Search.do?ByUserName'
 export default {
@@ -49,7 +50,12 @@ export default {
     }
   },
   created () {
-    this._getDeptList()
+    let deptList = storage.get('deptList')
+    if (deptList) {
+      this.departmentList = deptList
+    } else {
+      this._getDeptList()
+    }
   },
   methods: {
     _getDeptList () {
@@ -57,6 +63,7 @@ export default {
         if (res.data.success) {
           let dept = res.data.data
           this.departmentList = transTree(dept)
+          storage.set('deptList', this.departmentList)
         }
       })
     },

@@ -6,7 +6,7 @@ import App from '@/App'
 import router from '@/router'
 import store from './store'
 
-import VConsole from 'vconsole'
+// import VConsole from 'vconsole'
 
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
@@ -20,7 +20,7 @@ import 'viewerjs/dist/viewer.css'
 import * as filters from '@/common/js/filters'
 import { $post, $get, $export, uploadUrl } from 'api/http'
 
-var vConsole = new VConsole() // eslint-disable-line
+// const vConsole = new VConsole() // eslint-disable-line
 
 Vue.config.productionTip = false
 

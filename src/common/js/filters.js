@@ -1,16 +1,11 @@
 
-// import storage from 'good-storage'
-import { getByCode } from 'api/getOptions'
+import storage from 'good-storage'
+// import { getByCode } from 'api/getOptions'
+// import { $post } from 'api/http'
 
-export function productType (num, str) {
-  let productTypes = []
-  getByCode(52).then(res => {
-    if (res.data.success) {
-      productTypes = res.data.data
-    }
-  })
+function _getProductType (arr, num, str) {
   let type = ''
-  productTypes.forEach(val => {
+  arr.forEach(val => {
     if (num == val.code_val) { //eslint-disable-line
       type = val.code_desc
     } else if (num == '1000') { //eslint-disable-line
@@ -18,6 +13,26 @@ export function productType (num, str) {
     }
   })
   return type + '' + (str || '')
+}
+
+// todo
+export function productType (num, str) {
+  let productTypes = []
+  let res = storage.session.get('x52')
+  if (res) {
+    productTypes = res.data.data
+    return _getProductType(productTypes, num, str)
+  }
+  // function aaa () {
+  //   return getByCode(52).then(res => {
+  //     if (res.data.success) {
+  //       productTypes = res.data.data
+  //       return _getProductType(productTypes, num, str)
+  //     }
+  //   })
+  // }
+  // let b = await aaa()
+  // return b
 }
 
 export function comType (num) {

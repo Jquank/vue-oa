@@ -10,6 +10,13 @@
             </el-form-item>
           </el-col>
         </el-row>
+         <el-row v-for="(item,index) in productMoneyList" :key="index">
+          <el-col :md="24" v-if="item.type<100">
+            <el-form-item :label="item.type | productType(' :')" class="product-name">
+              <el-input v-model="item.value" disabled></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-row>
           <el-col :md="24">
             <el-form-item label="服务费 :">
@@ -28,13 +35,6 @@
         </el-row>
         <!-- 百推 -->
         <template v-if="businessType==='DS'">
-          <el-row v-for="(item,index) in productMoneyList" :key="index">
-            <el-col :md="24" v-if="item.type<100">
-              <el-form-item :label="item.type | productType(' :')" class="product-name">
-                <el-input v-model="item.value" disabled></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
           <el-row>
             <el-col :md="24">
               <el-form-item label="大搜现金券 :">
@@ -66,13 +66,6 @@
         </template>
         <!-- 直通车 -->
         <template v-if="businessType==='ZTC2'">
-          <el-row v-for="(item,index) in productMoneyList" :key="index">
-            <el-col :md="24" v-if="item.type<100">
-              <el-form-item :label="item.type | productType(' :')" class="product-name">
-                <el-input v-model="item.value" disabled></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
           <el-row>
             <el-col :md="24">
               <el-form-item label="代金券 :">

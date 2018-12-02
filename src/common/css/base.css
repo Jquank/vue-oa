@@ -70,9 +70,12 @@ a {
   margin-bottom: 10px;
 }
 /*组件容器样式*/
+.component-bar-container {
+  min-height: calc((100% - 130px)) !important;
+}
 .component-container {
   padding: 15px;
-  min-height: calc((100% - 130px));
+  min-height: calc((100% - 30px));
   background: #fff;
 }
 .child-component-container {

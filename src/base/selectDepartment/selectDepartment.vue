@@ -11,6 +11,7 @@
 
 <script>
 import { transTree } from 'common/js/utils'
+import storage from 'good-storage'
 export default {
   props: {
     title: { // prepend 文字
@@ -43,6 +44,7 @@ export default {
         if (res.data.success) {
           let dept = res.data.data
           this.departmentList = transTree(dept)
+          storage.set('deptList', this.departmentList)
         }
       })
     },
@@ -52,7 +54,12 @@ export default {
       this.$refs.tree.$el.style.display = 'none'
     },
     showDepartment () {
-      this._getDeptList()
+      let deptList = storage.get('deptList')
+      if (deptList) {
+        this.departmentList = deptList
+      } else {
+        this._getDeptList()
+      }
       this.$refs.tree.$el.style.display = 'block'
       // let paddingWidth = this.title ? 20 : 0
       // let width = this.title.length * 13 + 4 + paddingWidth + 'px' // 字体长度+冒号+padding

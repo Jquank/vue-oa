@@ -40,6 +40,13 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <el-row v-for="(item,index) in productMoneyList" :key="index">
+            <el-col :md="24" v-if="item.type<100">
+              <el-form-item :label="item.type | productType(' :')" class="product-name">
+                <el-input v-model="item.value"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
         <el-row>
           <el-col :md="24">
             <el-form-item label="服务费 :">
@@ -56,13 +63,6 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row v-for="(item,index) in productMoneyList" :key="index">
-            <el-col :md="24" v-if="item.type<100">
-              <el-form-item :label="item.type | productType(' :')" class="product-name">
-                <el-input v-model="item.value"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
         <!-- 百推 -->
         <template v-if="businessType==='DS'">
           <el-row>
@@ -96,7 +96,7 @@
           <el-row>
             <el-col :md="24">
               <el-form-item label="客户行业 :" required>
-                <select-trade v-model="receipt.cat"></select-trade>
+                <select-trade v-model="receipt.cat" :echoTrade="echoTrade"></select-trade>
               </el-form-item>
             </el-col>
           </el-row>
@@ -210,7 +210,8 @@ export default {
       selProList: [],
       echoFlowList: [],
       receiveMoneyTotal: 0,
-      userReceiveCid: ''
+      userReceiveCid: '',
+      echoTrade: []
     }
   },
   computed: {
@@ -256,6 +257,7 @@ export default {
     _getLogs (id) {
       this.$get('/receipt.do?companyreceiptdetail', { id: id }).then(res => {
         this.receipt = res.data[0].data[0]
+        this.echoTrade = [(this.receipt.cat + '').slice(0, 2), (this.receipt.cat + '')]
         if (this.receipt.cat.length === 4) {
           this.receipt.cat = [this.receipt.cat.slice(0, 2), this.receipt.cat]
         }

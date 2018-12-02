@@ -15,7 +15,7 @@
       <el-table-column prop="" label="已使用保a数量 / 总保A配额">
         <span slot-scope="scope">{{scope.row.dept_true_a+' / '+scope.row.dept_max_a}}</span>
       </el-table-column>
-      <el-table-column prop="" label="操作" width="80">
+      <el-table-column prop="" label="操作">
         <template slot-scope="scope">
           <el-button type="primary" class="xsbtn" @click.native="editCycle(scope.row.id,scope.row.dept_max_a)">编辑
           </el-button>

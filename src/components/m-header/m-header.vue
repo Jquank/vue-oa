@@ -91,6 +91,7 @@ import { enterfullscreen, exitfullscreen } from 'api/myHeader'
 import { $post } from 'api/http'
 import cookie from 'js-cookie'
 import { mapGetters, mapMutations } from 'vuex'
+import { autoHeight } from 'common/js/utils'
 export default {
   computed: {
     uName () {
@@ -121,12 +122,20 @@ export default {
     $route (to, from) {
       this._findBread()
       this.lastRoutePath = from.path
+      // todo 此处transition会移除掉此样式
+      // this.$nextTick(() => {
+      //   autoHeight()
+      // })
+      setTimeout(() => {
+        autoHeight()
+      }, 500)
     }
   },
   created () {
     this._findBread()
   },
   mounted () {
+    autoHeight()
   },
   methods: {
     // 侧边栏折叠
@@ -187,6 +196,7 @@ export default {
       cookie.remove('rid')
       cookie.remove('userId')
       cookie.remove('permissions')
+      cookie.remove('allowBar')
       this.$router.push('/login')
       // $post('/logout').then(res => {
       //   if (res.data.status === -1) {

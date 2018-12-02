@@ -237,15 +237,6 @@ export const navList = [
     ]
   },
   {
-    id: '12',
-    fontIcon: 'fa fa-line-chart fa-fw',
-    text: '图表',
-    cList: [
-      { cid: '140', to: '/indexPage/charts', text: '图表实例' },
-      { cid: '141', to: '/indexPage/editTable', text: '编辑表格' }
-    ]
-  },
-  {
     id: '14',
     fontIcon: 'fa fa-line-chart fa-fw',
     text: '报表统计',

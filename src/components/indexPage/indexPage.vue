@@ -14,10 +14,10 @@
         </el-aside>
         <!-- 主体内容 -->
         <el-main id="main">
-          <div id="call-center">
+          <div id="call-center" v-if="isShow">
             <iframe ref="iframecall" id="iframe-call" src="http://gccp.baidu.com/gaiamgmt/fe-communication/communications/index.html#/" frameborder="0"></iframe>
           </div>
-          <transition name="fade">
+          <transition name="fade" mode="out-in">
             <router-view></router-view>
           </transition>
         </el-main>
@@ -34,6 +34,7 @@ import MHeader from 'components/m-header/m-header'
 // import BScroll from 'better-scroll'
 import cookie from 'js-cookie'
 import { mapMutations } from 'vuex'
+// import { autoHeight } from 'common/js/utils'
 let startX = 0
 let startY = 0
 let endX = 0
@@ -46,9 +47,15 @@ export default {
       nested: null
     }
   },
+  computed: {
+    isShow () {
+      return cookie.get('allowBar') === '9999'
+    }
+  },
   mounted () {
-    let allowCall = cookie.get('allowCall')
-    if (allowCall) {
+    // autoHeight()
+    let allowBar = cookie.get('allowBar')
+    if (allowBar) {
       window.agentbar.init('iframe-call')
       let iframe = document.getElementById('iframe-call')
       let urlParams = '/gaiaopt/rest/interface/agent/agentBarInit4H5'
@@ -140,10 +147,14 @@ export default {
     }
   }
   .fade-enter-active{
-    transition: all .5s cubic-bezier(0.3, 0.5, 0.8, 1.15);
+    transition: all .3s cubic-bezier(0.3, 0.5, 0.8, 1.15);
+    // transition: opacity .9s;
+    // transition: transform .5s cubic-bezier(0.3, 0.5, 0.8, 1.15);
   }
   .fade-leave-active {
-    transition: all .3s cubic-bezier(0.3, 0.5, 0.8, 1.0);
+    transition: all .3s cubic-bezier(0.3, 0.2, 0.8, 1.0);
+    // transition: opacity .9s;
+    // transition: transform .3s cubic-bezier(0.3, 0.5, 0.8, 1.0);
   }
   .fade-enter{
     opacity: 0;
