@@ -68,6 +68,7 @@ export default {
           let orderInfo = res.data.data[1]
           let productInfo = res.data.data[4][0]
           this.editData.productInfo = productInfo
+          this.editData.pid = this.pid
           this.editData.order_id = orderInfo.id
           this.editData.remark = orderInfo.remark
           this.editData.wjType = orderInfo.websitetype
@@ -93,7 +94,7 @@ export default {
     },
     getQualifyList (newArr, delArr) { // 获取删除的资质
       this.showQualify = newArr
-      this.deledQualify = this.deledQualify.concat(delArr).concat(delArr)
+      this.deledQualify = this.deledQualify.concat(delArr)
     }
   },
   components: {

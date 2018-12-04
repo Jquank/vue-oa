@@ -45,7 +45,6 @@ export default {
     // 删除资质图片
     delImg (index) {
       this.deledQualify = this.showQualify.splice(index, 1)
-      // this.showQualify.splice(index, 1)
       this._emitQualifyList()
     },
     _emitQualifyList () {

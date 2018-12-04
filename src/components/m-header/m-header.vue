@@ -90,6 +90,7 @@
 import { enterfullscreen, exitfullscreen } from 'api/myHeader'
 import { $post } from 'api/http'
 import cookie from 'js-cookie'
+import storage from 'good-storage'
 import { mapGetters, mapMutations } from 'vuex'
 import { autoHeight } from 'common/js/utils'
 export default {
@@ -197,6 +198,7 @@ export default {
       cookie.remove('userId')
       cookie.remove('permissions')
       cookie.remove('allowBar')
+      storage.remove('x52')
       this.$router.push('/login')
       // $post('/logout').then(res => {
       //   if (res.data.status === -1) {

@@ -571,7 +571,7 @@
                   </div>
                   <div class="mt10px row-container">
                     <div v-for="(item,index) in moneyInfo" :key="index">
-                      <template v-if="item.type < 100 && item.type!=8">
+                      <template v-if="item.type < 100">
                         <b>{{item.type | productType}}：</b>
                         <span>{{item.value | currency1}}</span>
                       </template>
@@ -811,7 +811,7 @@
           <!-- 网建外审 -->
           <in-quality v-if="sn===230 && templateInfo.cpid" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="网建外审"></in-quality>
           <!-- 网开空域 -->
-          <web-space v-if="sn===240 && templateInfo.cpid" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="网建外审"></web-space>
+          <web-space v-if="sn===240 && templateInfo.cpid" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="网开空域"></web-space>
           <!-- 质检申请加款 -->
           <quality-add-money v-if="sn===260 && templateInfo.cpid && pid === 'BAITUI'" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="质检申请加款"></quality-add-money>
           <!-- 理单员申请加款 -->

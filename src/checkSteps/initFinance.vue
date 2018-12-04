@@ -86,7 +86,7 @@
       </el-table-column>
     </el-table>
 
-    <el-card v-if="pid==='BAITUI'" class="mt10px card-total">
+    <el-card v-if="pid==='BAITUI' || pid==='ZTC2'" class="mt10px card-total">
       <div class="money-total">
         <div>
           <b>订单金额：</b>{{moneyRecord.sum | currency1}}

@@ -369,8 +369,8 @@ export const orderDeal = { // 订单处理
           if (!this.documenter || !this.designer) {
             this.$message.warning('请选择资料员和设计师！')
             return
-            this.next_uid = [this.documenter.id, this.designer.id].toString()
           }
+          this.next_uid = [this.documenter.id, this.designer.id].toString()
           this.webOrderRemark = `网建经理派单至:资料员-${this.documenter.name},设计师-${this.designer.name}；`
         }
         if (this.sn === 280 || this.sn === 300) {

@@ -18,20 +18,15 @@ function _getProductType (arr, num, str) {
 // todo
 export function productType (num, str) {
   let productTypes = []
-  let res = storage.session.get('x52')
-  if (res) {
-    productTypes = res.data.data
-    return _getProductType(productTypes, num, str)
-  }
-  // function aaa () {
-  //   return getByCode(52).then(res => {
-  //     if (res.data.success) {
-  //       productTypes = res.data.data
-  //       return _getProductType(productTypes, num, str)
-  //     }
-  //   })
-  // }
-  // let b = await aaa()
+  let res = storage.get('x52')
+  productTypes = res.data.data
+  return _getProductType(productTypes, num, str)
+  // let b = await getByCode(52).then(res => {
+  //   if (res.data.success) {
+  //     productTypes = res.data.data
+  //     return _getProductType(productTypes, num, str)
+  //   }
+  // })
   // return b
 }
 

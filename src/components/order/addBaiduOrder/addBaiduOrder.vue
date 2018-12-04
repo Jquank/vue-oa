@@ -180,7 +180,7 @@
                     </el-col>
                   </el-row>
                   <el-row>
-                    <el-table border :data="form.zizhiList" :key="form.zizhiList.id" id="uploadImgs">
+                    <el-table border :data="form.zizhiList" :key="form.zizhiList.id" id="uploadImgs" class="table-width">
                       <el-table-column prop="code_desc" label="资质类型" width="130">
                       </el-table-column>
                       <el-table-column label="操作">
@@ -505,7 +505,8 @@ export default {
         mobilewebsite: this.form.phoneWeb, // 手机站
         companyaddress: this.showEditBD ? this.form.cusAddress : this.editData.addr, // 公司地址
         remark_order: '', // 备注
-        company_attr: this.qualifyUploaded.concat(this.deledQualify), // 公司属性(已上传资质)
+        company_attr: this.qualifyUploaded, // 公司属性(已上传资质)
+        del_company_attr: this.deledQualify,
         remark: '',
         order_attr: [], // 订单属性
         from_val: _params, // what?

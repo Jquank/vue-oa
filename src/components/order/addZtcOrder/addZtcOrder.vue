@@ -507,7 +507,8 @@ export default {
           ? this.form.cusAddress
           : this.editData.addr, // 公司地址
         remark_order: '', // 备注
-        company_attr: this.qualifyUploaded.concat(this.deledQualify), // 公司属性(已上传资质)
+        company_attr: this.qualifyUploaded, // 公司属性(已上传资质)
+        del_company_attr: this.deledQualify,
         remark: '',
         order_attr: [], // 订单属性
         from_val: _params, // what?

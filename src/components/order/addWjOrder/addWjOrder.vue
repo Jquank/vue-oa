@@ -232,7 +232,7 @@
                   </el-card>
                   <!-- 编辑页回显企业资质照片 -->
                   <slot name="echoQualify"></slot>
-                  <el-row class="mt10px" :gutter="10">
+                  <el-row :gutter="10">
                     <el-col :sm="16">
                       <el-select value-key="id" @change="qualifySelectChange" v-model="form.zizhiName" placeholder="请选择上传资质类型" style="width:100%">
                         <el-option v-for="(qualify,index) in qualifyType" :key="index" :label="qualify.code_desc" :value="qualify"></el-option>
@@ -490,6 +490,7 @@ export default {
     editData (newval) {
       if (!this.showEditWJ) {
         console.log(newval)
+        this._getMyContract('', newval.pid === 'ZTC' ? 'CONTRACT_ZTCWEB' : 'CONTRACT_WZ')
         this.form.cName = newval.cusName
         this.form.pcWeb = newval.pcsite
         this.form.cusAddress = newval.addr
@@ -538,7 +539,6 @@ export default {
     this._getwjType(88)
   },
   mounted () {
-    this._getMyContract('', 'CONTRACT_ZTCWEB')
     this._getQualifyType(32)
     this._getServiceType() // 空间服务商类型
   },
@@ -596,7 +596,8 @@ export default {
         pcwebsite: this.form.pcWeb, // PC站
         companyaddress: this.form.cusAddress || this.editData.addr, // 公司地址
         remark_order: '', // 备注
-        company_attr: this.qualifyUploaded.concat(this.deledQualify), // 公司属性(已上传资质)
+        company_attr: this.qualifyUploaded, // 公司属性(已上传资质)
+        del_company_attr: this.deledQualify,
         remark: '',
         order_attr: [], // 订单属性
         from_val: _params, // what?
@@ -638,7 +639,6 @@ export default {
       }
       params = Object.assign({}, params, webBasicParams, defaultWebManagerInfo)
       params.websiteinfo = [webInfo]
-      console.log(params)
       if (
         !params.companyid ||
         !params.curId ||
@@ -682,6 +682,8 @@ export default {
           return
         }
       }
+      console.log(params)
+      // return
       this.$post('/wf.do?WebSite', params).then(res => {
         if (res.data[0].success) {
           if (!this.showEditWJ) {
@@ -708,7 +710,7 @@ export default {
     // 选择具体公司
     handleSelCompany (company) {
       this.companyData = company
-      this.pid = company.pid
+      this.pid = company.pid === 'DS' ? ORDER_TYPE : ORDER_TYPE_ZTC
       this.moneyRecord.cid = company.id
       this.moneyRecord.companylogid = company.companylogid
       // this.moneyRecord.uid = company.userid
@@ -721,6 +723,7 @@ export default {
       })
       this._getMoneyRecord()
       this._getContactName()
+      this._getMyContract('', this.pid === 'ZTC' ? 'CONTRACT_ZTCWEB' : 'CONTRACT_WZ')
     },
     // 获取到款记录 和 客户地址 cpid
     _getMoneyRecord () {

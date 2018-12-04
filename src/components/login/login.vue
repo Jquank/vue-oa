@@ -50,6 +50,8 @@
 import cookie from 'js-cookie'
 import axios from 'axios'
 import { serverUrl } from 'api/http'
+import { getByCode } from 'api/getOptions'
+import storage from 'good-storage'
 const REG = /^[\w-_]{6,16}$/
 export default {
   data () {
@@ -105,6 +107,9 @@ export default {
             cookie.set('userName', res.data.data.name)
             cookie.set('permissions', permissions)
             cookie.set('allowBar', res.data.data.dept)
+            getByCode(52).then(res => {
+              storage.set('x52', res)
+            })
             this.$router.push('/indexPage')
           } else {
             this.$message({
