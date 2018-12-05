@@ -6,8 +6,8 @@
         <b>订单金额：</b>{{moneyRecord.sum | currency1}}</p>
       <p>
         <b>服务费：</b>{{moneyRecord.service | currency1}}</p>
-      <p v-for="o in moneyInfo" :key="o.type">
-        <template v-if="o.type<100 && o.type!=8">
+      <p v-for="o in moneyInfo9" :key="o.type">
+        <template v-if="o.type<100">
           <b>{{o.type | productType}}：</b>{{o.value | currency1}}
         </template>
       </p>
@@ -28,7 +28,7 @@
         <el-input v-model="orderInfo.proxyid" placeholder="代理账号"></el-input>
       </el-col>
       <el-col :md="6">
-         <el-date-picker v-model="orderInfo.applytime" type="datetime" placeholder="申请加款时间">
+         <el-date-picker v-model="orderInfo.applytime" value-format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="申请加款时间">
         </el-date-picker>
       </el-col>
     </el-row>
@@ -111,6 +111,13 @@ export default {
       default: ''
     },
     moneyInfo: {
+      // [12]
+      type: Array,
+      default: function () {
+        return []
+      }
+    },
+    moneyInfo9: {
       // [12]
       type: Array,
       default: function () {

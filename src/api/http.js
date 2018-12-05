@@ -117,9 +117,10 @@ export function $get (url, _params = {}) {
   })
 }
 
-export function $export (url, params = {}) {
+export function $export (url, params = {}, otherParams = {}) {
   let tk = cookie.get('token')
   let isQuestionMark = url.indexOf('?') > -1
   let mark = isQuestionMark ? '&' : '?'
+  params = Object.assign({}, params, otherParams)
   window.location = serverUrl + url + mark + qs.stringify(params) + '&tk=' + tk
 }

@@ -11,8 +11,8 @@
                         @change="search()"
                         class="mb10px ml10px">
           <el-radio-button label="0">全部</el-radio-button>
-          <el-radio-button label="100">已通过</el-radio-button>
-          <el-radio-button label="300">已驳回</el-radio-button>
+          <el-radio-button label="20">已通过</el-radio-button>
+          <el-radio-button label="10">已驳回</el-radio-button>
         </el-radio-group>
       </el-tab-pane>
     </el-tabs>
@@ -144,7 +144,10 @@
           <span slot-scope="scope">
             <el-button type="warning"
                        plain
-                       class="xsbtn">{{scope.row.currentname?scope.row.currentname:'订单完成'}}</el-button>
+                       class="xsbtn">{{scope.row.currentname?scope.row.currentname:'订单完成'}}
+              {{(scope.row.checkBindName == '' && scope.row.ckName && scope.row.ckName != scope.row.currentname)?'('+scope.row.ckName+')':''}}
+              {{(scope.row.checkBindName && scope.row.checkBindName != scope.row.currentname)?'('+scope.row.checkBindName+')':''}}
+            </el-button>
           </span>
         </el-table-column>
         <el-table-column prop=""
@@ -356,7 +359,7 @@
     <el-dialog :modal-append-to-body="false"
                :title="makeInvoiceTitle"
                :visible.sync="makeInvoiceDialog"
-               width="750px">
+               width="900px">
       <make-invoice-dialog @closeDialog="makeInvoiceDialog=false"
                            :key="key_dialog"
                            :echoData="echoData"
@@ -684,6 +687,7 @@ export default {
     },
     search () {
       this.sendParams = {
+        opttype: this.tabStatus,
         status: this.orderKind,
         companyname: this.cusName,
         orderid: this.orderNumber,

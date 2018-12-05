@@ -3,19 +3,19 @@
     <h3 class="check-title">{{title}}</h3>
     <el-card class="card-money">
       <p>
-        <b>百度订单金额：</b>{{moneyRecord.sum | currency1}}</p>
+        <b>订单总金额：</b>{{moneyRecord.sum | currency1}}</p>
       <p>
         <b>服务费：</b>{{moneyRecord.service | currency1}}</p>
-      <p v-if="pid==='BAITUI'" v-for="(o,index) in moneyInfo" :key="index">
-        <template v-if="o.type<100 && o.type!=8">
-          <b>{{o.type | productType}}：</b>{{o.value | currency1}}
-        </template>
-      </p>
-      <p v-if="pid==='WEBSITE'" v-for="(o,index) in moneyInfo" :key="index">
+      <p v-for="(o,index) in moneyInfo" :key="index">
         <template v-if="o.type<100">
           <b>{{o.type | productType}}：</b>{{o.value | currency1}}
         </template>
       </p>
+      <!-- <p v-if="pid==='WEBSITE'" v-for="(o,index) in moneyInfo" :key="index">
+        <template v-if="o.type<100">
+          <b>{{o.type | productType}}：</b>{{o.value | currency1}}
+        </template>
+      </p> -->
     </el-card>
     <el-table :data="tableData" border class="mt10px init-table" style="width: 100%">
       <el-table-column prop="code_desc" label="银行类型" width="100">

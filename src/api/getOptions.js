@@ -1,4 +1,4 @@
-import { $post } from 'api/http'
+import { $post, $get } from 'api/http'
 import storage from 'good-storage'
 const contractUrl = '/Contract.do?SearchByCatId'
 const departmentUrl = '/Search.do?DeptTree'
@@ -46,7 +46,7 @@ export function getMyContract (type, uid, state = '20') {
     uid: uid,
     paging: 1
   }
-  return $post(contractUrl, params).then(res => {
+  return $get(contractUrl, params).then(res => {
     return res
   })
 }

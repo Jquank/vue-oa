@@ -522,7 +522,6 @@ export default {
         store_type: this.form.storeType, // 门店类型
         check_type: this.form.checkType // 验证类型
       }
-      console.log(params)
       if (
         !params.companyid ||
         !params.curId ||
@@ -563,6 +562,7 @@ export default {
           return
         }
       }
+      console.log(params)
       this.$post('/wf.do?go', params).then(res => {
         if (res.data[0].success) {
           this.$router.push({path: '/indexPage/orderPending'})

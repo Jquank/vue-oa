@@ -330,6 +330,8 @@ import cookie from 'js-cookie'
 import { orderMixin, mobileFit } from 'common/js/mixin'
 const ORDER_TYPE = 'WEBSITE'
 const ORDER_TYPE_ZTC = 'ZTC_WEBSITE'
+const CONTRACT_TYPE = 'CONTRACT_WZ'
+const CONTRACT_TYPE_ZTC = 'CONTRACT_ZTCWEB'
 export default {
   mixins: [orderMixin, mobileFit],
   props: {
@@ -490,7 +492,7 @@ export default {
     editData (newval) {
       if (!this.showEditWJ) {
         console.log(newval)
-        this._getMyContract('', newval.pid === 'ZTC' ? 'CONTRACT_ZTCWEB' : 'CONTRACT_WZ')
+        this._getMyContract('', newval.pid === 'ZTC' ? CONTRACT_TYPE_ZTC : CONTRACT_TYPE)
         this.form.cName = newval.cusName
         this.form.pcWeb = newval.pcsite
         this.form.cusAddress = newval.addr
@@ -723,18 +725,17 @@ export default {
       })
       this._getMoneyRecord()
       this._getContactName()
-      this._getMyContract('', this.pid === 'ZTC' ? 'CONTRACT_ZTCWEB' : 'CONTRACT_WZ')
+      this._getMyContract('', this.pid === ORDER_TYPE ? CONTRACT_TYPE : CONTRACT_TYPE_ZTC)
     },
     // 获取到款记录 和 客户地址 cpid
     _getMoneyRecord () {
-      let moneyRecordUrl = '/wf.do?set'
       let moneyRecordParams = {
         cid: this.moneyRecord.cid,
         companylogid: this.moneyRecord.companylogid,
         uid: this.moneyRecord.uid,
-        pid: this.pid === 'ZTC' ? ORDER_TYPE_ZTC : ORDER_TYPE
+        pid: this.pid
       }
-      this.$post(moneyRecordUrl, moneyRecordParams).then(res => {
+      this.$post('/wf.do?set', moneyRecordParams).then(res => {
         let _record = res.data[2].data
         this.cpid = res.data[0].data[1]
         this.moneyRecord.recordList = _record

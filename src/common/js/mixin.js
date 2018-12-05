@@ -246,12 +246,11 @@ export const orderDeal = { // 订单处理
         case 170:
         {
           return {
-            // todo
-            // baiduid: this.orderInfo.baiduid || undefined,
-            // baiducount: this.orderInfo.baiducount || undefined,
-            // preDeposit: this.preDeposit || undefined,
-            // applytime: this.orderInfo.applytime || undefined,
-            // proxyid: this.orderInfo.proxyid || undefined
+            baiduid: this.orderInfo.baiduid || undefined,
+            baiducount: this.orderInfo.baiducount || undefined,
+            preDeposit: this.preDeposit || undefined,
+            applytime: this.orderInfo.applytime || undefined,
+            proxyid: this.orderInfo.proxyid || undefined
           }
         }
         case 310:
@@ -346,7 +345,7 @@ export const orderDeal = { // 订单处理
           return
         }
       }
-      if (this.sn === 210 || this.sn === 220 || this.sn === 230 || this.sn === 320 || this.sn === 400) {
+      if (this.sn === 160 || this.sn === 210 || this.sn === 220 || this.sn === 230 || this.sn === 320 || this.sn === 400) {
         if (!this.dispatchValue) {
           this.$message({
             type: 'warning',
@@ -357,7 +356,7 @@ export const orderDeal = { // 订单处理
         this.next_uid = (this.dispatchValue || '').split('#')[0]
         this.next_name = (this.dispatchValue || '').split('#')[1]
       }
-      if (this.pid === 'WEBSITE') {
+      if (this.pid === 'WEBSITE' || this.pid === 'ZTC_WEBSITE') {
         // 网开空域
         if (this.sn === 240) {
           if (!this.newSpace || !this.newSpaceName) {
@@ -422,6 +421,7 @@ export const orderDeal = { // 订单处理
         contractid: [this.orderInfo.con_id],
         custom_type: this.orderInfo.custom_type, // 新，老客户
         invoice_type: this.orderInfo.invoice_type, // 发票类型
+        invoice_status: this.orderInfo.invoice_status, // 是否需要发票
         invoice_title: this.orderInfo.invoice_title, // 发票名称
         invoice_addr: this.orderInfo.invoice_addr, // 发票地址
         amount: this.orderInfo.amount,
@@ -475,7 +475,7 @@ export const orderDeal = { // 订单处理
         }
         params = Object.assign({}, params, _params)
       }
-      if (this.sn === 260 && this.pid !== 'WEBSITE') {
+      if (this.sn === 260 && this.pid !== 'WEBSITE' && this.pid !== 'ZTC_WEBSITE') {
         this.call('订单预存款金额为：' + this.countTotal + '，加款金额为：' + this._applyAddMoneyTotal +
           '，请确认是否提交？', params)
         return
@@ -491,12 +491,16 @@ export const orderDeal = { // 订单处理
         .then(() => {
           this.$post(this.url, params).then(res => {
             if (res.data[0].success) {
-              this.$router.push({
-                path: '/indexPage/orderPending',
-                query: {
-                  data: 'fromDetail'
-                }
-              })
+              if (this.tmark === '转户出纳') {
+                this.search()
+              } else {
+                this.$router.push({
+                  path: '/indexPage/orderPending',
+                  query: {
+                    data: 'fromDetail'
+                  }
+                })
+              }
             }
           })
         })

@@ -61,11 +61,11 @@
     <page class="page" :url="myFollowUrl" :sendParams="sendParams" @updateList="updateMyFollowList"></page>
 
     <!-- 查看弹窗-renew -->
-    <el-dialog :key="key_renew_detail" :modal-append-to-body="false" title="续费详情" :visible.sync="renewDetailDialog" width="1000px">
+    <el-dialog :key="key_renew_detail" :modal-append-to-body="false" title="续费详情" :visible.sync="renewDetailDialog" width="90%">
       <renew-detail :rowData="rowData" @closeRenewDetailDialog="closeRenewDetailDialog" :toMark="'renewAdd'"></renew-detail>
     </el-dialog>
     <!-- 查看弹窗-order -->
-    <el-dialog :key="key_order_detail" :modal-append-to-body="false" title="客户详情" :visible.sync="orderDetailDialog" width="1000px">
+    <el-dialog :key="key_order_detail" :modal-append-to-body="false" title="客户详情" :visible.sync="orderDetailDialog" width="90%">
       <!-- 续费信息 -->
       <div>
         <div class="title">
@@ -102,17 +102,17 @@
               </el-form-item>
             </el-col>
             <template v-else>
-              <el-col :md="24">
+              <el-col :md="8">
                 <el-form-item label="百度推广服务订单编号 :" label-width="180px">
                   <div>{{baseInfo1.ordernumber}}</div>
                 </el-form-item>
               </el-col>
-              <el-col :md="24" class="maxwidth">
+              <el-col :md="8" class="maxwidth">
                 <el-form-item label="百度推广首消授权书 :" label-width="180px">
                   <div>{{baseInfo1.order2number}}</div>
                 </el-form-item>
               </el-col>
-              <el-col :md="24" class="maxwidth">
+              <el-col :md="8" class="maxwidth">
                 <el-form-item label="百度推广服务协议 :" label-width="180px">
                   <div>{{baseInfo1.order3number}}</div>
                 </el-form-item>

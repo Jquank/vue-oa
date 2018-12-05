@@ -1,6 +1,6 @@
 <template>
   <div class="make-invoice-form">
-    <el-form :model="form" ref="form" :rules="rules" :status-icon="true" :validate-on-rule-change="false" label-width="115px">
+    <el-form :model="form" ref="form" :rules="rules" :status-icon="true" :validate-on-rule-change="false" :label-width="labelWidth">
       <div class="title">
         <el-button class="title-btn" type="warning">开票信息</el-button>
         <div class="line"></div>
@@ -20,20 +20,20 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row>
-        <el-col :md="18" class="maxwidth">
-          <el-form-item label="公司名称 :" prop="comName">
-            <el-input v-model="form.comName" disabled class="input-btn"></el-input>
-            <slot name="selBtn"></slot>
-          </el-form-item>
-        </el-col>
-      </el-row>
       <el-row v-if="makeInvoiceStatus==20">
         <el-col :md="12" class="maxwidth">
           <el-form-item label="选择发票 :">
             <el-select :key="key_sel_invoice" v-model="form.id" @change="selInvoiceChange" style="width: 100%;">
               <el-option v-for="(item, index) in form.invoice" :key="index" :value="item.id" :label="item.companyname"></el-option>
             </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :md="12" class="maxwidth">
+          <el-form-item label="公司名称 :" prop="comName">
+            <el-input v-model="form.comName" disabled :class="makeInvoiceStatus==20?'input-btn':''"></el-input>
+            <slot name="selBtn"></slot>
           </el-form-item>
         </el-col>
         <el-col :md="12" class="maxwidth">
@@ -198,6 +198,7 @@
 
 <script>
 import { getByCode } from 'api/getOptions'
+import { appMark } from 'common/js/utils'
 import Viewer from 'viewerjs'
 export default {
   props: {
@@ -235,6 +236,7 @@ export default {
   },
   data () {
     return {
+      labelWidth: '115px',
       key_sel_pro: '1',
       key_sel_invoice: '',
       form: {
@@ -317,6 +319,9 @@ export default {
     getByCode(47).then(res => {
       this.form.productList = res.data.data
     })
+    if (appMark()) {
+      this.labelWidth = '60px'
+    }
   },
   mounted () {
     const viewer = new Viewer(document.getElementById('images'),{  // eslint-disable-line
@@ -345,6 +350,10 @@ export default {
     },
     // 提交
     subChange (formName) {
+      if (this.form.productMoneyList.some(val => val.value > 100000)) {
+        this.$message.error('金额需小于或等于10万！')
+        return
+      }
       let params = {
         invoiceInfoId: this.form.id,
         offset: this.offset,

@@ -249,7 +249,7 @@
             </el-table-column>
           </el-table>
         </el-tab-pane>
-        <el-tab-pane v-if="pid==='WEBSITE'" label="网建订单基本信息">
+        <el-tab-pane v-if="pid==='WEBSITE' || pid==='ZTC_WEBSITE'" label="网建订单基本信息">
           <el-table :data="wjBasicInfo" border style="width: 100%">
             <el-table-column prop="type" label="信息分类" :width="tableFirstColumWidth">
             </el-table-column>
@@ -570,7 +570,7 @@
                     </div>
                   </div>
                   <div class="mt10px row-container">
-                    <div v-for="(item,index) in moneyInfo" :key="index">
+                    <div v-for="(item,index) in moneyInfo9" :key="index">
                       <template v-if="item.type < 100">
                         <b>{{item.type | productType}}：</b>
                         <span>{{item.value | currency1}}</span>
@@ -612,7 +612,7 @@
             </el-table-column>
           </el-table>
         </el-tab-pane>
-        <el-tab-pane v-if="pid==='WEBSITE'" label="PC/WAP信息">
+        <el-tab-pane v-if="pid==='WEBSITE' || pid==='ZTC_WEBSITE'" label="PC/WAP信息">
           <el-table :data="wjExtendInfo" border class="table-width">
             <el-table-column prop="type" label="信息分类" :width="tableFirstColumWidth">
             </el-table-column>
@@ -802,28 +802,44 @@
           <order-keeper v-if="sn===20 && templateInfo.cpid" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="理单员审核"></order-keeper>
           <!-- 综合部初审 -->
           <init-finance v-if="sn===100 && moneyInfo.length" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="综合部初审"></init-finance>
+          <!-- 业支外审 -->
+          <out-quality v-if="sn===120 && templateInfo.cpid" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="业支外审"></out-quality>
+          <!-- 业支开户 -->
+          <business-support-account v-if="sn===150 && templateInfo.cpid" :moneyInfo="moneyInfo" :moneyInfo9="moneyInfo9" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="业支开户"></business-support-account>
+          <!-- 业支派单 -->
+          <in-quality-order v-if="sn===160 && templateInfo.cpid" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="直通车接口派单"></in-quality-order>
+          <!-- 客服申请加款（直通车） -->
+          <quality-add-money v-if="sn===170 && templateInfo.cpid" :moneyInfo="moneyInfo" :moneyInfo9="moneyInfo9" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="客服申请加款"></quality-add-money>
+          <!-- 业支内审（直通车） -->
+          <out-quality v-if="sn===190 && templateInfo.cpid" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="直通车业支内审"></out-quality>
+          <!-- 业支外审（直通车） -->
+          <out-quality v-if="sn===200 && templateInfo.cpid && pid==='ZTC_WEBSITE'" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="业支外审"></out-quality>
+          <!-- 业支主管审核（直通车） -->
+          <out-quality v-if="sn===200 && templateInfo.cpid && pid==='ZTC2'" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="业支主管审核"></out-quality>
           <!-- 质检外审 -->
-          <out-quality v-if="sn===200 && templateInfo.cpid" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="质检外审"></out-quality>
+          <out-quality v-if="sn===200 && templateInfo.cpid && pid==='BAITUI'" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="质检外审"></out-quality>
           <!-- 质检内审派单 -->
           <in-quality-order v-if="sn===210 && templateInfo.cpid" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="质检内审派单"></in-quality-order>
+          <!-- 网数派单（直通车网建） -->
+          <in-quality v-if="sn===220 && templateInfo.cpid && pid==='ZTC_WEBSITE'" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="网数派单"></in-quality>
           <!-- 质检内审 -->
-          <in-quality v-if="sn===220 && templateInfo.cpid" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="质检内审派单"></in-quality>
+          <in-quality v-if="sn===220 && templateInfo.cpid && pid!=='ZTC_WEBSITE'" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="质检内审"></in-quality>
           <!-- 网建外审 -->
           <in-quality v-if="sn===230 && templateInfo.cpid" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="网建外审"></in-quality>
           <!-- 网开空域 -->
           <web-space v-if="sn===240 && templateInfo.cpid" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="网开空域"></web-space>
           <!-- 质检申请加款 -->
-          <quality-add-money v-if="sn===260 && templateInfo.cpid && pid === 'BAITUI'" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="质检申请加款"></quality-add-money>
+          <quality-add-money v-if="sn===260 && templateInfo.cpid && pid === 'BAITUI'" :moneyInfo="moneyInfo" :moneyInfo9="moneyInfo9" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="质检申请加款"></quality-add-money>
           <!-- 理单员申请加款 -->
-          <quality-add-money v-if="sn===260 && templateInfo.cpid && pid_ka === 'KA'" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="理单员申请加款"></quality-add-money>
+          <quality-add-money v-if="sn===260 && templateInfo.cpid && pid_ka === 'KA'" :moneyInfo="moneyInfo" :moneyInfo9="moneyInfo9" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="理单员申请加款"></quality-add-money>
           <!-- 网建经理派单 -->
-          <web-order v-if="sn===260 && templateInfo.cpid && pid === 'WEBSITE'" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="网建经理派单"></web-order>
+          <web-order v-if="sn===260 && templateInfo.cpid && (pid==='WEBSITE'||pid==='ZTC_WEBSITE')" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="网建经理派单"></web-order>
           <!-- 网站制作 -->
-          <web-make v-if="sn===280 && templateInfo.cpid && pid === 'WEBSITE'" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="网站制作"></web-make>
+          <web-make v-if="sn===280 && templateInfo.cpid && (pid==='WEBSITE'||pid==='ZTC_WEBSITE')" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="网站制作"></web-make>
           <!-- 网建内审 -->
-          <web-make v-if="sn===300 && templateInfo.cpid && pid === 'WEBSITE'" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="网建内审、网站提出"></web-make>
+          <web-make v-if="sn===300 && templateInfo.cpid && (pid==='WEBSITE'||pid==='ZTC_WEBSITE')" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="网建内审、网站提出"></web-make>
           <!-- 质检经理审核 -->
-          <quality-manager v-if="sn===300 && templateInfo.cpid && pid !== 'WEBSITE'" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="质检经理审核"></quality-manager>
+          <quality-manager v-if="sn===300 && templateInfo.cpid && pid !== 'WEBSITE' && pid !=='ZTC_WEBSITE'" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="质检经理审核"></quality-manager>
           <!-- 综合部复审 -->
           <second-finance v-if="sn===305 && templateInfo.cpid" :moneyInfo="moneyInfo" :moneyRecord="moneyRecord" :orderFlowDatas="orderFlowDatas" :orderInfo="orderInfo" :templateInfo="templateInfo" :originUser="originUser" :sn="sn" :invoiceInfo="invoiceInfo" :pid="pid" title="综合部复审"></second-finance>
           <!-- 账户加款(已移动到续费加款列表，暂时没用) -->
@@ -1022,6 +1038,11 @@ const OutQuality = (resolve) => {
     resolve(module)
   })
 }
+const BusinessSupportAccount = (resolve) => {
+  import('checkSteps/businessSupportAccount').then((module) => {
+    resolve(module)
+  })
+}
 const QualityAddMoney = (resolve) => {
   import('checkSteps/qualityAddMoney').then((module) => {
     resolve(module)
@@ -1168,6 +1189,7 @@ export default {
       sn: 10,
       mark: '',
       moneyInfo: [],
+      moneyInfo9: [],
       moneyRecord: {},
       orderFlowDatas: [],
       invoiceInfo: {},
@@ -1369,6 +1391,7 @@ export default {
           this.cusAttrList = res.data.data[5]
           this.showQualify = res.data.data[5]
           this.moneyInfo = res.data.data[12]
+          this.moneyInfo9 = res.data.data[9]
           this.moneyRecord = res.data.data[8][0]
           this.orderFlowDatas = res.data.data[13]
           this.invoiceInfo = res.data.data[11]
@@ -1406,6 +1429,7 @@ export default {
     InQualityOrder,
     InQuality,
     OutQuality,
+    BusinessSupportAccount,
     QualityAddMoney,
     QualityManager,
     SecondFinance,

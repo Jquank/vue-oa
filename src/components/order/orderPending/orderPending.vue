@@ -229,7 +229,8 @@ export default {
         addmoney: '0'
       },
       pid: 'BAITUI',
-      sn: 308
+      sn: 308,
+      tmark: ''
     }
   },
   beforeRouteUpdate (to, from, next) { // vue会复用组件，所以从详情页返回时带上搜索条件搜索
@@ -240,6 +241,7 @@ export default {
   },
   methods: {
     accountOutPass (data) {
+      this.tmark = '转户出纳'
       this.pid = data.pid
       this.sn = data.sn
       this._getUrl()

@@ -1,7 +1,9 @@
 <template>
   <div class="visit-record component-container media-padding">
     <div class="visit-search mt-10px">
-      <el-button @click.native="search" type="primary" class="visit-item fa fa-download"> 导 入</el-button>
+      <el-button @click.native="search" type="warning" class="visit-item fa fa-download"> 导 入</el-button>
+      <el-button @click.native="exportTxt" ng-if="permissions.indexOf('50') > -1" type="primary" class="visit-item fa fa-upload"> 导出txt</el-button>
+      <el-button @click.native="exportExcell" ng-if="permissions.indexOf('51') > -1" type="info" class="visit-item fa fa-upload"> 导出Excell</el-button>
       <el-button @click.native="search" type="warning" class="visit-item fa fa-upload"> 寄发票导出Excell</el-button>
       <span class="visit-item tipfont fa fa-search" style="line-height:34px;color:#06c;">
         <a href="http://www.kuaidi100.com/?from=openv" target="_blank" class="a-search-number"> 查询快递单号</a>
@@ -109,7 +111,7 @@
     </div>
     <!-- 公用列表 -->
     <div v-if="mark==='list' || mark==='pending' || (mark==='handled'&&permissions.indexOf('7c') < 0)">
-      <el-table @selection-change="handleSelectionChange" :key="key_table" border :data="invoiceList" class="table-width" id="invoice-list-table" max-height="500">
+      <el-table :key="key_table" border :data="invoiceList" class="table-width" id="invoice-list-table" max-height="500">
         <el-table-column prop="banktype" :fixed="fixed" label="银行类型" width="80">
         </el-table-column>
         <el-table-column prop="tm" label="交易时间" :fixed="fixed" width="90">
@@ -124,7 +126,10 @@
         </el-table-column>
         <el-table-column prop="bsid" label="bsid" :fixed="fixed" width="50" show-overflow-tooltip>
         </el-table-column>
-        <el-table-column type="selection" width="45">
+        <el-table-column prop="id" label="选择" width="45">
+          <template slot-scope="scope">
+            <el-checkbox @change="((val,$event)=>singleCheck(val,$event,scope.row.id))" :true-label="scope.row.id"></el-checkbox>
+          </template>
         </el-table-column>
         <el-table-column prop="tnumber" label="单据号码" width="100">
         </el-table-column>
@@ -151,7 +156,7 @@
         </el-table-column>
         <el-table-column prop="" label="状态" width="100">
           <template slot-scope="scope">
-            <el-button v-if="scope.row.step<300" plain :type="scope.row.step==300?'success':scope.row.step==0?'danger':scope.row.step<=40?'info':''" class="xsbtn">{{scope.row.step==300?'审核通过':scope.row.stepName}}</el-button>
+            <el-button plain :type="scope.row.step==300?'success':scope.row.step==0?'danger':scope.row.step<=40?'info':''" class="xsbtn">{{scope.row.step==300?'审核通过':scope.row.stepName}}</el-button>
             <el-button v-if="scope.row.step==300&&scope.row.invoice==0" plain type="warning" class="xsbtn">待开</el-button>
             <el-button v-if="scope.row.invoice==1" plain type="warning" class="xsbtn">正在开</el-button>
             <el-button v-if="scope.row.invoice==10" plain type="warning" class="xsbtn">已开</el-button>
@@ -550,8 +555,13 @@ export default {
         }
       })
     },
-    handleSelectionChange (val) {
-      this.multipleSelection = val
+    singleCheck (val, e, id) {
+      if (e.target.checked) {
+        this.multipleSelection.push(id)
+      } else {
+        this.multipleSelection = this.multipleSelection.filter(val => val !== id)
+      }
+      console.log(this.multipleSelection)
     },
     handleFlowSelectionChange (val) {
       this.flowSelectArr = val
@@ -563,6 +573,19 @@ export default {
     },
     updateRepaymentList (res) {
       this.repaymentList = res.data[0].data
+    },
+    exportTxt () {
+      let obj = {
+        invoiceIds: this.multipleSelection.toString()
+      }
+      this.$export('/Invoice.do?export', this.params[this.mark + 'Params'], obj)
+    },
+    exportExcell () {
+      let obj = {
+        invoiceIds: this.multipleSelection.toString(),
+        hasinvoice: 0
+      }
+      this.$export('/Invoice.do?exportexcel', this.params[this.mark + 'Params'], obj)
     },
     // 多对多，合并行
     _getRowSpan () {

@@ -7,15 +7,17 @@
       </auto-select>
       <el-button @click.native="pass" type="success" style="margin-left:-6px;">派单</el-button>
     </div>
-    <div class="mt10px">
-      <el-input v-model="refuseRemark" style="width:80%" type="textarea" :rows="5" placeholder="请填写驳回理由！！！"></el-input>
-    </div>
-    <div class="mt10px">
-      <auto-select v-model="backValue" :defaultValue="backValue" :title="'驳回至'" style="width:200px;">
-        <el-option v-for="(item, index) in backNodeList" :key="index" :value="item.sn+'#'+item.name" :label="item.name"></el-option>
-      </auto-select>
-      <el-button @click.native="refuse" type="danger" style="margin-left:-6px;">驳回</el-button>
-    </div>
+    <template v-if="pid!=='ZTC_WEBSITE'">
+      <div class="mt10px">
+        <el-input v-model="refuseRemark" style="width:80%" type="textarea" :rows="5" placeholder="请填写驳回理由！！！"></el-input>
+      </div>
+      <div class="mt10px">
+        <auto-select v-model="backValue" :defaultValue="backValue" :title="'驳回至'" style="width:200px;">
+          <el-option v-for="(item, index) in backNodeList" :key="index" :value="item.sn+'#'+item.name" :label="item.name"></el-option>
+        </auto-select>
+        <el-button @click.native="refuse" type="danger" style="margin-left:-6px;">驳回</el-button>
+      </div>
+    </template>
   </div>
 </template>
 
