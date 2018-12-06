@@ -237,7 +237,7 @@ export const navList = [
     ]
   },
   {
-    id: '14',
+    id: '79',
     fontIcon: 'fa fa-line-chart fa-fw',
     text: '报表统计',
     cList: [

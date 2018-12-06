@@ -215,6 +215,16 @@ export default {
     offset: {
       type: Number,
       default: 20 // 提前开票
+    },
+    mark: {
+      type: String,
+      default: 'renew' // 提前开票
+    },
+    rowData: {
+      type: Object,
+      default: function () {
+        return {}
+      }
     }
   },
   watch: {
@@ -334,9 +344,10 @@ export default {
       let params = {
         invoiceInfoId: this.form.id,
         offset: this.offset,
-        orderOrRenew: 'renew',
+        orderOrRenew: this.mark,
         is_advance: this.makeInvoiceStatus,
-        reid: '',
+        reid: this.rowData.reid,
+        orderId: this.rowData.orderid,
         companyid: this.form.comId,
         chargearray: this.form.productMoneyList,
         invoiceremark: this.form.remark
@@ -357,9 +368,10 @@ export default {
       let params = {
         invoiceInfoId: this.form.id,
         offset: this.offset,
-        orderOrRenew: 'renew',
+        orderOrRenew: this.mark,
         is_advance: this.makeInvoiceStatus,
-        reid: '',
+        reid: this.rowData.reid,
+        orderId: this.rowData.orderid,
         companyid: this.form.comId,
         chargearray: this.form.productMoneyList,
         invoiceremark: this.form.remark

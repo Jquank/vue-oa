@@ -21,6 +21,7 @@
         <el-button @click.native="reset" type="warning">重 置</el-button>
       </div>
       <div class="visit-item export">
+        <el-button @click.native="editChart({})" type="primary">新增</el-button>
         <el-button @click.native="exportExcell" type="warning">导 出</el-button>
       </div>
     </div>
@@ -166,7 +167,7 @@
           <span slot-scope="scope">{{scope.row.GHTIME | timeFormat1}}</span>
         </el-table-column>
       </el-table-column>
-      <el-table-column label="百度币">
+      <!-- <el-table-column label="百度币">
         <el-table-column prop="BDBI" label="金额" width="120">
           <template slot-scope="scope">
             <span v-if="!scope.row.mark">{{scope.row.BDBI | currency}}</span>
@@ -176,8 +177,7 @@
         <el-table-column prop="BDBITIME" label="时间" width="90">
           <span slot-scope="scope">{{scope.row.BDBITIME | timeFormat1}}</span>
         </el-table-column>
-      </el-table-column>
-
+      </el-table-column> -->
       <el-table-column prop="sum" label="合计" width="120">
         <template slot-scope="scope">
           <span v-if="!scope.row.mark">{{scope.row.sum | currency}}</span>
@@ -207,8 +207,6 @@
       </el-table-column>
       <el-table-column prop="activity" label="活动类型" width="70">
       </el-table-column>
-      <el-table-column prop="remark" label="备注" width="100">
-      </el-table-column>
       <el-table-column prop="xjq" label="现金券" width="90">
         <template slot-scope="scope">
           <span v-if="!scope.row.mark">{{scope.row.xjq | currency}}</span>
@@ -235,7 +233,7 @@
       </el-table-column>
       <el-table-column prop="catName" label="行业类型" width="90">
       </el-table-column>
-      <el-table-column prop="oldbillTime" label="新开提单时间" width="90">
+      <el-table-column prop="oldbillTime" label="新开提单时间" width="110">
         <span slot-scope="scope">{{scope.row.oldbillTime | timeFormat1}}</span>
       </el-table-column>
       <el-table-column prop="web" label="网站完成" width="60">
@@ -254,8 +252,189 @@
           <span else>{{scope.row.refund_count | currency1}}</span>
         </template>
       </el-table-column>
+      <el-table-column prop="remark" label="备注" width="180">
+      </el-table-column>
+      <el-table-column prop="" label="操作" width="80">
+        <template slot-scope="scope">
+          <el-button v-if="scope.$index!==invoiceList.length-1" @click.native="editChart(scope.row)" type="warning" class="xsbtn">编辑</el-button>
+        </template>
+      </el-table-column>
     </el-table>
     <page class="page" :url="invoiceUrl" :sendParams="invoiceParams" @updateList="updateInvoiceList"></page>
+
+    <!-- 新增，编辑弹窗 -->
+    <el-dialog :title="'新增'" :visible.sync="editDialog" width="900px">
+      <el-form ref="echo" :model="echo" label-width="130px">
+        <el-row :gutter="10">
+          <el-col :md="12" class="maxwidth">
+            <el-form-item label="记账日期 :">
+              <el-date-picker v-model="echo.billtime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" type="date" style="width:100%"></el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :md="12" class="maxwidth">
+            <el-form-item label="部门 :">
+              <el-input v-model="echo.fullname" disabled></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :md="12" class="maxwidth">
+            <el-form-item label="提单员 :">
+              <el-input v-model="echo.username" disabled class="input-btn"></el-input>
+              <el-button @click.native="selUser" type="primary" class="xsbtn">选择</el-button>
+            </el-form-item>
+          </el-col>
+          <el-col :md="12" class="maxwidth">
+            <el-form-item label="类型 :">
+              <el-col :md="12">
+                <el-select v-model="echo.type">
+                  <el-option v-for="item in productList" :key="item.code_val" :value="item.code_val" :label="item.code_desc"></el-option>
+                </el-select>
+              </el-col>
+              <el-col :md="12">
+                <el-select v-model="echo.addtype">
+                  <el-option value="新开" label="新开"></el-option>
+                  <el-option value="续费" label="续费"></el-option>
+                </el-select>
+              </el-col>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :md="12" class="maxwidth">
+            <el-form-item label="公司名称 :">
+              <el-input v-model="echo.companyname" class="input-btn"></el-input>
+              <el-button @click.native="selCom" type="primary" class="xsbtn">选择</el-button>
+            </el-form-item>
+          </el-col>
+          <el-col :md="12" class="maxwidth">
+            <el-form-item label="用户名 :">
+              <el-input v-model="echo.baiducount"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :md="12" class="maxwidth">
+            <el-form-item label="合计 :">
+              <el-input v-model="echo.sum"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :md="12" class="maxwidth">
+            <el-form-item label="毛利 :">
+              <el-input v-model="echo.profit"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :md="12" class="maxwidth">
+            <el-form-item label="应收账款 :">
+              <el-input v-model="echo.arrears"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :md="12" class="maxwidth">
+            <el-form-item label="实际加款 :">
+              <el-input v-model="echo.addmoney"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :md="12" class="maxwidth">
+            <el-form-item label="加款时间 :">
+              <el-date-picker v-model="echo.addTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" type="date" style="width:100%"></el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :md="12" class="maxwidth">
+            <el-form-item label="服务费年限 :">
+              <el-input v-model="echo.serviceyear"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :md="12" class="maxwidth">
+            <el-form-item label="活动类型 :">
+              <el-input v-model="echo.activity1"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :md="12" class="maxwidth">
+            <el-form-item label="现金券 :">
+              <el-input v-model="echo.xjq2"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :md="12" class="maxwidth">
+            <el-form-item label="代金券 :">
+              <el-input v-model="echo.voucher2"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :md="12" class="maxwidth">
+            <el-form-item label="代金券使用时间 :">
+              <el-input v-model="echo.aaa"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10">
+          <el-col :md="12" class="maxwidth">
+            <el-form-item label="退款 :">
+              <el-input v-model="echo.refund"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :md="12" class="maxwidth">
+            <el-form-item label="备注 :">
+              <el-input v-model="echo.remark" type="textarea" :rows="3"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :md="24" class="maxwidth">
+            <el-form-item label="金额明细 :">
+              <el-table :data="moneyDetailList" border stripe style="width: 100%">
+                <el-table-column prop="code_desc" label="银行类型"></el-table-column>
+                <el-table-column prop="split_amount" label="金额">
+                  <span slot-scope="scope">{{scope.row.split_amount | currency}}</span>
+                </el-table-column>
+                <el-table-column prop="tm" label="时间" min-width="135">
+                  <span slot-scope="scope">{{scope.row.tm}}</span>
+                </el-table-column>
+                <el-table-column prop="tm" label="操作" width="70">
+                  <template slot="header" slot-scope="scope">
+                    <el-button @click.native="addMoneyDetailDialog=true" icon="fa fa-plus" type="success" class="xsbtn"> 添加</el-button>
+                  </template>
+                  <template slot-scope="scope">
+                    <el-button @click.native="removeMoneyDetail" icon="fa fa-plus" type="danger" class="xsbtn">移除</el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+    </el-dialog>
+
+    <!-- 添加弹窗 -->
+    <el-dialog :title="'添加金额明细'" :visible.sync="addMoneyDetailDialog" width="400px">
+      <el-form label-width="80px">
+        <el-form-item label="银行类型 :">
+          <el-select v-model="add_code_desc" style="width:100%">
+            <el-option v-for="item in bankList" :key="item.code_desc" :value="item" :label="item.code_desc"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="金额 :">
+          <el-input v-model="add_money"></el-input>
+        </el-form-item>
+        <el-form-item label="时间 :">
+          <el-date-picker v-model="add_time" format="yyyy-MM-dd" value-format="yyyy-MM-dd" type="date" style="width:100%"></el-date-picker>
+        </el-form-item>
+        <div class="text-center">
+          <el-button @click.native="confirmAdd" type="success" size="mini">确认</el-button>
+        </div>
+      </el-form>
+    </el-dialog>
+
+    <!-- 选择人员弹窗 -->
+    <el-dialog :modal-append-to-body="false" title="选择人员" :visible.sync="selUserDialog" width="550px">
+      <select-user @userId="getUserId" @closeDialog="selUserDialog=false"></select-user>
+    </el-dialog>
   </div>
 </template>
 
@@ -263,6 +442,8 @@
 import AutoSelect from 'base/autoSelect/autoSelect'
 import Page from 'base/page/page'
 import {getByCode} from 'api/getOptions'
+import {timeFormat} from 'common/js/filters'
+import SelectUser from 'base/selectUser/selectUser'
 export default {
   data () {
     return {
@@ -275,13 +456,58 @@ export default {
       businessList: [],
       key_business: '',
       businessType: '',
-      tallyDate: []
+      tallyDate: [],
+
+      editDialog: false,
+      echo: {},
+      selUserDialog: false,
+      productList: [],
+      bankList: [],
+      moneyDetailList: [],
+      addMoneyDetailDialog: false,
+      add_code_desc: '',
+      add_money: 0,
+      add_time: ''
     }
   },
   mounted () {
     this._getBusinessList()
   },
   methods: {
+    editChart (data) {
+      this.echo = data
+      this.echo.billtime = timeFormat(data.billtime)
+      this.echo.addTime = timeFormat(data.addTime)
+      getByCode(52).then(res => {
+        this.productList = res.data.data
+      })
+      getByCode(42).then(res => {
+        this.bankList = res.data.data
+        this.moneyDetailList = this.bankList.map(val => {
+          return {
+            tm: data[val.remark + 'TIME'],
+            code_desc: val.code_desc,
+            split_amount: data[val.remark],
+            type: val.code_val
+          }
+        })
+        this.moneyDetailList = this.moneyDetailList.filter(val => !!val.split_amount)
+      })
+      this.editDialog = true
+    },
+    confirmAdd () {
+      this.addMoneyDetailDialog = false
+    },
+    removeMoneyDetail () {
+
+    },
+    selUser () {
+      this.selUserDialog = true
+    },
+    getUserId (id, name) {
+      this.echo.username = name
+      this.echo.userid = id
+    },
     search () {
       this.invoiceParams = {
         code_val: this.businessType,
@@ -327,7 +553,8 @@ export default {
   },
   components: {
     AutoSelect,
-    Page
+    Page,
+    SelectUser
   }
 }
 </script>
@@ -356,13 +583,16 @@ export default {
       width: 250px;
     }
   }
-  .maxwidth {
-    max-width: 500px;
-  }
+  // .maxwidth {
+  //   max-width: 500px;
+  // }
   .export{
      flex-grow: 1;
     text-align: right;
     padding-right: 30px;
+  }
+  .input-btn{
+    width: calc(~"(100% - 46px)");
   }
 }
 </style>

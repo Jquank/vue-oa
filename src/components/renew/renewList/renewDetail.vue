@@ -1,12 +1,83 @@
 <template>
   <div class="renew-detail">
+    <div v-if="toMark==='chargeOffCheck'">
+      <div class="title">
+        <el-button class="title-btn" type="warning">发票信息</el-button>
+        <div class="line"></div>
+      </div>
+      <el-form :model="rowData" label-width="118px" class="weight-label">
+        <el-row>
+          <el-col :md="8">
+            <el-form-item label="客户名称 :">
+              <div>{{rowData.comName}}</div>
+            </el-form-item>
+          </el-col>
+          <el-col :md="6" class="maxwidth">
+            <el-form-item label="发票类型 :">
+              <div>{{rowData.ttype+'' | invoiceState('invoiceType')}}</div>
+            </el-form-item>
+          </el-col>
+          <el-col :md="5" class="maxwidth">
+            <el-form-item label="开票人 :">
+              <div>{{rowData.invoiceuser}}</div>
+            </el-form-item>
+          </el-col>
+          <el-col :md="5" class="maxwidth">
+            <el-form-item label="开票日期 :">
+              <div>{{rowData.invoicetime | timeFormat1}}</div>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :md="8">
+            <el-form-item label="发票抬头 :">
+              <div>{{rowData.companyname}}</div>
+            </el-form-item>
+          </el-col>
+          <el-col :md="6" class="maxwidth">
+            <el-form-item label="单据号码 :">
+              <div>{{rowData.tnumber}}</div>
+            </el-form-item>
+          </el-col>
+          <el-col :md="5" class="maxwidth">
+            <el-form-item label="发票号码 :">
+              <div>{{rowData.invoicenumber}}</div>
+            </el-form-item>
+          </el-col>
+          <el-col :md="5" class="maxwidth">
+            <el-form-item label="发票代码 :">
+              <div>{{rowData.invoicecode}}</div>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :md="8" class="maxwidth">
+            <el-form-item label="货物名称 :">
+              <div>{{rowData.chargename}}</div>
+            </el-form-item>
+          </el-col>
+          <el-col :md="6">
+            <el-form-item label="发票金额 :">
+              <div>{{rowData.tmoney | currency}}</div>
+            </el-form-item>
+          </el-col>
+          <el-col :md="5" class="maxwidth">
+            <el-form-item label="垫款证明 :">
+              <div id="image">
+                <img :src="rowData.prove_img || ''" alt="" width="50px" height="50px">
+              </div>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+    </div>
     <!-- 续费信息 -->
     <div>
       <div class="title">
         <el-button class="title-btn" type="warning">续费信息</el-button>
         <div class="line"></div>
       </div>
-      <el-form :model="baseInfo" label-width="140px" class="weight-label">
+      <el-form :model="baseInfo" label-width="118px" class="weight-label">
         <el-row>
           <el-col :md="8">
             <el-form-item label="公司名称 :">
@@ -162,7 +233,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <div v-if="toMark==='renewReceive'">
+      <div v-if="toMark==='renewReceive' || toMark==='chargeOffCheck'">
         <el-table :data="renewFlowList" max-height="550" class="table-width" border>
           <!-- <el-table-column type="selection" width="35"></el-table-column> -->
           <el-table-column label="银行类型" prop="code_desc" width="80"></el-table-column>
@@ -233,7 +304,7 @@
             </template>
           </el-table-column>
         </el-table>
-        <div class="text-center">
+        <div class="text-center" v-if="toMark!=='chargeOffCheck'">
           <b>实际到账金额：</b><span>{{realReceive | currency}}</span>
         </div>
       </div>
@@ -244,7 +315,7 @@
         <el-button class="title-btn mt10px" type="warning">操作</el-button>
         <div class="line"></div>
       </div>
-      <div v-if="permissions.indexOf('7x') > -1">
+      <div v-if="permissions.indexOf('7x') > -1 && toMark!=='chargeOffCheck'">
         <el-table :data="productMoneyList" border>
           <el-table-column prop="" label="产品类型" min-width="200">
             <template slot-scope="scope">
@@ -326,7 +397,7 @@
         </el-table>
       </div>
       <el-form label-width="80px" class="mt10px">
-        <el-row v-if="permissions.indexOf('7x') > -1">
+        <el-row v-if="permissions.indexOf('7x') > -1 && toMark!=='chargeOffCheck'">
           <el-col :md="24" class="maxwidth">
             <el-form-item label="提单时间 :">
               <el-date-picker v-model="billTime" value-format="yyyy-MM-dd" format="yyyy-MM-dd" type="date" placeholder="选择日期"></el-date-picker>
@@ -356,6 +427,12 @@
         <template v-if="toMark==='renewCheck'">
           <el-button @click.native="check(300)" type="success">通 过</el-button>
           <el-button @click.native="check(200)" type="danger">驳 回</el-button>
+        </template>
+        <!-- 销账审核 -->
+        <template v-if="toMark==='chargeOffCheck'">
+          <el-button @click.native="chargeOffCheck(300)" v-if="chargeOffStep==100" type="success">通 过11</el-button>
+          <el-button @click.native="chargeOffCheck(200)" v-if="chargeOffStep==100" type="danger">驳 回22</el-button>
+          <el-button @click.native="chargeOffCheck(-10)" v-if="chargeOffStep==300" type="warning">撤 回33</el-button>
         </template>
         <el-button v-if="toMark==='renewList'" @click.native="addCheckRemark" type="success">提交备注</el-button>
         <el-button v-if="toMark==='renewAdd'" @click.native="checkAdd(300)" type="success">通过</el-button>
@@ -468,6 +545,10 @@ export default {
     toMark: {
       type: String,
       default: ''
+    },
+    chargeOffStep: {
+      type: Number,
+      default: 100
     }
   },
   computed: {
@@ -510,17 +591,32 @@ export default {
   },
   created () {
     this._getRenewBaseInfo()
-    this.toMark === 'renewReceive' && this._getRenewMoney()
     this._getProductList()
   },
   mounted () {
     setTimeout(() => {
       this.$nextTick(() => {
-        const gallery = new Viewer(document.getElementById('image')) // eslint-disable-line
+        const gallery = new Viewer(document.getElementById('image'), { // eslint-disable-line
+          zIndex: 1000000
+        })
       })
     }, 500)
   },
   methods: {
+    // 销账审核
+    chargeOffCheck (type) {
+      let params = {
+        inreids: [{'inreid': this.rowData.inreid, 'invoiceid': this.rowData.invoiceid}],
+        reid: this.rowData.reid,
+        remark: this.subRemark,
+        status: type
+      }
+      this.$post('/Invoice.do?invoiceOffsetCheck', params).then(res => {
+        if (res.data.success) {
+          this.$emit('closeRenewDetailDialog')
+        }
+      })
+    },
     confirmHandleCheck () {
       this.$post('/Renew.do?renewRefundCK', { reidArr: this.multipleSelection }).then(res => {
         if (res.data.success) {
@@ -673,11 +769,11 @@ export default {
       })
     },
     _getRenewMoney () {
-      this.$get('/Renew.do?renewBankReceive', { reid: this.rowData.id }).then(
+      this.$get('/Renew.do?renewBankReceive', { reid: this.rowData.id || this.rowData.reid }).then(
         res => {
           this.renewFlowList = res.data.data.receiveList
           this.productMoneyList = res.data.data.renewAttrList
-          if (this.renewFlowList.length) {
+          if (this.renewFlowList.length && this.toMark !== 'chargeOffCheck') {
             this.renewFlowList.forEach(val => {
               val.split.forEach(item => {
                 if (item.reid === this.baseInfo.id) {
@@ -689,7 +785,6 @@ export default {
               })
             })
           }
-          console.log(this.billTime)
         }
       )
     },
@@ -704,7 +799,10 @@ export default {
       this.$get('/Renew.do?renewdetail', {
         reid: this.rowData.id || this.rowData.reid
       }).then(res => {
-        this.baseInfo = res.data[0].data
+        this.baseInfo = res.data[0].data || {}
+        if (this.toMark === 'renewReceive' || this.toMark === 'chargeOffCheck') {
+          this._getRenewMoney()
+        }
         this.moneyDetail = res.data[1].data
         let realTotal = 0
         let djqTotal = 0

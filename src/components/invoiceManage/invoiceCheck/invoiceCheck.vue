@@ -75,7 +75,7 @@
     </div>
 
     <!-- 发票信息弹窗 -->
-    <el-dialog :key="key_invoice_dialog" title="发票信息" :visible.sync="invoiceDialog" width="750px">
+    <el-dialog :key="key_invoice_dialog" title="发票信息" :visible.sync="invoiceDialog" width="850px">
       <invoice-info-dialog :form="form" :invoiceLogs="invoiceLogs">
         <div slot="invoiceCheck">
           <div class="title">
@@ -125,6 +125,10 @@ export default {
     check (num, type) {
       let arr = []
       if (type === 'mutil') {
+        if (!this.multipleSelection.length) {
+          this.$message.warning('请进行勾选！')
+          return
+        }
         this.multipleSelection.forEach(val => {
           arr.push({
             id: val.id,
@@ -150,6 +154,9 @@ export default {
         .then(() => {
           this.$post('/Invoice.do?checkinvoice', params).then(res => {
             if (res.data.success) {
+              let msg = num === '1' ? '已通过！' : '已退回！'
+              this.$message.success(msg)
+              this.invoiceDialog = false
               this.search()
             }
           })

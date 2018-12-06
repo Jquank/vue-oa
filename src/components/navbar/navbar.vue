@@ -32,6 +32,7 @@ export default {
     }
   },
   mounted () {
+    console.log(this.permissions)
     // let that = this
     // window.onresize = function () {
     //   let width = document.body.clientWidth

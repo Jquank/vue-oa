@@ -31,7 +31,7 @@
       <el-row :gutter="20">
         <el-col :md="12" class="maxwidth">
           <el-form-item label="地址 :" prop="companyaddr">
-            <el-input v-model="form.companyaddr"></el-input>
+            <el-input v-model="form.companyaddr" type="textarea"></el-input>
           </el-form-item>
         </el-col>
         <el-col :md="12" class="maxwidth">
@@ -129,7 +129,7 @@
     </el-form>
 
     <div class="text-center" v-if="form.hasinvoice == 0 && permissions.indexOf('52') > -1">
-      <el-button type="primary" @click.native="subChange('form')">提交修改</el-button>
+      <el-button type="primary" @click.native="subChange('form')">修改发票信息</el-button>
     </div>
 
     <!-- 开票审核 -->
@@ -176,7 +176,6 @@ export default {
   data () {
     return {
       permissions: cookie.getJSON('permissions'),
-      invoiceDialog: false,
 
       rules: {
         companyname: [
@@ -232,8 +231,10 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.$post('/Invoice.do?edit', this.form).then(res => {
-            this.invoiceDialog = false
-            this.search()
+            if (res.data.success) {
+              this.$emit('closeInvoiceDialog')
+              this.$message.success('修改成功！')
+            }
           })
         } else {
           return false

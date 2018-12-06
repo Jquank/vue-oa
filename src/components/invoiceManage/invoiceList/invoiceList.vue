@@ -1,11 +1,13 @@
 <template>
-  <div class="visit-record component-container media-padding">
+  <div class="incoice-list-component component-container media-padding">
     <div class="visit-search mt-10px">
-      <el-button @click.native="search" type="warning" class="visit-item fa fa-download"> 导 入</el-button>
-      <el-button @click.native="exportTxt" ng-if="permissions.indexOf('50') > -1" type="primary" class="visit-item fa fa-upload"> 导出txt</el-button>
-      <el-button @click.native="exportExcell" ng-if="permissions.indexOf('51') > -1" type="info" class="visit-item fa fa-upload"> 导出Excell</el-button>
-      <el-button @click.native="search" type="warning" class="visit-item fa fa-upload"> 寄发票导出Excell</el-button>
-      <span class="visit-item tipfont fa fa-search" style="line-height:34px;color:#06c;">
+      <up-file v-if="mark==='handled'" :title="'导入'" :upIcon="'fa fa-download'" :uploadUrl="serverUrl+'/Invoice.do?import'"  :isHiddenFileList="true" :otherParams="{'code': '50', 'tk': tk}" class="visit-item"></up-file>
+      <el-button @click.native="exportExcellHandled" v-if="mark==='handled'" type="info" class="visit-item fa fa-upload"> 导出Excell</el-button>
+      <el-button @click.native="exportExcellSend" v-if="permissions.indexOf('7c') > -1 && mark==='handled'" type="warning" class="visit-item fa fa-upload"> 寄发票导出Excell</el-button>
+
+      <el-button @click.native="exportTxt" v-if="permissions.indexOf('50') > -1 && mark==='pending'" type="primary" class="visit-item fa fa-upload"> 导出txt</el-button>
+      <el-button @click.native="exportExcell" v-if="permissions.indexOf('51') > -1 && mark==='pending'" type="info" class="visit-item fa fa-upload"> 导出Excell</el-button>
+      <span v-if="permissions.indexOf('50') > -1 || permissions.indexOf('51') > -1" class="visit-item tipfont fa fa-search" style="line-height:34px;color:#06c;">
         <a href="http://www.kuaidi100.com/?from=openv" target="_blank" class="a-search-number"> 查询快递单号</a>
       </span>
     </div>
@@ -53,7 +55,7 @@
         <el-button @click.native="reset" type="warning">重 置</el-button>
       </div>
       <div class="visit-item export">
-        <el-button @click.native="changeUser" type="primary">更换责任人</el-button>
+        <el-button v-if="permissions.indexOf('87') > -1&&mark==='list'" @click.native="changeUser" type="primary">更换责任人</el-button>
       </div>
     </div>
 
@@ -167,9 +169,12 @@
           <template slot-scope="scope">
             <div class="table-btns">
               <el-button @click.native="view(scope.row)" type="success" class="xsbtn">查看</el-button>
-              <el-button v-if="scope.row.step < 300 && scope.row.hasinvoice == 0 && permissions.indexOf('52') > -1" @click.native="del(scope.row)" type="danger" class="xsbtn">删除</el-button>
+              <el-button v-if="mark==='pending'" @click.native="del(scope.row)" type="danger" class="xsbtn">删除</el-button>
+
+              <el-button v-if="scope.row.step < 300 && scope.row.hasinvoice == 0 && permissions.indexOf('52') > -1 && mark==='list'" @click.native="del(scope.row)" type="danger" class="xsbtn">删除</el-button>
+
               <el-button v-if="scope.row.hasinvoice>=10" @click.native="moreCancle(scope.row)" type="warning" class="xsbtn">开多废除</el-button>
-              <el-button v-if="scope.row.is_advance == 20 && scope.row.receive_money < scope.row.tmoney" @click.native="repayment(scope.row)" type="primary" class="xsbtn">还款</el-button>
+              <el-button v-if="scope.row.is_advance == 20 && scope.row.receive_money < scope.row.tmoney && mark==='list'" @click.native="repayment(scope.row)" type="primary" class="xsbtn">还款</el-button>
               <el-button v-if="scope.row.hasinvoice >= 10 && permissions.indexOf('7d')>-1" @click.native="errorRed(scope.row)" type="warning" class="xsbtn">发票开错冲红</el-button>
             </div>
           </template>
@@ -177,6 +182,7 @@
       </el-table>
     </div>
     <page class="page" :url="invoiceListUrl" :sendParams="params[mark+'Params']" @updateList="updateInvoiceList"></page>
+
     <!-- 人员选择弹窗 -->
     <el-dialog :modal-append-to-body="false" title="人员选择" :visible.sync="selUserDialog" width="550px">
       <select-user @userId="getUserId" @closeDialog="closeUserDialog"></select-user>
@@ -191,8 +197,8 @@
     </el-dialog>
 
     <!-- 发票信息弹窗 -->
-    <el-dialog :key="key_invoice_dialog" title="发票信息" :visible.sync="invoiceDialog" width="750px">
-      <invoice-info-dialog :form="form" :invoiceLogs="invoiceLogs"></invoice-info-dialog>
+    <el-dialog :key="key_invoice_dialog" title="发票信息" :visible.sync="invoiceDialog" width="850px">
+      <invoice-info-dialog :form="form" :invoiceLogs="invoiceLogs" @closeInvoiceDialog="invoiceDialog=false"></invoice-info-dialog>
     </el-dialog>
 
     <!-- 还款弹窗 -->
@@ -235,7 +241,7 @@
         <el-row>
           <el-col :md="24" class="maxwidth">
             <el-form-item label="快递时间 :">
-              <el-date-picker v-model="tnumberForm.express_time" format="yyyy/MM/dd HH:mm" value-format="yyyy/MM/dd HH:mm" type="datetime" style="width:100%;"></el-date-picker>
+              <el-date-picker v-model="tnumberForm.express_time" value-format="yyyy/MM/dd HH:mm" type="datetime" style="width:100%;"></el-date-picker>
             </el-form-item>
           </el-col>
         </el-row>
@@ -259,9 +265,12 @@ import InvoiceInfoDialog from 'components/invoiceManage/invoiceList/invoiceInfoD
 import AutoSelect from 'base/autoSelect/autoSelect'
 import SelectUser from 'base/selectUser/selectUser'
 import elDragDialog from '@/directive/el-dragDialog' // eslint-disable-line
+import UpFile from 'base/upLoad/upFile'
 import Page from 'base/page/page'
 import { rowSpan } from 'common/js/utils'
 import cookie from 'js-cookie'
+import { serverUrl } from 'api/http'
+import { timeFormat } from 'common/js/filters'
 export default {
   directives: { elDragDialog },
   props: {
@@ -276,6 +285,8 @@ export default {
   },
   data () {
     return {
+      serverUrl: serverUrl,
+      tk: cookie.get('token'),
       permissions: cookie.getJSON('permissions'),
       baoAName: '',
       invoiceName: '',
@@ -342,7 +353,6 @@ export default {
     }
   },
   mounted () {
-    this._getRowSpan()
   },
   methods: {
     search () {
@@ -409,6 +419,7 @@ export default {
         .then(() => {
           this.$post('/Invoice.do?invoiceDel', params).then(res => {
             if (res.data.success) {
+              this.$message.success('已删除！')
               this.search()
             }
           })
@@ -495,7 +506,11 @@ export default {
     // 填写快递单号
     writeTnumber (data) {
       this.tnumberDialog = true
-      this.tnumberForm = data
+      this.tnumberForm = {
+        express_no: data.express_no,
+        express_time: timeFormat(data.express_time),
+        express_remark: data.express_remark
+      }
     },
     subTnumber () {
       if (!this.tnumberForm.express_no) {
@@ -574,6 +589,7 @@ export default {
     updateRepaymentList (res) {
       this.repaymentList = res.data[0].data
     },
+    // 待开导出
     exportTxt () {
       let obj = {
         invoiceIds: this.multipleSelection.toString()
@@ -584,6 +600,20 @@ export default {
       let obj = {
         invoiceIds: this.multipleSelection.toString(),
         hasinvoice: 0
+      }
+      this.$export('/Invoice.do?exportexcel', this.params[this.mark + 'Params'], obj)
+    },
+    // 已开导出
+    exportExcellHandled () {
+      let obj = {
+        code: 74,
+        hasinvoice: 10
+      }
+      this.$export('/Invoice.do?exportexcel', this.params[this.mark + 'Params'], obj)
+    },
+    exportExcellSend () {
+      let obj = {
+        code: 72
       }
       this.$export('/Invoice.do?exportexcel', this.params[this.mark + 'Params'], obj)
     },
@@ -619,16 +649,18 @@ export default {
     InvoiceInfoDialog,
     AutoSelect,
     Page,
-    SelectUser
+    SelectUser,
+    UpFile
   }
 }
 </script>
 <style lang="less" scoped>
-.visit-record {
+.incoice-list-component {
   .visit-search {
     display: flex;
     flex-wrap: wrap;
     .visit-item {
+      align-items: center;
       margin-left: 10px;
       margin-top: 10px;
     }

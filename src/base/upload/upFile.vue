@@ -11,8 +11,9 @@
       :list-type="listType"
       :file-list="fileList"
       :data="otherParams"
-      :show-file-list="showFileList">
-      <el-button size="small" type="primary">{{title}}</el-button>
+      :show-file-list="showFileList"
+    >
+      <el-button size="small" type="primary" :class="upIcon"> {{title}}</el-button>
       <!-- <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div> -->
     </el-upload>
   </div>
@@ -33,6 +34,10 @@ export default {
     title: {
       type: String,
       default: '点击上传'
+    },
+    upIcon: {
+      type: String,
+      default: ''
     },
     otherParams: {
       type: Object,
@@ -55,6 +60,7 @@ export default {
     upSuccess (file, fileList) {
       this.$emit('fileUrl', file)
       if (this.isHiddenFileList) {
+        this.$message.success('导入成功！')
         setTimeout(() => {
           this.showFileList = false
         }, 2000)

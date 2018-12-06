@@ -363,6 +363,8 @@
       <make-invoice-dialog @closeDialog="makeInvoiceDialog=false"
                            :key="key_dialog"
                            :echoData="echoData"
+                           :mark="'order'"
+                           :rowData="rowData"
                            :makeInvoiceStatus="makeInvoiceStatus"
                            :offset="offset">
         <el-button v-if="makeInvoiceStatus==20"
@@ -529,7 +531,7 @@ export default {
       comUrl: '/Project.do?kind',
       comParams: {
         type: '20',
-        orderOrRenew: 'renew',
+        orderOrRenew: 'order',
         companyname: ''
       },
 
@@ -614,6 +616,7 @@ export default {
     },
     // 申请发票
     applyInvoice (data) {
+      this.rowData = data
       this.key_dialog = new Date() + ''
       this._getInvoiceData(data, data.id)
       this.makeInvoiceTitle = '申请发票'
@@ -625,8 +628,9 @@ export default {
     },
     // 提前开票
     aheadMakeInvoice () {
+      this.rowData = {}
       this.key_dialog = new Date() + ''
-      this.makeInvoiceTitle = '提前发票'
+      this.makeInvoiceTitle = '提前开票'
       this.makeInvoiceStatus = 20
       this.offset = 0
       setTimeout(() => {
@@ -637,7 +641,7 @@ export default {
     searchCompany () {
       this.comParams = {
         type: '20',
-        orderOrRenew: 'renew',
+        orderOrRenew: 'order',
         companyname: this.handleCompanyName
       }
     },

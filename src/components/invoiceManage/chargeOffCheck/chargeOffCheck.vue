@@ -28,7 +28,7 @@
       </div>
 
       <!-- 列表 -->
-      <el-table @selection-change="handleSelectionChange" stripe border :data="makeInvoiceList" max-height="550" style="width: 100%">
+      <el-table stripe border :data="makeInvoiceList" max-height="550" style="width: 100%">
         <el-table-column prop="tnumber" label="单据号码" width="100">
         </el-table-column>
         <el-table-column prop="applyuser" label="申请人" width="100">
@@ -74,15 +74,17 @@
       <page class="page" :url="makeInvoiceUrl" :sendParams="sendParams" @updateList="updateMakeInvoiceList"></page>
     </div>
 
-    <!-- 发票信息弹窗 -->
-    <el-dialog :key="key_invoice_dialog" title="发票信息" :visible.sync="invoiceDialog" width="750px">
+    <!-- 查看弹窗 -->
+    <el-dialog :key="key_invoice_dialog" :modal-append-to-body="false" title="销账信息" :visible.sync="invoiceDialog" width="1100px">
+      <renew-detail :rowData="rowData" :toMark="'chargeOffCheck'" :chargeOffStep="checkStep" @closeRenewDetailDialog="closeRenewDetailDialog"></renew-detail>
     </el-dialog>
   </div>
 </template>
 
 <script>
 // import cookie from 'js-cookie'
-import Page from '@/base/page/page'
+import Page from 'base/page/page'
+import RenewDetail from 'components/renew/renewList/renewDetail'
 export default {
   data () {
     return {
@@ -103,17 +105,17 @@ export default {
       invoiceDialog: false,
       form: {},
       invoiceLogs: [],
-      key_invoice_dialog: '100'
+      key_invoice_dialog: '1'
     }
   },
   methods: {
     search () {
       this.sendParams = {
         status: this.checkStep,
-        invoice_cname: this.invoiceName,
-        cname: this.comName,
-        baidu_account: this.bdAccount,
-        applyuser: this.applyName,
+        invoice_cname: this.invoiceName.trim(),
+        cname: this.comName.trim(),
+        baidu_account: this.bdAccount.trim(),
+        applyuser: this.applyName.trim(),
         check_start: this.checkDate[0],
         check_end: this.checkDate[1]
       }
@@ -126,28 +128,23 @@ export default {
       this.checkDate = []
     },
     // 查看
-    // todo
     view (data) {
       this.rowData = data
-      this.key_invoice_dialog = new Date() + '100'
-      this.$get('/Invoice.do?invoicebyid', { invoiceid: data.id }).then(
-        res => {
-          if (res.data[0].success) {
-            this.form = res.data[0].data[0]
-            this.invoiceLogs = res.data[1].data
-            setTimeout(() => {
-              this.invoiceDialog = true
-            }, 100)
-          }
-        }
-      )
+      this.key_invoice_dialog = new Date() + '1'
+      setTimeout(() => {
+        this.invoiceDialog = true
+      }, 300)
+    },
+    closeRenewDetailDialog () {
+      this.invoiceDialog = false
+      this.search()
     },
     updateMakeInvoiceList (data) {
       this.makeInvoiceList = data.data[0].data
     }
   },
   components: {
-    Page
+    Page, RenewDetail
   }
 }
 </script>
