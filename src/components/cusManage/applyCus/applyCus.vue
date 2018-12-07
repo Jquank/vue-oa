@@ -1,9 +1,7 @@
 <template>
   <div class="apply-cus component-container media-padding">
     <div class="apply-search top">
-      <!-- <select-area v-model="area" class="apply-item item-width"></select-area> -->
-      <!-- <select-trade v-model="trade" class="apply-item item-width"></select-trade> -->
-      <auto-select :title="'数量'" v-model="applyCount" :defaultValue="applyCount" class="apply-item item-width">
+      <auto-select :classMark="'sel1'" :title="'数量'" v-model="applyCount" :defaultValue="applyCount" class="apply-item item-width">
         <el-option label="5" value="5"></el-option>
         <el-option label="10" value="10"></el-option>
         <el-option label="30" value="30"></el-option>
@@ -11,11 +9,9 @@
         <el-option label="100" value="100"></el-option>
       </auto-select>
       <el-button @click.native="apply" :loading="applyBtnLoading" type="primary" class="apply-item">申 领</el-button>
-      <div class="apply-item">
-        <el-button type="primary" plain>公共库总客户: {{count1}}</el-button>
-        <el-button type="primary" plain>已申领客户: {{count2}}</el-button>
-        <el-button type="primary" plain>申领次数大于5的客户: {{count1}}</el-button>
-      </div>
+      <el-button class="apply-item" type="primary" plain>公共库总客户: {{count1}}</el-button>
+      <el-button class="apply-item" type="primary" plain>已申领客户: {{count2}}</el-button>
+      <el-button class="apply-item" type="primary" plain>申领次数大于5的客户: {{count1}}</el-button>
     </div>
     <div class="cut-line"></div>
     <div class="apply-search">
@@ -23,7 +19,7 @@
       <el-input v-model="cusName" class="apply-item item-width" placeholder="客户名称">
         <template slot="prepend">客户名称:</template>
       </el-input>
-      <auto-select :key="key_auto_sel" :title="'状态'" v-model="applyCusStatus" :defaultValue="applyCusStatus" class="apply-item item-width">
+      <auto-select :classMark="'sel2'" :key="key_auto_sel" :title="'状态'" v-model="applyCusStatus" :defaultValue="applyCusStatus" class="apply-item item-width">
         <el-option label="全部" value="300"></el-option>
         <el-option label="未完成客户" value="0"></el-option>
         <el-option label="完成客户" value="100"></el-option>
@@ -36,10 +32,10 @@
       </div>
     </div>
     <!-- 列表 -->
-    <el-table stripe border max-height="600" :data="applyList" style="width: 100%;margin-top:10px;">
-      <el-table-column prop="companyname" label="客户名称">
+    <el-table stripe border max-height="550" :data="applyList" class="table-width">
+      <el-table-column prop="companyname" label="客户名称" min-width="150">
       </el-table-column>
-      <el-table-column prop="" label="客户类型">
+      <el-table-column prop="" label="客户类型" min-width="80">
         <template slot-scope="scope">
           <span>{{scope.row.producttype | cusState('cusType')}}</span>
           <span>{{scope.row.producttype!==0?scope.row.productnumber:''}}</span>
@@ -49,10 +45,10 @@
       </el-table-column>
       <el-table-column prop="fullname" label="所属部门">
       </el-table-column>
-      <el-table-column prop="" label="申领时间">
+      <el-table-column prop="" label="申领时间" width="135">
         <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
       </el-table-column>
-      <el-table-column prop="" label="最后跟进时间">
+      <el-table-column prop="" label="最后跟进时间" width="135">
         <span slot-scope="scope">{{scope.row.followtime | timeFormat}}</span>
       </el-table-column>
       <el-table-column prop="" label="状态">
@@ -65,9 +61,9 @@
           scope.row.applytype===100?'完成':'未标记'
           }}</span>
       </el-table-column>
-      <el-table-column label="操作" min-width="50">
+      <el-table-column label="操作" min-width="50" align="center">
         <template slot-scope="scope">
-          <el-button @click.native="view(scope.row)" type="success" size="mini">查看</el-button>
+          <el-button @click.native="view(scope.row)" type="success" class="xsbtn">查看</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -105,6 +101,13 @@ export default {
         applytype: '0'
       }
     }
+  },
+  beforeRouteUpdate (to, from, next) {
+    console.log(to)
+    if (to.query.data === 'fromDetail') {
+      this.search()
+    }
+    next()
   },
   methods: {
     apply () {

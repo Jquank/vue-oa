@@ -1,6 +1,6 @@
 // 带input的部门树
 <template>
-  <div class="sel-department"  style="width:250px">
+  <div class="sel-department">
     <el-input placeholder="点击选择部门" v-model="department" @focus="showDepartment" id="dept-input">
       <template v-if="prepend" slot="prepend">{{title}}:</template>
     </el-input>
@@ -65,19 +65,21 @@ export default {
       // let width = this.title.length * 13 + 4 + paddingWidth + 'px' // 字体长度+冒号+padding
       // this.$refs.tree.$el.style.left = width
       // this.$refs.tree.$el.style.width = `calc(100% - ${width})`
-    },
-    hiddenDepartment (e) { // 此方法用于调用此组件的父组件上（点击事件），或绑定body上
-      // let tree = document.getElementById('department')
-      // if (tree && e.target.id !== 'dept-input') {
-      //   tree.style.display = 'none'
-      // }
     }
+
+    // hiddenDepartment (e) { // 此方法已绑定至el-main上
+    //   let tree = document.getElementById('department')
+    //   if (tree && e.target.id !== 'dept-input') {
+    //     tree.style.display = 'none'
+    //   }
+    // }
   }
 }
 </script>
 
 <style lang="less">
 .sel-department {
+  width: 250px;
   position: relative;
   .el-tree {
     display: none;

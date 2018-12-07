@@ -1,5 +1,5 @@
 <template>
-  <div @click="hiddenDepartment" class="money-count component-container media-padding">
+  <div class="money-count component-container media-padding">
     <div class="top">
       <div class="btns top-item">
         <select-department :key="key_dept" @upDeptId="getDeptId" :title="'部门'" class="left-item"></select-department>
@@ -125,12 +125,6 @@ export default {
     reset () {
       this.dept = ''
       this.key_dept = new Date() + ''
-    },
-    hiddenDepartment (e) {
-      let tree = document.getElementById('department')
-      if (tree && e.target.id !== 'dept-input') {
-        tree.style.display = 'none'
-      }
     },
     getDeptId (id) {
       this.dept = id

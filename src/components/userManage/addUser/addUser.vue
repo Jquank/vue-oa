@@ -1,5 +1,5 @@
 <template>
-  <div class="add-user component-container media-padding" @click="hiddenDepartment">
+  <div class="add-user component-container media-padding">
     <el-form ref="form" :model="form" :rules="rules" label-width="80px">
       <el-row :gutter="20">
         <el-col :md="12" class="maxwidth">
@@ -375,13 +375,6 @@ export default {
           return false
         }
       })
-    },
-    hiddenDepartment (e) {
-      // 隐藏部门树
-      let tree = document.getElementById('department')
-      if (tree && e.target.id !== 'dept-input') {
-        tree.style.display = 'none'
-      }
     }
   },
   components: { SelectDepartment }

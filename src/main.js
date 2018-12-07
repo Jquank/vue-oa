@@ -19,6 +19,7 @@ import 'viewerjs/dist/viewer.css'
 
 import * as filters from '@/common/js/filters'
 import { $post, $get, $export, uploadUrl } from 'api/http'
+import { callPhone } from 'api/call'
 
 // const vConsole = new VConsole() // eslint-disable-line
 
@@ -28,6 +29,7 @@ Vue.prototype.$post = $post
 Vue.prototype.$get = $get
 Vue.prototype.$export = $export
 Vue.prototype.uploadUrl = uploadUrl
+Vue.prototype.callPhone = callPhone // 点击电话图表打电话
 Vue.config.errorHandler = function (err, vm, info) {
   if (err === 'ignore') {
     return true

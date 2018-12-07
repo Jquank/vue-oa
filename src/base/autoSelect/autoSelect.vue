@@ -41,7 +41,7 @@ export default {
   },
   mounted () {
     let sels = document.getElementsByClassName('auto-sel')
-    for (let i = 0; i < sels.length; i++) {
+    for (let i = 0, len = sels.length; i < len; i++) {
       if (sels[i].getAttribute('self-class') === this.classMark) {
         sels[i].setAttribute('id', this.classMark)
       }

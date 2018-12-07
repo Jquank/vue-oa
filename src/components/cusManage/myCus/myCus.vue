@@ -73,7 +73,7 @@
             {{scope.row.visittime | timeFormat}}
           </span>
         </el-table-column>
-        <el-table-column label="操作" width="180">
+        <el-table-column label="操作" width="180" align="center">
           <template slot-scope="scope">
             <el-button @click.native.prevent="view(scope.row)" type="success" class="xsbtn">查看</el-button>
 
@@ -220,7 +220,7 @@ export default {
       rowData: {} // 一行的数据(scope.row)
     }
   },
-  beforeRouteUpdate (to, from, next) { // vue会复用组件，所以从详情页返回时带上搜索条件搜索
+  beforeRouteUpdate (to, from, next) {
     console.log(to)
     if (from.meta.text.indexOf('详情') > -1 && to.query.data === 'fromDetail') {
       this.search()

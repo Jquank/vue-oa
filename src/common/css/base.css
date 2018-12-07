@@ -1,5 +1,4 @@
 @import 'nomalize.css';
-@import 'font-awesome.min.css';
 @import 'media.css';
 ul {
   margin: 0;
@@ -106,6 +105,13 @@ div.el-table {
 /* 侧边栏剪头  */
 .nav-aside .el-submenu__icon-arrow {
   right: 50px;
+  top: calc((50% + 5px));
+}
+.el-submenu__title {
+  padding-left: 10px !important;
+}
+.home-title {
+  padding-left: 10px !important;
 }
 div.el-dialog__body {
   padding-top: 5px;

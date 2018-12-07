@@ -9,11 +9,11 @@
       <!-- 左侧边栏和主体内容 -->
       <el-container class="con-bottom">
         <!-- 左侧边栏 -->
-        <el-aside @touchstart.native="touchStart" @touchmove.native="touchMove" @touchend.native="touchEnd" id="nav-aside" class="nav-aside" width="180px">
+        <el-aside @touchstart.native="touchStart" @touchmove.native="touchMove" @touchend.native="touchEnd" id="nav-aside" class="nav-aside" width="160px">
           <navbar></navbar>
         </el-aside>
         <!-- 主体内容 -->
-        <el-main id="main">
+        <el-main id="main" @click.native="hiddenDepartment">
           <div id="call-center" v-if="isShow">
             <iframe ref="iframecall" id="iframe-call" src="http://gccp.baidu.com/gaiamgmt/fe-communication/communications/index.html#/" frameborder="0"></iframe>
           </div>
@@ -82,6 +82,12 @@ export default {
     // })
   },
   methods: {
+    hiddenDepartment (e) { // 隐藏部门树
+      let tree = document.getElementById('department')
+      if (tree && e.target.id !== 'dept-input') {
+        tree.style.display = 'none'
+      }
+    },
     touchStart (e) {
       startX = e.changedTouches[0].pageX
       startY = e.changedTouches[0].pageY

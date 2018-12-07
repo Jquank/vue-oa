@@ -2,9 +2,9 @@
   <div class="control-scroll">
     <div ref="navbar" class="nav-bar">
       <el-menu :collapse="myCollapse" router background-color="#19233C" text-color="#bfcbd9" active-text-color="#fff" :unique-opened="true" :default-active="$router.currentRoute.fullPath">
-        <el-menu-item index="/indexPage/indexContent">
-          <i class="fa fa-home fa-fw"></i>
-          <span slot="title">首页</span>
+        <el-menu-item index="/indexPage/indexContent" class="home-title">
+          <i class="fa fa-home fa-fw fa-lg"></i>
+          <span slot="title">&nbsp;首页</span>
         </el-menu-item>
         <el-submenu v-for="(item, index) in navList" :key="index" :index="item.id+''"  v-if="permissions.indexOf(item.id)>-1">
           <span slot="title">
@@ -32,7 +32,6 @@ export default {
     }
   },
   mounted () {
-    console.log(this.permissions)
     // let that = this
     // window.onresize = function () {
     //   let width = document.body.clientWidth
@@ -70,11 +69,11 @@ export default {
 <style scoped lang="less">
 .control-scroll {
   height: calc(~'(100vh - 50px)');
-  width: 197px;
+  width: 177px;
   overflow-x: hidden;
   overflow-y: auto;
   .nav-bar {
-    width: 197px;
+    width: 177px;
     height: 100%;
     .el-menu {
       width: 100%;
@@ -84,13 +83,10 @@ export default {
     .el-menu-item.is-active {
       background: #108cee !important;
     }
-    .index-title {
-      height: 56px;
-      line-height: 56px;
+    .el-menu-item, .el-submenu__title{
+      height: 45px;
+      line-height: 45px;
       padding-left: 20px;
-      font-size: 14px;
-      color: #fff;
-      cursor: pointer;
     }
     .item-active {
       background: #121929 !important;

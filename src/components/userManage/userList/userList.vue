@@ -1,5 +1,5 @@
 <template>
-  <div class="user-list component-container media-padding" @click="hiddenDepartment">
+  <div class="user-list component-container media-padding">
     <div class="import-file">
       <el-button type="primary" icon="el-icon-upload">导入人员</el-button>
       <el-button type="success" icon="el-icon-upload">导入组织结构</el-button>
@@ -10,14 +10,14 @@
     </div>
     <!-- 搜索 -->
     <div class="search">
-      <select-department  @keydown.enter.native="search" @upDeptId="upDeptId" :title="'部门'" :key="key_dept" class="search-item"></select-department>
-      <el-input @keydown.enter.native="search" v-model="staffName" class="search-item" style="width:300px;" placeholder="搜索员工姓名">
+      <select-department  @keydown.enter.native="search" @upDeptId="upDeptId" :title="'部门'" :key="key_dept" class="search-item item-width"></select-department>
+      <el-input @keydown.enter.native="search" v-model="staffName" class="search-item item-width" placeholder="搜索员工姓名">
         <template slot="prepend">员工姓名:</template>
       </el-input>
-      <el-input @keydown.enter.native="search" v-model="roleName" class="search-item" style="width:300px;" placeholder="搜索角色名">
+      <el-input @keydown.enter.native="search" v-model="roleName" class="search-item item-width" placeholder="搜索角色名">
         <template slot="prepend">角色名:</template>
       </el-input>
-      <auto-select @keydown.enter.native="search" title="司龄" v-model="workAge" :key="key_sel" class="search-item" style="width:300px;">
+      <auto-select @keydown.enter.native="search" title="司龄" v-model="workAge" :key="key_sel" class="search-item item-width">
         <el-option label="3个月以上" value="3"></el-option>
         <el-option label="6个月以上" value="6"></el-option>
         <el-option label="12个月以上" value="12"></el-option>
@@ -245,13 +245,6 @@ export default {
           })
         }
       })
-    },
-    // 隐藏带input的部门树
-    hiddenDepartment (e) {
-      let tree = document.getElementById('department')
-      if (tree && e.target.id !== 'dept-input') {
-        tree.style.display = 'none'
-      }
     }
   },
   components: { Page, SelectDept, SelectDepartment, AutoSelect, AddUser }
@@ -268,11 +261,6 @@ export default {
       margin-top: 10px;
     }
   }
-  .page {
-    padding-top: 10px;
-    display: flex;
-    justify-content: flex-end;
-  }
   .search {
     display: flex;
     justify-content: flex-start;
@@ -281,6 +269,9 @@ export default {
     .search-item {
       margin-left: 10px;
       margin-top: 10px;
+    }
+    .item-width{
+      width: 280px;
     }
   }
   .import-file {

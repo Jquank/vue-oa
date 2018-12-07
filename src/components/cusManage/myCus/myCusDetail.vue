@@ -62,12 +62,13 @@
           <el-row v-for="(item,index) in form.contactList" :key="index" :gutter="20">
             <el-col :md="12" class="maxwidth">
               <el-form-item label="联系人 :" required>
-                <el-input v-model="form.contactList[index].name" :disabled="disabled"></el-input>
+                <el-input v-model="item.name" :disabled="disabled"></el-input>
               </el-form-item>
             </el-col>
             <el-col :md="12" class="maxwidth">
               <el-form-item label="联系电话 :" required>
-                <el-input v-model="form.contactList[index].contact" :disabled="disabled" class="contact-phone"></el-input>
+                <el-input v-model="item.contact" :disabled="disabled" class="input-btn"></el-input>
+                <el-button @click.native="callPhone(item.contact)" type="success" icon="fa fa-phone fa-lg" circle size="mini"></el-button>
                 <!-- <el-button @click.native="addContact(index)" class="circle-btn" :type="index===0?'success':'danger'" size="mini" :icon="index===0?'fa fa-plus':'fa fa-minus'" circle></el-button> -->
               </el-form-item>
             </el-col>
@@ -592,9 +593,6 @@ export default {
   .maxwidth {
     max-width: 500px;
   }
-  // .contact-phone {
-  //   width: calc(~'(100% - 30px)');
-  // }
   .circle-btn {
     width: 26px;
     height: 26px;
@@ -606,6 +604,9 @@ export default {
     .title-btn {
       border-top-right-radius: 15px;
     }
+  }
+  .input-btn{
+    width: calc(~"(100% - 40px)");
   }
 }
 </style>

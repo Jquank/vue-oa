@@ -156,9 +156,9 @@ export default {
     pcCollapse (width, result) {
       let aside = document.getElementById('nav-aside')
       let logo = this.$refs.logoimg
-      this.$refs.nested.style.left = result ? '190px' : '10px'
-      result ? aside.setAttribute('style', 'width:180px !important') : aside.setAttribute('style', 'width:0 !important')
-      result ? logo.setAttribute('style', 'width:180px !important') : logo.setAttribute('style', 'width:0 !important')
+      this.$refs.nested.style.left = result ? '170px' : '10px'
+      result ? aside.setAttribute('style', 'width:160px !important') : aside.setAttribute('style', 'width:0 !important')
+      result ? logo.setAttribute('style', 'width:160px !important') : logo.setAttribute('style', 'width:0 !important')
     },
     fullScreen () {
       this.count++
@@ -229,7 +229,7 @@ export default {
   z-index: 1000;
   position: fixed;
   top: 17px;
-  left: 190px;
+  left: 170px;
   transition: all 0.5s;
   cursor: pointer;
 }
@@ -249,7 +249,7 @@ export default {
       }
     }
     .logo-img {
-      width: 180px;
+      width: 160px;
       height: 50px;
       // position: relative;
       // top: 0;

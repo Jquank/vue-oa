@@ -13,3 +13,7 @@ export function loadCallIframe (id) {
     console.log(err)
   })
 }
+
+export function callPhone (phone) {
+  window.agentbar.makecall('', '', phone, '', '', '', '', '', 1)
+}

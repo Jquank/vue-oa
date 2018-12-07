@@ -62,12 +62,16 @@
           <el-row v-for="(item,index) in contactList" :key="index" :gutter="20">
             <el-col :md="12" class="maxwidth">
               <el-form-item label="联系人 :" required>
-                <el-input v-model="contactList[index].name" placeholder="联系人"></el-input>
+                <el-input v-model="item.name" placeholder="联系人"></el-input>
               </el-form-item>
             </el-col>
             <el-col :md="12" class="maxwidth">
-              <el-form-item label="联系电话 :" required>
-                <el-input v-model="contactList[index].contact" placeholder="联系电话" class="contact-phone"></el-input>
+              <el-form-item required>
+                <template slot="label">
+                  电话
+                  <el-button @click.native="callPhone(item.contact)" type="success" icon="fa fa-phone fa-lg" circle size="mini"></el-button>
+                </template>
+                <el-input v-model="item.contact" placeholder="联系电话" class="contact-phone"></el-input>
                 <el-button @click.native="addContact(index)" class="circle-btn" :type="index===0?'success':'danger'" size="mini" :icon="index===0?'fa fa-plus':'fa fa-minus'" circle></el-button>
               </el-form-item>
             </el-col>
@@ -107,10 +111,12 @@
         </el-table>
       </div>
       <div class="remark mt10px">
-        <span>备注：</span>
+        <div class="title">
+          <el-button class="title-btn" type="primary">操 作</el-button>
+        </div>
         <el-row>
           <el-col :md="24" style="max-width: 980px;">
-            <el-input type="textarea" :rows="3" v-model="remark"></el-input>
+            <el-input type="textarea" :rows="3" v-model="remark" placeholder="备注"></el-input>
           </el-col>
         </el-row>
       </div>
@@ -189,17 +195,18 @@ export default {
         })
         return
       }
+      this.btnDisabled = true
       this.$post('/Apply.do?limit', params).then(res => {
         if (applytype === 10) {
           this.turnFollow()
+          return
         }
         if (res.data.success) {
-          this.$message({
-            type: 'success',
-            message: '操作成功'
+          this.$message.success('操作成功！')
+          this.$router.push({
+            path: '/indexPage/applyCus',
+            query: { data: 'fromDetail' }
           })
-          this.btnDisabled = true
-          // this.$router.go(0)
         }
       })
     },
@@ -223,9 +230,10 @@ export default {
                     companylogid: this.receiveData.companylogid
                   }).then(res => {
                     if (res.data[0].data) {
-                      this.$message({
-                        type: 'success',
-                        message: '跟踪成功！'
+                      this.$message.success('跟踪成功！')
+                      this.$router.push({
+                        path: '/indexPage/applyCus',
+                        query: { data: 'fromDetail' }
                       })
                     }
                   })
@@ -329,6 +337,11 @@ export default {
     .title-btn {
       border-top-right-radius: 15px;
     }
+  }
+  .btns{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
   }
 }
 </style>

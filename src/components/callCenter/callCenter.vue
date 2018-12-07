@@ -61,7 +61,7 @@
       <el-table-column prop="contactname" label="联系人">
       </el-table-column>
       <el-table-column prop="" label="电话" width="120">
-        <span slot-scope="scope">{{scope.row.telnum}}&nbsp;<i class="el-icon-phone" @click="call(scope.row.telnum)"></i></span>
+        <span slot-scope="scope">{{scope.row.telnum}}&nbsp;<i class="el-icon-phone" @click="callPhone(scope.row.telnum)"></i></span>
       </el-table-column>
       <el-table-column prop="" label="最新状态" width="120">
         <template slot-scope="scope">
@@ -198,9 +198,6 @@ export default {
             message: '已取消'
           })
         })
-    },
-    call (phone) {
-      window.agentbar.makecall('', '', phone, '', '', '', '', '', 1)
     },
     exportExcell () {
       let params = {

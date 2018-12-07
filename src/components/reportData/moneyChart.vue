@@ -26,7 +26,7 @@
       </div>
     </div>
 
-    <el-table :span-method="arraySpanMethod" stripe border :data="invoiceList" class="table-width" max-height="550">
+    <el-table id="money-chart-table" :span-method="arraySpanMethod" stripe border :data="invoiceList" class="table-width" max-height="550">
       <el-table-column prop="billtime" label="记账日期" fixed width="90">
         <span slot-scope="scope">{{scope.row.billtime | timeFormat1}}</span>
       </el-table-column>
@@ -46,124 +46,124 @@
         <span slot-scope="scope">{{scope.row.addtype != '新开' ? scope.row.baiducount : ''}}</span>
       </el-table-column>
 
-      <el-table-column label="现金">
-        <el-table-column prop="XJ" label="金额" width="120">
+      <el-table-column label="现金" align="center">
+        <el-table-column prop="XJ" label="金额" width="120" align="center">
           <template slot-scope="scope">
             <span v-if="!scope.row.mark">{{scope.row.XJ | currency}}</span>
             <span else>{{scope.row.XJ_count | currency1}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="XJTIME" label="时间" width="90">
+        <el-table-column prop="XJTIME" label="时间" width="90" align="center">
           <span slot-scope="scope">{{scope.row.XJTIME | timeFormat1}}</span>
         </el-table-column>
       </el-table-column>
-      <el-table-column label="糯米现金">
-        <el-table-column prop="NMXJ" label="金额" width="120">
+      <el-table-column label="糯米现金" align="center">
+        <el-table-column prop="NMXJ" label="金额" width="120" align="center">
           <template slot-scope="scope">
             <span v-if="!scope.row.mark">{{scope.row.NMXJ | currency}}</span>
             <span else>{{scope.row.NMXJ_count | currency1}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="NMXJTIME" label="时间" width="90">
+        <el-table-column prop="NMXJTIME" label="时间" width="90" align="center">
           <span slot-scope="scope">{{scope.row.NMXJTIME | timeFormat1}}</span>
         </el-table-column>
       </el-table-column>
-      <el-table-column label="招行">
-        <el-table-column prop="ZH" label="金额" width="120">
+      <el-table-column label="招行" align="center">
+        <el-table-column prop="ZH" label="金额" width="120" align="center">
           <template slot-scope="scope">
             <span v-if="!scope.row.mark">{{scope.row.ZH | currency}}</span>
             <span else>{{scope.row.ZH_count | currency1}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="ZHTIME" label="时间" width="90">
+        <el-table-column prop="ZHTIME" label="时间" width="90" align="center">
           <span slot-scope="scope">{{scope.row.ZHTIME | timeFormat1}}</span>
         </el-table-column>
       </el-table-column>
-      <el-table-column label="糯米招行">
-        <el-table-column prop="NMZH" label="金额" width="120">
+      <el-table-column label="糯米招行" align="center">
+        <el-table-column prop="NMZH" label="金额" width="120" align="center">
           <template slot-scope="scope">
             <span v-if="!scope.row.mark">{{scope.row.NMZH | currency}}</span>
             <span else>{{scope.row.NMZH_count | currency1}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="NMZHTIME" label="时间" width="90">
+        <el-table-column prop="NMZHTIME" label="时间" width="90" align="center">
           <span slot-scope="scope">{{scope.row.NMZHTIME | timeFormat1}}</span>
         </el-table-column>
       </el-table-column>
-      <el-table-column label="银联">
-        <el-table-column prop="YL" label="金额" width="120">
+      <el-table-column label="银联" align="center">
+        <el-table-column prop="YL" label="金额" width="120" align="center">
           <template slot-scope="scope">
             <span v-if="!scope.row.mark">{{scope.row.YL | currency}}</span>
             <span else>{{scope.row.YL_count | currency1}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="YLTIME" label="时间" width="90">
+        <el-table-column prop="YLTIME" label="时间" width="90" align="center">
           <span slot-scope="scope">{{scope.row.YLTIME | timeFormat1}}</span>
         </el-table-column>
       </el-table-column>
-      <el-table-column label="糯米银联">
-        <el-table-column prop="NMYL" label="金额" width="120">
+      <el-table-column label="糯米银联" align="center">
+        <el-table-column prop="NMYL" label="金额" width="120" align="center">
           <template slot-scope="scope">
             <span v-if="!scope.row.mark">{{scope.row.NMYL | currency}}</span>
             <span else>{{scope.row.NMYL_count | currency1}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="NMYLTIME" label="时间" width="90">
+        <el-table-column prop="NMYLTIME" label="时间" width="90" align="center">
           <span slot-scope="scope">{{scope.row.NMYLTIME | timeFormat1}}</span>
         </el-table-column>
       </el-table-column>
-      <el-table-column label="黄华中行">
-        <el-table-column prop="HHZH" label="金额" width="120">
+      <el-table-column label="黄华中行" align="center">
+        <el-table-column prop="HHZH" label="金额" width="120" align="center">
           <template slot-scope="scope">
             <span v-if="!scope.row.mark">{{scope.row.HHZH | currency}}</span>
             <span else>{{scope.row.HHZH_count | currency1}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="HHZHTIME" label="时间" width="90">
+        <el-table-column prop="HHZHTIME" label="时间" width="90" align="center">
           <span slot-scope="scope">{{scope.row.HHZHTIME | timeFormat1}}</span>
         </el-table-column>
       </el-table-column>
-      <el-table-column label="中行1">
-        <el-table-column prop="ZH1" label="金额" width="120">
+      <el-table-column label="中行1" align="center">
+        <el-table-column prop="ZH1" label="金额" width="120" align="center">
           <template slot-scope="scope">
             <span v-if="!scope.row.mark">{{scope.row.ZH1 | currency}}</span>
             <span else>{{scope.row.ZH1_count | currency1}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="ZH1TIME" label="时间" width="90">
+        <el-table-column prop="ZH1TIME" label="时间" width="90" align="center">
           <span slot-scope="scope">{{scope.row.ZH1TIME | timeFormat1}}</span>
         </el-table-column>
       </el-table-column>
-      <el-table-column label="阳光快付">
-        <el-table-column prop="YGKF" label="金额" width="120">
+      <el-table-column label="阳光快付" align="center">
+        <el-table-column prop="YGKF" label="金额" width="120" align="center">
           <template slot-scope="scope">
             <span v-if="!scope.row.mark">{{scope.row.YGKF | currency}}</span>
             <span else>{{scope.row.YGKF_count | currency1}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="YGKFTIME" label="时间" width="90">
+        <el-table-column prop="YGKFTIME" label="时间" width="90" align="center">
           <span slot-scope="scope">{{scope.row.YGKFTIME | timeFormat1}}</span>
         </el-table-column>
       </el-table-column>
-      <el-table-column label="糯米快付">
-        <el-table-column prop="NMKF" label="金额" width="120">
+      <el-table-column label="糯米快付" align="center">
+        <el-table-column prop="NMKF" label="金额" width="120" align="center">
           <template slot-scope="scope">
             <span v-if="!scope.row.mark">{{scope.row.NMKF | currency}}</span>
             <span else>{{scope.row.NMKF_count | currency1}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="NMKFTIME" label="时间" width="90">
+        <el-table-column prop="NMKFTIME" label="时间" width="90" align="center">
           <span slot-scope="scope">{{scope.row.NMKFTIME | timeFormat1}}</span>
         </el-table-column>
       </el-table-column>
-      <el-table-column label="工行">
-        <el-table-column prop="GH" label="金额" width="120">
+      <el-table-column label="工行" align="center">
+        <el-table-column prop="GH" label="金额" width="120" align="center">
           <template slot-scope="scope">
             <span v-if="!scope.row.mark">{{scope.row.GH | currency}}</span>
             <span else>{{scope.row.GH_count | currency1}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="GHTIME" label="时间" width="90">
+        <el-table-column prop="GHTIME" label="时间" width="90" align="center">
           <span slot-scope="scope">{{scope.row.GHTIME | timeFormat1}}</span>
         </el-table-column>
       </el-table-column>
@@ -236,7 +236,7 @@
       <el-table-column prop="oldbillTime" label="新开提单时间" width="110">
         <span slot-scope="scope">{{scope.row.oldbillTime | timeFormat1}}</span>
       </el-table-column>
-      <el-table-column prop="web" label="网站完成" width="60">
+      <el-table-column prop="web" label="网站完成" width="70">
       </el-table-column>
       <el-table-column prop="invoice_type" label="开发票" width="90">
         <template slot-scope="scope">
@@ -264,7 +264,7 @@
 
     <!-- 新增，编辑弹窗 -->
     <el-dialog :title="'新增'" :visible.sync="editDialog" width="900px">
-      <el-form ref="echo" :model="echo" label-width="130px">
+      <el-form ref="echo" :model="echo" :label-width="labelWidth">
         <el-row :gutter="10">
           <el-col :md="12" class="maxwidth">
             <el-form-item label="记账日期 :">
@@ -304,7 +304,7 @@
           <el-col :md="12" class="maxwidth">
             <el-form-item label="公司名称 :">
               <el-input v-model="echo.companyname" class="input-btn"></el-input>
-              <el-button @click.native="selCom" type="primary" class="xsbtn">选择</el-button>
+              <el-button @click.native="selCompanyDialog=true" type="primary" class="xsbtn">选择</el-button>
             </el-form-item>
           </el-col>
           <el-col :md="12" class="maxwidth">
@@ -369,7 +369,7 @@
           </el-col>
           <el-col :md="12" class="maxwidth">
             <el-form-item label="代金券使用时间 :">
-              <el-input v-model="echo.aaa"></el-input>
+              <el-date-picker v-model="echo.aaa" format="yyyy-MM-dd" value-format="yyyy-MM-dd" type="date" style="width:100%"></el-date-picker>
             </el-form-item>
           </el-col>
         </el-row>
@@ -396,16 +396,19 @@
                 <el-table-column prop="tm" label="时间" min-width="135">
                   <span slot-scope="scope">{{scope.row.tm}}</span>
                 </el-table-column>
-                <el-table-column prop="tm" label="操作" width="70">
+                <el-table-column prop="tm" label="操作" width="80" align="center">
                   <template slot="header" slot-scope="scope">
                     <el-button @click.native="addMoneyDetailDialog=true" icon="fa fa-plus" type="success" class="xsbtn"> 添加</el-button>
                   </template>
                   <template slot-scope="scope">
-                    <el-button @click.native="removeMoneyDetail" icon="fa fa-plus" type="danger" class="xsbtn">移除</el-button>
+                    <el-button @click.native="removeMoneyDetail(scope.$index)" icon="fa fa-minus" type="danger" class="xsbtn"> 移除</el-button>
                   </template>
                 </el-table-column>
               </el-table>
             </el-form-item>
+            <div class="text-center">
+              <el-button @click.native="subEditChart" type="primary">提 交</el-button>
+            </div>
           </el-col>
         </el-row>
       </el-form>
@@ -415,7 +418,7 @@
     <el-dialog :title="'添加金额明细'" :visible.sync="addMoneyDetailDialog" width="400px">
       <el-form label-width="80px">
         <el-form-item label="银行类型 :">
-          <el-select v-model="add_code_desc" style="width:100%">
+          <el-select v-model="add_code_desc" value-key="code_val" style="width:100%">
             <el-option v-for="item in bankList" :key="item.code_desc" :value="item" :label="item.code_desc"></el-option>
           </el-select>
         </el-form-item>
@@ -435,6 +438,38 @@
     <el-dialog :modal-append-to-body="false" title="选择人员" :visible.sync="selUserDialog" width="550px">
       <select-user @userId="getUserId" @closeDialog="selUserDialog=false"></select-user>
     </el-dialog>
+
+    <!-- 选择公司弹窗 -->
+    <el-dialog :modal-append-to-body="false" title="选择公司" :visible.sync="selCompanyDialog" width="900px">
+      <el-input @click.native.prevent="searchCompany($event)" @keydown.enter.native="searchCompany('enter')" v-model="comForm.companyName" style="margin-top:10px;" placeholder="搜索客服">
+        <span slot="append" class="search-service">搜索客服</span>
+      </el-input>
+      <el-table id="cus-out-table" :data="comList" class="table-width">
+        <el-table-column prop="companyname" label="客户名称" min-width="160">
+        </el-table-column>
+        <el-table-column prop="" label="客户类型" width="80">
+          <span slot-scope="scope">{{scope.row.producttype | cusState('cusType')}}</span>
+        </el-table-column>
+        <el-table-column prop="companyname" label="公司状态">
+          <span slot-scope="scope">{{scope.row.ctype | cusState('cusStatus')}}</span>
+        </el-table-column>
+        <el-table-column prop="" label="业务状态">
+          <span slot-scope="scope">{{scope.row.cltype + '' + scope.row.cltype | businessStatus}}</span>
+        </el-table-column>
+        <el-table-column prop="kefa" label="所属商务">
+        </el-table-column>
+        <el-table-column prop="kefu" label="所属客服">
+        </el-table-column>
+        <el-table-column prop="baidu_account" label="百度账号" min-width="100">
+        </el-table-column>
+        <el-table-column prop="" label="操作">
+          <template slot-scope="scope">
+            <el-button @click.native.prevent="confirmSelCompany(scope.row)" type="success" class="xsbtn">选择</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <page :simpleLayout="'total, prev, next, jumper'" class="page" :url="comUrl" :sendParams="comParams" @updateList="getComList"></page>
+    </el-dialog>
   </div>
 </template>
 
@@ -444,9 +479,11 @@ import Page from 'base/page/page'
 import {getByCode} from 'api/getOptions'
 import {timeFormat} from 'common/js/filters'
 import SelectUser from 'base/selectUser/selectUser'
+import {appMark} from 'common/js/utils'
 export default {
   data () {
     return {
+      labelWidth: '130px',
       invoiceList: [],
       invoiceUrl: '/wf.do?moneydetail',
       invoiceParams: {},
@@ -467,13 +504,42 @@ export default {
       addMoneyDetailDialog: false,
       add_code_desc: '',
       add_money: 0,
-      add_time: ''
+      add_time: '',
+
+      selCompanyDialog: false,
+      comForm: {
+        companyName: ''
+      },
+      comList: [],
+      comUrl: '/Search.do?ByBaiduAccount',
+      comParams: {}
+    }
+  },
+  created () {
+    if (appMark()) {
+      this.labelWidth = '50px'
     }
   },
   mounted () {
     this._getBusinessList()
   },
   methods: {
+    subEditChart () {
+      let params = {}
+      Object.keys(this.echo).forEach(val => {
+        params[val] = this.echo[val]
+      })
+      params.bankReceive = this.moneyDetailList
+      console.log(params)
+      this.$post('/wf.do?receiveCWSet', params).then(res => {
+        if (res.data.success) {
+          this.editDialog = false
+          this.search()
+        }
+      }).catch(err => {
+        console.log(err)
+      })
+    },
     editChart (data) {
       this.echo = data
       this.echo.billtime = timeFormat(data.billtime)
@@ -496,17 +562,40 @@ export default {
       this.editDialog = true
     },
     confirmAdd () {
+      let obj = {
+        tm: this.add_time,
+        code_desc: this.add_code_desc.code_desc,
+        split_amount: this.add_money,
+        type: this.add_code_desc.code_val
+      }
+      this.moneyDetailList = this.moneyDetailList.filter(val => val.code_desc !== obj.code_desc)
+      this.moneyDetailList.push(obj)
       this.addMoneyDetailDialog = false
     },
-    removeMoneyDetail () {
-
+    removeMoneyDetail (index) {
+      this.moneyDetailList.splice(index, 1)
     },
     selUser () {
       this.selUserDialog = true
     },
     getUserId (id, name) {
       this.echo.username = name
-      this.echo.userid = id
+      this.echo.uid = id
+    },
+    getComList (res) {
+      this.comList = res.data[0].data
+    },
+    searchCompany (e) {
+      if (e === 'enter' || e.target.nodeName !== 'INPUT') {
+        this.comParams = {
+          'companyname': this.comForm.companyName
+        }
+      }
+    },
+    confirmSelCompany (data) {
+      this.echo.companyname = data.companyname
+      this.echo.cid = data.cpid
+      this.selCompanyDialog = false
     },
     search () {
       this.invoiceParams = {
@@ -559,14 +648,16 @@ export default {
 }
 </script>
 <style lang="less">
-.el-table--border td,
-.el-table--border th,
-.el-table__body-wrapper .el-table--border.is-scrolling-left ~ .el-table__fixed {
-  border-right: 1px solid rgb(155, 152, 152);
-}
-.el-table td,
-.el-table th, .el-table th.is-leaf {
-  border-bottom: 1px solid rgb(155, 152, 152);
+.money-chart-table{
+  .el-table--border td,
+  .el-table--border th,
+  .el-table__body-wrapper .el-table--border.is-scrolling-left ~ .el-table__fixed {
+    border-right: 1px solid rgb(155, 152, 152);
+  }
+  .el-table td,
+  .el-table th, .el-table th.is-leaf {
+    border-bottom: 1px solid rgb(155, 152, 152);
+  }
 }
 </style>
 <style lang="less" scoped>
