@@ -16,7 +16,7 @@
         <el-option label="已审核" value="25"></el-option>
       </auto-select>
       <select-department :key="key_dept" @upDeptId="upDeptId" class="check-item item-width"></select-department>
-      <el-date-picker v-model="subDate" type="datetimerange" range-separator="至" start-placeholder="提交开始日期" end-placeholder="提交结束日期" value-format="yyyy/MM/dd HH:mm" :unlink-panels="true" class="check-item" style="width:338px;"></el-date-picker>
+      <el-date-picker v-model="subDate" type="datetimerange" range-separator="至" start-placeholder="提交开始日期" end-placeholder="提交结束日期" value-format="yyyy/MM/dd HH:mm" :unlink-panels="true" class="check-item item-width"></el-date-picker>
       <div class="check-item">
         <el-button @click.native="search" type="primary">查 询</el-button>
         <el-button @click.native="reset" type="warning">重 置</el-button>
@@ -43,9 +43,10 @@
       </el-table-column>
       <el-table-column prop="username" label="提交人">
       </el-table-column>
-      <el-table-column prop="" label="操作" width="80px">
+      <el-table-column prop="" label="操作" width="130px" align="center">
         <template slot-scope="scope">
-          <el-button @click.native="check(scope.row)" type="primary" size="mini">审核</el-button>
+          <el-button @click.native="check(scope.row)" type="primary" class="xsbtn">审核</el-button>
+          <el-button v-if="scope.row.cltype==20&&scope.row.clstatus==10&&scope.row.type==10&&scope.row.auditor_now_h!==null&&(scope.row.tb_field_name-scope.row.auditor_now_h>0)" @click.native="stopProtect(scope.row)" type="danger" class="xsbtn">终止保护</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -84,6 +85,25 @@ export default {
     next()
   },
   methods: {
+    stopProtect (data) {
+      this.$confirm('请确认是否终止该客户的保护机制？', '', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          this.$post('/Company.do?logStop', {
+            'companyid': data.id,
+            'companylogid': data.companylogid
+          }).then(res => {})
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          })
+        })
+    },
     check (data) {
       this.$router.push({
         path: `dealCheck/${data.id}`,

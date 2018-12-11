@@ -40,17 +40,24 @@ export default {
     }
   },
   mounted () {
-    let sels = document.getElementsByClassName('auto-sel')
-    for (let i = 0, len = sels.length; i < len; i++) {
-      if (sels[i].getAttribute('self-class') === this.classMark) {
-        sels[i].setAttribute('id', this.classMark)
-      }
+    if (this.classMark) {
+      this._setInputPadding()
     }
-    let len = this.title.length
-    let paddingWidth = this.title ? (4 + 20 + 10) : 0 // 冒号宽度+padding及其他
-    let width = len * 13 + paddingWidth + 'px'
-    let input = document.querySelector('#' + this.classMark + '.auto-sel input.el-input__inner')
-    input.style.paddingLeft = width
+  },
+  methods: {
+    _setInputPadding () {
+      let sels = document.getElementsByClassName('auto-sel')
+      for (let i = 0, len = sels.length; i < len; i++) {
+        if (sels[i].getAttribute('self-class') === this.classMark) {
+          sels[i].setAttribute('id', this.classMark)
+        }
+      }
+      let len = this.title.length
+      let paddingWidth = this.title ? (4 + 20 + 10) : 0 // 冒号宽度+padding及其他
+      let width = len * 13 + paddingWidth + 'px'
+      let input = document.querySelector('#' + this.classMark + '.auto-sel input.el-input__inner')
+      input.style.paddingLeft = width
+    }
   }
 }
 </script>

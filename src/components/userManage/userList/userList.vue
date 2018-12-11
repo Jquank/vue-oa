@@ -1,12 +1,8 @@
 <template>
   <div class="user-list component-container media-padding">
     <div class="import-file">
-      <el-button type="primary" icon="el-icon-upload">导入人员</el-button>
-      <el-button type="success" icon="el-icon-upload">导入组织结构</el-button>
-      <el-button size="mini">
-        <span>账号开关：</span>
-        <el-switch @change="turnOff(accountOff)" v-model="accountOff" active-color="#13ce66" inactive-color="#13ce66"></el-switch>
-      </el-button>
+      <up-file v-if="permissions.indexOf('4o') > -1" :title="'导入人员'" :upIcon="'el-icon-upload'" :uploadUrl="serverUrl+'/employee.do?importUser'+'&tk='+tk" :isHiddenFileList="true" class="import-item mr10px"></up-file>
+      <up-file v-if="permissions.indexOf('5v') > -1" :title="'导入组织结构'" :upIcon="'el-icon-upload'" :uploadUrl="serverUrl+'/employee.do?importOrg'+'&tk='+tk" :isHiddenFileList="true" :type="'success'" class="import-item mr10px"></up-file>
     </div>
     <!-- 搜索 -->
     <div class="search">
@@ -22,6 +18,11 @@
         <el-option label="6个月以上" value="6"></el-option>
         <el-option label="12个月以上" value="12"></el-option>
         <el-option label="24个月以上" value="24"></el-option>
+      </auto-select>
+      <auto-select title="账号" v-model="allowed" :defaultValue="'100'" :key="key_allowed" class="search-item item-width">
+        <el-option label="所有" value="100"></el-option>
+        <el-option label="开" value="1"></el-option>
+        <el-option label="关" value="0"></el-option>
       </auto-select>
       <div class="search-item">
         <el-button type="primary" @click="search">查 询</el-button>
@@ -58,16 +59,16 @@
       <el-table-column prop="isResign" label="状态" width="50">
         <span :class="scope.row.resignationtime!=''?'':'red'" slot-scope="scope">{{scope.row.resignationtime!=''?'在职':'离职'}}</span>
       </el-table-column>
-      <el-table-column prop="" label="账号开关" width="140">
+      <el-table-column v-if="permissions.indexOf('5e') > -1" prop="" label="账号开关" width="100" align="center">
         <template slot-scope="scope">
-          <el-button plain disabled class="xsbtn" :type="scope.row.status==-10?'danger':'success'">{{scope.row.status==-10?'已关闭':'已打开'}}</el-button>
+          <el-switch @change="((val)=>turnOff(val,scope.row.uid))" v-model="scope.row.allowed" active-color="#13ce66" inactive-color="#ff4949" :active-value="1" :inactive-value="0"></el-switch>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="250">
         <template slot-scope="scope">
-          <el-button @click.native="editUserInfo(scope.row.uid)" class="xsbtn" type="primary">编辑</el-button>
-          <el-button @click.native="editQuota(scope.row.uid)" class="xsbtn" type="primary">编辑配额</el-button>
-          <el-button @click.native="editDept(scope.row.uid)" class="xsbtn" type="primary">编辑管理部门</el-button>
+          <el-button v-if="permissions.indexOf('4j') > -1" @click.native="editUserInfo(scope.row.uid)" class="xsbtn" type="primary">编辑</el-button>
+          <el-button v-if="permissions.indexOf('4k') > -1" @click.native="editQuota(scope.row.uid)" class="xsbtn" type="primary">编辑配额</el-button>
+          <el-button v-if="permissions.indexOf('66') > -1" @click.native="editDept(scope.row.uid)" class="xsbtn" type="primary">编辑管理部门</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -93,10 +94,17 @@ import SelectDept from 'base/selectDept/selectDept'
 import SelectDepartment from 'base/selectDepartment/selectDepartment'
 import AutoSelect from 'base/autoSelect/autoSelect'
 import AddUser from 'components/userManage/addUser/addUser'
+import UpFile from 'base/upLoad/upFile'
+import cookie from 'js-cookie'
+import { serverUrl } from 'api/http'
 export default {
   data () {
     return {
-      accountOff: '',
+      permissions: cookie.getJSON('permissions'),
+      serverUrl: serverUrl,
+      tk: cookie.get('token'),
+      allowed: '100',
+      key_allowed: '2',
       key_dept: '',
       key_sel: '1',
       key_add_user: '', // 异步获取数据传递时，用key更新子组件
@@ -125,25 +133,29 @@ export default {
   methods: {
     // 账号开关
     // todo
-    turnOff (val) {
-      if (this.multipleSelection.length === 0) {
-        this.$message({
-          message: '请进行勾选',
-          type: 'warning'
+    turnOff (val, uid) {
+      this.$confirm(`确定${val === 1 ? '打开' : '关闭'}此账号？`, '', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          this._turnOffRequest(val, uid)
         })
-        return
-      }
-      this._turnOffRequest()
-    },
-    _turnOffRequest () {
-      this.$post('/User/UserStatusBatchUpdate', {
-        uids: this.multipleSelection
-      }).then(res => {
-        if (res.data.status === 1) {
+        .catch(() => {
           this.$message({
-            type: 'success',
-            message: '修改成功'
+            type: 'info',
+            message: '已取消'
           })
+        })
+    },
+    _turnOffRequest (val, uid) {
+      this.$post('/Oper.do?EditAllowed', {
+        'uid': uid,
+        'allowed': val
+      }).then(res => {
+        if (res.data.success) {
+          this.$message.success(val === 1 ? '已打开' : '已关闭')
           this.search()
         }
       })
@@ -159,7 +171,8 @@ export default {
         deptcode: this.deptCode,
         username: this.staffName,
         worktime: this.workAge,
-        rolename: this.roleName
+        rolename: this.roleName,
+        allowed: this.allowed
       }
     },
     reset () {
@@ -167,8 +180,10 @@ export default {
       this.roleName = ''
       this.workAge = ''
       this.deptCode = ''
+      this.allowed = '100'
       this.key_dept = new Date() + ''
-      this.key_sel = new Date() + '1' // 重置时绑定新的key值来重新加载子组件以达到重置的目的
+      this.key_sel = new Date() + '1'
+      this.key_allowed = new Date() + '2'
     },
     updateList (res) {
       this.tableData = res.data[0].data
@@ -247,7 +262,7 @@ export default {
       })
     }
   },
-  components: { Page, SelectDept, SelectDepartment, AutoSelect, AddUser }
+  components: { Page, SelectDept, SelectDepartment, AutoSelect, AddUser, UpFile }
 }
 </script>
 
@@ -257,7 +272,7 @@ export default {
     display: flex;
     flex-wrap: wrap;
     margin-top: -10px;
-    & > .el-button {
+    .import-item {
       margin-top: 10px;
     }
   }
@@ -271,7 +286,7 @@ export default {
       margin-top: 10px;
     }
     .item-width{
-      width: 280px;
+      width: 250px;
     }
   }
   .import-file {

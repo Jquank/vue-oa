@@ -180,6 +180,7 @@ export default {
         return
       }
       this.$post('/Company.do?compget', {companyname: this.form.cusName}).then(res => {
+        // dsj //eslint-disable-line
         if (!res.data[0].data.length) {
           this.disabled = false
           this.cusFromList = res.data[1].data

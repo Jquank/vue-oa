@@ -10,8 +10,8 @@
       </div>
       <div class="top-item radio">
         <el-radio-group v-model="radio" @change="radioChange">
-          <el-radio-button :label="{day:7,type:'day'}">近7天</el-radio-button>
-          <el-radio-button :label="{day:30,type:'day'}">近30天</el-radio-button>
+          <el-radio-button :label="{day:8,type:'day'}">近7天</el-radio-button>
+          <el-radio-button :label="{day:31,type:'day'}">近30天</el-radio-button>
           <el-radio-button :label="{day:0,type:'week'}">周</el-radio-button>
           <el-radio-button :label="{day:0,type:'month'}">月</el-radio-button>
           <el-radio-button :label="{day:0,type:'quarter'}">季度</el-radio-button>
@@ -38,7 +38,7 @@ export default {
     return {
       width: '1000px',
       height: '600px',
-      radio: {day: 7, type: 'day'},
+      radio: {day: 8, type: 'day'},
       dept: '',
       key_dept: '',
       dayData: [],
@@ -56,7 +56,7 @@ export default {
   },
   mounted () {
     this.lineChart = Echarts.init(document.getElementById('money-count-chart'))
-    this._getChartData('day', 7)
+    this._getChartData('day', 8)
   },
   methods: {
     _getChartData (type, time, dept) {
@@ -65,14 +65,24 @@ export default {
         dept: dept
       }).then(res => {
         this.dayData = res.data[0].data
-        let arr = this.dayData.slice(this.dayData.length - (type === 'day' ? time : this.dayData.length))
+        console.log(this.dayData)
+        let arr = []
+        if (type === 'day') {
+          let now = new Date()
+          let beforeSeven = now.setDate(now.getDate() - time)
+          arr = this.dayData.filter(val => {
+            let t = new Date(val.time)
+            return t.getTime() > beforeSeven
+          })
+        } else {
+          arr = this.dayData
+        }
         this.xAxiasData = []
         this.yAxiasData = []
         arr.forEach(val => {
           this.xAxiasData.push(val.time)
           this.yAxiasData.push(val.count)
         })
-        console.log(this.xAxiasData)
         let that = this
         this.option = {
           title: {

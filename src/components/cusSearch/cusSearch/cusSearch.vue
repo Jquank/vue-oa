@@ -53,7 +53,7 @@
         <el-table-column prop="kefuDept" label="客服部门">
         </el-table-column>
       </template>
-      <el-table-column prop="" label="操作" min-width="120px" v-if="permissions.indexOf('73')==-1">
+      <el-table-column prop="" label="操作" min-width="120px" v-if="permissions.indexOf('84')>-1">
         <template slot-scope="scope">
           <el-button @click.native="view(scope.row)" type="success" class="xsbtn">查看</el-button>
           <el-button @click.native="turnFollow(scope.row)" v-if="!(scope.row.cltype>=20&&scope.row.clstatus>=20)" type="primary" class="xsbtn">转跟踪</el-button>
@@ -414,6 +414,7 @@ export default {
       })
     },
     view (data) {
+      this.cusType = ''
       this.rowData = data
       this.proType = data.pid
       this._getProTypeList()
@@ -421,9 +422,10 @@ export default {
       this.cusDetailDialog = true
     },
     search () {
+      const regKeyWords = /(湖北省)|(武汉市)|(江岸区)|(江汉区)|(硚口区)|(汉阳区)|(武昌区)|(青山区)|(洪山区)|(蔡甸区)|(江夏区)|(黄陂区)|(新洲区)|(东西湖区)|(汉南区)|(东湖区)|(化学区)|(八吉府区)|(汉口区)|(北京市)|(上海市)|(天津市)|(深圳市)|(东莞市)|(重庆市)|(成都市)|(四川市)|(广东省)|(广州市)|(顺德市)|(佛山市)|(河源市)|(惠州市)|(西安市)|(陕西省)|(山东省)|(济南市)|(山西省)|(太原市)|(广西省)|(桂林市)|(云南省)|(昆明市)|(湖南省)|(长沙市)|(株洲市)|(常德市)|(安徽省)|(黄山市)|(合肥市)|(浙江省)|(杭州市)|(江苏省)|(苏州市)|(南京市)|(哈尔滨省)|(黑龙江省)|(吉林市)|(长春市)|(辽宁市)|(沈阳市)|(内蒙古)|(呼和浩特)|(河北省)|(石家庄市)|(新疆省)|(乌鲁木齐市)|(甘肃省)|(兰州市)|(青海省)|(西宁市)|(宁夏市)|(银川市)|(河南省)|(郑州市)|(贵州市)|(贵阳市)|(西藏)|(拉萨)|(江西省)|(南昌市)|(福建省)|(福州市)|(台湾)|(台北)|(海南省)|(海口市)|(香港)|(澳门)|(湖北)|(武汉)|(江岸)|(江汉)|(硚口)|(汉阳)|(武昌)|(青山)|(洪山)|(蔡甸)|(江夏)|(黄陂)|(新洲)|(东西湖)|(汉南)|(东湖)|(化学)|(八吉府)|(汉口)|(北京)|(上海)|(天津)|(深圳)|(东莞)|(重庆)|(成都)|(四川)|(广东)|(广州)|(顺德)|(佛山)|(河源)|(惠州)|(西安)|(陕西)|(山东)|(济南)|(山西)|(太原)|(广西)|(桂林)|(云南)|(昆明)|(湖南)|(长沙)|(株洲)|(常德)|(安徽)|(黄山)|(合肥)|(浙江)|(杭州)|(江苏)|(苏州)|(南京)|(哈乐滨)|(黑龙江)|(吉林)|(长春)|(辽宁)|(沈阳)|(内蒙古)|(呼和浩特)|(河北)|(石家庄)|(新疆)|(乌鲁木齐)|(甘肃)|(兰州)|(青海)|(西宁)|(宁夏)|(银川)|(河南)|(郑州)|(贵州)|(贵阳)|(西藏)|(拉萨)|(江西)|(南昌)|(福建)|(福州)|(台湾)|(台北)|(海南)|(海口)|(香港)|(澳门)|(分公司)/g
       this.sendParams = {
-        'companyname': this.cusName,
-        'baidu_account': this.bdAccount
+        'companyname': this.cusName.trim().replace(regKeyWords, ''),
+        'baidu_account': this.bdAccount.trim()
       }
     },
     reset () {
@@ -521,7 +523,7 @@ export default {
       margin-top: 10px;
     }
     .item-width {
-      width: 250px;
+      width: 280px;
     }
     .countTip {
       display: flex;

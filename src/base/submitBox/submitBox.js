@@ -29,7 +29,7 @@ export default function submitBox (that, obj = {}) {
         for (var key in obj.editParams) {
           params[key] = obj.editParams[key] || value
         }
-        that.$post(obj.url, params).then((res) => {
+        that.$get(obj.url, params).then((res) => {
           if (res.data.success) {
             resolve(true)
           } else {

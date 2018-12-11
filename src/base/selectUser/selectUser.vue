@@ -1,9 +1,9 @@
 <template>
   <div class="select-user">
-    <el-tree :data="departmentList" :props="depProps" @node-click="nodeClick" accordion node-key="code" ref="tree" id="department" :default-expanded-keys="defaultExpanded" style="width:250px;"></el-tree>
+    <el-tree :data="departmentList" :props="depProps" @node-click="nodeClick" accordion node-key="code" ref="tree" id="select-user" :default-expanded-keys="defaultExpanded" style="width:250px;"></el-tree>
     <el-row class="name">
       <el-input v-if="showSearch" placeholder="搜索姓名" v-model="name" @keydown.enter.native="searchName">
-        <el-button @click="searchName" slot="append" icon="el-icon-search"></el-button>
+        <el-button @click.native="searchName" slot="append" icon="el-icon-search"></el-button>
       </el-input>
       <div class="name-container">
         <div @click="clickName(index,item.id,item.name)" class="name-item" :class="'x'+index" v-for="(item,index) in nameList" :key="index">

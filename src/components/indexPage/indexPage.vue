@@ -153,22 +153,18 @@ export default {
     }
   }
   .fade-enter-active{
-    transition: all .3s cubic-bezier(0.3, 0.5, 0.8, 1.15);
-    // transition: opacity .9s;
-    // transition: transform .5s cubic-bezier(0.3, 0.5, 0.8, 1.15);
+    transition: opacity .4s ease, transform .3s cubic-bezier(0.3, 0.5, 0.8, 1.15);
   }
   .fade-leave-active {
-    transition: all .3s cubic-bezier(0.3, 0.2, 0.8, 1.0);
-    // transition: opacity .9s;
-    // transition: transform .3s cubic-bezier(0.3, 0.5, 0.8, 1.0);
+    transition: opacity .4s ease-in-out, transform .3s ease-in;
   }
   .fade-enter{
     opacity: 0;
-    transform: translateX(-300px);
+    transform: translateX(-40px);
   }
   .fade-leave-to{
     opacity: 0;
-    transform: translateX(100px);
+    transform: translateX(40px);
   }
 }
 </style>

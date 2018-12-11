@@ -1,7 +1,7 @@
 <template>
   <div class="cus-search component-container media-padding">
     <div class="multi-import">
-      <el-button type="primary" icon="fa fa-cloud-download"> 批量导入</el-button>
+      <up-file :title="'批量导入'" :upIcon="'fa fa-cloud-download'" :isHiddenFileList="true" :uploadUrl="serverUrl+'/Renew.do?rollOutExcle' + '&tk=' + tk" style="display: inline-block"></up-file>
       <span class="red">(ps:excell表头为“百度用户名”、“转入客服编号”、“SF系统”)</span>
     </div>
     <div class="search">
@@ -62,9 +62,14 @@
 import AutoSelect from 'base/autoSelect/autoSelect'
 import SelectDepartment from 'base/selectDepartment/selectDepartment'
 import Page from 'base/page/page'
+import UpFile from 'base/upLoad/upFile'
+import cookie from 'js-cookie'
+import { serverUrl } from 'api/http'
 export default {
   data () {
     return {
+      serverUrl: serverUrl,
+      tk: cookie.get('token'),
       cusName: '',
       bdAccount: '',
 
@@ -125,7 +130,7 @@ export default {
     },
     search () {
       this.sendParams = {
-        'companyname': this.cusName,
+        'companyName': this.cusName,
         'baiduAccount': this.bdAccount
       }
     },
@@ -153,7 +158,8 @@ export default {
   components: {
     AutoSelect,
     SelectDepartment,
-    Page
+    Page,
+    UpFile
   }
 }
 </script>

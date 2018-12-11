@@ -9,7 +9,7 @@
           <el-radio-button :label="40">签约客户</el-radio-button>
         </el-radio-group>
         <div class="throw-order">
-          <el-button @click.native="throwOrder" type="warning">保A甩单</el-button>
+          <el-button v-if="permissions.indexOf('5x') > -1&&myKind==30" @click.native="throwOrder" type="warning">保A甩单</el-button>
         </div>
       </div>
       <div class="search-cus">
@@ -41,7 +41,7 @@
       <el-table @selection-change="handleSelectionChange" stripe border :data="myCusList" max-height="600" style="width: 100%">
         <el-table-column fixed type="selection" width="40">
         </el-table-column>
-        <el-table-column prop="companyname" label="客户名称" min-width="150">
+        <el-table-column prop="companyname" label="客户名称" min-width="220">
         </el-table-column>
         <el-table-column prop="companytype" label="公司状态" width="70">
           <span :class="scope.row.companytype===-10?'red':''" slot-scope="scope">
@@ -68,10 +68,18 @@
         </el-table-column>
         <el-table-column prop="username" label="所属商务" width="80">
         </el-table-column>
+        <el-table-column v-if="myKind==20" prop="traceName" label="跟踪人" width="80">
+        </el-table-column>
+        <el-table-column v-if="myKind==30" prop="auditor_time" label="最后审核时间" width="135">
+          <span slot-scope="scope">{{scope.row.auditor_time | timeFormat}}</span>
+        </el-table-column>
         <el-table-column prop="" label="最后跟进时间" width="140">
           <span :class="scope.row.tip?'red':''" slot-scope="scope">
             {{scope.row.visittime | timeFormat}}
           </span>
+        </el-table-column>
+        <el-table-column v-if="myKind==40" prop="auditor_time" label="最后降E时间" width="135">
+          <span slot-scope="scope">{{scope.row.jiangE | timeFormat}}</span>
         </el-table-column>
         <el-table-column label="操作" width="180" align="center">
           <template slot-scope="scope">
@@ -90,7 +98,7 @@
     <router-view></router-view>
 
     <!-- 保A甩单弹窗 -->
-    <el-dialog title="选择" :visible.sync="throwDialog" width="520px">
+    <el-dialog title="选择" :visible.sync="throwDialog" width="550px">
       <select-user @userId="getUserId"></select-user>
     </el-dialog>
     <!-- 跟进弹窗 -->
@@ -136,12 +144,12 @@
           </el-col>
         </el-row>
         <el-row :gutter="20">
-          <el-col :md="12">
+          <!-- <el-col :md="12">
             <el-form-item label="联系电话 :">
               <el-input v-model="form.phone"></el-input>
             </el-form-item>
-          </el-col>
-          <el-col :md="12">
+          </el-col> -->
+          <el-col :md="24">
             <el-form-item label="联系地址 :">
               <el-input v-model="cusDetail.address"></el-input>
             </el-form-item>
@@ -181,6 +189,7 @@ const USER_ID = cookie.get('userId')
 export default {
   data () {
     return {
+      permissions: cookie.getJSON('permissions'),
       USER_ID: USER_ID,
       refresh: true,
       myKind: 30,
@@ -217,7 +226,7 @@ export default {
       },
       throwDialog: false,
       userId: '',
-      rowData: {} // 一行的数据(scope.row)
+      rowData: {}
     }
   },
   beforeRouteUpdate (to, from, next) {
@@ -373,11 +382,12 @@ export default {
         'uid': USER_ID,
         'accompany': this.rowData.accompanyUserId,
         'pid': this.rowData.pid,
-        'ccid': '',
+        'ccid': this.form.visitMan,
         'result': this.form.cusIntention, // 意向
         'begin': this.form.visitTime,
         'status': 10,
-        'addr': this.cusDetail.address
+        'addr': this.cusDetail.address,
+        'companylogid': this.rowData.companylogid
       }
       if (!this.form.cusIntention ||
           !this.form.visitType ||

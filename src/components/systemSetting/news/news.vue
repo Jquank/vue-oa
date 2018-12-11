@@ -2,10 +2,10 @@
   <div class="news-manage component-container media-padding">
     <div class="news-content">
       <div>
-        <el-button icon="el-icon-plus" type="primary" @click="addNews">新增</el-button>
-        <el-button icon="el-icon-delete" type="danger">删除</el-button>
+        <el-button icon="el-icon-plus" type="primary" @click.native="addNews">新增</el-button>
+        <el-button icon="el-icon-delete" type="danger" @click.native="delNews">删除</el-button>
       </div>
-      <el-table stripe :data="newsList" class="table-width">
+      <el-table  @selection-change="handleSelectionChange" stripe :data="newsList" class="table-width">
         <el-table-column type="selection" width="55">
         </el-table-column>
         <el-table-column type="index" >
@@ -43,7 +43,8 @@ export default {
     return {
       newsList: [],
       url: '/User.do?DisplayInfo',
-      sendParams: {}
+      sendParams: {},
+      multipleSelection: []
     }
   },
   beforeRouteUpdate (to, from, next) {
@@ -61,6 +62,17 @@ export default {
         path: 'news/add/123'
       })
     },
+    delNews () {
+      if (!this.multipleSelection.length) {
+        this.$message.warning('请勾选！')
+        return
+      }
+      let arr = this.multipleSelection.map(val => val.id)
+      this.$post('/User.do?DeleteInfo', {'id': arr}).then(res => {
+        this.$message.success('已删除！')
+        this.search()
+      })
+    },
     edit (data) {
       this.$router.push({
         path: 'news/edit/456',
@@ -73,6 +85,9 @@ export default {
         query: {data: data}
       })
     },
+    handleSelectionChange (val) {
+      this.multipleSelection = val
+    },
     updateNewsList (res) {
       this.newsList = res.data[0].data
     }
@@ -84,7 +99,7 @@ export default {
 <style lang="less" scoped>
 .news-manage {
   position: relative;
-  .news-content {
-  }
+  // .news-content {
+  // }
 }
 </style>

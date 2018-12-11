@@ -30,11 +30,7 @@ Vue.prototype.$get = $get
 Vue.prototype.$export = $export
 Vue.prototype.uploadUrl = uploadUrl
 Vue.prototype.callPhone = callPhone // 点击电话图表打电话
-Vue.config.errorHandler = function (err, vm, info) {
-  if (err === 'ignore') {
-    return true
-  }
-}
+
 Vue.use(ElementUI, {size: 'small'})
 // 全局注册所有过滤器
 Object.keys(filters).forEach(key => {

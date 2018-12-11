@@ -1,6 +1,5 @@
 
-import { serverUrl } from 'api/config'
-import { $get } from '@/api/http'
+import { serverUrl, $get } from 'api/http'
 export function loadCallIframe (id) {
   let baseUrl = '/gaiaopt/rest/interface/agent/agentBarInit4H5'
   let callInitUrl = serverUrl + '/bdurl.do?init'

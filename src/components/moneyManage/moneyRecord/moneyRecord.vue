@@ -2,9 +2,10 @@
   <div class="apply-contract component-container media-padding">
     <div class="apply-btn">
       <el-button v-if="permissions.indexOf('4t') > -1" @click.native="addMoneyRecord({'type':'BT'})" type="primary" icon="fa fa-plus"> 添加大搜到款</el-button>
-      <el-button v-if="permissions.indexOf('80') > -1" @click.native="addMoneyRecord({'type':'ZTC'})" type="primary" icon="fa fa-plus"> 添加直通车到款</el-button>
-      <el-button v-if="permissions.indexOf('89') > -1" @click.native="addMoneyRecord({'type':'KA'})" type="primary" icon="fa fa-plus"> 添加KA到款</el-button>
+      <el-button v-if="permissions.indexOf('80') > -1" @click.native="addMoneyRecord({'type':'ZTC'})" type="warning" icon="fa fa-plus"> 添加直通车到款</el-button>
+      <el-button v-if="permissions.indexOf('89') > -1" @click.native="addMoneyRecord({'type':'KA'})" type="success" icon="fa fa-plus"> 添加KA到款</el-button>
     </div>
+    <span class="red ml10px">(同一订单，若前后多笔到款，请在编辑页修改。网建有钱，请单独建一笔到款，没有的话，请在原到款上编辑！！！)</span>
     <div class="apply-search">
       <el-input placeholder="搜索公司名/法人" v-model="cusName" class="apply-item item-width">
         <template slot="prepend">公司名/法人:</template>
@@ -29,7 +30,7 @@
       <el-table-column prop="" label="服务费">
         <span slot-scope="scope">{{scope.row.service | currency1}}</span>
       </el-table-column>
-      <el-table-column prop="" label="操作" min-width="80">
+      <el-table-column prop="" label="操作" min-width="80" align="center">
         <template slot-scope="scope">
           <el-button @click.native="viewMoney(scope.row)" type="success" class="xsbtn">查看</el-button>
           <el-button @click.native="editMoney(scope.row)" type="warning" class="xsbtn">编辑</el-button>
@@ -128,7 +129,7 @@ export default {
       margin-top: 10px;
     }
     .item-width {
-      width: 250px;
+      width: 280px;
     }
   }
 }

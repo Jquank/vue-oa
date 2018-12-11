@@ -29,7 +29,7 @@
         </div>
       </div>
       <div class="list-item">
-        <el-button @click.native="exportContract" type="success">导出合同</el-button>
+        <el-button @click.native="exportContract" type="success" icon="el-icon-upload">导出合同</el-button>
       </div>
     </div>
 
@@ -59,7 +59,7 @@
           <el-button v-if="scope.row.status==20 && scope.row.switchuid != '' && scope.row.switchuid!=null && userId != scope.row.uid">接收合同</el-button>
         </template>
       </el-table-column>
-      <el-table-column v-if="permissions.indexOf('76') > -1" prop="" label="操作" width="60px">
+      <el-table-column v-if="permissions.indexOf('76') > -1" prop="" label="操作" width="60px" align="center">
         <template slot-scope="scope">
           <el-button @click.native="edit(scope.row)" type="primary" class="xsbtn">编辑</el-button>
         </template>
@@ -88,7 +88,8 @@
               <el-select v-model="detailInfo.status" style="width:100%;">
                 <el-option label="未领用" :value="10"></el-option>
                 <el-option label="已领用" :value="20"></el-option>
-                <el-option label="签约" :value="30"></el-option>
+                <el-option label="已签约" :value="25"></el-option>
+                <el-option label="已签约" :value="30"></el-option>
                 <el-option label="作废" :value="40"></el-option>
               </el-select>
             </el-form-item>
@@ -123,7 +124,7 @@
           </el-col>
           <el-col :md="12" class="maxwidth">
             <el-form-item label="归档时间 :">
-              <el-date-picker v-model="detailInfo.returntime" type="datetime" placeholder="选择日期" style="width:100%"></el-date-picker>
+              <el-date-picker v-model="detailInfo.returntime" format="yyyy/MM/dd HH:mm" value-format="yyyy/MM/dd HH:mm" type="datetime" placeholder="选择日期" style="width:100%"></el-date-picker>
             </el-form-item>
           </el-col>
         </el-row>
@@ -164,6 +165,7 @@ import Page from 'base/page/page'
 import AutoSelect from 'base/autoSelect/autoSelect'
 import SelectDepartment from 'base/selectDepartment/selectDepartment'
 import SelectUser from 'base/selectUser/selectUser'
+import { timeFormat } from 'common/js/filters'
 export default {
   data () {
     return {
@@ -189,7 +191,9 @@ export default {
       detailInfo: {},
       checkLogs: [],
       selUserDialog: false, // 选择人员弹窗
-      selUserId: ''
+      selUserId: '',
+
+      statusnamebefore: ''
     }
   },
   created () {
@@ -216,7 +220,9 @@ export default {
       this.receiptTime = []
       this.receiptName = ''
     },
-    exportContract () {},
+    exportContract () {
+      this.$export('/Contract.do?contractExport', this.sendParams)
+    },
     // 编辑
     edit (data) {
       this.rowData = data
@@ -228,6 +234,8 @@ export default {
       }
       this.$get('/Contract.do?SearchByCatId', params).then(res => {
         this.detailInfo = res.data[0].data[0]
+        this.statusnamebefore = this.detailInfo.text
+        this.detailInfo.returntime = timeFormat(this.detailInfo.returntime)
         this.beforeUserName = this.detailInfo.username
         this.checkLogs = res.data[1].data
       })
@@ -238,10 +246,10 @@ export default {
         contractid: this.rowData.id,
         contractnumber: this.detailInfo.number,
         status: this.detailInfo.status,
-        statusname: '', // todo 选中后的label值？
+        statusname: '',
         uid: this.selUserId || this.detailInfo.uid,
         username: this.detailInfo.username,
-        statusnamebefore: this.detailInfo.text,
+        statusnamebefore: this.statusnamebefore,
         uidbefore: this.detailInfo.uid,
         usernamebefore: this.beforeUserName,
         returntime: this.detailInfo.returntime || null,
@@ -250,7 +258,11 @@ export default {
       console.log(params)
       // todo
       this.$post('/Contract.do?editcontract', params).then(res => {
-        this.search()
+        if (res.data[0].success) {
+          this.$message.success('保存成功！')
+          this.editContractDialog = false
+          this.search()
+        }
       })
     },
     selUser () {

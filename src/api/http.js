@@ -12,7 +12,7 @@ export const serverUrl = 'http://172.16.11.84:8080/BaiJieOA'
 const instance = axios.create({
   baseURL: serverUrl,
   // withCredentials: true, // 跨域凭证
-  timeout: 15000
+  timeout: 25000
   // headers: {'token': tk}
 })
 let loadingInstance
@@ -30,7 +30,7 @@ instance.interceptors.request.use( // 请求拦截
     Message.error({
       message: '加载超时'
     })
-    console.log(err)
+    console.error(err)
     return Promise.reject(err)
   }
 )
@@ -77,9 +77,9 @@ instance.interceptors.response.use( // 响应拦截
   err => {
     loadingInstance.close()
     Message.error({
-      message: '请求出错了'
+      message: '请求出错或超时！'
     })
-    console.log(err)
+    console.error(err)
     return Promise.reject(err)
   }
 )

@@ -9,18 +9,7 @@
         <el-button @click.native="reset" type="warning" class="import-item">重 置</el-button>
       </div>
       <div class="import-item">
-
-        <el-upload
-          :action="actionUrl"
-          :before-upload="beforeUpload"
-          :data="uploadData"
-          :file-list="fileList"
-          :headers="uploadHeaders"
-          :on-success="uploadSuccess"
-        >
-          <el-button type="primary" icon="el-icon-upload">导 入</el-button>
-          <div slot="tip" class="el-upload__tip"></div>
-        </el-upload>
+        <up-file :title="'导入'" :upIcon="'el-icon-upload'" :uploadUrl="serverUrl+'/Company.do?importcompanyinfo'+'&tk='+tk" :otherParams="{uid: userId}" :isHiddenFileList="true"></up-file>
       </div>
     </div>
 
@@ -45,34 +34,22 @@
 <script>
 import cookie from 'js-cookie'
 import Page from 'base/page/page'
+import UpFile from 'base/upLoad/upFile'
+import { serverUrl } from 'api/http'
 const userId = cookie.get('userId')
 export default {
   data () {
     return {
+      serverUrl: serverUrl,
+      tk: cookie.get('token'),
+      userId: userId,
       cusName: '',
       myFollowList: [],
       myFollowUrl: '/Company.do?finduploadcompanyinfo',
-      sendParams: {},
-
-      uploadData: {},
-      uploadHeaders: {},
-      actionUrl: '/Company.do?importcompanyinfo',
-      fileList: []
+      sendParams: {}
     }
   },
   methods: {
-    uploadSuccess (response, file, fileList) {
-      console.log(response)
-    },
-    beforeUpload (file) {
-      console.log(file)
-      this.uploadData = {
-        uid: userId
-      }
-      this.uploadHeaders = {
-        'Content-Type': file.type
-      }
-    },
     search () {
       this.sendParams = {
         'companyname': this.cusName
@@ -85,7 +62,7 @@ export default {
       this.myFollowList = res.data[0].data
     }
   },
-  components: {Page}
+  components: {Page, UpFile}
 }
 </script>
 

@@ -35,7 +35,7 @@ export default {
       submitBox(that, {
         url: '/System/setTime.do',
         editParams: {
-          tb_field_name: name,
+          tb_field_name: '',
           id: id
         },
         title: '编辑时长',

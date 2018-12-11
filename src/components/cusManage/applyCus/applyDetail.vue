@@ -120,7 +120,7 @@
           </el-col>
         </el-row>
       </div>
-      <div class="btns mt10px">
+      <div class="btns mt10px mb10px" v-if="receiveData.applytype===0">
         <el-button type="success" @click.native="applyResult(20,200)" :disabled="btnDisabled">跟进</el-button>
         <el-button type="primary" @click.native="applyResult(10,0)" :disabled="btnDisabled">转跟踪</el-button>
         <el-button type="warning" @click.native="applyResult(-10,0)" :disabled="btnDisabled">暂不联系</el-button>

@@ -6,12 +6,13 @@
           <el-input v-if="item.where.type==='text'" v-model="item.where.val[0]" :placeholder="item.as" class="item item-width">
             <template slot="prepend">{{item.as}}:</template>
           </el-input>
-          <el-date-picker v-if="item.where.type==='datetime'" v-model="item.where.val" value-format="yyyy/MM/dd HH:mm" format="yyyy/MM/dd HH:mm" type="datetimerange" range-separator="至" :start-placeholder="item.as" :end-placeholder="item.as" class="item" style="width:300px;"></el-date-picker>
-          <select-trade v-if="item.where.type==='indu'" v-model="item.where.val" class="item item-width"></select-trade>
-          <select-area v-if="item.where.type==='area'" v-model="item.where.val" class="item item-width"></select-area>
-          <auto-select v-if="item.where.type==='dropdown'" v-model="item.where.val[0].type" :title="item.as" class="item item-width">
+          <el-date-picker v-if="item.where.type==='datetime'" v-model="item.where.val[0]" value-format="yyyy/MM/dd HH:mm" format="yyyy/MM/dd HH:mm" type="datetimerange" range-separator="至" :start-placeholder="item.as" :end-placeholder="item.as" class="item item-width"></el-date-picker>
+          <select-trade v-if="item.where.type==='indu'" v-model="item.where.val[0]" class="item item-width"></select-trade>
+          <select-area v-if="item.where.type==='area'" v-model="item.where.val[0]" class="item item-width"></select-area>
+          <auto-select v-if="item.where.type==='dropdown'" v-model="item.where.val[0]" :title="item.as" class="item item-width">
             <el-option v-for="(op,index) in item.where.options" :key="index" :label="op.text" :value="op.type"></el-option>
           </auto-select>
+          <select-department @upDeptId="(id)=>{item.where.val[0]=id}" v-if="item.where.type==='depart'" :title="item.as" class="item item-width"></select-department>
         </template>
       </div>
       <div class="item">
@@ -20,7 +21,8 @@
       </div>
       <div class="item export">
         <span v-for="(act, index) in acts" :key="index" :class="index?'ml10px':''">
-          <el-button @click.native="search(act.label.indexOf('导入')>-1?'import':'export')" :type="index%2===1?'primary':'warning'">{{act.label}}</el-button>
+          <up-file v-if="act.label.indexOf('导入')>-1" :title="act.label" :uploadUrl="serverUrl+'/'+act.url+'&tk='+tk" :otherParams="upLoadOtherParams" :isHiddenFileList="true"></up-file>
+          <el-button v-else @click.native="exportExcell(act)" :type="index%2===1?'primary':'warning'">{{act.label}}</el-button>
         </span>
       </div>
     </div>
@@ -45,8 +47,17 @@ import Page from '@/base/page/page'
 import SelectArea from 'base/selectArea/selectArea'
 import SelectTrade from 'base/selectTrade/selectTrade'
 import AutoSelect from 'base/autoSelect/autoSelect'
+import SelectDepartment from 'base/selectDepartment/selectDepartment'
+import UpFile from 'base/upLoad/upFile'
+import cookie from 'js-cookie'
+import {serverUrl} from 'api/http'
 export default {
   computed: {
+    upLoadOtherParams () {
+      return {
+        rpt_id: this.$route.name
+      }
+    },
     sendParams () {
       return {
         rpt_id: this.$route.name
@@ -55,12 +66,13 @@ export default {
   },
   data () {
     return {
+      serverUrl: serverUrl,
+      tk: cookie.get('token'),
       cols: [],
       acts: [],
       myList: [],
       list: [],
       url: '/rpt.do?get',
-
       otherParams: {
         rpt_data: {
           columns: []
@@ -68,21 +80,23 @@ export default {
       }
     }
   },
-  created () {
-    // this._getInit(this.path)
-  },
-  mounted () {},
   methods: {
+    exportExcell (type, data) {
+      if (type === 'export') {
+        this.$export('/' + data.url, this.sendParams)
+      } else {
+
+      }
+    },
     search () {
-      this.sendParams = {
-        rpt_id: this.$route.name,
+      this.otherParams = {
         rpt_data: {
           pageno: 1,
           pagenum: 10,
           columns: this.cols
         }
       }
-      // this.$post('/rpt.do?get')
+      console.log(this.sendParams)
     },
     getList (res) {
       if (res.data.success) {
@@ -103,7 +117,6 @@ export default {
         for (var key in exportBtns) {
           this.acts.push(exportBtns[key])
         }
-        console.log(this.acts)
       }
     }
   },
@@ -111,7 +124,9 @@ export default {
     Page,
     SelectArea,
     SelectTrade,
-    AutoSelect
+    AutoSelect,
+    SelectDepartment,
+    UpFile
   }
 }
 </script>

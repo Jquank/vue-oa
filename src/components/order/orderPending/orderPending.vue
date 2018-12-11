@@ -1,7 +1,7 @@
 <template>
   <div class="order-pending component-container media-padding">
     <div class="pending-content">
-      <div class="tab">
+      <div v-if="permissions.indexOf('59') > -1" class="tab">
         <el-radio-group v-model="tabStatus" @change="tab">
           <el-radio-button label="0">全部</el-radio-button>
           <el-radio-button label="100">未加款</el-radio-button>
@@ -34,7 +34,7 @@
         <el-input placeholder="搜索百度ID" v-model="bd_id" class="search-item item-width">
           <template slot="prepend">百度 ID:&nbsp;&nbsp;</template>
         </el-input>
-        <auto-select :key="key_achievement" title="选择业绩" v-model="achievement" class="search-item item-width">
+        <auto-select v-if="permissions.indexOf('4d') > -1" :key="key_achievement" title="选择业绩" v-model="achievement" class="search-item item-width">
           <el-option v-for="item in achievements" :key="item.value" :label="item.label" :value="item.opentime"></el-option>
         </auto-select>
         <div class="search-item">

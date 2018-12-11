@@ -56,6 +56,9 @@ export default {
     sendParams () {
       this.key = new Date() + '' // 修复搜索时当前页未改变为1的bug
       this._getFirstList()
+    },
+    otherParams () {
+      this._getFirstList()
     }
 
   },
@@ -84,7 +87,7 @@ export default {
       let params = Object.assign({}, {
         pagesize: 10,
         currentpage: 1
-      }, this.sendParams)
+      }, this.sendParams, this.otherParams)
 
       this.$post(this.url, params)
         .then(res => {

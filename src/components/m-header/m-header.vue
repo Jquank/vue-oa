@@ -57,6 +57,7 @@
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item @click.native="dialogFormVisible = true">修改个人信息</el-dropdown-item>
                 <el-dropdown-item @click.native="exitLogin">退出登录</el-dropdown-item>
+                <!-- <el-dropdown-item @click.native="errorHistory">历史报错</el-dropdown-item> -->
               </el-dropdown-menu>
             </el-dropdown>
           </a>
@@ -82,6 +83,10 @@
       </div>
     </el-dialog>
     <!-- 修改个人信息弹窗 end-->
+
+    <el-dialog :modal-append-to-body="false" :append-to-body="true" title="错误收集" :visible.sync="errorDialog" width="900px">
+      <error-collect></error-collect>
+    </el-dialog>
   </div>
 
 </template>
@@ -93,6 +98,7 @@ import cookie from 'js-cookie'
 import storage from 'good-storage'
 import { mapGetters, mapMutations } from 'vuex'
 import { autoHeight } from 'common/js/utils'
+import ErrorCollect from 'base/errorCollect/errorCollect'
 export default {
   computed: {
     uName () {
@@ -116,7 +122,8 @@ export default {
       firstTitle: '首页',
       secondTitle: '',
       thirdTitle: '',
-      lastRoutePath: ''
+      lastRoutePath: '',
+      errorDialog: false
     }
   },
   watch: {
@@ -139,6 +146,9 @@ export default {
     autoHeight()
   },
   methods: {
+    errorHistory () {
+      this.errorDialog = true
+    },
     // 侧边栏折叠
     nested () {
       this.changeCollapseCount()
@@ -218,6 +228,9 @@ export default {
     ...mapMutations({
       changeCollapseCount: 'CHANGE_COLLAPSE_COUNT'
     })
+  },
+  components: {
+    ErrorCollect
   }
 }
 </script>

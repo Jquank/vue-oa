@@ -336,11 +336,11 @@ export default {
     }
     this.renewParams = { companyId: this.receiveData.id }
     this.applyChangeParams = this.stopParams = {
-      companyId: this.receiveData.id,
+      companyid: this.receiveData.id,
       companylogid: this.receiveData.companylogid
     }
     this.changeParams = {
-      companyId: this.receiveData.id,
+      companyid: this.receiveData.id,
       companylogid: this.receiveData.companylogid,
       companylogtype: this.cusDetail.cltype,
       companylogstatus: this.cusDetail.clstatus

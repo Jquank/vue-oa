@@ -1,7 +1,7 @@
 <template>
   <div class="allot-contract component-container media-padding">
     <div class="add-contract">
-      <el-button @click.native="addContract" icon="el-icon-plus" type="primary" class="allot-item">新增合同</el-button>
+      <el-button v-if="permissions.indexOf('43') > -1" @click.native="addContract" icon="el-icon-plus" type="primary" class="allot-item">新增合同</el-button>
     </div>
     <div class="allot-search">
       <auto-select :key="key_auto_select" title="合同类型" v-model="contratType" class="allot-item item-width">
@@ -27,7 +27,7 @@
       </el-table-column>
       <el-table-column prop="count" label="份数">
       </el-table-column>
-      <el-table-column prop="" label="操作" min-width="100px">
+      <el-table-column prop="" label="操作" min-width="100px" align="center">
         <template slot-scope="scope">
           <el-button @click.native="allot(scope.row)" type="success" class="xsbtn">分配</el-button>
           <el-button @click.native="back(scope.row)" type="danger" class="xsbtn">驳回</el-button>
@@ -59,13 +59,13 @@
         <el-button @click.native="searchContractNum" type="primary">查询</el-button>
       </div>
       <el-table @selection-change="handleSelectionChange" stripe border :data="allotList" style="width: 100%;margin-top:10px;">
-        <el-table-column type="selection" width="55">
+        <el-table-column type="selection" width="45">
         </el-table-column>
         <el-table-column prop="contractnumber" label="合同编号">
         </el-table-column>
         <el-table-column prop="catname" label="合同类型">
         </el-table-column>
-        <el-table-column prop="" label="操作">
+        <el-table-column prop="" label="操作" align="center">
           <template slot-scope="scope">
             <el-button @click.native="delContract(scope.row)" type="danger" class="xsbtn">删除</el-button>
           </template>
@@ -83,9 +83,11 @@
 import Page from 'base/page/page'
 import AutoSelect from 'base/autoSelect/autoSelect'
 import SelectDepartment from 'base/selectDepartment/selectDepartment'
+import cookie from 'js-cookie'
 export default {
   data () {
     return {
+      permissions: cookie.getJSON('permissions'),
       contratType: undefined,
       contratTypeList: [],
       key_auto_select: '',
@@ -233,6 +235,7 @@ export default {
         username: this.rowData.username
       }
       this.$post('/Contract.do?Alloction', params).then(res => {
+        this.$message.success('已分配！')
         this.allotDialog = false
         this.search()
       })

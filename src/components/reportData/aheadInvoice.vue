@@ -23,10 +23,10 @@
         <el-option label="纸质普票" value="10"></el-option>
         <el-option label="专票" value="20"></el-option>
       </auto-select>
-      <el-date-picker v-model="applyDate" format="yyyy/MM/dd HH:mm" value-format="yyyy/MM/dd HH:mm" :unlink-panels="true" type="datetimerange" range-separator="至" start-placeholder="申请时间" end-placeholder="申请时间" class="visit-item" style="width:300px;"></el-date-picker>
-      <el-date-picker v-model="invoiceDate" format="yyyy/MM/dd HH:mm" value-format="yyyy/MM/dd HH:mm" :unlink-panels="true" type="datetimerange" range-separator="至" start-placeholder="开票时间" end-placeholder="开票时间" class="visit-item" style="width:300px;"></el-date-picker>
-      <el-date-picker v-model="addDate" format="yyyy/MM/dd HH:mm" value-format="yyyy/MM/dd HH:mm" :unlink-panels="true" type="datetimerange" range-separator="至" start-placeholder="加款时间" end-placeholder="加款时间" class="visit-item" style="width:300px;"></el-date-picker>
-      <el-date-picker v-model="removeDate" format="yyyy/MM/dd HH:mm" value-format="yyyy/MM/dd HH:mm" :unlink-panels="true" type="datetimerange" range-separator="至" start-placeholder="实际销账时间" end-placeholder="实际销账时间" class="visit-item" style="width:300px;"></el-date-picker>
+      <el-date-picker v-model="applyDate" format="yyyy/MM/dd HH:mm" value-format="yyyy/MM/dd HH:mm" :unlink-panels="true" type="datetimerange" range-separator="至" start-placeholder="申请时间" end-placeholder="申请时间" class="visit-item item-width"></el-date-picker>
+      <el-date-picker v-model="invoiceDate" format="yyyy/MM/dd HH:mm" value-format="yyyy/MM/dd HH:mm" :unlink-panels="true" type="datetimerange" range-separator="至" start-placeholder="开票时间" end-placeholder="开票时间" class="visit-item item-width"></el-date-picker>
+      <el-date-picker v-model="addDate" format="yyyy/MM/dd HH:mm" value-format="yyyy/MM/dd HH:mm" :unlink-panels="true" type="datetimerange" range-separator="至" start-placeholder="加款时间" end-placeholder="加款时间" class="visit-item item-width"></el-date-picker>
+      <el-date-picker v-model="removeDate" format="yyyy/MM/dd HH:mm" value-format="yyyy/MM/dd HH:mm" :unlink-panels="true" type="datetimerange" range-separator="至" start-placeholder="实际销账时间" end-placeholder="实际销账时间" class="visit-item item-width"></el-date-picker>
       <div class="visit-item">
         <el-button @click.native="search" type="primary">查 询</el-button>
         <el-button @click.native="reset" type="warning">重 置</el-button>
@@ -84,7 +84,7 @@
           </el-table-column>
           <el-table-column label="操作" width="80">
             <template slot-scope="scope">
-              <el-button @click.native.prevent="writeVisitResult(scope.row)" type="primary" class="xsbtn">查看</el-button>
+              <el-button @click.native.prevent="viewAheadInvoice(scope.row)" type="primary" class="xsbtn">查看</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -126,7 +126,7 @@
           </el-table-column>
           <el-table-column label="操作" width="80">
             <template slot-scope="scope">
-              <el-button @click.native.prevent="writeVisitResult(scope.row)" type="primary" class="xsbtn">查看</el-button>
+              <el-button @click.native.prevent="viewAheadAddMoney(scope.row)" type="primary" class="xsbtn">查看</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -202,7 +202,12 @@ export default {
       this.invoiceType = ''
     },
     exportExcell () {
-      this.$export('/Invoice.do?exportexcel', this.invoiceParams)
+      let obj = {
+        code: this.activeName === 'invoice' ? 78 : 79,
+        hasinvoice: 10,
+        isAdvance: 'isAdvance'
+      }
+      this.$export('/Invoice.do?exportexcel', this.invoiceParams, obj)
     },
     handleChangeRadio (val) {
       this.removeType = val

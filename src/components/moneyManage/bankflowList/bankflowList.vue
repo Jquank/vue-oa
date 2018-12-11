@@ -4,9 +4,11 @@
       <div class="status">
         <!-- 分配状态按钮 -->
         <el-radio-group v-model="selStatus" @change="changeStatus" class="status-item" style="width:303px;">
-          <el-radio-button v-for="item in statusList" :key="item.id" :label="item.val">
-            {{item.text}}
-          </el-radio-button>
+          <template v-for="item in statusList">
+            <el-radio-button :key="item.per" :label="item.val" v-if="item.per.length<2||permissions.indexOf(item.per)>-1">
+              {{item.text}}
+            </el-radio-button>
+          </template>
         </el-radio-group>
         <!-- 银行类型 -->
         <auto-select :key="key_bank" v-model="selBank" :title="'银行类型'" class="status-item">
@@ -23,8 +25,9 @@
         </auto-select>
       </div>
       <div class="btns">
-        <el-button type="primary" icon="fa fa-cloud-download"> 导入流水</el-button>
-        <el-button type="warning" icon="fa fa-cloud-upload"> 导出流水</el-button>
+        <up-file v-if="permissions.indexOf('4u') > -1" :title="'导入流水'" :upIcon="'fa fa-cloud-download'" :isHiddenFileList="true"
+        :uploadUrl="serverUrl + '/receipt.do?importBS' + '&tk=' + tk" class="btns-item"></up-file>
+        <el-button v-if="permissions.indexOf('6j') > -1" @click.native="exportFlow" type="warning" icon="fa fa-cloud-upload" class="btns-item"> 导出流水</el-button>
       </div>
     </div>
     <!-- 搜索 -->
@@ -73,7 +76,7 @@
       <el-table-column class-name="splited-col" label="拆分后金额" prop="" width="100">
         <template slot-scope="scope">
           <el-table class="split-item" :data="scope.row.split"  :show-header="false">
-            <el-table-column class-name="split-item-col" label="" prop="''">
+            <el-table-column class-name="split-item-col" label="" prop="">
               <span slot-scope="scope">{{scope.row.split_amount | currency1}}</span>
             </el-table-column>
           </el-table>
@@ -99,7 +102,7 @@
       </el-table-column>
       <el-table-column v-if="selStatus!=0" class-name="splited-col" label="公司名称" prop="" width="180">
         <template slot-scope="scope">
-          <el-table class="split-item" :data="scope.row.split"  :show-header="false">
+          <el-table  :cell-style="setCellStyle" class="split-item" :data="scope.row.split"  :show-header="false">
             <el-table-column show-overflow-tooltip class-name="split-item-col" label="" prop="">
               <span slot-scope="scope">{{(scope.row.wfndStatus===300||scope.row.reckStatus===300)?scope.row.companyname:'.'}}</span>
             </el-table-column>
@@ -142,14 +145,16 @@
           </el-table>
         </template>
       </el-table-column>
-      <el-table-column v-if="selStatus!=20" class-name="splited-col" label="操作" prop="" width="100">
+      <el-table-column v-if="selStatus!=20" class-name="splited-col" label="操作" prop="" width="90" align="center">
         <template slot-scope="scope">
           <el-table class="split-item" :data="scope.row.split"  :show-header="false">
             <el-table-column show-overflow-tooltip class-name="split-item-col" label="" prop="">
               <!-- 后代作用域插槽 -->
               <template slot-scope="cscope">
-                <el-dropdown trigger="click" split-button type="primary">
-                  操作
+                <el-dropdown trigger="click">
+                  <el-button type="primary">
+                    操作<i class="el-icon-arrow-down el-icon--right"></i>
+                  </el-button>
                   <el-dropdown-menu id="my-dropdown-menu" divided slot="dropdown">
                     <el-dropdown-item>
                       <el-button v-if="permissions.indexOf( '6s')>-1&&selStatus===0" @click.native.prevent="allot(cscope.row)" size="mini" type="primary">分配</el-button>
@@ -199,7 +204,10 @@
     </el-dialog>
     <!-- 选择人员弹窗 -->
     <el-dialog :modal-append-to-body="false" title="选择人员" :visible.sync="selUserDialog" width="550px">
-      <select-user @userId="getUserId" @closeDialog="closeDialog"></select-user>
+      <select-user :key="key_seluser" @userId="getUserId" @closeDialog="selUserDialog=false"></select-user>
+    </el-dialog>
+    <el-dialog :modal-append-to-body="false" title="选择维护客服" :visible.sync="selKeepUserDialog" width="550px">
+      <select-user :key="key_selkeepuser" @userId="getKeepUserId" @closeDialog="selKeepUserDialog=false"></select-user>
     </el-dialog>
     <!-- 拆账弹窗 -->
     <el-dialog :modal-append-to-body="false" title="拆账" :visible.sync="splitDialog" width="500px">
@@ -235,10 +243,10 @@
     </el-dialog>
     <!-- 编辑流水弹窗 -->
     <el-dialog :modal-append-to-body="false" :title="'编辑流水信息----金额 : '+ flowMoney" :visible.sync="editDialog" width="800px">
-      <el-form :model="editForm" label-width="120px">
+      <el-form :model="editForm" label-width="140px">
         <el-form-item label="" required>
           <template slot="label">
-            <el-button @click.native.prevent="selUser" type="primary">选择使用人</el-button>
+            <el-button @click.native.prevent="selUser('user')" type="primary">选择使用人</el-button>
           </template>
           <el-input v-model="editForm.user" disabled></el-input>
         </el-form-item>
@@ -251,16 +259,25 @@
         <el-form-item label="百度账号 :" required>
           <el-input v-model="editForm.bdAccount"></el-input>
         </el-form-item>
-        <el-form-item label="类型 :" required>
+        <el-form-item label="用户ID :" required>
+          <el-input v-model="editForm.id"></el-input>
+        </el-form-item>
+        <el-form-item label="" required>
+          <template slot="label">
+            <el-button @click.native.prevent="selUser('keepUser')" type="primary">选择维护客服</el-button>
+          </template>
+          <el-input v-model="editForm.keepUser" disabled></el-input>
+        </el-form-item>
+        <!-- <el-form-item label="类型 :" required>
           <el-radio v-model="editForm.radio" label="1">新开</el-radio>
           <el-radio v-model="editForm.radio" label="0">续费</el-radio>
-        </el-form-item>
-        <el-form-item label="产品类型 :">
+        </el-form-item> -->
+        <!-- <el-form-item label="产品类型 :">
           <el-checkbox-group @change="selProduct" v-model="editForm.productType">
             <el-checkbox v-for="(item,index) in editForm.productList" :key="index" :label="item">{{item.code_desc}}</el-checkbox>
           </el-checkbox-group>
-        </el-form-item>
-        <el-form-item v-if="editForm.productMoneyList.length!==0">
+        </el-form-item> -->
+        <!-- <el-form-item v-if="editForm.productMoneyList.length!==0">
           <el-table :data="editForm.productMoneyList" border size="mini">
             <el-table-column label="" prop="" width="100">
               <span slot-scope="scope">{{scope.row.type | productType}}</span>
@@ -286,14 +303,17 @@
               </template>
             </el-table-column>
           </el-table>
-        </el-form-item>
-        <el-form-item label="大搜服务费 :" required>
+        </el-form-item> -->
+        <!-- <el-form-item label="大搜服务费 :" required>
           <el-input v-model="editForm.searvice"></el-input>
         </el-form-item>
         <el-form-item label="服务费期限 :" required>
           <el-input v-model="editForm.searviceYear">
             <span slot="prepend">月</span>
           </el-input>
+        </el-form-item> -->
+        <el-form-item label="提单金额 :">
+          <el-input v-model="editForm.money"></el-input>
         </el-form-item>
         <el-form-item label="提单时间 :" required>
           <el-date-picker
@@ -313,12 +333,12 @@
       </el-form>
     </el-dialog>
     <!-- 选择公司弹窗 -->
-    <el-dialog :modal-append-to-body="false" title="选择公司" :visible.sync="selCompanyDialog" width="800px">
+    <el-dialog :modal-append-to-body="false" title="选择公司" :visible.sync="selCompanyDialog" width="900px">
       <el-input @click.native.prevent="searchCompany($event)" @keydown.enter.native="searchCompany('enter')" v-model="comForm.companyName" style="margin-top:10px;" placeholder="搜索客服">
         <span slot="append" class="search-service">搜索客服</span>
       </el-input>
       <el-table id="cus-out-table" :data="comList" class="table-width">
-        <el-table-column prop="companyname" label="客户名称">
+        <el-table-column prop="companyname" label="客户名称" min-width="170">
         </el-table-column>
         <el-table-column prop="" label="客户类型">
           <span slot-scope="scope">{{scope.row.producttype | cusState('cusType')}}</span>
@@ -335,7 +355,7 @@
         </el-table-column>
         <el-table-column prop="baidu_account" label="百度账号">
         </el-table-column>
-        <el-table-column prop="" label="操作">
+        <el-table-column prop="" label="操作" align="center">
           <template slot-scope="scope">
             <el-button @click.native.prevent="confirmSelCompany(scope.row)" type="success" class="xsbtn">选择</el-button>
           </template>
@@ -352,11 +372,15 @@ import cookie from 'js-cookie'
 import Page from 'base/page/page'
 import AutoSelect from 'base/autoSelect/autoSelect'
 import SelectUser from 'base/selectUser/selectUser'
+import UpFile from 'base/upLoad/upFile'
+import { serverUrl } from 'api/http'
 export default {
   data () {
     return {
+      serverUrl: serverUrl,
       rid: cookie.get('rid'),
       permissions: cookie.getJSON('permissions'),
+      tk: cookie.get('token'),
       userId: cookie.get('userId'),
       isFixed: true,
       expandTest: [{ name: 'ddd', age: 18 }, { name: 'ccc', age: 19 }],
@@ -368,10 +392,10 @@ export default {
       },
       bankList: [],
       statusList: [
-        { id: 0, text: '待分配(待认领)', val: 0 },
-        { id: 1, text: '已分配', val: 10 },
-        { id: 2, text: '已认领', val: 20 },
-        { id: 3, text: '全部', val: 100 }
+        { per: '1', text: '待分配(待认领)', val: 0 },
+        { per: '6w', text: '已分配', val: 10 },
+        { per: '6x', text: '已认领', val: 20 },
+        { per: '2', text: '全部', val: 100 }
       ],
       selStatus: 0,
       selBank: '',
@@ -393,6 +417,7 @@ export default {
         shangWu: ''
       },
       selUserDialog: false,
+      selKeepUserDialog: false,
       selUserId: '',
       splitDialog: false,
       splitForm: {
@@ -415,7 +440,10 @@ export default {
         productMoneyList: [],
         searvice: '0',
         searviceYear: '0',
-        subOrderDate: ''
+        subOrderDate: '',
+        money: 0,
+        id: '',
+        keepUser: ''
       },
       selCompanyDialog: false,
       comForm: {
@@ -425,7 +453,9 @@ export default {
       comUrl: '/Search.do?ByBaiduAccount',
       comParams: {},
       comInfo: {},
-      flowMoney: 0
+      flowMoney: 0,
+      key_seluser: '',
+      key_selkeepuser: '1'
     }
   },
   computed: {
@@ -453,22 +483,30 @@ export default {
     this._getBankType()
   },
   methods: {
+    setCellStyle ({row, column, rowIndex, columnIndex}) {
+      console.log(row)
+    },
+    exportFlow () {
+      this.$export('/receipt.do?bankReceiptExport', this.sendParams)
+    },
     // 分配流水
     allot (data) {
       this.rowData = data
       // this.allotForm.shangWu = ''
       this.allotDialog = true
     },
-    selUser () {
-      this.selUserDialog = true
+    selUser (type) {
+      type === 'user' ? this.selUserDialog = true : this.selKeepUserDialog = true
+      this.key_seluser = new Date() + ''
+      this.key_selkeepuser = new Date() + '1'
     },
     getUserId (id, name) {
       this.selUserId = id
       this.allotForm.shangWu = name
       this.editForm.user = name
     },
-    closeDialog () {
-      this.selUserDialog = false
+    getKeepUserId (id, name) {
+      this.editForm.keepUser = name
     },
     confirmAllot () {
       let params = {
@@ -613,7 +651,7 @@ export default {
       })
     },
     // 删除
-    deleteFlow () {
+    deleteFlow (data) {
       this.$confirm('确定要删除此笔流水吗?', '', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -621,8 +659,8 @@ export default {
       }).then(() => {
         let params = {
           idsarray: [{
-            id: this.rowData.id,
-            pid: this.rowData.pid
+            id: data.id,
+            pid: data.pid
           }]
         }
         this.$post('/receipt.do?delBankRecept', params).then(res => {
@@ -648,7 +686,7 @@ export default {
     },
     // 编辑
     editFlow (data) {
-      // this.editForm.user = ''
+      this.editForm.money = data.split_amount
       this.selUserId = ''
       this.comInfo = {}
       this.editForm.subOrderDate = ''
@@ -695,50 +733,58 @@ export default {
       this.comInfo = data
       this.editForm.bdAccount = this.comInfo.baidu_account
       this.editForm.company = this.comInfo.companyname
+      this.editForm.id = this.comInfo.baidu_id
+      this.editForm.keepUser = this.comInfo.kefu
+      this.editForm.cpid = this.comInfo.cpid
       this.selCompanyDialog = false
     },
     subEdit () {
       let params = {
-        bsid: this.rowData.bsid,
+        bsid: this.rowData.id,
         uid: this.selUserId,
         remark: this.editForm.remark,
         companyid: this.comInfo.companyid,
         companylogid: this.comInfo.companylogid,
+        companyname: this.comInfo.companyname,
         baidu_account: this.editForm.bdAccount,
         bill_time: this.editForm.subOrderDate,
-        useDetail: this.editForm.productMoneyList,
-        service_money: this.editForm.searvice,
-        service_year: this.editForm.searviceYear,
-        orderOrRenew: this.editForm.radio === '1' ? 'order' : 'renew'
+        // useDetail: this.editForm.productMoneyList,
+        // service_money: this.editForm.searvice,
+        // service_year: this.editForm.searviceYear,
+        // orderOrRenew: this.editForm.radio === '1' ? 'order' : 'renew',
+        kefu: this.editForm.keepUser,
+        baidu_id: this.editForm.id,
+        cpid: this.editForm.cpid
       }
-      if (!params.baidu_account || !params.bill_time || !params.companyid || !params.uid || !params.service_money || !params.service_year) {
+      console.log(params)
+      if (!params.baidu_account || !params.bill_time || !params.companyid || !params.uid) {
         this.$message({
           type: 'warning',
           message: '请完善必填信息！'
         })
         return
       }
-      let regNum = /^\d{1,}(\.)?\d*$/
-      let sum = 0
-      if (this.editForm.productMoneyList.length !== 0) {
-        this.editForm.productMoneyList.forEach(val => {
-          if (!regNum.test(val.real_amount) || !regNum.test(val.djq) || !regNum.test(val.xjq) || !regNum.test(val.apply_amount)) {
-            this.$message({
-              type: 'warning',
-              message: '请填写产品金额！'
-            })
-            throw new Error('ignore')
-          }
-          sum += parseFloat(val.real_amount)
-        })
-        if ((sum + parseFloat(this.editForm.searvice)).toFixed(2) !== parseFloat(this.flowMoney).toFixed(2)) {
-          this.$message({
-            type: 'warning',
-            message: '请确保实际总到款等于流水金额！'
-          })
-          return
-        }
-      }
+      // let regNum = /^\d{1,}(\.)?\d*$/
+      // let sum = 0
+      // if (this.editForm.productMoneyList.length !== 0) {
+      //   this.editForm.productMoneyList.forEach(val => {
+      //     if (!regNum.test(val.real_amount) || !regNum.test(val.djq) || !regNum.test(val.xjq) || !regNum.test(val.apply_amount)) {
+      //       this.$message({
+      //         type: 'warning',
+      //         message: '请填写产品金额！'
+      //       })
+      //       throw new Error('ignore')
+      //     }
+      //     sum += parseFloat(val.real_amount)
+      //   })
+      //   if ((sum + parseFloat(this.editForm.searvice)).toFixed(2) !== parseFloat(this.flowMoney).toFixed(2)) {
+      //     this.$message({
+      //       type: 'warning',
+      //       message: '请确保实际总到款等于流水金额！'
+      //     })
+      //     return
+      //   }
+      // }
       this.$post('/receipt.do?manualUserReceive', params).then(res => {
         if (res.data.success) {
           this.$message({
@@ -797,7 +843,8 @@ export default {
   components: {
     Page,
     AutoSelect,
-    SelectUser
+    SelectUser,
+    UpFile
   }
 }
 </script>
@@ -825,7 +872,8 @@ export default {
       }
     }
     .btns {
-      > .el-button {
+      .btns-item {
+        display: inline-block;
         margin-top: 10px;
         margin-left: 10px;
       }

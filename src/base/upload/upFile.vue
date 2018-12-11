@@ -13,7 +13,7 @@
       :data="otherParams"
       :show-file-list="showFileList"
     >
-      <el-button size="small" type="primary" :class="upIcon"> {{title}}</el-button>
+      <el-button size="small" :type="type" :class="upIcon"> {{title}}</el-button>
       <!-- <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div> -->
     </el-upload>
   </div>
@@ -48,6 +48,10 @@ export default {
     isHiddenFileList: {
       type: Boolean,
       default: false
+    },
+    type: {
+      type: String,
+      default: 'primary'
     }
   },
   data () {
@@ -57,13 +61,17 @@ export default {
     }
   },
   methods: {
-    upSuccess (file, fileList) {
+    upSuccess (response, file, fileList) {
       this.$emit('fileUrl', file)
       if (this.isHiddenFileList) {
-        this.$message.success('导入成功！')
         setTimeout(() => {
           this.showFileList = false
         }, 2000)
+        if (response.success) {
+          this.$message.success(response.msg || '导入成功！')
+        } else {
+          this.$message.error(response.msg || '导入失败！')
+        }
       }
     },
     handleExceed (files, fileList) {

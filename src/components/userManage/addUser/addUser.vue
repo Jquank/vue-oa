@@ -1,26 +1,26 @@
 <template>
   <div class="add-user component-container media-padding">
-    <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+    <el-form ref="form" :model="form" :rules="rules" label-width="90px">
       <el-row :gutter="20">
         <el-col :md="12" class="maxwidth">
-          <el-form-item label="账户名 :" :label-width="labelWidth" prop="accountName">
+          <el-form-item label="账户名 :"  prop="accountName">
             <el-input @blur="accountNameBlur" v-model="form.accountName" :disabled="editDisable || quotaDisable" placeholder="账户名"></el-input>
           </el-form-item>
         </el-col>
         <el-col :md="12" class="maxwidth">
-          <el-form-item label="真实姓名 :" :label-width="labelWidth"  prop="trueName">
+          <el-form-item label="真实姓名 :"   prop="trueName">
             <el-input v-model="form.trueName" :disabled="editDisable || quotaDisable" placeholder="真实姓名"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
         <el-col :md="12" class="maxwidth">
-          <el-form-item label="工号 :" :label-width="labelWidth" prop="userNum">
+          <el-form-item label="工号 :"  prop="userNum">
             <el-input v-model="form.userNum" :disabled="quotaDisable" placeholder="工号"></el-input>
           </el-form-item>
         </el-col>
         <el-col :md="12" class="maxwidth">
-          <el-form-item label="性别 :" :label-width="labelWidth" prop="sex">
+          <el-form-item label="性别 :"  prop="sex">
             <el-select v-model="form.sex" :disabled="repeatDisabled || quotaDisable" placeholder="选择性别" style="width:100%;">
               <el-option label="男" value="0"></el-option>
               <el-option label="女" value="1"></el-option>
@@ -30,51 +30,37 @@
       </el-row>
       <el-row :gutter="20" v-if="!quotaDisable">
         <el-col :md="12" class="maxwidth">
-          <el-form-item label="身份证号 :" :label-width="labelWidth" prop="idCardNum">
+          <el-form-item label="身份证号 :"  prop="idCardNum">
             <el-input v-model="form.idCardNum" :disabled="repeatDisabled" placeholder="身份证号"></el-input>
           </el-form-item>
         </el-col>
         <el-col :md="12" class="maxwidth">
-          <el-form-item label="密码 :" :label-width="labelWidth">
+          <el-form-item label="密码 :" >
             <el-input v-model="form.password" :disabled="repeatDisabled" placeholder="密码"></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="20" v-if="!quotaDisable">
-        <el-col :md="12" class="maxwidth">
-          <el-form-item label="银行卡号 :" :label-width="labelWidth">
-            <el-input v-model="form.bankCardNum" :disabled="repeatDisabled" placeholder="银行卡号"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :md="12" class="maxwidth">
-          <el-form-item label="角色 :" :label-width="labelWidth" prop="role">
-            <el-select v-model="form.role" :disabled="repeatDisabled" placeholder="选择角色" style="width:100%;">
-              <el-option v-for="item in form.roleList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-            </el-select>
           </el-form-item>
         </el-col>
       </el-row>
       <!-- 保A配额 -->
       <el-row v-if="editDisable || quotaDisable" :gutter="20">
         <el-col :md="12" class="maxwidth">
-          <el-form-item label="保A配额 :" :label-width="labelWidth">
+          <el-form-item label="保A配额 :" >
             <el-input v-model="form.baoAquota" placeholder="保A配额"></el-input>
           </el-form-item>
         </el-col>
         <el-col :md="12" class="maxwidth">
-          <el-form-item label="跟踪配额 :" :label-width="labelWidth">
+          <el-form-item label="跟踪配额 :" >
             <el-input v-model="form.followQuota" placeholder="跟踪配额"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20" v-if="!quotaDisable">
         <el-col :md="12" class="maxwidth">
-          <el-form-item label="部门 :" :label-width="labelWidth">
+          <el-form-item label="部门 :" prop="dept">
             <select-department @upDeptId="upDeptId" :prepend="false" :echoDept="echoDept" :key="key_dept" v-model="form.dept" style="width:100%"></select-department>
           </el-form-item>
         </el-col>
         <el-col :md="12" class="maxwidth">
-          <el-form-item label="职位 :" :label-width="labelWidth" prop="job">
+          <el-form-item label="职位 :"  prop="job">
             <el-select v-model="form.job" :disabled="repeatDisabled" placeholder="选择职位" style="width:100%">
               <el-option v-for="item in form.jobList" :key="item.id" :label="item.code_desc" :value="item.code_val"></el-option>
             </el-select>
@@ -83,24 +69,24 @@
       </el-row>
       <el-row :gutter="20" v-if="!quotaDisable">
         <el-col :md="12" class="maxwidth">
-          <el-form-item label="手机 :" :label-width="labelWidth">
+          <el-form-item label="手机 :" >
             <el-input v-model="form.phone" :disabled="repeatDisabled" placeholder="手机号"></el-input>
           </el-form-item>
         </el-col>
         <el-col :md="12" class="maxwidth">
-          <el-form-item label="座机 :" :label-width="labelWidth">
+          <el-form-item label="座机 :" >
             <el-input v-model="form.extention" :disabled="repeatDisabled" placeholder="座机号"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20" v-if="!quotaDisable">
         <el-col :md="12" class="maxwidth">
-          <el-form-item label="Hi号 :" :label-width="labelWidth">
+          <el-form-item label="Hi号 :" >
             <el-input v-model="form.hi" :disabled="repeatDisabled" placeholder="Hi号"></el-input>
           </el-form-item>
         </el-col>
         <el-col :md="12" class="maxwidth">
-          <el-form-item label="入职日期 :" :label-width="labelWidth">
+          <el-form-item label="入职日期 :" prop="entryDate">
             <el-date-picker v-model="form.entryDate" :disabled="repeatDisabled" value-format="yyyy/MM/dd" type="date" placeholder="选择入职日期" style="width:100%"></el-date-picker>
           </el-form-item>
         </el-col>
@@ -108,12 +94,12 @@
       <!-- 转正日期 -->
       <el-row v-if="editDisable" :gutter="20">
         <el-col :md="12" class="maxwidth">
-          <el-form-item label="转正日期 :" :label-width="labelWidth">
+          <el-form-item label="转正日期 :" >
             <el-date-picker v-model="form.turnRealDate" value-format="yyyy-MM-dd" type="date" placeholder="选择转正日期" style="width:100%"></el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :md="12" class="maxwidth">
-          <el-form-item label="离职日期 :" :label-width="labelWidth">
+          <el-form-item label="离职日期 :" >
             <el-date-picker v-model="form.leaveDate" value-format="yyyy-MM-dd" type="date" placeholder="选择离职日期" style="width:100%"></el-date-picker>
           </el-form-item>
         </el-col>
@@ -124,21 +110,38 @@
             <el-checkbox v-model="form.canCall" :disabled="repeatDisabled" label="允许打电话" border></el-checkbox>
           </el-form-item>
         </el-col>
+        <el-col :md="12" class="maxwidth">
+          <el-form-item label="角色 :"  prop="role">
+            <el-select v-model="form.role" :disabled="repeatDisabled" placeholder="选择角色" style="width:100%;">
+              <el-option v-for="item in form.roleList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20" v-if="!quotaDisable">
+        <!-- 序列 -->
+        <el-col :md="12" class="maxwidth">
+          <el-form-item label="序列 :">
+            <el-select @focus="getRank(form.dept)" v-model="form.rank" :disabled="repeatDisabled" placeholder="选择序列" style="width:100%;">
+              <el-option v-for="item in form.rankList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
         <!-- 百度ID -->
         <el-col v-if="editDisable" :md="12" class="maxwidth">
-          <el-form-item label="百度ID :" :label-width="labelWidth">
+          <el-form-item label="百度ID :" >
             <el-input v-model="form.baiduID" disabled></el-input>
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row :gutter="20">
+      <el-row :gutter="20" v-if="!quotaDisable">
         <el-col :md="12" class="maxwidth">
-          <el-form-item label="招行卡号 :" :label-width="labelWidth">
+          <el-form-item label="招行卡号 :" >
             <el-input v-model="form.EX_ZHYHK" :disabled="repeatDisabled" placeholder="招行卡号"></el-input>
           </el-form-item>
         </el-col>
         <el-col :md="12" class="maxwidth">
-          <el-form-item label="中银卡号 :" :label-width="labelWidth">
+          <el-form-item label="中银卡号 :" >
             <el-input v-model="form.EX_ZGYHYHK" :disabled="repeatDisabled" placeholder="中银卡号"></el-input>
           </el-form-item>
         </el-col>
@@ -185,7 +188,6 @@ export default {
         sex: '',
         idCardNum: '',
         password: '',
-        bankCardNum: '',
         role: '',
         roleList: [],
         job: '',
@@ -201,7 +203,9 @@ export default {
         followQuota: '',
         baiduID: '',
         EX_ZHYHK: '',
-        EX_ZGYHYHK: ''
+        EX_ZGYHYHK: '',
+        rank: '',
+        rankList: []
       },
 
       rules: {
@@ -211,13 +215,15 @@ export default {
         sex: [],
         idCardNum: [],
         role: [],
-        job: []
+        job: [],
+        dept: [],
+        entryDate: []
       }
     }
   },
   created () {
     for (let key in this.rules) {
-      if (key === 'sex' || key === 'role' || key === 'job') {
+      if (key === 'sex' || key === 'role' || key === 'job' || key === 'dept') {
         this.rules[key].push({required: true, message: '请选择必选项', trigger: 'change'})
       } else {
         this.rules[key].push({required: true, message: '请输入必填项内容', trigger: 'blur'})
@@ -228,6 +234,7 @@ export default {
     if (!this.editDisable && !this.quotaDisable) {
       return
     }
+    console.log(this.echoUserInfo)
     this.echoDept = this.echoUserInfo.deptfullname
     this.key_dept = new Date() + ''
     let receiveData = {
@@ -237,7 +244,6 @@ export default {
       trueName: this.echoUserInfo.true_name,
       userNum: this.echoUserInfo.workid,
       idCardNum: this.echoUserInfo.SFZ,
-      bankCardNum: this.echoUserInfo.bankcard,
       password: this.echoUserInfo.pwd, // 新密码
       sex: this.echoUserInfo.sex + '',
       extention: this.echoUserInfo.office_phone,
@@ -252,16 +258,18 @@ export default {
       turnRealDate: timeFormat1(this.echoUserInfo.turningtime),
       entryDate: timeFormat1(this.echoUserInfo.hiredate),
       EX_ZHYHK: this.echoUserInfo.EX_ZHYHK,
-      EX_ZGYHYHK: this.echoUserInfo.EX_ZGYHYHK
+      EX_ZGYHYHK: this.echoUserInfo.EX_ZGYHYHK,
+      rank: this.echoUserInfo.sequence
     }
     this.form = Object.assign({}, this.form, receiveData)
-    console.log(this.form)
+    this.getRank(this.form.dept) // 序列回显
   },
   methods: {
     upDeptId (id) {
       this.form.dept = id
     },
     accountNameBlur () {
+      if (!this.form.accountName) { return }
       this.$post('/Oper.do?SearchName', { name: this.form.accountName }).then(res => {
         if (res.data.success && res.data.data[0].number >= 1) {
           this.repeatDisabled = true
@@ -274,6 +282,17 @@ export default {
         }
       })
     },
+    getRank (dept) {
+      // if (!dept) {
+      //   this.$message.warning('请先选择部门！')
+      //   return
+      // }
+      this.$post('/Search.do?orgSequence', {deptCode: dept}).then(res => {
+        if (res.data.success) {
+          this.form.rankList = res.data.data
+        }
+      })
+    },
     _getRoles () {
       getRoles().then(res => {
         if (res.data.success) {
@@ -283,7 +302,6 @@ export default {
     },
     _getPositions () {
       getByCode(39).then(res => {
-        console.log(res.data.data)
         if (res.data.success) {
           this.form.jobList = res.data.data
         }
@@ -291,9 +309,9 @@ export default {
     },
     submit (formName) {
       let params = {
-        iscall: this.form.canCall ? '9999' : null,
+        dept: this.form.canCall ? '9999' : null,
         name: this.form.accountName, // 账户名
-        true_name: this.form.trueName,
+        truename: this.form.trueName,
         workid: this.form.userNum, // 工号
         pwd: this.form.password,
         sex: this.form.sex, // 0.男 1.女
@@ -305,9 +323,9 @@ export default {
         hi: this.form.hi, // hi号
         hiredate: this.form.entryDate, // 入职日期 ,格式需要后台更改，新增页和编辑页不同
         SFZ: this.form.idCardNum,
-        // bankcard: this.form.bankCardNum
         EX_ZHYHK: this.form.EX_ZHYHK,
-        EX_ZGYHYHK: this.form.EX_ZGYHYHK
+        EX_ZGYHYHK: this.form.EX_ZGYHYHK,
+        sequence: this.form.rank
       }
       // console.log(params)
       // return
@@ -322,6 +340,7 @@ export default {
                     message: '新增成功',
                     type: 'success'
                   })
+                  this.$router.push('/indexPage/userList')
                 } else {
                   this.$message({
                     message: '新增失败',

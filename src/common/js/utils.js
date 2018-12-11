@@ -84,9 +84,22 @@ export function appMark () {
 
 export function autoHeight () { // 没有电话条的账户设置最小高度铺满
   const bool = cookie.get('allowBar') === '9999'
-  if (bool) {
-    let container = document.getElementsByClassName('component-container')[0]
+  let container = document.getElementsByClassName('component-container')[0]
+  if (bool && container) {
     // addClass(container, 'component-bar-container')
     container.style.minHeight = 'calc(100% - 130px)'
   }
+}
+
+export function loadStyleSheet (cssCode) {
+  var link = document.createElement('link')
+  link.rel = 'stylesheet'
+  link.type = 'text/css'
+  try {
+    link.appendChild(document.createTextNode(cssCode))
+  } catch (error) {
+    link.styleSheet.cssText = cssCode
+  }
+  var head = document.getElementsByTagName('head')[0]
+  head.appendChild(link)
 }

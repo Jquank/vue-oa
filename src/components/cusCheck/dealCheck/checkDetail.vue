@@ -3,8 +3,8 @@
     <div class="detail-main">
       <div class="cus-info">
         <div class="check-search">
-          <el-input placeholder="请输入电话或公司名进行搜索" v-model="searchWords" class="maxwidth"></el-input>
-          <el-button type="primary" @click.native="checkSearch">搜 索</el-button>
+          <el-input placeholder="请输入电话或公司名进行搜索" v-model="searchWords" style="max-width:400px;"></el-input>
+          <el-button type="primary" @click.native="checkSearch" size="mini">查 重</el-button>
         </div>
         <div class="title">
           <el-button class="title-btn" type="primary">客户信息</el-button>
@@ -424,11 +424,11 @@ export default {
       })
     }
     this.applyChangeParams = this.stopParams = {
-      companyId: this.receiveData.id,
+      companyid: this.receiveData.id,
       companylogid: this.receiveData.companylogid
     }
     this.changeParams = {
-      companyId: this.receiveData.id,
+      companyid: this.receiveData.id,
       companylogid: this.receiveData.companylogid,
       companylogtype: this.cusDetail.cltype,
       companylogstatus: this.cusDetail.clstatus
@@ -481,10 +481,13 @@ export default {
         remark: this.checkRemark
       }
       this.$post('/CheckOut.do?pass', params).then(res => {
-        this.$router.push({
-          path: '/indexPage/dealCheck',
-          query: { data: 'fromDetail' }
-        })
+        if (res.data[2].success) {
+          this.$message.success(res.data[2].msg)
+          this.$router.push({
+            path: '/indexPage/dealCheck',
+            query: { data: 'fromDetail' }
+          })
+        }
       })
     },
     // 审核不通过
@@ -524,6 +527,7 @@ export default {
       }
       this.$post('/CheckOut.do?basepass', params).then(res => {
         if (res.data[0].success) {
+          this.$message.success('操作成功！')
           this.$router.push({
             path: '/indexPage/dealCheck',
             query: { data: 'fromDetail' }
@@ -613,7 +617,7 @@ export default {
         companylogid: this.receiveData.companylogid
       }).then(res => {
         this.cusDetail = res.data[0].data[0]
-        console.log(this.cusDetail)
+        // console.log(this.cusDetail)
         this.form.cusName = this.cusDetail.name
         this.form.trade = [this.cusDetail.cid, this.cusDetail.bid]
         this.form.area = [

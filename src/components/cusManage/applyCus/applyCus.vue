@@ -19,13 +19,19 @@
       <el-input v-model="cusName" class="apply-item item-width" placeholder="客户名称">
         <template slot="prepend">客户名称:</template>
       </el-input>
+      <el-input v-model="inputName" class="apply-item item-width" placeholder="导入人">
+        <template slot="prepend">导入人:</template>
+      </el-input>
+      <auto-select :classMark="'sel3'" :key="key_auto_source" :title="'客户来源'" v-model="source" class="apply-item item-width">
+        <el-option v-for="item in sourceList" :key="item.id" :label="item.code_desc" :value="item.id"></el-option>
+      </auto-select>
       <auto-select :classMark="'sel2'" :key="key_auto_sel" :title="'状态'" v-model="applyCusStatus" :defaultValue="applyCusStatus" class="apply-item item-width">
         <el-option label="全部" value="300"></el-option>
         <el-option label="未完成客户" value="0"></el-option>
         <el-option label="完成客户" value="100"></el-option>
       </auto-select>
-      <el-date-picker v-model="applyDate" format="yyyy/MM/dd" value-format="yyyy-MM-dd" :unlink-panels="true" type="datetimerange" range-separator="至" start-placeholder="申领开始日期" end-placeholder="申领结束日期" class="apply-item" style="width:250px;"></el-date-picker>
-      <el-date-picker v-model="doneDate" format="yyyy/MM/dd" value-format="yyyy-MM-dd" :unlink-panels="true" type="datetimerange" range-separator="至" start-placeholder="完成开始日期" end-placeholder="完成结束日期" class="apply-item" style="width:250px;"></el-date-picker>
+      <el-date-picker v-model="applyDate" format="yyyy-MM-dd" value-format="yyyy-MM-dd" :unlink-panels="true" type="datetimerange" range-separator="至" start-placeholder="申领时间" end-placeholder="申领时间" class="apply-item" style="width:250px;"></el-date-picker>
+      <el-date-picker v-model="doneDate" format="yyyy-MM-dd" value-format="yyyy-MM-dd" :unlink-panels="true" type="datetimerange" range-separator="至" start-placeholder="完成时间" end-placeholder="完成时间" class="apply-item" style="width:250px;"></el-date-picker>
       <div class="apply-item">
         <el-button type="primary" @click.native="search">查 询</el-button>
         <el-button type="warning" @click.native="reset">重 置</el-button>
@@ -78,6 +84,7 @@ import SelectArea from 'base/selectArea/selectArea'
 import SelectTrade from 'base/selectTrade/selectTrade'
 import AutoSelect from 'base/autoSelect/autoSelect'
 import SelectDepartment from 'base/selectDepartment/selectDepartment'
+import { getByCode } from 'api/getOptions'
 export default {
   data () {
     return {
@@ -87,6 +94,7 @@ export default {
       applyBtnLoading: false,
       key_dept: '',
       key_auto_sel: '1',
+      key_auto_source: '2',
       area: [],
       trade: [],
       applyCount: '30',
@@ -99,7 +107,10 @@ export default {
       applyUrl: '/Apply.do?getcompany',
       sendParams: {
         applytype: '0'
-      }
+      },
+      inputName: '',
+      source: '',
+      sourceList: []
     }
   },
   beforeRouteUpdate (to, from, next) {
@@ -108,6 +119,9 @@ export default {
       this.search()
     }
     next()
+  },
+  mounted () {
+    this._getSourceList()
   },
   methods: {
     apply () {
@@ -131,6 +145,11 @@ export default {
         console.log(err)
       })
     },
+    _getSourceList () {
+      getByCode(27).then(res => {
+        this.sourceList = res.data.data
+      })
+    },
     search () {
       this.sendParams = {
         applytype: this.applyCusStatus,
@@ -139,17 +158,22 @@ export default {
         applyEnd: this.applyDate[1],
         followStart: this.doneDate[0],
         followEnd: this.doneDate[1],
-        deptcode: this.dept
+        deptcode: this.dept,
+        source_name: this.inputName,
+        source: this.source
       }
     },
     reset () {
       this.applyCusStatus = '300'
-      this.key_auto_sel = new Date() + ''
       this.cusName = ''
       this.applyDate = []
       this.doneDate = []
       this.dept = ''
+      this.inputName = ''
+      this.source = ''
       this.key_dept = new Date() + ''
+      this.key_auto_sel = new Date() + '1'
+      this.key_auto_source = new Date() + '2'
     },
     updateApplyList (res) {
       this.applyList = res.data[0].data

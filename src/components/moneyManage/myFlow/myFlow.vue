@@ -19,8 +19,8 @@
           <el-button @click.native.prevent="reset" type="warning">重 置</el-button>
         </div>
       </div>
-      <div class="search-item text-right">
-        <el-button type="warning" icon="fa fa-cloud-upload"> 导出</el-button>
+      <div v-if="permissions.indexOf('75') > -1" class="search-item text-right">
+        <el-button @click.native="exportFlow" type="warning" icon="fa fa-cloud-upload"> 导出</el-button>
       </div>
     </div>
     <!-- 列表 -->
@@ -46,12 +46,12 @@
       <el-table-column label="所属人" prop="userName"></el-table-column>
       <el-table-column label="是否使用" prop="">
         <template slot-scope="scope">
-          <el-button :type="scope.row.status===0?'success':'danger'" plain class="xsbtn">{{scope.row.status!== 0?'已使用':'未使用'}}</el-button>
+          <el-button :type="scope.row.bsaStatus===0?'success':'danger'" plain class="xsbtn">{{scope.row.bsaStatus!== 0?'已使用':'未使用'}}</el-button>
         </template>
       </el-table-column>
       <el-table-column label="操作" prop="">
         <template slot-scope="scope">
-          <el-button  v-if="permissions.indexOf('6r')>-1&&scope.row.status===0" @click.native.prevent="goBack(scope.row)" type="warning" class="xsbtn">退回</el-button>
+          <el-button  v-if="permissions.indexOf('6r')>-1&&scope.row.bsaStatus===0" @click.native.prevent="goBack(scope.row)" type="warning" class="xsbtn">退回</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -77,34 +77,40 @@ export default {
       sendParams: {}
     }
   },
-  created () {},
   methods: {
+    exportFlow () {
+      this.$export('/receipt.do?exportBankReceiveMine', this.sendParams)
+    },
     goBack (data) {
-      this.$confirm('确定要退回吗?', '', {
+      this.$confirm('确定要退回吗？', '', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(() => {
-        this.$get('/receipt.do?receiptClaimBack', {brcId: this.data.id}).then(res => {
-          if (res.data.success) {
-            this.$message({
-              type: 'success',
-              message: '退回成功'
-            })
-            this.search()
-          } else {
-            this.$message({
-              type: 'error',
-              message: '此笔流水不能退回'
-            })
-          }
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消'
-        })
       })
+        .then(() => {
+          this.$post('/receipt.do?receiptClaimBack', {
+            brcId: data.id
+          }).then(res => {
+            if (res.data.success) {
+              this.$message({
+                type: 'success',
+                message: '退回成功'
+              })
+              this.search()
+            } else {
+              this.$message({
+                type: 'error',
+                message: '此笔流水不能退回'
+              })
+            }
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          })
+        })
     },
     search () {
       this.sendParams = {

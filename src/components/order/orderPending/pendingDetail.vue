@@ -138,7 +138,7 @@
             </el-table-column>
           </el-table>
         </el-tab-pane>
-        <el-tab-pane v-if="pid==='ZTC2'" label="直通车订单基本信息">
+        <el-tab-pane v-if="pid==='ZTC2' || pid==='ZTC'" label="直通车订单基本信息">
           <el-row class="text-right mb10px">
             <el-button type="warning" @click.native="changeInfo" class="xsbtn">修改基本信息</el-button>
           </el-row>
@@ -544,7 +544,7 @@
             </el-table-column>
           </el-table>
         </el-tab-pane>
-        <el-tab-pane v-if="pid==='ZTC2'" label="直通车信息">
+        <el-tab-pane v-if="pid==='ZTC2' || pid==='ZTC'" label="直通车信息">
           <el-table :data="ztcExtendInfo" border class="table-width">
             <el-table-column prop="type" label="信息分类" :width="tableFirstColumWidth">
             </el-table-column>

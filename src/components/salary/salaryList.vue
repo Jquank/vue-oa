@@ -3,7 +3,7 @@
     <div>
       <div class="salary-search mt-10px">
         <select-department :key="key_dept" :title="'部门'" @upDeptId="upDeptId" v-model="dept" class="salary-item item-width"></select-department>
-        <el-date-picker v-model="date" format="yyyy-MM" type="date" placeholder="选择日期"  class="salary-item item-width">
+        <el-date-picker v-model="date" format="yyyy-MM" value-format="yyyy-MM" type="date" placeholder="选择日期"  class="salary-item item-width">
         </el-date-picker>
         <div class="salary-item export">
           <up-file :uploadUrl="serverUrl + '/salary.do?import' + '&tk=' + tk" :title="'导入'" :otherParams="otherParams" @fileUrl="search()" :isHiddenFileList="true"></up-file>
