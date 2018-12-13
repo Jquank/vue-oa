@@ -1,5 +1,5 @@
 <template>
-  <div class="renew-detail">
+  <div class="renew-detail" id="renew-detail">
     <div v-if="toMark==='chargeOffCheck'">
       <div class="title">
         <el-button class="title-btn" type="warning">发票信息</el-button>
@@ -63,7 +63,7 @@
           </el-col>
           <el-col :md="5" class="maxwidth">
             <el-form-item label="垫款证明 :">
-              <div id="image">
+              <div>
                 <img :src="rowData.prove_img || ''" alt="" width="50px" height="50px">
               </div>
             </el-form-item>
@@ -414,13 +414,13 @@
       </el-form>
       <div class="text-center">
         <!-- 续费主管 -->
-        <template v-if="permissions.indexOf('7y') > -1">
-          <el-button @click.native="checkReceive(300)" type="success">通 过</el-button>
+        <template v-if="permissions.indexOf('7y') > -1 && toMark==='renewReceive'">
+          <el-button v-if="isPass" @click.native="checkReceive(300)" type="success">通 过</el-button>
           <el-button @click.native="selBackMoney" type="warning">选 择</el-button>
           <el-button @click.native="checkReceive(200)" type="danger">驳 回</el-button>
         </template>
         <!-- 收单出纳 7x -->
-        <template v-if="permissions.indexOf('7x') > -1">
+        <template v-if="permissions.indexOf('7x') > -1 && toMark==='renewReceive'">
           <el-button @click.native="checkReceive(300)" type="success">通 过</el-button>
           <el-button @click.native="checkReceive(200)" type="danger">驳 回</el-button>
         </template>
@@ -430,9 +430,9 @@
         </template>
         <!-- 销账审核 -->
         <template v-if="toMark==='chargeOffCheck'">
-          <el-button @click.native="chargeOffCheck(300)" v-if="chargeOffStep==100" type="success">通 过11</el-button>
-          <el-button @click.native="chargeOffCheck(200)" v-if="chargeOffStep==100" type="danger">驳 回22</el-button>
-          <el-button @click.native="chargeOffCheck(-10)" v-if="chargeOffStep==300" type="warning">撤 回33</el-button>
+          <el-button @click.native="chargeOffCheck(300)" v-if="chargeOffStep==100" type="success">通 过</el-button>
+          <el-button @click.native="chargeOffCheck(200)" v-if="chargeOffStep==100" type="danger">驳 回</el-button>
+          <el-button @click.native="chargeOffCheck(-10)" v-if="chargeOffStep==300" type="warning">撤 回</el-button>
         </template>
         <el-button v-if="toMark==='renewList'" @click.native="addCheckRemark" type="success">提交备注</el-button>
         <el-button v-if="toMark==='renewAdd'" @click.native="checkAdd(300)" type="success">通过</el-button>
@@ -465,7 +465,7 @@
         <el-table-column prop="prove_img" label="发票垫款证明" width="110">
           <template slot-scope="scope">
             <div>
-              <img id="image" ref="proveImg" :src="scope.row.prove_img" height="50px">
+              <img ref="proveImg" :src="scope.row.prove_img" height="50px">
             </div>
           </template>
         </el-table-column>
@@ -532,7 +532,6 @@ import Page from 'base/page/page'
 import { getByCode } from 'api/getOptions'
 import { timeFormat1 } from 'common/js/filters' // eslint-disable-line
 import cookie from 'js-cookie'
-// import 'viewerjs/dist/viewer.css'
 import Viewer from 'viewerjs'
 export default {
   props: {
@@ -549,6 +548,10 @@ export default {
     chargeOffStep: {
       type: Number,
       default: 100
+    },
+    isPass: {
+      type: Boolean,
+      default: true
     }
   },
   computed: {
@@ -586,7 +589,8 @@ export default {
         companyName: ''
       },
       multipleSelection: [],
-      backList: []
+      backList: [],
+      viewer: null
     }
   },
   created () {
@@ -594,12 +598,16 @@ export default {
     this._getProductList()
   },
   mounted () {
-    setTimeout(() => {
-      this.$nextTick(() => {
-        const gallery = new Viewer(document.getElementById('image'), { // eslint-disable-line
-          zIndex: 1000000
-        })
+    this.$nextTick(() => {
+      if (this.viewer) {
+        this.viewer.destroy()
+      }
+      this.viewer = new Viewer(document.getElementById('renew-detail'), { // eslint-disable-line
+        zIndex: 1000000
       })
+    })
+    setTimeout(() => {
+
     }, 500)
   },
   methods: {

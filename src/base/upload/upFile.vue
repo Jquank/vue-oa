@@ -2,6 +2,7 @@
   <div>
     <el-upload
       class="upload-file"
+      id="upload-file"
       :action="uploadUrl"
       :on-success="upSuccess"
       :before-remove="beforeRemove"
@@ -21,6 +22,7 @@
 
 <script>
 import { uploadUrl } from 'api/http'
+import Viewer from 'viewerjs'
 export default {
   props: {
     uploadUrl: {
@@ -57,7 +59,8 @@ export default {
   data () {
     return {
       fileList: [],
-      showFileList: true
+      showFileList: true,
+      viewer: null
     }
   },
   methods: {
@@ -73,12 +76,25 @@ export default {
           this.$message.error(response.msg || '导入失败！')
         }
       }
+      if (this.listType === 'picture') {
+        setTimeout(() => {
+          this._initViewer()
+        }, 500)
+      }
     },
     handleExceed (files, fileList) {
       this.$message.warning('限上传一个文件，请移除后重新上传')
     },
     beforeRemove (file, fileList) {
       return this.$confirm(`确定移除 ${file.name}？`)
+    },
+    _initViewer () {
+      if (this.viewer) {
+        this.viewer.destroy()
+      }
+      this.viewer = new Viewer(document.getElementById('upload-file'), {
+        zIndex: 100000
+      })
     }
   },
   components: {

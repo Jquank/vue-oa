@@ -1,2 +1,1 @@
 export const CHANGE_COLLAPSE_COUNT = 'CHANGE_COLLAPSE_COUNT'
-export const GET_ERROR = 'GET_ERROR'

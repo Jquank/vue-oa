@@ -195,7 +195,7 @@
         </el-form-item>
         <el-form-item label="商务" required>
           <el-input v-model="allotForm.shangWu" disabled style="width:60%"></el-input>
-          <el-button @click.native.prevent="selUser" type="primary">选择</el-button>
+          <el-button @click.native.prevent="selAllotUserDialog = true" type="primary">选择</el-button>
         </el-form-item>
         <div class="text-center">
           <el-button @click.native.prevent="confirmAllot" type="success">分配</el-button>
@@ -203,6 +203,9 @@
       </el-form>
     </el-dialog>
     <!-- 选择人员弹窗 -->
+    <el-dialog :modal-append-to-body="false" title="选择人员" :visible.sync="selAllotUserDialog" width="550px">
+      <select-user :key="key_seluser" @userId="getAllotUserId" @closeDialog="selAllotUserDialog=false"></select-user>
+    </el-dialog>
     <el-dialog :modal-append-to-body="false" title="选择人员" :visible.sync="selUserDialog" width="550px">
       <select-user :key="key_seluser" @userId="getUserId" @closeDialog="selUserDialog=false"></select-user>
     </el-dialog>
@@ -416,9 +419,11 @@ export default {
         remark: '',
         shangWu: ''
       },
+      selAllotUserDialog: false,
       selUserDialog: false,
       selKeepUserDialog: false,
       selUserId: '',
+      selAllotUserId: '',
       splitDialog: false,
       splitForm: {
         totalMoney: 0,
@@ -502,11 +507,14 @@ export default {
     },
     getUserId (id, name) {
       this.selUserId = id
-      this.allotForm.shangWu = name
       this.editForm.user = name
     },
     getKeepUserId (id, name) {
       this.editForm.keepUser = name
+    },
+    getAllotUserId (id, name) {
+      this.selAllotUserId = id
+      this.allotForm.shangWu = name
     },
     confirmAllot () {
       let params = {
@@ -514,7 +522,7 @@ export default {
           id: this.rowData.id,
           pid: this.rowData.pid
         }],
-        'uid': this.selUserId,
+        'uid': this.selAllotUserId,
         'alloc_remark': this.allotForm.remark,
         'type': 10
       }

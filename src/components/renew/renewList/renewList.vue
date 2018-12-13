@@ -1,146 +1,291 @@
 <template>
   <div class="renew-list component-container media-padding">
     <div class="allot-search">
-      <el-input placeholder="搜索客户名称" v-model="cus_name" class="list-item item-width">
+      <el-input placeholder="搜索客户名称"
+                v-model="cus_name"
+                class="list-item item-width">
         <template slot="prepend">公司名称:</template>
       </el-input>
-      <el-input placeholder="搜索百度账号" v-model="bdAccount" class="list-item item-width">
+      <el-input placeholder="搜索百度账号"
+                v-model="bdAccount"
+                class="list-item item-width">
         <template slot="prepend">百度账号:</template>
       </el-input>
-      <el-input placeholder="提单人" v-model="orderName" class="list-item item-width">
+      <el-input placeholder="提单人"
+                v-model="orderName"
+                class="list-item item-width">
         <template slot="prepend">提单人:</template>
       </el-input>
-      <auto-select :key="key_add_type" v-model="addType" title="加款类型" class="list-item item-width">
-        <el-option value="" label="全部"></el-option>
-        <el-option value="10" label="正常加款"></el-option>
-        <el-option value="20" label="提前加款"></el-option>
-        <el-option value="30" label="返款加款"></el-option>
+      <auto-select :key="key_add_type"
+                   v-model="addType"
+                   title="加款类型"
+                   class="list-item item-width">
+        <el-option value=""
+                   label="全部"></el-option>
+        <el-option value="10"
+                   label="正常加款"></el-option>
+        <el-option value="20"
+                   label="提前加款"></el-option>
+        <el-option value="30"
+                   label="返款加款"></el-option>
       </auto-select>
-      <auto-select :key="key_renew_status" v-model="renewStatus" title="续费状态" class="list-item item-width">
-        <el-option value="" label="全部"></el-option>
-        <el-option v-for="(item,index) in renewStatusList" :key="index" :value="item.code_val" :label="item.code_desc"></el-option>
+      <auto-select :key="key_renew_status"
+                   v-model="renewStatus"
+                   title="续费状态"
+                   class="list-item item-width">
+        <el-option value=""
+                   label="全部"></el-option>
+        <el-option v-for="(item,index) in renewStatusList"
+                   :key="index"
+                   :value="item.code_val"
+                   :label="item.code_desc"></el-option>
       </auto-select>
-      <el-button class="list-item" @click.native="search" type="primary">查 询</el-button>
-      <el-button class="list-item" @click.native="reset" type="warning">重 置</el-button>
+      <el-button class="list-item"
+                 @click.native="search"
+                 type="primary">查 询</el-button>
+      <el-button class="list-item"
+                 @click.native="reset"
+                 type="warning">重 置</el-button>
       <div class="list-item export">
-        <el-button v-if="permissions.indexOf('87') > -1" @click.native="changeUser" type="warning">更换责任人</el-button>
-        <el-button @click.native="aheadMakeInvoice" type="primary">提前开票</el-button>
+        <el-button v-if="permissions.indexOf('87') > -1"
+                   @click.native="changeUser"
+                   type="warning">更换责任人</el-button>
+        <el-button v-if="permissions.indexOf('6f') > -1"
+                   @click.native="aheadMakeInvoice"
+                   type="primary">提前开票</el-button>
       </div>
     </div>
 
-    <el-table @selection-change="handleSelectionChange" stripe border :data="list" max-height="550" class="table-width">
-      <el-table-column type="selection" fixed width="45">
+    <el-table @selection-change="handleSelectionChange"
+              stripe
+              border
+              :data="list"
+              max-height="550"
+              class="table-width">
+      <el-table-column type="selection"
+                       fixed
+                       width="45">
       </el-table-column>
-      <el-table-column prop="companyname" label="公司名称" min-width="120">
+      <el-table-column prop="companyname"
+                       label="公司名称"
+                       min-width="120">
       </el-table-column>
-      <el-table-column prop="baidu_account" label="百度账号">
+      <el-table-column prop="baidu_account"
+                       label="百度账号">
       </el-table-column>
-      <el-table-column prop="" label="到账金额" width="110">
+      <el-table-column prop=""
+                       label="到账金额"
+                       width="110">
         <span slot-scope="scope">{{scope.row.receiptmoney | currency1}}</span>
       </el-table-column>
-      <el-table-column prop="" label="提单金额" width="110">
+      <el-table-column prop=""
+                       label="提单金额"
+                       width="110">
         <span slot-scope="scope">{{scope.row.usemoney+scope.row.servicemoney+scope.row.usevoucher | currency1}}</span>
       </el-table-column>
-      <el-table-column prop="" label="申请时间" width="90">
+      <el-table-column prop=""
+                       label="申请时间"
+                       width="90">
         <span slot-scope="scope">{{scope.row.inserttime | timeFormat}}</span>
       </el-table-column>
-      <el-table-column prop="" label="提单人">
+      <el-table-column prop=""
+                       label="提单人">
         <span slot-scope="scope">{{scope.row.username+((scope.row.true_name && scope.row.true_name!=scope.row.username)?('('+scope.row.true_name+')'):'')}}</span>
       </el-table-column>
-      <el-table-column prop="" label="加款类型">
+      <el-table-column prop=""
+                       label="加款类型">
         <span slot-scope="scope">{{scope.row.addtype==10?'正常加款':scope.row.addtype==20?'提前加款':'返款加款'}}</span>
       </el-table-column>
-      <el-table-column prop="" label="审核状态" width="120">
+      <el-table-column prop=""
+                       label="审核状态"
+                       width="120">
         <template slot-scope="scope">
-          <el-button plain type="warning" class="xsbtn">{{scope.row.step >= 100 && scope.row.checkName ? (scope.row.checkBindName?(scope.row.checkBindName): ((scope.row.checkTrueName && scope.row.checkTrueName!=scope.row.checkName)?(scope.row.checkTrueName):scope.row.checkName)) : scope.row.code_desc}}</el-button>
+          <el-button plain
+                     type="warning"
+                     class="xsbtn">{{scope.row.step >= 100 && scope.row.checkName ? (scope.row.checkBindName?(scope.row.checkBindName): ((scope.row.checkTrueName && scope.row.checkTrueName!=scope.row.checkName)?(scope.row.checkTrueName):scope.row.checkName)) : scope.row.code_desc}}</el-button>
         </template>
       </el-table-column>
-      <el-table-column prop="" label="操作" width="160">
+      <el-table-column prop=""
+                       label="操作"
+                       width="160">
         <template slot-scope="scope">
           <div class="btns">
-            <el-button @click.native="view(scope.row)" type="success" class="xsbtn">查看</el-button>
-            <el-button v-if=" ( (scope.row.invoice=='0' || scope.row.invoice=='10' || (scope.row.invoice=='-1' && scope.row.invoiceCha =='1') ) && scope.row.receiptmoney > 0 && scope.row.invoiceTmoney < scope.row.receiptmoney)" @click.native="applyInvoice(scope.row)" type="primary" class="xsbtn">申请发票</el-button>
-            <el-button v-if="scope.row.receiptmoney<scope.row.usemoney&&permissions.indexOf('6u')>-1" @click.native="chargeOff(scope.row)" type="danger" class="xsbtn">销账</el-button>
-            <el-button v-if="permissions.indexOf('7n') > -1&&scope.row.step!=400" @click.native="stop(scope.row)" type="danger" class="xsbtn">终止</el-button>
-            <el-button v-if="scope.row.hasinvoice >= 10 && permissions.indexOf('7d')>-1" @click.native="errInvoice(scope.row)" type="primary" class="xsbtn">发票开错冲红</el-button>
+            <el-button @click.native="view(scope.row)"
+                       type="success"
+                       class="xsbtn">查看</el-button>
+            <el-button @click.native="editRenew(scope.row)"
+                       type="warning"
+                       class="xsbtn">编辑</el-button>
+            <el-button v-if=" ( (scope.row.invoice=='0' || scope.row.invoice=='10' || (scope.row.invoice=='-1' && scope.row.invoiceCha =='1') ) && scope.row.receiptmoney > 0 && scope.row.invoiceTmoney < scope.row.receiptmoney)"
+                       @click.native="applyInvoice(scope.row)"
+                       type="primary"
+                       class="xsbtn">申请发票</el-button>
+            <el-button v-if="scope.row.receiptmoney<scope.row.usemoney&&permissions.indexOf('6u')>-1"
+                       @click.native="chargeOff(scope.row)"
+                       type="danger"
+                       class="xsbtn">销账</el-button>
+            <el-button v-if="permissions.indexOf('7n') > -1&&scope.row.step!=400"
+                       @click.native="stop(scope.row)"
+                       type="danger"
+                       class="xsbtn">终止</el-button>
+            <el-button v-if="scope.row.hasinvoice >= 10 && permissions.indexOf('7d')>-1"
+                       @click.native="errInvoice(scope.row)"
+                       type="primary"
+                       class="xsbtn">发票开错冲红</el-button>
           </div>
         </template>
       </el-table-column>
     </el-table>
-    <page class="page" :url="url" :sendParams="sendParams" @updateList="getList"></page>
+    <page class="page"
+          :url="url"
+          :sendParams="sendParams"
+          @updateList="getList"></page>
 
     <!-- 人员选择弹窗 -->
-    <el-dialog :modal-append-to-body="false" title="人员选择" :visible.sync="selUserDialog" width="550px">
-      <select-user @userId="getUserId" @closeDialog="closeUserDialog"></select-user>
+    <el-dialog :modal-append-to-body="false"
+               title="人员选择"
+               :visible.sync="selUserDialog"
+               width="550px">
+      <select-user @userId="getUserId"
+                   @closeDialog="closeUserDialog"></select-user>
     </el-dialog>
     <!-- 确定选择弹窗 -->
-    <el-dialog :title="'确定更换为：'+ selUserName + ' ?'" :visible.sync="confirmUserDialog" width="550px">
-      <el-input v-model="remark" type="textarea" :rows="3"></el-input>
+    <el-dialog :title="'确定更换为：'+ selUserName + ' ?'"
+               :visible.sync="confirmUserDialog"
+               width="550px">
+      <el-input v-model="remark"
+                type="textarea"
+                :rows="3"></el-input>
       <div class="text-center mt10px">
-        <el-button type="primary" @click.native="confirmSel">确 定</el-button>
+        <el-button type="primary"
+                   @click.native="confirmSel">确 定</el-button>
       </div>
     </el-dialog>
     <!-- 开票弹窗 -->
-    <el-dialog :modal-append-to-body="false" :title="makeInvoiceTitle" :visible.sync="makeInvoiceDialog" width="750px">
-      <make-invoice-dialog @closeDialog="makeInvoiceDialog=false" :key="key_dialog" :echoData="echoData" :makeInvoiceStatus="makeInvoiceStatus" :offset="offset">
-        <el-button v-if="makeInvoiceStatus==20" slot="selBtn" @click.native="selCompanyDialog = true" type="primary">选择</el-button>
+    <el-dialog :modal-append-to-body="false"
+               :title="makeInvoiceTitle"
+               :visible.sync="makeInvoiceDialog"
+               width="900px">
+      <make-invoice-dialog @closeDialog="makeInvoiceDialog=false"
+                           :key="key_dialog"
+                           :echoData="echoData"
+                           :makeInvoiceStatus="makeInvoiceStatus"
+                           :offset="offset">
+        <el-button v-if="makeInvoiceStatus==20"
+                   slot="selBtn"
+                   @click.native="selCompanyDialog = true"
+                   type="primary">选择</el-button>
       </make-invoice-dialog>
     </el-dialog>
     <!-- 选择公司弹窗 -->
-    <el-dialog title="选择公司" :visible.sync="selCompanyDialog" width="650px">
-      <el-input placeholder="请输入公司名进行搜索" v-model="handleCompanyName">
-        <el-button @click.native="searchCompany" slot="append" icon="el-icon-search"></el-button>
+    <el-dialog title="选择公司"
+               :visible.sync="selCompanyDialog"
+               width="650px">
+      <el-input placeholder="请输入公司名进行搜索"
+                @keyup.enter.native="searchCompany($event, 'enter')"  @click.native="searchCompany($event)"
+                v-model="handleCompanyName">
+        <el-button slot="append"
+                   icon="el-icon-search"></el-button>
       </el-input>
-      <el-table :data="myCompany" class="table-width" max-height="500">
-        <el-table-column prop="companyname" label="公司名称" min-width="130"></el-table-column>
-        <el-table-column prop="producttype" label="客户类型" width="80">
+      <el-table :data="myCompany"
+                class="table-width"
+                max-height="500">
+        <el-table-column prop="companyname"
+                         label="公司名称"
+                         min-width="130"></el-table-column>
+        <el-table-column prop="producttype"
+                         label="客户类型"
+                         width="80">
           <template slot-scope="scope">
             <span>{{scope.row.producttype | cusStatus}}</span>
             <span>{{scope.row.producttype!=0?scope.row.productnumber:''}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="baidu_account" label="百度账号" width="100">
+        <el-table-column prop="baidu_account"
+                         label="百度账号"
+                         width="100">
         </el-table-column>
-        <el-table-column prop="logUname" label="所属商务" width="80"></el-table-column>
-        <el-table-column prop="kefuName" label="所属客服" width="80"></el-table-column>
-        <el-table-column prop="" label="操作">
+        <el-table-column prop="logUname"
+                         label="所属商务"
+                         width="80"></el-table-column>
+        <el-table-column prop="kefuName"
+                         label="所属客服"
+                         width="80"></el-table-column>
+        <el-table-column prop=""
+                         label="操作">
           <template slot-scope="scope">
-            <el-button @click.native="handleSelCompany(scope.row)" type="primary" class="xsbtn">选择</el-button>
+            <el-button @click.native="handleSelCompany(scope.row)"
+                       type="primary"
+                       class="xsbtn">选择</el-button>
           </template>
         </el-table-column>
       </el-table>
-      <page :simpleLayout="'total, prev, next, jumper'" class="page" :url="comUrl" :sendParams="comParams" @updateList="updateMyCompanyList"></page>
+      <page :simpleLayout="'total, prev, next, jumper'"
+            class="page"
+            :url="comUrl"
+            :sendParams="comParams"
+            @updateList="updateMyCompanyList"></page>
     </el-dialog>
     <!-- 查看弹窗 -->
-    <el-dialog :key="key_renew_detail" :modal-append-to-body="false" title="续费详情" :visible.sync="renewDetailDialog" width="1000px">
-      <renew-detail :rowData="rowData" @closeRenewDetailDialog="renewDetailDialog=false" :toMark="'renewList'"></renew-detail>
+    <el-dialog :key="key_renew_detail"
+               :modal-append-to-body="false"
+               title="续费详情"
+               :visible.sync="renewDetailDialog"
+               width="1000px">
+      <renew-detail :rowData="rowData"
+                    @closeRenewDetailDialog="renewDetailDialog=false"
+                    :toMark="'renewList'"></renew-detail>
     </el-dialog>
     <!-- 销账弹窗 -->
-    <el-dialog :modal-append-to-body="false" title="销账" :visible.sync="chargeOffDialog" width="550px">
-      <el-table :data="chargeOffList" class="table-width" @selection-change="handleSelFlow">
-        <el-table-column type="selection" width="40">
+    <el-dialog :modal-append-to-body="false"
+               title="销账"
+               :visible.sync="chargeOffDialog"
+               width="550px">
+      <el-table :data="chargeOffList"
+                class="table-width"
+                @selection-change="handleSelFlow">
+        <el-table-column type="selection"
+                         width="40">
         </el-table-column>
-        <el-table-column prop="code_desc" label="银行类型" width="80">
+        <el-table-column prop="code_desc"
+                         label="银行类型"
+                         width="80">
         </el-table-column>
-        <el-table-column prop="tm" label="时间" width="135">
+        <el-table-column prop="tm"
+                         label="时间"
+                         width="135">
           <span slot-scope="scope">{{scope.row.tm | timeFormat}}</span>
         </el-table-column>
-        <el-table-column prop="split_amount" label="金额" width="120">
+        <el-table-column prop="split_amount"
+                         label="金额"
+                         width="120">
           <span slot-scope="scope">{{scope.row.split_amount | currency}}</span>
         </el-table-column>
-        <el-table-column prop="allocRemark" label="备注"></el-table-column>
+        <el-table-column prop="allocRemark"
+                         label="备注"></el-table-column>
       </el-table>
-      <page :simpleLayout="'total, prev, next, jumper'" class="page" :url="chargeOffUrl" :sendParams="chargeOffParams" @updateList="updateChargeOffList"></page>
+      <page :simpleLayout="'total, prev, next, jumper'"
+            class="page"
+            :url="chargeOffUrl"
+            :sendParams="chargeOffParams"
+            @updateList="updateChargeOffList"></page>
       <div class="text-center mt10px">
-        <el-button @click.native="confirmFlow" type="success">确 定</el-button>
+        <el-button @click.native="confirmFlow"
+                   type="success">确 定</el-button>
       </div>
     </el-dialog>
     <!-- 终止弹窗 -->
-    <el-dialog :modal-append-to-body="false" title="终止" :visible.sync="stopDialog" width="550px">
+    <el-dialog :modal-append-to-body="false"
+               title="终止"
+               :visible.sync="stopDialog"
+               width="550px">
       <b>填写备注：</b>
-      <el-input v-model="stopRemark" type="textarea" :rows="3"></el-input>
+      <el-input v-model="stopRemark"
+                type="textarea"
+                :rows="3"></el-input>
       <div class="text-center mt10px">
-        <el-button @click.native="confirmStop" type="success">确 定</el-button>
+        <el-button @click.native="confirmStop"
+                   type="success">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -154,6 +299,7 @@ import SelectUser from 'base/selectUser/selectUser'
 import MakeInvoiceDialog from './makeInvoiceDialog'
 import RenewDetail from 'components/renew/renewList/renewDetail'
 import { getByCode } from 'api/getOptions'
+import RenewApply from 'components/renew/renewApply/renewApply'
 export default {
   data () {
     return {
@@ -277,6 +423,24 @@ export default {
         this.renewDetailDialog = true
       }, 300)
     },
+    editRenew (data) {
+      let params = {
+        reid: data.id,
+        edit: 'edit'
+      }
+      this.$get('/Renew.do?renewdetail', params).then(res => {
+        let detail = res.data[0].data
+        let pro = res.data[1].data
+        let flows = res.data[2].data
+        let ids = {
+          reid: data.id
+        }
+        this.$router.push({
+          path: '/indexPage/renewApply',
+          query: { detail: detail, pro: pro, flows: flows, ids: ids, edit: true }
+        })
+      })
+    },
     // 发票开错冲红
     errInvoice (data) {
       this.key_dialog = new Date() + ''
@@ -310,11 +474,13 @@ export default {
       }, 200)
     },
     // 选择公司
-    searchCompany () {
-      this.comParams = {
-        type: '20',
-        orderOrRenew: 'renew',
-        companyname: this.handleCompanyName
+    searchCompany (e, type) {
+      if (type === 'enter' || e.target.nodeName !== 'INPUT') {
+        this.comParams = {
+          type: '20',
+          orderOrRenew: 'renew',
+          companyname: this.handleCompanyName
+        }
       }
     },
     handleSelCompany (data) {
@@ -421,7 +587,8 @@ export default {
     AutoSelect,
     SelectUser,
     MakeInvoiceDialog,
-    RenewDetail
+    RenewDetail,
+    RenewApply
   }
 }
 </script>
@@ -440,11 +607,11 @@ export default {
       width: 280px;
     }
   }
-  .btns{
+  .btns {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
-    .el-button{
+    .el-button {
       margin: 3px 0 0 0;
     }
   }

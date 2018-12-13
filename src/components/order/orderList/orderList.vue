@@ -69,7 +69,7 @@
                   class="search-item item-width">
           <template slot="prepend">客户电话:</template>
         </el-input>
-        <auto-select :key="key_achievement"
+        <auto-select v-if="permissions.indexOf('4d')>-1" :key="key_achievement"
                      title="选择业绩"
                      v-model="achievement"
                      class="search-item item-width">
@@ -102,13 +102,13 @@
           <el-button type="warning"
                      @click.native="reset">重置</el-button>
         </div>
-        <div class="search-item export">
+        <div v-if="permissions.indexOf('6f')>-1" class="search-item export">
           <el-button @click.native="aheadMakeInvoice"
                      type="primary">提前开票</el-button>
         </div>
       </div>
       <!-- 列表 -->
-      <el-table v-if="permissions.indexOf('5q')<0&&permissions.indexOf('6n')<0"
+      <el-table size="mini" v-if="permissions.indexOf('5q')<0&&permissions.indexOf('6n')<0" border
                 :data="orderListData"
                 class="table-width"
                 max-height="800">
@@ -138,16 +138,57 @@
             <span v-if="scope.row.pid!='WEBSITE'">{{scope.row.pname}}</span>
           </template>
         </el-table-column>
+        <template v-if="permissions.indexOf('78') > -1">
+          <el-table-column prop=""
+                          label="订单金额"
+                          width="110">
+            <span slot-scope="scope">{{scope.row.amount_real | currency}}</span>
+          </el-table-column>
+          <el-table-column prop=""
+                          label="提单时间"
+                          width="90">
+            <span slot-scope="scope">{{scope.row.bill_time | timeFormat}}</span>
+          </el-table-column>
+          <el-table-column prop=""
+                          label="业绩新开时间"
+                          width="100">
+            <span slot-scope="scope">{{scope.row.opentime | timeFormat1}}</span>
+          </el-table-column>
+          <el-table-column prop=""
+                          label="业绩上线时间"
+                          width="100">
+            <span slot-scope="scope">{{scope.row.onlinetime | timeFormat1}}</span>
+          </el-table-column>
+          <el-table-column prop="commision_num"
+                          label="提成单量"
+                          width="110">
+          </el-table-column>
+          <el-table-column prop=""
+                          label="提成合计"
+                          width="110">
+            <span slot-scope="scope">{{scope.row.commision_count | currency}}</span>
+          </el-table-column>
+          <el-table-column prop=""
+                          label="发放日期"
+                          width="90">
+            <span slot-scope="scope">{{scope.row.granttime | timeFormat1}}</span>
+          </el-table-column>
+        </template>
         <el-table-column prop=""
                          label="审核状态"
-                         min-width="140">
-          <span slot-scope="scope">
-            <el-button type="warning"
-                       plain
-                       class="xsbtn">{{scope.row.currentname?scope.row.currentname:'订单完成'}}
+                         min-width="150">
+          <span slot-scope="scope" class="check-status">
+            <el-alert
+              title=""
+              type="warning"
+              :closable="false"
+              :description="(scope.row.currentname?scope.row.currentname:'订单完成')+
+                    ((scope.row.checkBindName == '' && scope.row.ckName && scope.row.ckName != scope.row.currentname)?'('+scope.row.ckName+')':'')+
+                    ((scope.row.checkBindName && scope.row.checkBindName != scope.row.currentname)?'('+scope.row.checkBindName+')':'')">
+            </el-alert>
+            <!-- {{scope.row.currentname?scope.row.currentname:'订单完成'}}
               {{(scope.row.checkBindName == '' && scope.row.ckName && scope.row.ckName != scope.row.currentname)?'('+scope.row.ckName+')':''}}
-              {{(scope.row.checkBindName && scope.row.checkBindName != scope.row.currentname)?'('+scope.row.checkBindName+')':''}}
-            </el-button>
+              {{(scope.row.checkBindName && scope.row.checkBindName != scope.row.currentname)?'('+scope.row.checkBindName+')':''}} -->
           </span>
         </el-table-column>
         <el-table-column prop=""
@@ -168,13 +209,15 @@
         </el-table-column>
         <el-table-column prop=""
                          label="操作"
-                         width="200">
+                         :width="orderKind==500?'200':'70'"
+                         align="center">
           <template slot-scope="scope">
             <div class="btns">
               <el-button type="success"
                          @click.native="viewOrder(scope.row)"
                          class="xsbtn">查看</el-button>
-              <el-button v-if="(scope.row.invoice_type==0 ||scope.row.invoiceTmoney<scope.row.amount_real)&&permissions.indexOf('6g') > -1"
+              <template v-if="orderKind==500">
+                <el-button v-if="(scope.row.invoice_type===0 ||scope.row.invoiceTmoney<scope.row.amount_real)&&permissions.indexOf('6g') > -1"
                          @click.native="applyInvoice(scope.row)"
                          type="primary"
                          class="xsbtn">申请发票</el-button>
@@ -194,6 +237,10 @@
                          @click.native="changeShangWu(scope.row)"
                          type="warning"
                          class="xsbtn">更换商务</el-button>
+              <el-button v-if="scope.row.hasinvoice && scope.row.hasinvoice >= 10 && permissions.indexOf('7d')>-1"  @click.native="applyInvoice(scope.row)"
+                       type="primary"
+                       class="xsbtn">发票开错冲红</el-button>
+              </template>
             </div>
           </template>
         </el-table-column>
@@ -256,9 +303,11 @@
                          label="操作"
                          min-width="80">
           <template slot-scope="scope">
-            <el-button type="success"
-                       @click.native="accountOutPass(scope.row)"
-                       class="xsbtn">通过</el-button>
+            <template v-if="orderKind==500">
+              <el-button type="success"
+                      @click.native="accountOutPass(scope.row)"
+                      class="xsbtn">通过</el-button>
+            </template>
           </template>
         </el-table-column>
       </el-table>
@@ -331,18 +380,21 @@
         </el-table-column>
         <el-table-column prop=""
                          label="操作"
-                         min-width="148">
+                         min-width="148"
+                         align="center">
           <template slot-scope="scope">
             <el-button type="success"
                        @click.native="viewOrder(scope.row)"
                        class="xsbtn">查看</el-button>
-            <el-button v-if="scope.row.invoice==0&&permissions.indexOf('6g') > -1"
-                       @click.native="applyInvoice(scope.row)"
-                       type="primary"
-                       class="xsbtn">申请发票</el-button>
-            <el-button @click.native="applyInvoice(scope.row)"
-                       type="primary"
-                       class="xsbtn">发票开错冲红</el-button>
+            <template v-if="orderKind==500">
+              <el-button v-if="scope.row.invoice==0&&permissions.indexOf('6g') > -1"
+                        @click.native="applyInvoice(scope.row)"
+                        type="primary"
+                        class="xsbtn">申请发票</el-button>
+              <el-button v-if="scope.row.hasinvoice && scope.row.hasinvoice >= 10 && permissions.indexOf('7d')>-1" @click.native="applyInvoice(scope.row)"
+                        type="primary"
+                        class="xsbtn">发票开错冲红</el-button>
+            </template>
           </template>
         </el-table-column>
       </el-table>
@@ -589,7 +641,11 @@ export default {
         type: 'warning'
       })
         .then(() => {
-          this.$post('/wf.do?reduceReceive', params).then(res => {})
+          this.$post('/wf.do?reduceReceive', params).then(res => {
+            if (res.data.success) {
+              this.$message.success('变更成功！')
+            }
+          })
         })
         .catch(() => {
           this.$message({
@@ -741,6 +797,9 @@ export default {
   width: 100%;
   height: 100%;
 }
+.el-alert{
+  padding: 0;
+}
 </style>
 
 <style lang="less" scoped>
@@ -785,8 +844,11 @@ export default {
       flex-wrap: wrap;
       // justify-content: space-between;
       .xsbtn {
-        margin-top: 5px;
+        margin-top: 2px;
       }
+    }
+    .check-status{
+      color: #E6A23C;
     }
   }
 }

@@ -140,7 +140,7 @@ export default {
     },
     invoiceInfo: {
       // [11]
-      type: Array,
+      type: Object,
       default: function () {
         return {}
       }

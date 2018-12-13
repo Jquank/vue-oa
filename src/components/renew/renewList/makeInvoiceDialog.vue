@@ -5,14 +5,20 @@
         <el-button class="title-btn" type="warning">开票信息</el-button>
         <div class="line"></div>
       </div>
-      <el-row>
-        <el-col :md="12" class="maxwidth">
+      <el-row class="top-radio">
+        <el-col :md="8" class="maxwidth">
           <el-form-item label="">
             <el-radio v-model="form.invoice_com" label="10">公司</el-radio>
             <el-radio v-model="form.invoice_com" label="1">个人</el-radio>
           </el-form-item>
         </el-col>
-        <el-col :md="12" class="maxwidth">
+        <el-col :md="8" class="maxwidth">
+          <el-form-item label="">
+            <el-radio v-model="form.invoice_open" label="10">百推</el-radio>
+            <el-radio v-model="form.invoice_open" label="20">糯米</el-radio>
+          </el-form-item>
+        </el-col>
+        <el-col :md="8" class="maxwidth">
           <el-form-item label="">
             <span class="tipfont fa fa-search" style="line-height:34px;color:#06c;">
               <a href="https://wsbs.hb-n-tax.gov.cn/hbgs/tax/xyzkcx/sfybnsr1" target="_blank" class="a-search-number"> 查询快递单号</a>
@@ -39,6 +45,54 @@
         <el-col :md="12" class="maxwidth">
           <el-form-item label="" label-width="15px">
             <p class="red tipfont" style="margin-top: 10px;">1、专票能抵扣增值税，普票不可以抵扣。</p>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :md="12" class="maxwidth">
+          <el-form-item label="合并发票 :">
+            <el-button @click.native="mixinInvoice" type="primary">选择合并</el-button>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :md="24" class="maxwidth">
+          <el-form-item label="已选中发票 :">
+            <el-table :data="selectedMixinInvoice" border stripe
+                    class="table-width">
+            <el-table-column prop="companyname"
+                            label="公司名称"
+                            min-width="130">
+            </el-table-column>
+            <el-table-column prop="baidu_account"
+                            label="百度账号"
+                            width="100">
+            </el-table-column>
+            <el-table-column prop="receiptmoney"
+                            label="金额"
+                            width="110">
+                            <span slot-scope="scope">{{scope.row.receiptmoney | currency}}</span>
+            </el-table-column>
+            <el-table-column prop="bill_time"
+                            label="记账日期"
+                            width="90">
+                            <span slot-scope="scope">{{scope.row.bill_time | timeFormat}}</span>
+            </el-table-column>
+            <el-table-column prop="insert_time"
+                            label="申请时间"
+                            width="90">
+                            <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
+            </el-table-column>
+            <el-table-column prop=""
+                            label="商务|客服"
+                            width="80">
+                            <span slot-scope="scope">{{scope.row.applyUname+(scope.row.username !== scope.row.ckBdName ? (','+scope.row.ckBdName) : '')}}</span>
+            </el-table-column>
+            <el-table-column prop="orderOrRenew"
+                            label="订单或续费"
+                            width="80">
+            </el-table-column>
+          </el-table>
           </el-form-item>
         </el-col>
       </el-row>
@@ -193,6 +247,60 @@
       <el-button type="primary" @click.native="subChange('form')">提 交</el-button>
       <el-button @click.native="changeSixTip" type="warning">修改发票信息</el-button>
     </div>
+
+    <!-- 选择合并发票 -->
+    <el-dialog title="选择公司"
+               :append-to-body="true"
+               :modal-append-to-body="false"
+               :visible.sync="mixinInvoiceDialog"
+               width="650px">
+      <el-table :data="mixinInvoiceList" border stripe
+                class="table-width"
+                @selection-change="handleSelectionChange">
+        <el-table-column type="selection" width="45" fixed>
+        </el-table-column>
+        <el-table-column prop="companyname"
+                         label="公司名称"
+                         min-width="130">
+        </el-table-column>
+        <el-table-column prop="baidu_account"
+                         label="百度账号"
+                         width="100">
+        </el-table-column>
+        <el-table-column prop="receiptmoney"
+                         label="金额"
+                         width="110">
+                        <span slot-scope="scope">{{scope.row.receiptmoney | currency}}</span>
+        </el-table-column>
+        <el-table-column prop="bill_time"
+                         label="记账日期"
+                         width="90">
+                         <span slot-scope="scope">{{scope.row.bill_time | timeFormat}}</span>
+        </el-table-column>
+        <el-table-column prop="insert_time"
+                         label="申请时间"
+                         width="90">
+                         <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
+        </el-table-column>
+        <el-table-column prop=""
+                         label="商务|客服"
+                         width="80">
+                         <span slot-scope="scope">{{scope.row.applyUname+(scope.row.username !== scope.row.ckBdName ? (','+scope.row.ckBdName) : '')}}</span>
+        </el-table-column>
+        <el-table-column prop="orderOrRenew"
+                         label="订单或续费"
+                         width="80">
+        </el-table-column>
+      </el-table>
+      <page :simpleLayout="'total, prev, next, jumper'"
+            class="page"
+            :url="mixinInvoiceUrl"
+            :sendParams="mixinInvoiceParams"
+            @updateList="updateMixinInvoiceList"></page>
+      <div class="text-center">
+        <el-button @click.native="confirmSelMixinInvoice" type="success">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -200,6 +308,7 @@
 import { getByCode } from 'api/getOptions'
 import { appMark } from 'common/js/utils'
 import Viewer from 'viewerjs'
+import Page from 'base/page/page'
 export default {
   props: {
     echoData: {
@@ -270,8 +379,17 @@ export default {
         taddr: '',
         tphone: '',
         tmobile: '',
-        offsetTime: ''
+        offsetTime: '',
+        invoice_open: '10'
       },
+      mixinInvoiceList: [],
+      mixinInvoiceDialog: false,
+      mixinInvoiceUrl: '/Renew.do?renewRefundList',
+      mixinInvoiceParams: {
+        'companyName': ''
+      },
+      multipleSelection: [],
+      selectedMixinInvoice: [],
 
       rules: {
         comName: [{ required: true, message: '请选择公司', trigger: 'blur' }],
@@ -339,6 +457,28 @@ export default {
     })
   },
   methods: {
+    // 合并发票
+    mixinInvoice () {
+      this.mixinInvoiceDialog = true
+      this.mixinInvoiceParams = {
+        'companyname': this.form.comName
+      }
+    },
+    confirmSelMixinInvoice () {
+      this.mixinInvoiceDialog = false
+    },
+    handleSelectionChange (val) {
+      this.selectedMixinInvoice = val
+      this.multipleSelection = val.map(item => {
+        return {
+          id: item.fkid,
+          orderOrRenew: item.orderOrRenew
+        }
+      })
+    },
+    updateMixinInvoiceList (res) {
+      this.mixinInvoiceList = res.data[0].data
+    },
     // 修改六要素
     changeSixTip () {
       let params = {
@@ -350,6 +490,7 @@ export default {
         orderId: this.rowData.orderid,
         companyid: this.form.comId,
         chargearray: this.form.productMoneyList,
+        invoice_open: this.form.invoice_open,
         invoiceremark: this.form.remark
       }
       params = Object.assign({}, this.form, params)
@@ -374,7 +515,8 @@ export default {
         orderId: this.rowData.orderid,
         companyid: this.form.comId,
         chargearray: this.form.productMoneyList,
-        invoiceremark: this.form.remark
+        invoiceremark: this.form.remark,
+        fkidArr: this.multipleSelection
       }
       params = Object.assign({}, this.form, params)
       this.$refs[formName].validate(valid => {
@@ -382,6 +524,7 @@ export default {
           this.$post('/Invoice.do?apply', params).then(res => {
             // this.$refs[formName].resetFields()
             if (res.data.success) {
+              this.$message.success('已提交申请，等待审核！')
               this.$emit('closeDialog')
             }
           })
@@ -426,7 +569,7 @@ export default {
       })
     }
   },
-  components: {}
+  components: {Page}
 }
 </script>
 
@@ -447,6 +590,9 @@ export default {
   }
   p.tipfont {
     margin: 0;
+  }
+  .top-radio .el-form-item{
+    margin-bottom: 0;
   }
 }
 </style>

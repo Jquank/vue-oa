@@ -805,7 +805,7 @@ const router = new Router({
         {
           path: 'renewList',
           name: 'renewList',
-          meta: { text: '续费申请' },
+          meta: { text: '续费列表' },
           component: RenewList
         },
         {

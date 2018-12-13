@@ -7,7 +7,7 @@
           <dd style="margin:0 auto">
             <img style="width:120px;height:auto" :src="s.val.split('#')[0]" :alt="s.val.split('#')[1]">
           </dd>
-          <dd>
+          <dd v-if="showDel">
             <el-button type="danger" size="mini" @click="delImg(index)">删除</el-button>
           </dd>
         </template>
@@ -25,17 +25,38 @@ export default {
       default: function () {
         return []
       }
+    },
+    showDel: {
+      type: Boolean,
+      default: true
     }
   },
   data () {
     return {
-      deledQualify: []
+      deledQualify: [],
+      viewer: null
+    }
+  },
+  watch: {
+    showQualify: {
+      handler () {
+        this.initViewer()
+      },
+      deep: true
     }
   },
   mounted () {
-    const viewer = new Viewer(document.getElementById('images')) // eslint-disable-line
+    this.initViewer()
   },
   methods: {
+    initViewer () {
+      if (this.viewer) {
+        this.viewer.destroy()
+      }
+      this.viewer = new Viewer(document.getElementById('images'), {
+        zIndex: 100000
+      })
+    },
     open (val) {
       if (val === 'rotate') {
         this.$refs.img.style.transform = `rotate(${this.deg}deg)`

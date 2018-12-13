@@ -19,7 +19,7 @@
       <el-row>
         <el-col :md="24">
           <el-form-item label="流水信息 :">
-            <el-table border :data="handleSelFlow" style="max-width: 400px;">
+            <el-table border :data="flows" style="max-width: 400px;">
               <el-table-column prop="code_desc" label="到款方式">
               </el-table-column>
               <el-table-column prop="" label="到款时间" width="135">
@@ -42,7 +42,7 @@
                   <el-col :md="8">
                     <el-select v-model="form.bdOrderNumber" placeholder="百度推广服务订单编号">
                       <el-option label="百度推广服务合同" value="0"></el-option>
-                      <el-option v-for="(contract0,index) in contract.newBdOrderNumber" :key="index" :label="contract0.number" :value="contract0.id"></el-option>
+                      <el-option v-for="contract0 in contract.newBdOrderNumber" :key="contract0.id" :label="contract0.number" :value="contract0.id"></el-option>
                     </el-select>
                   </el-col>
                 </el-row>
@@ -52,20 +52,20 @@
                   <el-col :md="8">
                     <el-select v-model="form.bdOrderNumber" placeholder="百度推广服务订单编号">
                       <el-option label="百度推广服务订单编号" value="0"></el-option>
-                      <el-option v-for="(contract1,index) in contract.bdOrderNumber" :key="index" :label="contract1.number" :value="contract1.id"></el-option>
+                      <el-option v-for="contract1 in contract.bdOrderNumber" :key="contract1.id" :label="contract1.number" :value="contract1.id"></el-option>
                     </el-select>
                   </el-col>
                   <el-col :md="8">
                     <el-select v-model="form.bdProxy" @change="selProxy(form.bdProxy)" placeholder="百度推广首消授权书">
                       <el-option label="百度推广首消授权书" value="0"></el-option>
                       <el-option label="无首消授权书" value="no_proxy20180625160112"></el-option>
-                      <el-option v-for="(contract2,index) in contract.bdProxy" :key="index" :label="contract2.number" :value="contract2.id"></el-option>
+                      <el-option v-for="contract2 in contract.bdProxy" :key="contract2.id" :label="contract2.number" :value="contract2.id"></el-option>
                     </el-select>
                   </el-col>
                   <el-col :md="8">
                     <el-select v-model="form.bdServiceProtocol" placeholder="百度推广服务协议">
                       <el-option label="百度推广服务协议" value="0"></el-option>
-                      <el-option v-for="(contract3,index) in contract.bdServiceProtocol" :key="index" :label="contract3.number" :value="contract3.id"></el-option>
+                      <el-option v-for="contract3 in contract.bdServiceProtocol" :key="contract3.id" :label="contract3.number" :value="contract3.id"></el-option>
                     </el-select>
                   </el-col>
                 </el-row>
@@ -106,6 +106,7 @@
             <el-radio v-model="form.isNeedInvoice" label="-10">不再需要</el-radio>
             <el-radio v-model="form.isNeedInvoice" label="-1">本月暂不需要</el-radio>
             <el-radio v-model="form.isNeedInvoice" label="0">需要(有效期3个月)</el-radio>
+            <el-radio v-model="form.isNeedInvoice" label="10">已开</el-radio>
           </el-form-item>
         </el-col>
       </el-row>
@@ -175,22 +176,22 @@
         <el-col :md="24" class="maxwidth">
           <el-form-item label="产品类型 :" prop="selProList">
             <el-checkbox-group @change="handleProChange" v-model="form.selProList">
-              <el-checkbox v-for="(item,index) in form.productList" :key="index" :label="item">
+              <el-checkbox v-for="item in form.productList" :key="item.id" :label="item.code_val">
                 {{item.code_desc}}</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row v-for="pro in productMoneyList" :key="pro.type" :gutter="20" class="maxwidth">
+      <el-row v-for="(pro,index) in productMoneyList" :key="index" :gutter="20" class="maxwidth">
         <el-col :md="12">
-          <el-form-item :label="pro.type | productType">
+          <el-form-item :label="pro.code_desc">
             <el-input v-model="pro.value">
               <span slot="prepend">¥</span>
             </el-input>
           </el-form-item>
         </el-col>
         <el-col :md="12">
-          <el-form-item label="代金券/返款金额">
+          <el-form-item label="代金券/返款金额 :">
             <el-input v-model="pro.truevalue">
               <span slot="prepend">¥</span>
             </el-input>
@@ -227,7 +228,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row v-if="form.special == 20" :key="form.addType==20?new Date()+'':''">
+      <el-row v-if="form.addType == 20">
         <el-col :md="24" class="maxwidth">
           <el-form-item label="预计还款时间 :" :prop="form.addType==20?'expectTime':''">
             <el-date-picker v-model="form.expectTime" value-format="yyyy/MM/dd" type="date" placeholder="选择日期">
@@ -258,6 +259,21 @@
         </el-col>
       </el-row>
     </el-form>
+    <!-- 续费审核记录 -->
+    <div v-if="isEdit" class="maxwidth">
+      <el-table stripe border :data="checkRecords">
+        <el-table-column prop="" label="操作时间" width="135">
+          <span slot-scope="scope">{{scope.row.inserttime | timeFormat}}</span>
+        </el-table-column>
+        <el-table-column prop="name" label="操作人" width="100">
+        </el-table-column>
+        <el-table-column prop="record" label="操作记录" width="100">
+        </el-table-column>
+        <el-table-column prop="remark" label="处理备注">
+        </el-table-column>
+      </el-table>
+      <page :simpleLayout="'total, prev, next, jumper'" class="page" :url="checkRecordsUrl" :sendParams="checkRecordsParams" @updateList="getRecordsList"></page>
+    </div>
 
     <!-- 选择公司弹窗 -->
     <el-dialog title="选择公司" :visible.sync="selCompanyDialog" width="550px">
@@ -279,13 +295,13 @@
     </el-dialog>
 
     <!-- 选择流水弹窗 -->
-    <el-dialog :modal-append-to-body="false" title="分配合同" :visible.sync="selFlowDialog" width="700px">
+    <el-dialog :modal-append-to-body="false" title="选择流水" :visible.sync="selFlowDialog" width="700px">
       <el-table @selection-change="handleSelectionChange" stripe border :data="selFlowList" max-height="500">
         <el-table-column type="selection" width="55">
         </el-table-column>
         <el-table-column prop="code_desc" label="银行类型" width="80">
         </el-table-column>
-        <el-table-column prop="" label="交易时间">
+        <el-table-column prop="" label="交易时间" width="90">
           <span slot-scope="scope">{{scope.row.tm | timeFormat}}</span>
         </el-table-column>
         <el-table-column prop="fm_name" label="付款名" min-width="140">
@@ -298,7 +314,7 @@
       </el-table>
       <page :simpleLayout="'total, prev, next, jumper'" class="page" :url="selFlowUrl" :sendParams="selFlowParams" @updateList="getFlowList"></page>
       <div class="text-right mt10px">
-        <el-button @click.native="selFlowDialog = false" type="primary">确定</el-button>
+        <el-button @click.native="confirmSelFlowDialog" type="primary">确定</el-button>
       </div>
     </el-dialog>
 
@@ -339,11 +355,12 @@ import Page from 'base/page/page'
 import { getByCode, getMyContract } from 'api/getOptions'
 import cookie from 'js-cookie'
 import UpFile from 'base/upLoad/upFile'
+import { productType } from 'common/js/filters' //eslint-disable-line
 export default {
   computed: {
     receiveTotal () {
       let sum = 0
-      this.handleSelFlow.forEach(val => {
+      this.flows.forEach(val => {
         sum += parseFloat(val.split_amount || 0)
       })
       return sum
@@ -361,6 +378,11 @@ export default {
         sum += parseFloat(val.truevalue || 0)
       })
       return sum
+    },
+    checkRecordsParams () {
+      return {
+        'reid': this.ids.reid
+      }
     }
   },
   data () {
@@ -420,6 +442,13 @@ export default {
       invoiceIdArr: [],
       fileUrl: '',
       productMoneyList: [],
+      detail: {},
+      pro: [],
+      flows: [],
+      ids: {},
+      checkRecords: [],
+      checkRecordsUrl: '/Renew.do?renewrecord',
+      isEdit: false,
 
       rules: {
         holiday: [],
@@ -434,6 +463,8 @@ export default {
     }
   },
   created () {
+    this.isEdit = this.$route.query.edit || false
+    this._getEditData(this.isEdit)
     let specialRules = {
       comName: [{ required: true, message: '请选择公司', trigger: 'blur' }]
     }
@@ -453,6 +484,53 @@ export default {
     this._getMyContract()
   },
   methods: {
+    // 编辑
+    _getEditData (bool) {
+      if (!bool) {
+        return
+      }
+      this.ids = this.$route.query.ids
+      if (!this.ids.reid) {
+        this.$router.push('/indexPage/renewList')
+        return
+      }
+      this.detail = this.$route.query.detail
+      this.pro = this.$route.query.pro
+      this.flows = this.$route.query.flows
+      this.form = {
+        comName: this.detail.companyname,
+        addType: this.detail.addtype + '',
+        special: this.detail.special,
+        isNeedInvoice: this.detail.invoice + '',
+        bdAccount: this.detail.baidu_account,
+        userID: this.detail.baidu_id,
+        sfAccount: this.detail.proxy_id,
+        productType: [],
+        serviceMoney: this.detail.servicemoney,
+        serviceYear: this.detail.serviceyear,
+        remark: this.detail.remark,
+        holiday: this.detail.holiday + '',
+        productList: [],
+        selProList: [],
+        receiveTime: this.detail.receive_time,
+        expectTime: this.detail.offset_time
+      }
+      console.log(this.pro)
+      this.pro.forEach(item => {
+        this.form.selProList.push(item.type)
+        this.productMoneyList.push({
+          id: null,
+          code_val: item.type,
+          code_desc: productType(item.type, ' :'),
+          type: item.type,
+          value: item.value,
+          truevalue: item.truevalue
+        })
+      })
+    },
+    getRecordsList (res) {
+      this.checkRecords = res.data[0].data
+    },
     subApply (formName) {
       let hasValue = this.productMoneyList.every(val => {
         return val.value > 0
@@ -524,18 +602,17 @@ export default {
     },
     // 勾选产品
     handleProChange (val) {
-      this.productMoneyList = []
-      val.forEach(item => {
-        this.productMoneyList.push({
+      this.productMoneyList = val.map(item => {
+        return {
           id: null,
-          code_val: item.code_val,
-          code_desc: item.code_desc,
-          type: item.code_val + '',
+          code_val: item,
+          code_desc: productType(item, ' :'),
+          type: item,
           value: '0',
-          truevalue: '0',
-          bonustype: item.tb_field_name
-        })
+          truevalue: '0'
+        }
       })
+      console.log(this.productMoneyList)
     },
     // 勾选流水
     handleSelectionChange (val) {
@@ -552,6 +629,10 @@ export default {
           brid: item.bsid
         })
       })
+    },
+    confirmSelFlowDialog () {
+      this.selFlowDialog = false
+      this.flows = this.flows.concat(this.handleSelFlow)
     },
     // 勾选发票
     handleInvoiceChange (val) {

@@ -43,7 +43,7 @@
         </div>
       </div>
       <!-- 列表 -->
-      <el-table v-if="permissions.indexOf('5q')<0&&permissions.indexOf('6n')<0" :data="pendingList" class="table-width" max-height="550">
+      <el-table size="mini" v-if="permissions.indexOf('5q')<0&&permissions.indexOf('6n')<0" :data="pendingList" class="table-width" max-height="550">
         <el-table-column prop="ordernum" label="订单ID" min-width="180">
         </el-table-column>
         <el-table-column prop="cname" label="订单名称" min-width="150">
@@ -60,9 +60,9 @@
             <span v-if="scope.row.pid!='WEBSITE'">{{scope.row.pname}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="" label="审核状态" min-width="140">
+        <el-table-column prop="" label="审核状态" min-width="155">
           <span slot-scope="scope">
-            <el-button type="warning" plain class="xsbtn">{{scope.row.currentname?scope.row.currentname:'订单完成'}}</el-button>
+            <el-button type="warning" class="xsbtn" plain>{{scope.row.currentname?scope.row.currentname:'订单完成'}}</el-button>
           </span>
         </el-table-column>
         <el-table-column prop="" label="订单状态" width="120">
@@ -75,7 +75,7 @@
         </el-table-column>
         <el-table-column prop="deptname" label="商务大区部门" min-width="110">
         </el-table-column>
-        <el-table-column prop="" label="操作" min-width="148">
+        <el-table-column prop="" label="操作" min-width="148" align="center">
           <template slot-scope="scope">
             <el-button type="primary" @click.native="viewOrder(scope.row)" class="xsbtn">查看</el-button>
             <el-button v-if="permissions.indexOf('5a')>-1" type="warning" @click.native="updateOrder(scope.row)" class="xsbtn">修改订单</el-button>
@@ -233,7 +233,7 @@ export default {
       tmark: ''
     }
   },
-  beforeRouteUpdate (to, from, next) { // vue会复用组件，所以从详情页返回时带上搜索条件搜索
+  beforeRouteUpdate (to, from, next) {
     if (to.query.data === 'fromDetail') {
       this.search()
     }

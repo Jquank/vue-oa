@@ -19,7 +19,9 @@ function _getProductType (arr, num, str) {
 export function productType (num, str) {
   let productTypes = []
   let res = storage.get('x52')
-  productTypes = res.data.data
+  if (res) {
+    productTypes = res.data.data
+  }
   return _getProductType(productTypes, num, str)
   // let b = await getByCode(52).then(res => {
   //   if (res.data.success) {

@@ -1,6 +1,5 @@
 
 const state = {
-  collapseCount: 0,
-  errorList: []
+  collapseCount: 0
 }
 export default state

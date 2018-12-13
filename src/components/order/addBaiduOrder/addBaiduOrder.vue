@@ -185,7 +185,7 @@
                       </el-table-column>
                       <el-table-column label="操作">
                         <template slot-scope="scope">
-                          <el-upload :on-change="(()=>{upChange('uploadImgs')})"
+                          <el-upload :on-change="(()=>upChange('uploadImgs'))"
                           class="upload-demo" :ref="'upload'+scope.$index" :action="uploadUrl" :on-exceed="handleExceed" :before-upload="uploadBefore" :on-success="uploadSuccess" :file-list="fileList" :auto-upload="false" :multiple="false" list-type="picture">
                             <el-button slot="trigger" type="primary" class="xsbtn">选取文件</el-button>
                             <el-button type="success" @click.native="submitUpload(scope.row,scope.$index)" class="ml10px xsbtn">上传到服务器</el-button>

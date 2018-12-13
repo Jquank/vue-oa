@@ -58,7 +58,7 @@
       <el-table-column prop="" label="操作" width="145">
         <template slot-scope="scope">
           <el-button @click.native="view(scope.row)" type="success" class="xsbtn">查 看</el-button>
-          <el-button @click.native="stop(scope.row)" type="danger" class="xsbtn">终 止</el-button>
+          <el-button v-if="permissions.indexOf('7n') > -1&&scope.row.step!=400" @click.native="stop(scope.row)" type="danger" class="xsbtn">终 止</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -66,7 +66,7 @@
 
     <!-- 查看弹窗 -->
     <el-dialog :key="key_renew_detail" :modal-append-to-body="false" title="续费详情" :visible.sync="renewDetailDialog" width="1100px">
-      <renew-detail  :rowData="rowData" :toMark="'renewReceive'" @closeRenewDetailDialog="closeRenewDetailDialog"></renew-detail>
+      <renew-detail  :rowData="rowData" :toMark="'renewReceive'" :isPass="!!(stateRadio==100)" @closeRenewDetailDialog="closeRenewDetailDialog"></renew-detail>
     </el-dialog>
 
     <!-- 终止弹窗 -->
@@ -84,9 +84,11 @@
 import Page from 'base/page/page'
 import RenewDetail from 'components/renew/renewList/renewDetail'
 import AutoSelect from 'base/autoSelect/autoSelect'
+import cookie from 'js-cookie'
 export default {
   data () {
     return {
+      permissions: cookie.get('permissions'),
       stateRadio: '100',
       comName: '',
       bdAccount: '',
