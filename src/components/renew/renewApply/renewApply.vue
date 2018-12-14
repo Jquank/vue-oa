@@ -56,7 +56,7 @@
                     </el-select>
                   </el-col>
                   <el-col :md="8">
-                    <el-select v-model="form.bdProxy" @change="selProxy(form.bdProxy)" placeholder="百度推广首消授权书">
+                    <el-select v-model="form.bdProxy" placeholder="百度推广首消授权书">
                       <el-option label="百度推广首消授权书" value="0"></el-option>
                       <el-option label="无首消授权书" value="no_proxy20180625160112"></el-option>
                       <el-option v-for="contract2 in contract.bdProxy" :key="contract2.id" :label="contract2.number" :value="contract2.id"></el-option>

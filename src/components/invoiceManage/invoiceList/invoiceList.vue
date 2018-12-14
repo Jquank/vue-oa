@@ -1,13 +1,13 @@
 <template>
   <div class="incoice-list-component component-container media-padding">
     <div class="visit-search mt-10px">
-      <up-file v-if="mark==='handled'" :title="'导入'" :upIcon="'fa fa-download'" :uploadUrl="serverUrl+'/Invoice.do?import'"  :isHiddenFileList="true" :otherParams="{'code': '50', 'tk': tk}" class="visit-item"></up-file>
+      <up-file v-if="permissions.indexOf('53') > -1 && (mark==='list' || mark==='handled')" :title="'导入'" :upIcon="'fa fa-download'" :uploadUrl="serverUrl+'/Invoice.do?import'"  :isHiddenFileList="true" :otherParams="{'code': '50', 'tk': tk}" class="visit-item"></up-file>
       <el-button @click.native="exportExcellHandled" v-if="mark==='handled'" type="info" class="visit-item fa fa-upload"> 导出Excell</el-button>
-      <el-button @click.native="exportExcellSend" v-if="permissions.indexOf('7c') > -1 && mark==='handled'" type="warning" class="visit-item fa fa-upload"> 寄发票导出Excell</el-button>
+      <el-button @click.native="exportExcellSend" v-if="permissions.indexOf('7c') > -1 && mark==='list'" type="warning" class="visit-item fa fa-upload"> 寄发票导出Excell</el-button>
 
       <el-button @click.native="exportTxt" v-if="permissions.indexOf('50') > -1 && mark==='pending'" type="primary" class="visit-item fa fa-upload"> 导出txt</el-button>
-      <el-button @click.native="exportExcell" v-if="permissions.indexOf('51') > -1 && mark==='pending'" type="info" class="visit-item fa fa-upload"> 导出Excell</el-button>
-      <span v-if="permissions.indexOf('50') > -1 || permissions.indexOf('51') > -1" class="visit-item tipfont fa fa-search" style="line-height:34px;color:#06c;">
+      <el-button @click.native="exportExcell" v-if="permissions.indexOf('51') > -1 && mark==='pending'" type="warning" class="visit-item fa fa-upload"> 导出Excell</el-button>
+      <span v-if="mark==='list'" class="visit-item tipfont fa fa-search" style="line-height:34px;color:#06c;">
         <a href="http://www.kuaidi100.com/?from=openv" target="_blank" class="a-search-number"> 查询快递单号</a>
       </span>
     </div>
@@ -55,7 +55,7 @@
         <el-button @click.native="reset" type="warning">重 置</el-button>
       </div>
       <div class="visit-item export">
-        <el-button v-if="permissions.indexOf('87') > -1&&mark==='list'" @click.native="changeUser" type="primary">更换责任人</el-button>
+        <el-button v-if="permissions.indexOf('87')>-1 && mark==='list'" @click.native="changeUser" type="primary">更换责任人</el-button>
       </div>
     </div>
 
@@ -128,9 +128,10 @@
         </el-table-column>
         <el-table-column prop="bsid" label="bsid" :fixed="fixed" width="50" show-overflow-tooltip>
         </el-table-column>
-        <el-table-column prop="id" label="选择" width="45">
+        <!-- 此处dom有合并，但数据并没有合并，故用不了table的selection -->
+        <el-table-column prop="id" label="选择" width="45" :fixed="fixed">
           <template slot-scope="scope">
-            <el-checkbox @change="((val,$event)=>singleCheck(val,$event,scope.row.id))" :true-label="scope.row.id"></el-checkbox>
+            <el-checkbox @change="((val,$event)=>singleCheck(val,$event,scope.row))" :true-label="scope.row.id"></el-checkbox>
           </template>
         </el-table-column>
         <el-table-column prop="tnumber" label="单据号码" width="100">
@@ -165,16 +166,21 @@
             <el-button v-if="scope.row.invoice==20" plain type="warning" class="xsbtn">寄出</el-button>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="150">
+        <el-table-column label="操作" width="160">
           <template slot-scope="scope">
             <div class="table-btns">
               <el-button @click.native="view(scope.row)" type="success" class="xsbtn">查看</el-button>
+
+              <el-button v-if="permissions.indexOf('52') > -1&&mark==='pending'" @click.native="editInvoice(scope.row)" type="warning" class="xsbtn">编辑</el-button>
+
               <el-button v-if="mark==='pending'" @click.native="del(scope.row)" type="danger" class="xsbtn">删除</el-button>
 
               <el-button v-if="scope.row.step < 300 && scope.row.hasinvoice == 0 && permissions.indexOf('52') > -1 && mark==='list'" @click.native="del(scope.row)" type="danger" class="xsbtn">删除</el-button>
 
               <el-button v-if="scope.row.hasinvoice>=10" @click.native="moreCancle(scope.row)" type="warning" class="xsbtn">开多废除</el-button>
+
               <el-button v-if="scope.row.is_advance == 20 && scope.row.receive_money < scope.row.tmoney && mark==='list'" @click.native="repayment(scope.row)" type="primary" class="xsbtn">还款</el-button>
+
               <el-button v-if="scope.row.hasinvoice >= 10 && permissions.indexOf('7d')>-1" @click.native="errorRed(scope.row)" type="warning" class="xsbtn">发票开错冲红</el-button>
             </div>
           </template>
@@ -198,11 +204,17 @@
 
     <!-- 发票信息弹窗 -->
     <el-dialog :key="key_invoice_dialog" title="发票信息" :visible.sync="invoiceDialog" width="850px">
-      <invoice-info-dialog :form="form" :invoiceLogs="invoiceLogs" @closeInvoiceDialog="invoiceDialog=false"></invoice-info-dialog>
+      <invoice-info-dialog :form="form" :invoiceLogs="invoiceLogs"   :isShowBtn="isShowBtn" @closeInvoiceDialog="invoiceDialog=false"></invoice-info-dialog>
     </el-dialog>
 
     <!-- 还款弹窗 -->
     <el-dialog title="还款" :visible.sync="repaymentDialog" width="600px">
+      <div class="prove-wrapper">
+        <img :src="form.prove_img" width="50px" height="50px" alt="">
+        <up-file @fileUrl="getFileUrl" :listType="'picture'" class="ml10px mr10px"></up-file>
+        <!-- <up-file @fileUrl="getFileUrl" :listType="'picture'" style="display:inline-block;"></up-file> -->
+        <a @click="exportBankFlow" href="javascript:void(0)" class="a-search-number tipfont fa fa-download">点击下载模板</a>
+      </div>
       <el-table @selection-change="handleFlowSelectionChange" stripe border :data="repaymentList" class="table-width">
         <el-table-column type="selection" width="45">
         </el-table-column>
@@ -257,6 +269,18 @@
         </div>
       </el-form>
     </el-dialog>
+
+    <!-- 发票开错冲红弹窗 -->
+    <el-dialog :modal-append-to-body="false" :title="makeInvoiceTitle" :visible.sync="makeInvoiceDialog" width="900px">
+      <make-invoice-dialog
+        @closeDialog="makeInvoiceDialog=false"
+        :key="key_make_invoice"
+        :echoData="echoData"
+        :makeInvoiceStatus="makeInvoiceStatus"
+        :offset="offset"
+      >
+      </make-invoice-dialog>
+    </el-dialog>
   </div>
 </template>
 
@@ -271,6 +295,7 @@ import { rowSpan } from 'common/js/utils'
 import cookie from 'js-cookie'
 import { serverUrl } from 'api/http'
 import { timeFormat } from 'common/js/filters'
+import MakeInvoiceDialog from 'components/renew/renewList/makeInvoiceDialog'
 export default {
   directives: { elDragDialog },
   props: {
@@ -349,7 +374,14 @@ export default {
         express_no: '',
         express_time: '',
         express_remark: ''
-      }
+      },
+      makeInvoiceDialog: false,
+      key_make_invoice: '50',
+      echoData: [],
+      makeInvoiceTitle: '',
+      makeInvoiceStatus: '',
+      offset: '',
+      isShowBtn: false
     }
   },
   mounted () {
@@ -388,6 +420,22 @@ export default {
     },
     // 查看
     view (data) {
+      this.key_invoice_dialog = new Date() + '5'
+      this.$get('/Invoice.do?invoicebyid', { invoiceid: data.invoiceid }).then(
+        res => {
+          if (res.data[0].success) {
+            this.form = res.data[0].data[0]
+            this.invoiceLogs = res.data[1].data
+            setTimeout(() => {
+              this.invoiceDialog = true
+            }, 100)
+          }
+        }
+      )
+    },
+    // 编辑
+    editInvoice(data) {
+      this.isShowBtn = true
       this.key_invoice_dialog = new Date() + '5'
       this.$get('/Invoice.do?invoicebyid', { invoiceid: data.invoiceid }).then(
         res => {
@@ -449,7 +497,10 @@ export default {
         .then(() => {
           this.$post('/Invoice.do?invoiceDel', params).then(res => {
             if (res.data.success) {
+              this.$message.success('已废除！')
               this.search()
+            } else {
+              this.$message.error('废除失败！')
             }
           })
         })
@@ -461,14 +512,31 @@ export default {
         })
     },
     // 发票开错冲红
-    // todo
     errorRed (data) {
-      // let params = {
-      //   'reid': data.reid,
-      //   'companylogid': data.companylogid
-      // }
-      // this.$get('/Invoice.do?getInvoiceInfo', params).then(res => {
-      // })
+      this._getInvoiceData(data, data.reid)
+      this.key_make_invoice = new Date() + '50'
+      this.makeInvoiceTitle = '发票开错冲红'
+      this.makeInvoiceStatus = 10
+      this.offset = 10
+      setTimeout(() => {
+        this.makeInvoiceDialog = true
+      }, 200)
+    },
+    _getInvoiceData(data, reid = null) {
+      let params = {
+        reid: reid,
+        companylogid: data.companylogid
+      }
+      this.$post('/Invoice.do?getInvoiceInfo', params).then(res => {
+        if (res.data.success) {
+          this.echoData = res.data.data[0]
+          let productMoneyList = res.data.data[1]
+          this.echoData[0].productMoneyList = productMoneyList
+          if (!this.echoData[0].companyname) {
+            this.echoData[0].companyname = this.echoData[0].comName
+          }
+        }
+      })
     },
     // 还款
     repayment (data) {
@@ -478,7 +546,20 @@ export default {
         invoiceOffset: 'invoiceOffset',
         invoiceid: data.invoiceid
       }
+      this.$get('/Invoice.do?invoicebyid', { invoiceid: data.invoiceid }).then(
+        res => {
+          if (res.data[0].success) {
+            this.form = res.data[0].data[0]
+          }
+        }
+      )
       this.repaymentDialog = true
+    },
+    exportBankFlow() {
+      this.$export('/Invoice.do?invoiceCushionProof')
+    },
+    getFileUrl (res) {
+      this.prove_img = res.response.url
     },
     // 还款确认
     confirmFlow () {
@@ -529,6 +610,7 @@ export default {
         }
       })
     },
+    // 更换责任人
     changeUser () {
       if (!this.multipleSelection.length) {
         this.$message({
@@ -570,13 +652,12 @@ export default {
         }
       })
     },
-    singleCheck (val, e, id) {
+    singleCheck (val, e, data) {
       if (e.target.checked) {
-        this.multipleSelection.push(id)
+        this.multipleSelection.push(data)
       } else {
-        this.multipleSelection = this.multipleSelection.filter(val => val !== id)
+        this.multipleSelection = this.multipleSelection.filter(val => val.id !== data.id)
       }
-      console.log(this.multipleSelection)
     },
     handleFlowSelectionChange (val) {
       this.flowSelectArr = val
@@ -584,7 +665,9 @@ export default {
     updateInvoiceList (res) {
       this.key_table = new Date() + ''
       this.invoiceList = res.data[0].data
-      this._getRowSpan()
+      if (this.mark === 'list' || this.mark === 'pending') {
+        this._getRowSpan()
+      }
     },
     updateRepaymentList (res) {
       this.repaymentList = res.data[0].data
@@ -650,7 +733,8 @@ export default {
     AutoSelect,
     Page,
     SelectUser,
-    UpFile
+    UpFile,
+    MakeInvoiceDialog
   }
 }
 </script>
@@ -674,12 +758,17 @@ export default {
   }
   .table-btns {
     display: flex;
-    justify-content: space-between;
+    // justify-content: space-between;
     flex-wrap: wrap;
     .el-button {
-      margin-left: 0;
-      margin-top: 2px;
+      margin: 1px 0 0 2px;
     }
+  }
+  .prove-wrapper{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+
   }
 }
 </style>

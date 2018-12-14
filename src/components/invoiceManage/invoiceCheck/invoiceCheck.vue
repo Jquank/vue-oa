@@ -26,7 +26,7 @@
       <el-table @selection-change="handleSelectionChange" stripe border :data="makeInvoiceList" max-height="550" style="width: 100%">
         <el-table-column fixed type="selection" width="55">
         </el-table-column>
-        <el-table-column prop="" label="审核" min-width="70">
+        <el-table-column prop="" label="审核" min-width="85">
           <template slot-scope="scope">
             <span v-show="scope.row.is_advance==20">提前开发票</span>
             <span v-show="scope.row.companyname!=scope.row.comName">A开B</span>

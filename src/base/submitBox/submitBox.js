@@ -14,7 +14,7 @@ ex：submitBox(that, {
         console.log(err)
       })
 */
-export default function submitBox (that, obj = {}) {
+export default function submitBox(that, obj = {}) {
   return new Promise((resolve, reject) => {
     that.$prompt(obj.title || '', {
       confirmButtonText: '确定',

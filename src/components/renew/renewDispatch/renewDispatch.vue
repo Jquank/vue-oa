@@ -13,7 +13,7 @@
         <el-button type="warning" @click.native="reset">重 置</el-button>
       </div>
       <div class="follow-item export">
-        <el-button type="warning"  @click.native="confirm">批量处理</el-button>
+        <el-button type="warning"  @click.native="confirm('mutiple')">批量处理</el-button>
       </div>
     </div>
     <el-table  @selection-change="handleSelectionChange" stripe border :data="myFollowList" style="width: 100%;margin-top:10px;">
@@ -37,7 +37,7 @@
       <el-table-column prop="addtype" label="续费类型">
         <span slot-scope="scope">{{scope.row.addtype+'' | renewState('addType')}}</span>
       </el-table-column>
-      <el-table-column prop="stepName" label="审核状态" v-if="step!=150">
+      <el-table-column prop="stepName" label="审核状态" min-width="120" v-if="step!=150">
         <template slot-scope="scope">
           <el-button type="warning" plain class="xsbtn">{{scope.row.stepName}}</el-button>
         </template>
@@ -84,10 +84,17 @@ export default {
     },
     confirm (data) {
       let params = {
-        'reidarray': this.selectArr,
-        'reid': data.reid,
         'checkresult': 300,
         'step': this.step
+      }
+      if (data !== 'mutiple') {
+        params.reid = data.reid
+      } else {
+        params.reidarray = this.selectArr
+        if (!this.selectArr.length) {
+          this.$message.warning('请进行勾选！')
+          return
+        }
       }
       this.$confirm('确定转出吗?', '', {
         confirmButtonText: '确定',

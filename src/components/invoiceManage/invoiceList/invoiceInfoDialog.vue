@@ -83,10 +83,10 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row>
+      <el-row id="prove-img">
         <el-col class="maxwidth">
           <el-form-item label="发票垫款证明 :">
-            <img :src="form.prove_img" alt="">
+            <img v-if="form.prove_img" :src="form.prove_img" width="50px" height="50px" alt="">
           </el-form-item>
         </el-col>
       </el-row>
@@ -128,7 +128,7 @@
       </el-row>
     </el-form>
 
-    <div class="text-center" v-if="form.hasinvoice == 0 && permissions.indexOf('52') > -1">
+    <div class="text-center" v-if="(form.hasinvoice == 0 && permissions.indexOf('52') > -1) || isShowBtn">
       <el-button type="primary" @click.native="subChange('form')">修改发票信息</el-button>
     </div>
 
@@ -158,6 +158,7 @@ import SelectUser from 'base/selectUser/selectUser'
 import elDragDialog from '@/directive/el-dragDialog' // eslint-disable-line
 import Page from 'base/page/page'
 import cookie from 'js-cookie'
+import Viewer from 'viewerjs'
 export default {
   props: {
     form: {
@@ -171,6 +172,10 @@ export default {
       default: function () {
         return []
       }
+    },
+    isShowBtn: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -222,6 +227,14 @@ export default {
         ]
       }
     }
+  },
+  mounted() {
+    this.$nextTick(() => {
+      /* eslint-disable no-new */
+      new Viewer(document.getElementById('prove-img'), {
+        zIndex: 10000
+      })
+    })
   },
   methods: {
     // 提交修改

@@ -83,10 +83,9 @@ export default {
   methods: {
     // 获取列表的第一页
     _getFirstList () {
-      this.currentPage = 1
       let params = Object.assign({}, {
         pagesize: 10,
-        currentpage: 1
+        currentpage: this.currentPage
       }, this.sendParams, this.otherParams)
 
       this.$post(this.url, params)

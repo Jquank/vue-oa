@@ -1,98 +1,103 @@
 <template>
   <div class="make-invoice-form">
-    <el-form :model="form" ref="form" :rules="rules" :status-icon="true" :validate-on-rule-change="false" :label-width="labelWidth">
+    <el-form
+      :model="form"
+      ref="form"
+      :rules="rules"
+      :status-icon="true"
+      :validate-on-rule-change="false"
+      :label-width="labelWidth"
+    >
       <div class="title">
         <el-button class="title-btn" type="warning">开票信息</el-button>
         <div class="line"></div>
       </div>
       <el-row class="top-radio">
         <el-col :md="8" class="maxwidth">
-          <el-form-item label="">
+          <el-form-item label>
             <el-radio v-model="form.invoice_com" label="10">公司</el-radio>
             <el-radio v-model="form.invoice_com" label="1">个人</el-radio>
           </el-form-item>
         </el-col>
         <el-col :md="8" class="maxwidth">
-          <el-form-item label="">
+          <el-form-item label>
             <el-radio v-model="form.invoice_open" label="10">百推</el-radio>
             <el-radio v-model="form.invoice_open" label="20">糯米</el-radio>
           </el-form-item>
         </el-col>
         <el-col :md="8" class="maxwidth">
-          <el-form-item label="">
+          <el-form-item label>
             <span class="tipfont fa fa-search" style="line-height:34px;color:#06c;">
-              <a href="https://wsbs.hb-n-tax.gov.cn/hbgs/tax/xyzkcx/sfybnsr1" target="_blank" class="a-search-number"> 查询快递单号</a>
+              <a
+                href="https://wsswj.hb-n-tax.gov.cn/portal/iframe.c?goUrl=/zyy-typt/typt/ggcx/sfybnsr.jsp"
+                target="_blank"
+                class="a-search-number"
+              >查询纳税人资格</a>
             </span>
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row v-if="makeInvoiceStatus==20">
-        <el-col :md="12" class="maxwidth">
-          <el-form-item label="选择发票 :">
-            <el-select :key="key_sel_invoice" v-model="form.id" @change="selInvoiceChange" style="width: 100%;">
-              <el-option v-for="(item, index) in form.invoice" :key="index" :value="item.id" :label="item.companyname"></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-      </el-row>
       <el-row>
-        <el-col :md="12" class="maxwidth">
+        <el-col :md="16" class="maxwidth">
           <el-form-item label="公司名称 :" prop="comName">
             <el-input v-model="form.comName" disabled :class="makeInvoiceStatus==20?'input-btn':''"></el-input>
             <slot name="selBtn"></slot>
           </el-form-item>
         </el-col>
-        <el-col :md="12" class="maxwidth">
-          <el-form-item label="" label-width="15px">
+        <el-col :md="8" class="maxwidth">
+          <el-form-item label label-width="15px">
             <p class="red tipfont" style="margin-top: 10px;">1、专票能抵扣增值税，普票不可以抵扣。</p>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
-        <el-col :md="12" class="maxwidth">
+        <el-col :md="16" class="maxwidth">
+          <el-form-item label="历史发票 :">
+            <el-select :key="key_sel_invoice" v-model="form.id" @change="selInvoiceChange" style="width: 100%;">
+              <el-option v-for="(item, index) in form.invoice" :key="index" :value="item.id" :label="item.companyname"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :md="8" class="maxwidth">
+          <el-form-item label label-width="15px">
+            <p class="red tipfont">2、客服或商务申请提前开发票的，应由发票申请人所属部门副总审批。</p>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :md="8" class="maxwidth">
           <el-form-item label="合并发票 :">
             <el-button @click.native="mixinInvoice" type="primary">选择合并</el-button>
+          </el-form-item>
+        </el-col>
+        <el-col :md="16" class="maxwidth">
+          <el-form-item label label-width="15px">
+            <p class="red tipfont">3、关于客服申请开具发票抬头的公司名称，与签约推广的公司不一致的， 需要发票申请人所属部门副总审批以及线下提供资质如垫款证明。</p>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :md="24" class="maxwidth">
           <el-form-item label="已选中发票 :">
-            <el-table :data="selectedMixinInvoice" border stripe
-                    class="table-width">
-            <el-table-column prop="companyname"
-                            label="公司名称"
-                            min-width="130">
-            </el-table-column>
-            <el-table-column prop="baidu_account"
-                            label="百度账号"
-                            width="100">
-            </el-table-column>
-            <el-table-column prop="receiptmoney"
-                            label="金额"
-                            width="110">
-                            <span slot-scope="scope">{{scope.row.receiptmoney | currency}}</span>
-            </el-table-column>
-            <el-table-column prop="bill_time"
-                            label="记账日期"
-                            width="90">
-                            <span slot-scope="scope">{{scope.row.bill_time | timeFormat}}</span>
-            </el-table-column>
-            <el-table-column prop="insert_time"
-                            label="申请时间"
-                            width="90">
-                            <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
-            </el-table-column>
-            <el-table-column prop=""
-                            label="商务|客服"
-                            width="80">
-                            <span slot-scope="scope">{{scope.row.applyUname+(scope.row.username !== scope.row.ckBdName ? (','+scope.row.ckBdName) : '')}}</span>
-            </el-table-column>
-            <el-table-column prop="orderOrRenew"
-                            label="订单或续费"
-                            width="80">
-            </el-table-column>
-          </el-table>
+            <el-table :data="selectedMixinInvoice" border stripe class="table-width">
+              <el-table-column prop="companyname" label="公司名称" min-width="130"></el-table-column>
+              <el-table-column prop="baidu_account" label="百度账号" width="100"></el-table-column>
+              <el-table-column prop="receiptmoney" label="金额" width="110">
+                <span slot-scope="scope">{{scope.row.receiptmoney | currency}}</span>
+              </el-table-column>
+              <el-table-column prop="bill_time" label="记账日期" width="90">
+                <span slot-scope="scope">{{scope.row.bill_time | timeFormat}}</span>
+              </el-table-column>
+              <el-table-column prop="insert_time" label="申请时间" width="90">
+                <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
+              </el-table-column>
+              <el-table-column prop label="商务|客服" width="80">
+                <span
+                  slot-scope="scope"
+                >{{scope.row.applyUname+(scope.row.username !== scope.row.ckBdName ? (','+scope.row.ckBdName) : '')}}</span>
+              </el-table-column>
+              <el-table-column prop="orderOrRenew" label="订单或续费" width="80"></el-table-column>
+            </el-table>
           </el-form-item>
         </el-col>
       </el-row>
@@ -103,20 +108,8 @@
           </el-form-item>
         </el-col>
         <el-col :md="12" class="maxwidth">
-          <el-form-item label="" label-width="15px">
-            <p class="red tipfont">2、关于客服申请开具发票抬头的公司名称，与签约推广的公司不一致的， 需要发票申请人所属部门副总审批以及线下提供资质如垫款证明。</p>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :md="12" class="maxwidth">
           <el-form-item label="纳税人识别号 :" :prop="form.invoice_com==10?'identinum':''">
             <el-input v-model="form.identinum"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :md="12" class="maxwidth">
-          <el-form-item label="" label-width="15px">
-            <p class="red tipfont">3、客服或商务申请提前开发票的，应由发票申请人所属部门副总审批。</p>
           </el-form-item>
         </el-col>
       </el-row>
@@ -177,7 +170,12 @@
         <el-col class="maxwidth">
           <el-form-item label="产品类型 :" prop="proArr">
             <el-checkbox-group :key="key_sel_pro" v-model="form.proArr">
-              <el-checkbox  @change="selProChange(item)" v-for="item in form.productList" :key="item.code_val" :label="item.code_val">{{item.code_desc}}</el-checkbox>
+              <el-checkbox
+                @change="selProChange(item)"
+                v-for="item in form.productList"
+                :key="item.code_val"
+                :label="item.code_val"
+              >{{item.code_desc}}</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
         </el-col>
@@ -201,8 +199,7 @@
       <el-row>
         <el-col :md="12" class="maxwidth">
           <el-form-item label="预计还款时间 :" :prop="makeInvoiceStatus===20?'offsetTime':''">
-            <el-date-picker v-model="form.offsetTime" value-format="yyyy-MM-dd" type="date" placeholder="选择日期">
-            </el-date-picker>
+            <el-date-picker v-model="form.offsetTime" value-format="yyyy-MM-dd" type="date" placeholder="选择日期"></el-date-picker>
           </el-form-item>
         </el-col>
       </el-row>
@@ -249,54 +246,40 @@
     </div>
 
     <!-- 选择合并发票 -->
-    <el-dialog title="选择公司"
-               :append-to-body="true"
-               :modal-append-to-body="false"
-               :visible.sync="mixinInvoiceDialog"
-               width="650px">
-      <el-table :data="mixinInvoiceList" border stripe
-                class="table-width"
-                @selection-change="handleSelectionChange">
-        <el-table-column type="selection" width="45" fixed>
+    <el-dialog
+      title="选择公司"
+      :append-to-body="true"
+      :modal-append-to-body="false"
+      :visible.sync="mixinInvoiceDialog"
+      width="650px"
+    >
+      <el-table :data="mixinInvoiceList" border stripe class="table-width" @selection-change="handleSelectionChange">
+        <el-table-column type="selection" width="45" fixed></el-table-column>
+        <el-table-column prop="companyname" label="公司名称" min-width="130"></el-table-column>
+        <el-table-column prop="baidu_account" label="百度账号" width="100"></el-table-column>
+        <el-table-column prop="receiptmoney" label="金额" width="110">
+          <span slot-scope="scope">{{scope.row.receiptmoney | currency}}</span>
         </el-table-column>
-        <el-table-column prop="companyname"
-                         label="公司名称"
-                         min-width="130">
+        <el-table-column prop="bill_time" label="记账日期" width="90">
+          <span slot-scope="scope">{{scope.row.bill_time | timeFormat}}</span>
         </el-table-column>
-        <el-table-column prop="baidu_account"
-                         label="百度账号"
-                         width="100">
+        <el-table-column prop="insert_time" label="申请时间" width="90">
+          <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
         </el-table-column>
-        <el-table-column prop="receiptmoney"
-                         label="金额"
-                         width="110">
-                        <span slot-scope="scope">{{scope.row.receiptmoney | currency}}</span>
+        <el-table-column prop label="商务|客服" width="80">
+          <span
+            slot-scope="scope"
+          >{{scope.row.applyUname+(scope.row.username !== scope.row.ckBdName ? (','+scope.row.ckBdName) : '')}}</span>
         </el-table-column>
-        <el-table-column prop="bill_time"
-                         label="记账日期"
-                         width="90">
-                         <span slot-scope="scope">{{scope.row.bill_time | timeFormat}}</span>
-        </el-table-column>
-        <el-table-column prop="insert_time"
-                         label="申请时间"
-                         width="90">
-                         <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
-        </el-table-column>
-        <el-table-column prop=""
-                         label="商务|客服"
-                         width="80">
-                         <span slot-scope="scope">{{scope.row.applyUname+(scope.row.username !== scope.row.ckBdName ? (','+scope.row.ckBdName) : '')}}</span>
-        </el-table-column>
-        <el-table-column prop="orderOrRenew"
-                         label="订单或续费"
-                         width="80">
-        </el-table-column>
+        <el-table-column prop="orderOrRenew" label="订单或续费" width="80"></el-table-column>
       </el-table>
-      <page :simpleLayout="'total, prev, next, jumper'"
-            class="page"
-            :url="mixinInvoiceUrl"
-            :sendParams="mixinInvoiceParams"
-            @updateList="updateMixinInvoiceList"></page>
+      <page
+        :simpleLayout="'total, prev, next, jumper'"
+        class="page"
+        :url="mixinInvoiceUrl"
+        :sendParams="mixinInvoiceParams"
+        @updateList="updateMixinInvoiceList"
+      ></page>
       <div class="text-center">
         <el-button @click.native="confirmSelMixinInvoice" type="success">确 定</el-button>
       </div>
@@ -313,7 +296,7 @@ export default {
   props: {
     echoData: {
       type: Array,
-      default: function () {
+      default: function() {
         return []
       }
     },
@@ -331,14 +314,14 @@ export default {
     },
     rowData: {
       type: Object,
-      default: function () {
+      default: function() {
         return {}
       }
     }
   },
   watch: {
     echoData: {
-      handler: function (newEcho) {
+      handler: function(newEcho) {
         this.form.proArr = []
         this.form.invoice = newEcho
         this.form = Object.assign(this.form, newEcho[0])
@@ -353,7 +336,7 @@ export default {
       immediate: true // 将立即以表达式的当前值触发回调
     }
   },
-  data () {
+  data() {
     return {
       labelWidth: '115px',
       key_sel_pro: '1',
@@ -386,7 +369,7 @@ export default {
       mixinInvoiceDialog: false,
       mixinInvoiceUrl: '/Renew.do?renewRefundList',
       mixinInvoiceParams: {
-        'companyName': ''
+        companyName: ''
       },
       multipleSelection: [],
       selectedMixinInvoice: [],
@@ -443,7 +426,7 @@ export default {
       }
     }
   },
-  created () {
+  created() {
     getByCode(47).then(res => {
       this.form.productList = res.data.data
     })
@@ -451,23 +434,24 @@ export default {
       this.labelWidth = '60px'
     }
   },
-  mounted () {
-    const viewer = new Viewer(document.getElementById('images'),{  // eslint-disable-line
+  mounted() {
+    /* eslint-disable no-new */
+    new Viewer(document.getElementById('images'), {
       zIndex: 100000
     })
   },
   methods: {
     // 合并发票
-    mixinInvoice () {
+    mixinInvoice() {
       this.mixinInvoiceDialog = true
       this.mixinInvoiceParams = {
-        'companyname': this.form.comName
+        companyname: this.form.comName
       }
     },
-    confirmSelMixinInvoice () {
+    confirmSelMixinInvoice() {
       this.mixinInvoiceDialog = false
     },
-    handleSelectionChange (val) {
+    handleSelectionChange(val) {
       this.selectedMixinInvoice = val
       this.multipleSelection = val.map(item => {
         return {
@@ -476,11 +460,11 @@ export default {
         }
       })
     },
-    updateMixinInvoiceList (res) {
+    updateMixinInvoiceList(res) {
       this.mixinInvoiceList = res.data[0].data
     },
     // 修改六要素
-    changeSixTip () {
+    changeSixTip() {
       let params = {
         invoiceInfoId: this.form.id,
         offset: this.offset,
@@ -501,7 +485,7 @@ export default {
       })
     },
     // 提交
-    subChange (formName) {
+    subChange(formName) {
       if (this.form.productMoneyList.some(val => val.value > 100000)) {
         this.$message.error('金额需小于或等于10万！')
         return
@@ -533,14 +517,14 @@ export default {
         }
       })
     },
-    selInvoiceChange (id) {
+    selInvoiceChange(id) {
       this.form.invoice.forEach((val, key, arr) => {
         if (val.id === id) {
           this.form = Object.assign({}, this.form, arr[key])
         }
       })
     },
-    selProChange (obj) {
+    selProChange(obj) {
       let index = -1
       this.form.productMoneyList.forEach((val, key) => {
         if (val.code_val === obj.code_val) {
@@ -556,7 +540,7 @@ export default {
           value: 0
         })
       }
-      this.form.productMoneyList.sort(function (a, b) {
+      this.form.productMoneyList.sort(function(a, b) {
         var val1 = a.code_val
         var val2 = b.code_val
         if (val1 > val2) {
@@ -569,7 +553,7 @@ export default {
       })
     }
   },
-  components: {Page}
+  components: { Page }
 }
 </script>
 
@@ -591,7 +575,7 @@ export default {
   p.tipfont {
     margin: 0;
   }
-  .top-radio .el-form-item{
+  .top-radio .el-form-item {
     margin-bottom: 0;
   }
 }
