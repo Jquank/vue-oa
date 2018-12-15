@@ -82,7 +82,7 @@
           </el-table>
         </template>
       </el-table-column>
-      <el-table-column prop="" label="分配时间" class-name="splited-col" width="135">
+      <el-table-column prop="" label="分配时间" class-name="splited-col" width="140">
         <template slot-scope="scopeOut">
           <el-table class="split-item" :data="scopeOut.row.split" :show-header="false">
             <el-table-column class-name="split-item-col" show-overflow-tooltip label="" prop="''">

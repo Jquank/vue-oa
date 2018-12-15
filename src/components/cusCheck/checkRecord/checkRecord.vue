@@ -17,16 +17,16 @@
       </div>
     </div>
 
-    <el-table stripe border :data="list" style="width: 100%;margin-top:10px;">
+    <el-table stripe border :data="list" class="table-width">
         <el-table-column prop="companyname" label="客户名称" min-width="150">
         </el-table-column>
-        <el-table-column prop="username" label="提交人">
+        <el-table-column prop="username" label="提交人" width="90">
         </el-table-column>
         <el-table-column prop="fullname" label="提交部门">
         </el-table-column>
         <el-table-column prop="auditorname" label="审核人">
         </el-table-column>
-        <el-table-column prop="" label="审核时间" min-width="135">
+        <el-table-column prop="" label="审核时间" width="150">
           <span slot-scope="scope">{{scope.row.auditortime | timeFormat}}</span>
         </el-table-column>
         <el-table-column prop="productname" label="业务类型" min-width="80">

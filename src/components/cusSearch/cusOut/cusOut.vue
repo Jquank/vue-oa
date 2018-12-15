@@ -18,7 +18,7 @@
     </div>
 
     <el-table stripe border :data="list" style="width: 100%;margin-top:10px;">
-      <el-table-column prop="cName" label="公司名称" width="190">
+      <el-table-column prop="cName" label="公司名称" width="220">
       </el-table-column>
       <el-table-column prop="baidu_account" label="百度账号">
       </el-table-column>
@@ -100,7 +100,9 @@ export default {
       }
     },
     handleCurrentChange (val) {
-      this.selectedId = val.id
+      if (val) { // 此事件偶尔有bug
+        this.selectedId = val.id
+      }
     },
     confirmOut () {
       if (!this.accountSF || !this.selectedId) {

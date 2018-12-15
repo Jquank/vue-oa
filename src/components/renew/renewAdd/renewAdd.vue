@@ -205,7 +205,7 @@
           <div class="line"></div>
         </div>
         <el-table :data="recordList" class="table-width" max-height="400">
-          <el-table-column prop="inserttime" label="操作时间" width="135">
+          <el-table-column prop="inserttime" label="操作时间" width="140">
             <span slot-scope="scope">{{scope.row.inserttime | timeFormat}}</span>
           </el-table-column>
           <el-table-column prop="name" label="操作人">

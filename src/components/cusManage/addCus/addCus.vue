@@ -89,7 +89,7 @@
         <el-button type="primary" @click.native="submit(0)" :disabled="subDisable" class="btns-child">添加为公共客户</el-button>
         <el-button type="warning" @click.native="submit(10)" :disabled="subDisable" class="btns-child">添加为我的跟踪客户</el-button>
         <div class="btns-child">
-          <el-button type="primary" @click.native="submit(20)" :disabled="subDisable">添加并申请保A</el-button>
+          <el-button type="success" @click.native="submit(20)" :disabled="subDisable">添加并申请保A</el-button>
           <span class="red">(可保A数量：{{availableBaoA}})</span>
         </div>
       </el-form-item>
@@ -293,7 +293,7 @@ export default {
     max-width: 500px;
   }
   .contact-phone {
-    width: calc(~'(100% - 30px)');
+    width: calc(~'(100% - 35px)');
   }
   .circle-btn {
     width: 26px;

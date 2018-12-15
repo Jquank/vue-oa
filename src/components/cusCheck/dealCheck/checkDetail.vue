@@ -77,9 +77,9 @@
             </el-col>
           </el-row>
           <el-row :gutter="20">
-            <el-col :md="24" style="max-width:1000px;">
+            <el-col :md="12" class="maxwidth">
               <el-form-item label="客户类型 :" required>
-                <el-select v-model="cusDetail.producttype">
+                <el-select v-model="cusDetail.producttype" style="width:100%;">
                   <el-option :value="0" label="新开"></el-option>
                   <el-option :value="10" label="一户多开"></el-option>
                   <el-option :value="20" label="老户重开"></el-option>
@@ -126,11 +126,13 @@
             </el-col>
           </el-row>
           <el-row :gutter="20">
-            <el-col :md="12" class="maxwidth">
-              <el-form-item label="提交备注 :">
+            <el-col :md="24">
+              <el-form-item label="提交备注 :" style="max-width:1000px;">
                 <span>{{cusDetail.remark}}</span>
               </el-form-item>
             </el-col>
+          </el-row>
+          <el-row :gutter="20">
             <el-col :md="12" class="maxwidth">
               <el-form-item label="提交时间 :">
                 <span>{{cusDetail.insert_time | timeFormat}}</span>
@@ -171,38 +173,38 @@
         </div>
         <el-tabs v-model="activeName" style="width:100%;" type="card" @tab-click="handleClick">
           <el-tab-pane label="审核记录" name="1">
-            <el-table :data="checkLogs" style="width: 100%;">
+            <el-table :data="checkLogs" border stripe style="width: 100%;">
               <el-table-column prop="pname" label="业务类型" width="80">
               </el-table-column>
               <el-table-column prop="" label="处理类型" width="120">
                 <span slot-scope="scope">{{scope.row.type | cusState('checkType')}}</span>
               </el-table-column>
-              <el-table-column prop="" label="处理状态" width="120">
+              <el-table-column prop="" label="处理状态" min-width="120">
                 <span slot-scope="scope">{{scope.row.status | cusState('checkStatus')}}</span>
               </el-table-column>
-              <el-table-column prop="username" label="提交人" width="100">
+              <el-table-column prop="username" label="提交人" width="80">
               </el-table-column>
-              <el-table-column prop="insert_time" label="提交时间" width="90">
+              <el-table-column prop="insert_time" label="提交时间" width="100">
                 <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
               </el-table-column>
-              <el-table-column prop="cremark" label="提交备注">
+              <el-table-column prop="cremark" label="提交备注" min-width="250">
               </el-table-column>
               <el-table-column prop="auditor" label="处理人" width="100">
               </el-table-column>
-              <el-table-column prop="" label="处理时间" width="90">
+              <el-table-column prop="" label="处理时间" width="100">
                 <span slot-scope="scope">{{scope.row.auditor_time | timeFormat}}</span>
               </el-table-column>
-              <el-table-column prop="reason" label="被拒原因">
+              <el-table-column prop="reason" label="被拒原因" min-width="150">
               </el-table-column>
               <el-table-column prop="clremark" label="处理备注">
               </el-table-column>
             </el-table>
           </el-tab-pane>
           <el-tab-pane label="修改记录" name="2">
-            <el-table :data="changeLogs" style="width: 100%;">
+            <el-table :data="changeLogs" border stripe style="width: 100%;">
               <el-table-column prop="name" label="操作人">
               </el-table-column>
-              <el-table-column prop="" label="操作时间">
+              <el-table-column prop="" label="操作时间" width="150">
                 <span slot-scope="scope">{{scope.row.inserttime | timeFormat}}</span>
               </el-table-column>
               <el-table-column prop="remark" label="操作内容">
@@ -211,10 +213,10 @@
             <page class="page" :url="changeUrl" :sendParams="changeParams" @updateList="getChangeLogs"></page>
           </el-tab-pane>
           <el-tab-pane label="申请修改记录" name="3">
-            <el-table :data="applyChangeLogs" style="width: 100%;">
+            <el-table :data="applyChangeLogs" border stripe style="width: 100%;">
               <el-table-column prop="applyName" label="提交人">
               </el-table-column>
-              <el-table-column prop="" label="提交时间">
+              <el-table-column prop="" label="提交时间" width="150">
                 <span slot-scope="scope">{{scope.row.inserttime | timeFormat}}</span>
               </el-table-column>
               <el-table-column prop="remark" label="提交备注">
@@ -224,7 +226,7 @@
               <el-table-column prop="" label="处理状态">
                 <span slot-scope="scope">{{scope.row.type | cusState('checkStatus')}}</span>
               </el-table-column>
-              <el-table-column prop="" label="处理时间">
+              <el-table-column prop="" label="处理时间" width="150">
                 <span slot-scope="scope">{{scope.row.auditor_time | timeFormat}}</span>
               </el-table-column>
               <el-table-column prop="refuseremark" label="被拒原因">
@@ -233,15 +235,15 @@
             <page class="page" :url="applyChangeUrl" :sendParams="applyChangeParams" @updateList="getApplyChangeLogs"></page>
           </el-tab-pane>
           <el-tab-pane label="放弃保A日志" name="4">
-            <el-table :data="stopBaoALogs" style="width: 100%;">
+            <el-table :data="stopBaoALogs" border stripe style="width: 100%;">
               <el-table-column prop="companyname" label="客户名称">
               </el-table-column>
-              <el-table-column prop="" label="操作时间">
+              <el-table-column prop="" label="操作时间" width="150">
                 <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
               </el-table-column>
-              <el-table-column prop="username" label="操作人">
+              <el-table-column prop="username" label="操作人" width="80">
               </el-table-column>
-              <el-table-column prop="remark" label="备注">
+              <el-table-column prop="remark" label="备注" min-width="200">
               </el-table-column>
             </el-table>
             <page class="page" :url="stopUrl" :sendParams="stopParams" @updateList="getStopBaoALogs"></page>
@@ -686,7 +688,7 @@ export default {
     margin-bottom: 10px;
   }
   .contact-phone {
-    width: calc(~'(100% - 30px)');
+    width: calc(~'(100% - 35px)');
   }
   .circle-btn {
     width: 26px;

@@ -1,4 +1,5 @@
 @import 'nomalize.css';
+@import 'font-awesome.css';
 @import 'media.css';
 ul {
   margin: 0;
@@ -7,8 +8,10 @@ ul {
 li {
   list-style: none;
 }
+html,
 body {
-  font: 14px "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+  font: 14px "微软雅黑", "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif;
+  font-weight: 500;
 }
 a {
   text-decoration: none;
@@ -92,7 +95,7 @@ a {
   padding: 0;
 }
 div.el-table {
-  font-size: 12px;
+  font-size: 13px;
 }
 /* 表头背景色 */
 .el-table thead th {
@@ -173,7 +176,7 @@ div.el-dialog__body {
   padding-right: 30px;
 }
 .input-btn {
-  width: calc((100% - 60px));
+  width: calc((100% - 65px));
 }
 .a-search-number {
   text-decoration: underline;

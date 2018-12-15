@@ -3,7 +3,7 @@
     <div class="detail-main">
       <div class="cus-info">
         <div class="check-search">
-          <el-input placeholder="请输入电话或公司名进行搜索" v-model="searchWords" class="maxwidth"></el-input>
+          <el-input placeholder="请输入电话或公司名进行搜索" v-model="searchWords" style="max-width: 450px;"></el-input>
           <el-button type="primary" @click.native="checkSearch">搜 索</el-button>
         </div>
         <div class="title">
@@ -32,7 +32,7 @@
             </el-col>
             <el-col :md="12" class="maxwidth">
               <el-form-item label="客户地址 :">
-                <el-input v-model="cusDetail.address"></el-input>
+                <el-input v-model="cusDetail.address" type="textarea"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -144,14 +144,14 @@
               </el-table-column>
               <el-table-column prop="username" label="提交人" width="100">
               </el-table-column>
-              <el-table-column prop="insert_time" label="提交时间" width="90">
+              <el-table-column prop="insert_time" label="提交时间" width="100">
                 <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
               </el-table-column>
-              <el-table-column prop="cremark" label="提交备注">
+              <el-table-column prop="cremark" label="提交备注" min-width="180">
               </el-table-column>
               <el-table-column prop="auditor" label="处理人" width="100">
               </el-table-column>
-              <el-table-column prop="" label="处理时间" width="90">
+              <el-table-column prop="" label="处理时间" width="100">
                 <span slot-scope="scope">{{scope.row.auditor_time | timeFormat}}</span>
               </el-table-column>
               <el-table-column prop="reason" label="被拒原因">
@@ -161,7 +161,7 @@
             </el-table>
           </el-tab-pane>
           <el-tab-pane label="修改记录" name="2">
-            <el-table :data="changeLogs" style="width: 100%;">
+            <el-table :data="changeLogs" border strip style="width: 100%;">
               <el-table-column prop="name" label="操作人">
               </el-table-column>
               <el-table-column prop="" label="操作时间">
@@ -173,13 +173,13 @@
             <page class="page" :url="changeUrl" :sendParams="changeParams" @updateList="getChangeLogs"></page>
           </el-tab-pane>
           <el-tab-pane label="申请修改记录" name="3">
-            <el-table :data="applyChangeLogs" style="width: 100%;">
-              <el-table-column prop="applyName" label="提交人">
+            <el-table :data="applyChangeLogs" border stripe style="width: 100%;">
+              <el-table-column prop="applyName" label="提交人" width="90">
               </el-table-column>
-              <el-table-column prop="" label="提交时间">
+              <el-table-column prop="" label="提交时间" width="150">
                 <span slot-scope="scope">{{scope.row.inserttime | timeFormat}}</span>
               </el-table-column>
-              <el-table-column prop="remark" label="提交备注">
+              <el-table-column prop="remark" label="提交备注" min-width="210">
               </el-table-column>
               <el-table-column prop="auditorName" label="处理人">
               </el-table-column>
@@ -518,7 +518,7 @@ export default {
     margin-bottom: 10px;
   }
   .contact-phone {
-    width: calc(~'(100% - 30px)');
+    width: calc(~'(100% - 35px)');
   }
   .circle-btn {
     width: 26px;

@@ -4,14 +4,15 @@
       <el-input v-model="cusName" class="follow-item item-width" placeholder="搜索客户名称">
         <template slot="prepend">客户名称:</template>
       </el-input>
-      <el-date-picker v-model="followDate" type="datetimerange" value-format="yyyy-MM-dd HH:mm:ss" range-separator="至" start-placeholder="跟进开始日期" end-placeholder="跟进结束日期" :unlink-panels="true" class="follow-item" style="width:350px;"></el-date-picker>
+      <el-date-picker v-model="followDate" type="datetimerange" value-format="yyyy-MM-dd HH:mm:ss" range-separator="至" start-placeholder="跟进开始日期" end-placeholder="跟进结束日期" :unlink-panels="true"
+      class="follow-item item-width"></el-date-picker>
       <div class="follow-item">
         <el-button type="primary" @click.native="search">查 询</el-button>
         <el-button type="warning" @click.native="reset">重 置</el-button>
       </div>
     </div>
-    <el-table stripe border :data="myFollowList" style="width: 100%;margin-top:10px;">
-      <el-table-column prop="cname" label="客户名称" min-width="150">
+    <el-table stripe border :data="myFollowList" class="table-width">
+      <el-table-column prop="cname" label="客户名称">
       </el-table-column>
       <el-table-column prop="remark" label="跟进备注">
       </el-table-column>
@@ -75,7 +76,7 @@ export default {
       margin-top: 10px;
     }
     .item-width {
-      width: 250px;
+      width: 280px;
     }
   }
 }

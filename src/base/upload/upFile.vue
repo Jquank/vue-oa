@@ -14,7 +14,7 @@
       :data="otherParams"
       :show-file-list="showFileList"
     >
-      <el-button size="small" :type="type" :class="upIcon"> {{title}}</el-button>
+      <el-button size="small" :type="type" :icon="upIcon"> {{title}}</el-button>
       <!-- <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div> -->
     </el-upload>
   </div>

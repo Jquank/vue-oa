@@ -19,7 +19,7 @@
     <el-table  @selection-change="handleSelectionChange" stripe border :data="myFollowList" style="width: 100%;margin-top:10px;">
       <el-table-column type="selection" width="40">
       </el-table-column>
-      <el-table-column prop="inserttime" label="日期" width="135">
+      <el-table-column prop="inserttime" label="日期" width="140">
         <span slot-scope="scope">{{scope.row.inserttime | timeFormat}}</span>
       </el-table-column>
       <el-table-column prop="username" label="客服">

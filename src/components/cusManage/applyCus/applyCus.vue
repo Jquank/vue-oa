@@ -47,14 +47,14 @@
           <span>{{scope.row.producttype!==0?scope.row.productnumber:''}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="username" label="申领商务" min-width="80">
+      <el-table-column prop="username" label="申领商务" width="80">
       </el-table-column>
       <el-table-column prop="fullname" label="所属部门">
       </el-table-column>
-      <el-table-column prop="" label="申领时间" width="135">
+      <el-table-column prop="" label="申领时间" width="150">
         <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
       </el-table-column>
-      <el-table-column prop="" label="最后跟进时间" width="135">
+      <el-table-column prop="" label="最后跟进时间" width="150">
         <span slot-scope="scope">{{scope.row.followtime | timeFormat}}</span>
       </el-table-column>
       <el-table-column prop="" label="状态">
@@ -67,7 +67,7 @@
           scope.row.applytype===100?'完成':'未标记'
           }}</span>
       </el-table-column>
-      <el-table-column label="操作" min-width="50" align="center">
+      <el-table-column label="操作" width="60" align="center">
         <template slot-scope="scope">
           <el-button @click.native="view(scope.row)" type="success" class="xsbtn">查看</el-button>
         </template>

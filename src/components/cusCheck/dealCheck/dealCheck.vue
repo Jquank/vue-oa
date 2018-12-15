@@ -26,17 +26,17 @@
     <el-table stripe border :data="dealList" style="width: 100%;margin-top:10px;">
       <el-table-column prop="name" label="客户名称" min-width="150">
       </el-table-column>
-      <el-table-column prop="" label="客户类型" min-width="80">
+      <el-table-column prop="" label="客户类型" width="90">
         <span slot-scope="scope">
           {{scope.row.producttype | cusState('cusType')}}{{scope.row.producttype!==0?scope.row.productnumber:''}}
         </span>
       </el-table-column>
-      <el-table-column prop="pname" label="业务类型" min-width="80">
+      <el-table-column prop="pname" label="业务类型" width="90">
       </el-table-column>
       <el-table-column prop="" label="审核类型">
         <span slot-scope="scope">{{scope.row.cltype | cusState('checkType')}}</span>
       </el-table-column>
-      <el-table-column prop="" label="提交时间" min-width="110px">
+      <el-table-column prop="" label="提交时间" width="150px">
         <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
       </el-table-column>
       <el-table-column prop="entername" label="录入人">

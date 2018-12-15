@@ -7,17 +7,17 @@
 //     }
 //   }
 <template>
- <div class="block">
+  <div class="block">
     <el-pagination
       :key="key"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="currentPage"
-      :page-sizes="[10,30,50,100]"
+      :page-sizes="[10,30,50,100,500]"
       :page-size="10"
       :layout="layout"
-      :total="pageCount">
-    </el-pagination>
+      :total="pageCount"
+    ></el-pagination>
   </div>
 </template>
 
@@ -30,13 +30,13 @@ export default {
     },
     sendParams: {
       type: Object,
-      default: function () {
+      default: function() {
         return {}
       }
     },
     otherParams: {
       type: Object,
-      default: function () {
+      default: function() {
         return {}
       }
     },
@@ -53,16 +53,15 @@ export default {
     //   },
     //   deep: true
     // }
-    sendParams () {
+    sendParams() {
       this.key = new Date() + '' // 修复搜索时当前页未改变为1的bug
       this._getFirstList()
     },
-    otherParams () {
+    otherParams() {
       this._getFirstList()
     }
-
   },
-  data () {
+  data() {
     return {
       key: '',
       currentPage: 1,
@@ -73,7 +72,7 @@ export default {
       layout: this.simpleLayout
     }
   },
-  created () {
+  created() {
     let width = document.documentElement.clientWidth
     if (width < 768) {
       this.layout = 'total, prev, next, jumper'
@@ -82,15 +81,21 @@ export default {
   },
   methods: {
     // 获取列表的第一页
-    _getFirstList () {
-      let params = Object.assign({}, {
-        pagesize: 10,
-        currentpage: this.currentPage
-      }, this.sendParams, this.otherParams)
+    _getFirstList() {
+      let params = Object.assign(
+        {},
+        {
+          pagesize: 10,
+          currentpage: this.currentPage
+        },
+        this.sendParams,
+        this.otherParams
+      )
 
       this.$post(this.url, params)
         .then(res => {
-          if (res.data.success) { // 万能报表的分页
+          if (res.data.success) {
+            // 万能报表的分页
             this.pageCount = res.data.data.page_count
             this.handleList = res
             this._updateList()
@@ -109,20 +114,27 @@ export default {
         })
     },
     // page-size改变的回调，默认为10
-    handleSizeChange (val) {
+    handleSizeChange(val) {
       this.pageval = val
 
-      if (this.url === '/rpt.do?get') { // 万能报表
+      if (this.url === '/rpt.do?get') {
+        // 万能报表
         this.otherParams.rpt_data.pageno = this.currentPage
         this.otherParams.rpt_data.pagenum = this.pageval
       }
-      let params = Object.assign({}, {
-        pagesize: this.pageval,
-        currentpage: this.currentPage
-      }, this.sendParams, this.otherParams)
+      let params = Object.assign(
+        {},
+        {
+          pagesize: this.pageval,
+          currentpage: this.currentPage
+        },
+        this.sendParams,
+        this.otherParams
+      )
       this.$post(this.url, params)
         .then(res => {
-          if (res.data.success || res.data[0].success) { // 前面表示万能报表
+          if (res.data.success || res.data[0].success) {
+            // 前面表示万能报表
             this.handleList = res
             this._updateList()
           }
@@ -132,24 +144,30 @@ export default {
         })
     },
     // 当前页改变的回调
-    handleCurrentChange (page) {
+    handleCurrentChange(page) {
       this.currentPage = page
       if (!this.pageval) {
         this.pageval = 10
       }
 
-      if (this.url === '/rpt.do?get') { // 万能报表
+      if (this.url === '/rpt.do?get') {
+        // 万能报表
         this.otherParams.rpt_data.pageno = page
         this.otherParams.rpt_data.pagenum = this.pageval
       }
-      let params = Object.assign({}, {
-        pagesize: this.pageval,
-        currentpage: page
-      }, this.sendParams, this.otherParams)
-      console.log(params)
+      let params = Object.assign(
+        {},
+        {
+          pagesize: this.pageval,
+          currentpage: page
+        },
+        this.sendParams,
+        this.otherParams
+      )
       this.$post(this.url, params)
         .then(res => {
-          if (res.data.success || res.data[0].success) { // 前面表示万能报表
+          if (res.data.success || res.data[0].success) {
+            // 前面表示万能报表
             this.handleList = res
             this._updateList()
           }
@@ -159,7 +177,7 @@ export default {
         })
     },
     // 触发自定义事件
-    _updateList () {
+    _updateList() {
       this.$emit('updateList', this.handleList)
     }
   }

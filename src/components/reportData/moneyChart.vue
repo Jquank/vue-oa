@@ -393,7 +393,7 @@
                 <el-table-column prop="split_amount" label="金额">
                   <span slot-scope="scope">{{scope.row.split_amount | currency}}</span>
                 </el-table-column>
-                <el-table-column prop="tm" label="时间" min-width="135">
+                <el-table-column prop="tm" label="时间" min-width="140">
                   <span slot-scope="scope">{{scope.row.tm}}</span>
                 </el-table-column>
                 <el-table-column prop="tm" label="操作" width="80" align="center">

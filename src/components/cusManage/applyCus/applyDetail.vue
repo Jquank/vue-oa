@@ -324,7 +324,7 @@ export default {
     max-width: 500px;
   }
   .contact-phone {
-    width: calc(~'(100% - 30px)');
+    width: calc(~'(100% - 35px)');
   }
   .circle-btn {
     width: 26px;

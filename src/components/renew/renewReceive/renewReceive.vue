@@ -33,7 +33,7 @@
       <el-table-column prop="receiptmoney" label="提单金额">
         <span slot-scope="scope">{{scope.row.usemoney+scope.row.servicemoney+scope.row.usevoucher | currency}}</span>
       </el-table-column>
-      <el-table-column prop="receiptmoney" label="提单时间" width="135">
+      <el-table-column prop="receiptmoney" label="提单时间" width="140">
         <span slot-scope="scope">{{scope.row.inserttime | timeFormat}}</span>
       </el-table-column>
       <el-table-column prop="username" label="提单人">

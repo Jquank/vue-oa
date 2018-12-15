@@ -1,8 +1,8 @@
 <template>
   <div class="user-list component-container media-padding">
     <div class="import-file">
-      <up-file v-if="permissions.indexOf('4o') > -1" :title="'导入人员'" :upIcon="'el-icon-upload'" :uploadUrl="serverUrl+'/employee.do?importUser'+'&tk='+tk" :isHiddenFileList="true" class="import-item mr10px"></up-file>
-      <up-file v-if="permissions.indexOf('5v') > -1" :title="'导入组织结构'" :upIcon="'el-icon-upload'" :uploadUrl="serverUrl+'/employee.do?importOrg'+'&tk='+tk" :isHiddenFileList="true" :type="'success'" class="import-item mr10px"></up-file>
+      <up-file v-if="permissions.indexOf('4o') > -1" :title="'导入人员'" :upIcon="'fa fa-cloud-download'" :uploadUrl="serverUrl+'/employee.do?importUser'+'&tk='+tk" :isHiddenFileList="true" class="import-item mr10px"></up-file>
+      <up-file v-if="permissions.indexOf('5v') > -1" :title="'导入组织结构'" :upIcon="'fa fa-cloud-download'" :uploadUrl="serverUrl+'/employee.do?importOrg'+'&tk='+tk" :isHiddenFileList="true" :type="'success'" class="import-item mr10px"></up-file>
     </div>
     <!-- 搜索 -->
     <div class="search">
@@ -30,31 +30,31 @@
       </div>
     </div>
     <!-- 列表 -->
-    <el-table ref="multipleTable" :data="tableData" style="width:100%;" @selection-change="handleSelectionChange">
-      <el-table-column fixed type="selection" width="55">
+    <el-table ref="multipleTable" :data="tableData" class="table-width" border stripe @selection-change="handleSelectionChange">
+      <el-table-column fixed type="selection" width="45">
       </el-table-column>
-      <el-table-column prop="uname" label="账户名" min-width="100">
+      <el-table-column prop="uname" label="账户名">
       </el-table-column>
-      <el-table-column prop="true_name" label="姓名" min-width="80">
+      <el-table-column prop="true_name" label="姓名">
       </el-table-column>
-      <el-table-column prop="" label="性别" min-width="50">
+      <el-table-column prop="" label="性别" width="60" align="center">
         <span slot-scope="scope">{{scope.row.sex==0?'男':'女'}}</span>
       </el-table-column>
-      <el-table-column prop="mobile" label="手机号" min-width="100">
+      <el-table-column prop="mobile" label="手机号" min-width="110">
       </el-table-column>
       <el-table-column prop="deptfullname" label="部门" min-width="120">
       </el-table-column>
-      <el-table-column prop="" label="保A数量 /保A配额" min-width="80">
+      <el-table-column prop="" label="保A数量 /保A配额" width="80" align="center">
         <template slot-scope="scope">
           <span>{{scope.row.true_a+' / '+scope.row.max_a}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="" label="跟踪数量 /跟踪配额" min-width="80">
+      <el-table-column prop="" label="跟踪数量 /跟踪配额" width="80" align="center">
         <template slot-scope="scope">
           <span>{{scope.row.true_b+' / '+scope.row.max_b}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="rname" label="角色" width="100">
+      <el-table-column prop="rname" label="角色"  min-width="100">
       </el-table-column>
       <el-table-column prop="isResign" label="状态" width="50">
         <span :class="scope.row.resignationtime!=''?'':'red'" slot-scope="scope">{{scope.row.resignationtime!=''?'在职':'离职'}}</span>
@@ -64,11 +64,24 @@
           <el-switch @change="((val)=>turnOff(val,scope.row.uid))" v-model="scope.row.allowed" active-color="#13ce66" inactive-color="#ff4949" :active-value="1" :inactive-value="0"></el-switch>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="250">
+      <el-table-column label="操作" width="100" align="center">
         <template slot-scope="scope">
-          <el-button v-if="permissions.indexOf('4j') > -1" @click.native="editUserInfo(scope.row.uid)" class="xsbtn" type="primary">编辑</el-button>
-          <el-button v-if="permissions.indexOf('4k') > -1" @click.native="editQuota(scope.row.uid)" class="xsbtn" type="primary">编辑配额</el-button>
-          <el-button v-if="permissions.indexOf('66') > -1" @click.native="editDept(scope.row.uid)" class="xsbtn" type="primary">编辑管理部门</el-button>
+          <el-dropdown trigger="click">
+            <el-button type="primary" size="mini">
+              操作<i class="el-icon-arrow-down el-icon--right"></i>
+            </el-button>
+            <el-dropdown-menu slot="dropdown" class="text-center">
+              <el-dropdown-item>
+                <el-button v-if="permissions.indexOf('4j') > -1" @click.native="editUserInfo(scope.row.uid)" class="xsbtn" type="success">编辑</el-button>
+              </el-dropdown-item>
+              <el-dropdown-item divided>
+                <el-button v-if="permissions.indexOf('4k') > -1" @click.native="editQuota(scope.row.uid)" class="xsbtn" type="primary">编辑配额</el-button>
+              </el-dropdown-item>
+              <el-dropdown-item divided>
+                <el-button v-if="permissions.indexOf('66') > -1" @click.native="editDept(scope.row.uid)" class="xsbtn" type="warning">编辑管理部门</el-button>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </template>
       </el-table-column>
     </el-table>

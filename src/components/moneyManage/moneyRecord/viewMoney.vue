@@ -100,7 +100,7 @@
     </div>
 
     <el-table stripe border :data="logs" class="maxwidth" style="width: 100%;margin-top:10px;">
-      <el-table-column prop="" label="操作日期" width="135">
+      <el-table-column prop="" label="操作日期" width="140">
         <span slot-scope="scope">{{scope.row.inserttime | timeFormat}}</span>
       </el-table-column>
       <el-table-column prop="remark" label="操作记录">

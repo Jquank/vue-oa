@@ -1,6 +1,6 @@
 <template>
   <div class="cycle component-container media-padding">
-    <el-table stripe :data="cycleList" style="width: 100%">
+    <el-table border stripe :data="cycleList" style="width: 100%">
       <el-table-column type="index">
       </el-table-column>
       <el-table-column prop="code_desc" label="角色名称">
@@ -8,7 +8,7 @@
       <el-table-column prop="" label="时长">
         <span slot-scope="scope">{{scope.row.tb_field_name+''+scope.row.remark}}</span>
       </el-table-column>
-      <el-table-column prop="" label="操作"  width="80">
+      <el-table-column prop="" label="操作" align="center">
         <template slot-scope="scope">
           <el-button type="primary" class="xsbtn" @click.native="editCycle(scope.row.tb_field_name,scope.row.id)">编辑
           </el-button>

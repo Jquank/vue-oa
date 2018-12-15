@@ -1,9 +1,9 @@
 <template>
   <div class="account-manage component-container media-apdding">
-    <el-table stripe :data="accountList" class="table-width">
+    <el-table border stripe :data="accountList" class="table-width">
       <el-table-column type="index">
       </el-table-column>
-      <el-table-column prop="name" label="账户名称">
+      <el-table-column prop="name" label="账户名称" align="center">
       </el-table-column>
       <el-table-column prop="" label="操作" align="center">
         <template slot-scope="scope">

@@ -166,7 +166,7 @@
       <el-table :data="chargeOffList" class="table-width" @selection-change="handleSelFlow">
         <el-table-column type="selection" width="40"></el-table-column>
         <el-table-column prop="code_desc" label="银行类型" width="80"></el-table-column>
-        <el-table-column prop="tm" label="时间" width="135">
+        <el-table-column prop="tm" label="时间" width="140">
           <span slot-scope="scope">{{scope.row.tm | timeFormat}}</span>
         </el-table-column>
         <el-table-column prop="split_amount" label="金额" width="120">

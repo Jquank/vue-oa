@@ -22,7 +22,7 @@
 
     <div class="export">
       <div class="allot-search">
-        <el-date-picker v-model="receiptTime" value-format="yyyy/MM/dd HH:mm" format="yyyy/MM/dd HH:mm" type="datetimerange" range-separator="至" start-placeholder="领用开始日期" end-placeholder="领用结束日期" :unlink-panels="true" class="list-item" style="width:300px;"></el-date-picker>
+        <el-date-picker v-model="receiptTime" value-format="yyyy/MM/dd HH:mm" format="yyyy/MM/dd HH:mm" type="datetimerange" range-separator="至" start-placeholder="领用开始日期" end-placeholder="领用结束日期" :unlink-panels="true" class="list-item" style="width:310px;"></el-date-picker>
         <div class="list-item">
           <el-button @click.native="search" type="primary">查 询</el-button>
           <el-button @click.native="reset" type="warning">重 置</el-button>
@@ -33,19 +33,19 @@
       </div>
     </div>
 
-    <el-table stripe border :data="list" style="width: 100%;margin-top:10px;">
-      <el-table-column prop="number" label="合同号">
+    <el-table stripe border :data="list" class="table-width">
+      <el-table-column prop="number" label="合同号" width="140">
       </el-table-column>
       <el-table-column prop="username" label="领用人">
       </el-table-column>
       <el-table-column prop="catname" label="合同类型" width="160">
       </el-table-column>
-      <el-table-column prop="companyname" label="公司名称">
+      <el-table-column prop="companyname" label="公司名称" min-width="150">
       </el-table-column>
-      <el-table-column prop="" label="领用时间" width="135">
+      <el-table-column prop="" label="领用时间" width="150">
         <span slot-scope="scope">{{scope.row.apply_dt | timeFormat}}</span>
       </el-table-column>
-      <el-table-column prop="" label="收回时间" width="135">
+      <el-table-column prop="" label="收回时间" width="150">
         <span slot-scope="scope">{{scope.row.return_dt | timeFormat}}</span>
       </el-table-column>
       <el-table-column prop="" label="状态" width="80">
@@ -53,7 +53,7 @@
         scope.row.status==40?'danger':
         scope.row.status==10?'info':'success'">{{scope.row.status | cusState('contractStatus')}}</el-button>
       </el-table-column>
-      <el-table-column prop="" label="转出/接收合同">
+      <el-table-column prop="" label="转出/接收合同" min-width="120">
         <template slot-scope="scope">
           <el-button v-if="scope.row.status==20 && scope.row.uid == userId">转出合同</el-button>
           <el-button v-if="scope.row.status==20 && scope.row.switchuid != '' && scope.row.switchuid!=null && userId != scope.row.uid">接收合同</el-button>
@@ -68,8 +68,8 @@
     <page class="page" :url="url" :sendParams="sendParams" @updateList="getList"></page>
 
     <!-- 编辑弹窗 -->
-    <el-dialog :modal-append-to-body="false" title="新增合同" :visible.sync="editContractDialog" width="700px">
-      <el-form ref="form" :model="detailInfo" label-width="90px">
+    <el-dialog :modal-append-to-body="false" title="新增合同" :visible.sync="editContractDialog" width="800px">
+      <el-form ref="form" :model="detailInfo" label-width="95px">
         <el-row :gutter="20">
           <el-col :md="12" class="maxwidth">
             <el-form-item label="合同类型 :">
@@ -110,7 +110,7 @@
         </el-row>
         <el-row :gutter="20">
           <el-col :md="24" class="maxwidth">
-            <el-form-item label="收回/签约/遗失/作废时间 :" label-width="175px">
+            <el-form-item label="收回/签约/遗失/作废时间 :" label-width="190px">
               <el-date-picker v-model="detailInfo.return_dt" disabled type="datetime" style="width:100%"></el-date-picker>
             </el-form-item>
           </el-col>
@@ -140,10 +140,10 @@
         </div>
       </el-form>
       <el-table stripe border :data="checkLogs" style="width: 100%;margin-top:10px;">
-        <el-table-column prop="insert_time" label="日期" width="90">
+        <el-table-column prop="insert_time" label="日期" width="100">
           <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
         </el-table-column>
-        <el-table-column prop="name" label="发表者" width="80">
+        <el-table-column prop="name" label="发表者" width="100">
         </el-table-column>
         <el-table-column prop="catname" label="合同类型" width="160">
         </el-table-column>
@@ -317,7 +317,7 @@ export default {
     }
   }
   .btn-input {
-    width: calc(~'(100% - 60px)');
+    width: calc(~'(100% - 65px)');
   }
 }
 </style>

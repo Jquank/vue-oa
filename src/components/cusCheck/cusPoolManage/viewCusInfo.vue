@@ -127,14 +127,14 @@
               </el-table-column>
               <el-table-column prop="username" label="提交人" width="100">
               </el-table-column>
-              <el-table-column prop="insert_time" label="提交时间" width="90">
+              <el-table-column prop="insert_time" label="提交时间" width="100">
                 <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
               </el-table-column>
-              <el-table-column prop="cremark" label="提交备注">
+              <el-table-column prop="cremark" label="提交备注" min-width="200">
               </el-table-column>
               <el-table-column prop="auditor" label="处理人" width="100">
               </el-table-column>
-              <el-table-column prop="" label="处理时间" width="90">
+              <el-table-column prop="" label="处理时间" width="100">
                 <span slot-scope="scope">{{scope.row.auditor_time | timeFormat}}</span>
               </el-table-column>
               <el-table-column prop="reason" label="被拒原因">
@@ -162,7 +162,7 @@
               <el-table-column prop="" label="提交时间">
                 <span slot-scope="scope">{{scope.row.inserttime | timeFormat}}</span>
               </el-table-column>
-              <el-table-column prop="remark" label="提交备注">
+              <el-table-column prop="remark" label="提交备注" min-width="200">
               </el-table-column>
               <el-table-column prop="auditorName" label="处理人">
               </el-table-column>
@@ -204,6 +204,7 @@ import Page from 'base/page/page'
 import SelectArea from 'base/selectArea/selectArea'
 import SelectTrade from 'base/selectTrade/selectTrade'
 import { getByCode } from 'api/getOptions'
+import { timeFormat } from 'common/js/filters'
 export default {
   data () {
     return {
@@ -339,6 +340,7 @@ export default {
       }).then(res => {
         this.cusDetail = res.data[0].data[0]
         console.log(this.cusDetail)
+        this.cusDetail.checktime = timeFormat(this.cusDetail.checktime)
         this.form.cusName = this.cusDetail.name
         this.form.trade = [this.cusDetail.cid, this.cusDetail.bid]
         this.form.area = [
@@ -404,7 +406,7 @@ export default {
     max-width: 500px;
   }
   .contact-phone {
-    width: calc(~'(100% - 30px)');
+    width: calc(~'(100% - 35px)');
   }
   .circle-btn {
     width: 26px;

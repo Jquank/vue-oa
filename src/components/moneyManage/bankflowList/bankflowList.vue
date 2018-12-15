@@ -3,179 +3,282 @@
     <div class="top">
       <div class="status">
         <!-- 分配状态按钮 -->
-        <el-radio-group v-model="selStatus" @change="changeStatus" class="status-item" style="width:303px;">
+        <el-radio-group @change="changeStatus" class="status-item" style="width:303px;" v-model="selStatus">
           <template v-for="item in statusList">
-            <el-radio-button :key="item.per" :label="item.val" v-if="item.per.length<2||permissions.indexOf(item.per)>-1">
-              {{item.text}}
-            </el-radio-button>
+            <el-radio-button
+              :key="item.per"
+              :label="item.val"
+              v-if="item.per.length<2||permissions.indexOf(item.per)>-1"
+            >{{item.text}}</el-radio-button>
           </template>
         </el-radio-group>
         <!-- 银行类型 -->
-        <auto-select :key="key_bank" v-model="selBank" :title="'银行类型'" class="status-item">
-          <el-option value="" label="全部"></el-option>
-          <el-option v-for="(item,index) in bankList" :key="index" :value="item.id" :label="item.code_desc"></el-option>
+        <auto-select :key="key_bank" :title="'银行类型'" class="status-item" v-model="selBank">
+          <el-option label="全部" value></el-option>
+          <el-option :key="index" :label="item.code_desc" :value="item.id" v-for="(item,index) in bankList"></el-option>
         </auto-select>
         <!-- 发票状态 -->
-        <auto-select :key="key_invoice" v-model="invoiceStatus" :defaultValue="invoiceStatus" :title="'发票状态'" class="status-item">
-          <el-option value="100" label="全部"></el-option>
-          <el-option value="10" label="已开发票"></el-option>
-          <el-option value="0" label="需要"></el-option>
-          <el-option value="-1" label="暂不需要"></el-option>
-          <el-option value="-10" label="不需要"></el-option>
+        <auto-select
+          :defaultValue="invoiceStatus"
+          :key="key_invoice"
+          :title="'发票状态'"
+          class="status-item"
+          v-model="invoiceStatus"
+        >
+          <el-option label="全部" value="100"></el-option>
+          <el-option label="已开发票" value="10"></el-option>
+          <el-option label="需要" value="0"></el-option>
+          <el-option label="暂不需要" value="-1"></el-option>
+          <el-option label="不需要" value="-10"></el-option>
         </auto-select>
       </div>
       <div class="btns">
-        <up-file v-if="permissions.indexOf('4u') > -1" :title="'导入流水'" :upIcon="'fa fa-cloud-download'" :isHiddenFileList="true"
-        :uploadUrl="serverUrl + '/receipt.do?importBS' + '&tk=' + tk" class="btns-item"></up-file>
-        <el-button v-if="permissions.indexOf('6j') > -1" @click.native="exportFlow" type="warning" icon="fa fa-cloud-upload" class="btns-item"> 导出流水</el-button>
+        <up-file
+          :isHiddenFileList="true"
+          :title="'导入流水'"
+          :upIcon="'fa fa-cloud-download'"
+          :uploadUrl="serverUrl + '/receipt.do?importBS' + '&tk=' + tk"
+          class="btns-item"
+          v-if="permissions.indexOf('4u') > -1"
+        ></up-file>
+        <el-button
+          @click.native="exportFlow"
+          class="btns-item"
+          icon="fa fa-cloud-upload"
+          type="warning"
+          v-if="permissions.indexOf('6j') > -1"
+        >导出流水</el-button>
       </div>
     </div>
     <!-- 搜索 -->
     <div class="search">
-      <el-input v-model="companyName" class="search-item">
+      <el-input class="search-item" v-model="companyName">
         <template slot="prepend">公司名称:</template>
       </el-input>
-      <el-input v-model="remarkSearch" class="search-item">
+      <el-input class="search-item" v-model="remarkSearch">
         <template slot="prepend">摘要|备注:</template>
       </el-input>
-      <el-input v-model="bdAccount" class="search-item">
+      <el-input class="search-item" v-model="bdAccount">
         <template slot="prepend">百度账户:</template>
       </el-input>
-      <el-input v-model="reserveInfo" class="search-item">
+      <el-input class="search-item" v-model="reserveInfo">
         <template slot="prepend">预留信息:</template>
       </el-input>
-      <el-input v-model="payAccount" class="search-item">
+      <el-input class="search-item" v-model="payAccount">
         <template slot="prepend">付款名:</template>
       </el-input>
-      <el-date-picker v-model="businessDate" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" type="datetimerange" range-separator="至" start-placeholder="交易开始日期" end-placeholder="交易结束日期" class="search-item" :unlink-panels="true"></el-date-picker>
-      <el-date-picker v-model="orderDate" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" type="datetimerange" range-separator="至" start-placeholder="提单开始日期" end-placeholder="提单结束日期" class="search-item" :unlink-panels="true"></el-date-picker>
+      <el-date-picker
+        :unlink-panels="true"
+        class="search-item"
+        end-placeholder="交易结束日期"
+        format="yyyy-MM-dd HH:mm"
+        range-separator="至"
+        start-placeholder="交易开始日期"
+        type="datetimerange"
+        v-model="businessDate"
+        value-format="yyyy-MM-dd HH:mm"
+      ></el-date-picker>
+      <el-date-picker
+        :unlink-panels="true"
+        class="search-item"
+        end-placeholder="提单结束日期"
+        format="yyyy-MM-dd HH:mm"
+        range-separator="至"
+        start-placeholder="提单开始日期"
+        type="datetimerange"
+        v-model="orderDate"
+        value-format="yyyy-MM-dd HH:mm"
+      ></el-date-picker>
       <div class="search-item">
         <el-button @click.native.prevent="search" type="primary">查 询</el-button>
         <el-button @click.native.prevent="reset" type="warning">重 置</el-button>
       </div>
     </div>
     <!-- 列表 -->
-    <el-table :data="bankFlowList" max-height="550" class="table-width" border>
+    <el-table :data="bankFlowList" border class="table-width" max-height="550" stripe>
       <!-- <el-table-column type="selection" width="35"></el-table-column> -->
-      <el-table-column label="银行类型" prop="code_desc" width="80" :fixed="isFixed"></el-table-column>
-      <el-table-column label="交易时间" prop="B_JYSJ" width="90" :fixed="isFixed">
+      <el-table-column :fixed="isFixed" label="银行类型" prop="code_desc" width="80"></el-table-column>
+      <el-table-column :fixed="isFixed" label="交易时间" prop="B_JYSJ" width="100">
         <span slot-scope="scope">{{scope.row.tm | timeFormat}}</span>
       </el-table-column>
-      <el-table-column label="参考号" prop="no" width="90" :fixed="isFixed"></el-table-column>
-      <el-table-column label="付款名" prop="fm_name" width="150" :fixed="isFixed"></el-table-column>
-      <el-table-column label="付款账号" prop="fm_account" width="90" :fixed="isFixed"></el-table-column>
-      <el-table-column label="现金收款人" prop="fm_uid" width="90" :fixed="isFixed"></el-table-column>
-      <el-table-column label="付款公司名" prop="company_name" min-width="90"></el-table-column>
-      <el-table-column label="摘要|备注" prop="remark"></el-table-column>
+      <el-table-column :fixed="isFixed" label="参考号" prop="no" width="100"></el-table-column>
+      <el-table-column :fixed="isFixed" label="付款名" prop="fm_name" width="130"></el-table-column>
+      <el-table-column :fixed="isFixed" label="付款账号" prop="fm_account" width="120"></el-table-column>
+      <el-table-column :fixed="isFixed" label="现金收款人" prop="fm_uid" width="90"></el-table-column>
+      <el-table-column label="付款公司名" min-width="90" prop="company_name"></el-table-column>
+      <el-table-column label="摘要|备注" min-width="120" prop="remark"></el-table-column>
       <el-table-column label="百度账户" prop="baidu_account2"></el-table-column>
       <el-table-column label="账户类型" prop="account_type"></el-table-column>
-      <el-table-column label="交易金额" prop="" min-width="100">
+      <el-table-column label="交易金额" min-width="110" prop>
         <span slot-scope="scope">{{scope.row.amount | currency1}}</span>
       </el-table-column>
       <!-- 拆 -->
-      <el-table-column class-name="splited-col" label="拆分后金额" prop="" width="100">
+      <el-table-column class-name="splited-col" label="拆分后金额" prop width="110">
         <template slot-scope="scope">
-          <el-table class="split-item" :data="scope.row.split"  :show-header="false">
-            <el-table-column class-name="split-item-col" label="" prop="">
+          <el-table
+            :data="scope.row.split"
+            :row-class-name="scope.row.split.length>1?'add-border':''"
+            :show-header="false"
+            class="split-item"
+          >
+            <el-table-column class-name="split-item-col" label prop show-overflow-tooltip>
               <span slot-scope="scope">{{scope.row.split_amount | currency1}}</span>
             </el-table-column>
           </el-table>
         </template>
       </el-table-column>
-      <el-table-column v-if="selStatus!=0" class-name="splited-col" label="预留信息" prop="" width="120">
+      <el-table-column class-name="splited-col" label="预留信息" prop v-if="selStatus!=0" width="120">
         <template slot-scope="scope">
-          <el-table class="split-item" :data="scope.row.split"  :show-header="false">
-            <el-table-column show-overflow-tooltip class-name="split-item-col" label="" prop="">
+          <el-table
+            :data="scope.row.split"
+            :row-class-name="scope.row.split.length>1?'add-border':''"
+            :show-header="false"
+            class="split-item"
+          >
+            <el-table-column class-name="split-item-col" label prop show-overflow-tooltip>
               <span slot-scope="scope">{{scope.row.alloc_remark || '.'}}</span>
             </el-table-column>
           </el-table>
         </template>
       </el-table-column>
-      <el-table-column v-if="selStatus!=0" class-name="splited-col" label="使用人" prop="" width="100">
+      <el-table-column class-name="splited-col" label="使用人" prop v-if="selStatus!=0" width="100">
         <template slot-scope="scope">
-          <el-table class="split-item" :data="scope.row.split"  :show-header="false">
-            <el-table-column show-overflow-tooltip class-name="split-item-col" label="" prop="useName">
+          <el-table
+            :data="scope.row.split"
+            :row-class-name="scope.row.split.length>1?'add-border':''"
+            :show-header="false"
+            class="split-item"
+          >
+            <el-table-column class-name="split-item-col" label prop="useName" show-overflow-tooltip>
               <span slot-scope="scope">{{scope.row.useName || '.'}}</span>
             </el-table-column>
           </el-table>
         </template>
       </el-table-column>
-      <el-table-column v-if="selStatus!=0" class-name="splited-col" label="公司名称" prop="" width="180">
+      <el-table-column class-name="splited-col" label="公司名称" prop v-if="selStatus!=0" width="180">
         <template slot-scope="scope">
-          <el-table  :cell-style="setCellStyle" class="split-item" :data="scope.row.split"  :show-header="false">
-            <el-table-column show-overflow-tooltip class-name="split-item-col" label="" prop="">
-              <span slot-scope="scope">{{(scope.row.wfndStatus===300||scope.row.reckStatus===300)?scope.row.companyname:'.'}}</span>
+          <el-table
+            :data="scope.row.split"
+            :row-class-name="scope.row.split.length>1?'add-border':''"
+            :show-header="false"
+            class="split-item"
+          >
+            <el-table-column class-name="split-item-col" label prop show-overflow-tooltip>
+              <span
+                slot-scope="scope"
+              >{{(scope.row.wfndStatus===300||scope.row.reckStatus===300)?scope.row.companyname:'.'}}</span>
             </el-table-column>
           </el-table>
         </template>
       </el-table-column>
-      <el-table-column v-if="selStatus!=0" class-name="splited-col" label="用户名" prop="" width="120">
+      <el-table-column class-name="splited-col" label="用户名" prop v-if="selStatus!=0" width="120">
         <template slot-scope="scope">
-          <el-table class="split-item" :data="scope.row.split"  :show-header="false">
-            <el-table-column show-overflow-tooltip class-name="split-item-col" label="" prop="">
+          <el-table
+            :data="scope.row.split"
+            :row-class-name="scope.row.split.length>1?'add-border':''"
+            :show-header="false"
+            class="split-item"
+          >
+            <el-table-column class-name="split-item-col" label prop show-overflow-tooltip>
               <span slot-scope="scope">{{scope.row.reckStatus===300?scope.row.baidu_account:'.'}}</span>
             </el-table-column>
           </el-table>
         </template>
       </el-table-column>
-      <el-table-column v-if="selStatus!=0" class-name="splited-col" label="提单金额" prop="" width="120">
+      <el-table-column class-name="splited-col" label="提单金额" prop v-if="selStatus!=0" width="120">
         <template slot-scope="scope">
-          <el-table class="split-item" :data="scope.row.split"  :show-header="false">
-            <el-table-column show-overflow-tooltip class-name="split-item-col" label="" prop="">
-              <span slot-scope="scope">{{(scope.row.wfndStatus===300||scope.row.reckStatus===300)?scope.row.split_amount:'.' |currency1}}</span>
+          <el-table
+            :data="scope.row.split"
+            :row-class-name="scope.row.split.length>1?'add-border':''"
+            :show-header="false"
+            class="split-item"
+          >
+            <el-table-column class-name="split-item-col" label prop show-overflow-tooltip>
+              <span
+                slot-scope="scope"
+              >{{(scope.row.wfndStatus===300||scope.row.reckStatus===300)?scope.row.split_amount:'.' |currency1}}</span>
             </el-table-column>
           </el-table>
         </template>
       </el-table-column>
-      <el-table-column v-if="selStatus!=0" class-name="splited-col" label="提单时间" prop="" width="120">
+      <el-table-column class-name="splited-col" label="提单时间" prop v-if="selStatus!=0" width="120">
         <template slot-scope="scope">
-          <el-table class="split-item" :data="scope.row.split"  :show-header="false">
-            <el-table-column show-overflow-tooltip class-name="split-item-col" label="" prop="">
-              <span slot-scope="scope">{{(scope.row.wfndStatus===300?scope.row.bill_time:(scope.row.reckStatus===300?scope.row.bill_time:'.')) | timeFormat1}}</span>
+          <el-table
+            :data="scope.row.split"
+            :row-class-name="scope.row.split.length>1?'add-border':''"
+            :show-header="false"
+            class="split-item"
+          >
+            <el-table-column class-name="split-item-col" label prop show-overflow-tooltip>
+              <span
+                slot-scope="scope"
+              >{{(scope.row.wfndStatus===300?scope.row.bill_time:(scope.row.reckStatus===300?scope.row.bill_time:'.')) | timeFormat1}}</span>
             </el-table-column>
           </el-table>
         </template>
       </el-table-column>
-      <el-table-column v-if="selStatus==100" class-name="splited-col" label="余额" prop="" width="120">
+      <el-table-column class-name="splited-col" label="余额" prop v-if="selStatus==100" width="120">
         <template slot-scope="scope">
-          <el-table class="split-item" :data="scope.row.split"  :show-header="false">
-            <el-table-column show-overflow-tooltip class-name="split-item-col" label="" prop="">
-              <span slot-scope="scope">{{(scope.row.wfndStatus!==300||scope.row.reckStatus!==300)?scope.row.split_amount:'.' |currency1}}</span>
+          <el-table
+            :data="scope.row.split"
+            :row-class-name="scope.row.split.length>1?'add-border':''"
+            :show-header="false"
+            class="split-item"
+          >
+            <el-table-column class-name="split-item-col" label prop show-overflow-tooltip>
+              <span
+                slot-scope="scope"
+              >{{(scope.row.wfndStatus!==300||scope.row.reckStatus!==300)?scope.row.split_amount:'.' |currency1}}</span>
             </el-table-column>
           </el-table>
         </template>
       </el-table-column>
-      <el-table-column v-if="selStatus!=20" class-name="splited-col" label="操作" prop="" width="90" align="center">
+      <el-table-column class-name="splited-col" label="操作" prop v-if="selStatus!=20" width="90">
         <template slot-scope="scope">
-          <el-table class="split-item" :data="scope.row.split"  :show-header="false">
-            <el-table-column show-overflow-tooltip class-name="split-item-col" label="" prop="">
-              <!-- 后代作用域插槽 -->
+          <el-table
+            :data="scope.row.split"
+            :row-class-name="scope.row.split.length>1?'add-border':''"
+            :show-header="false"
+            class="split-item"
+          >
+            <el-table-column class-name="split-item-col" label prop>
               <template slot-scope="cscope">
                 <el-dropdown trigger="click">
                   <el-button type="primary">
-                    操作<i class="el-icon-arrow-down el-icon--right"></i>
+                    操作
+                    <i class="el-icon-arrow-down el-icon--right"></i>
                   </el-button>
-                  <el-dropdown-menu id="my-dropdown-menu" divided slot="dropdown">
-                    <el-dropdown-item>
-                      <el-button v-if="permissions.indexOf( '6s')>-1&&selStatus===0" @click.native.prevent="allot(cscope.row)" size="mini" type="primary">分配</el-button>
+                  <el-dropdown-menu id="my-dropdown-menu" slot="dropdown">
+                    <el-dropdown-item v-if="permissions.indexOf( '6s')>-1&&selStatus===0">
+                      <el-button @click.native.prevent="allot(cscope.row)" size="mini" type="primary">分配</el-button>
                     </el-dropdown-item>
-                    <el-dropdown-item>
-                      <el-button v-if="permissions.indexOf('6l')>-1&&selStatus===0" @click.native.prevent="split(cscope.row)" size="mini" type="warning">拆账</el-button>
+                    <el-dropdown-item divided v-if="permissions.indexOf('6l')>-1&&selStatus===0">
+                      <el-button @click.native.prevent="split(cscope.row)" size="mini" type="warning">拆账</el-button>
                     </el-dropdown-item>
-                    <el-dropdown-item>
+                    <el-dropdown-item divided>
                       <!-- 客服看到的认领(阳光快付不允许认) -->
-                      <el-button v-if="(permissions.indexOf( '6k')>-1&&selStatus===0 && (scope.row.bkid!='c5b2159eb53c11e7a1f900e066be4002' && scope.row.bkid!='14721bbfba6f11e8929700e066be4061')) && (rid==='12' || rid==='2y') && cscope.row.isClaim == '1'" @click.native.prevent="claim(cscope.row)" size="mini" type="success">认领</el-button>
+                      <el-button
+                        @click.native.prevent="claim(cscope.row)"
+                        size="mini"
+                        type="success"
+                        v-if="(permissions.indexOf( '6k')>-1&&selStatus===0 && (scope.row.bkid!='c5b2159eb53c11e7a1f900e066be4002' && scope.row.bkid!='14721bbfba6f11e8929700e066be4061')) && (rid==='12' || rid==='2y') && cscope.row.isClaim == '1'"
+                      >认领</el-button>
                       <!-- 财务和admin看到的认领 -->
-                      <el-button v-if="((permissions.indexOf( '6k')>-1&&selStatus===0)&&rid!=='12' && rid!=='2y'|| rid==='0') && cscope.row.isClaim == '1'" @click.native.prevent="claim(cscope.row)" size="mini" type="success">认领</el-button>
+                      <el-button
+                        @click.native.prevent="claim(cscope.row)"
+                        size="mini"
+                        type="success"
+                        v-if="((permissions.indexOf( '6k')>-1&&selStatus===0)&&rid!=='12' && rid!=='2y'|| rid==='0') && cscope.row.isClaim == '1'"
+                      >认领</el-button>
                     </el-dropdown-item>
-                    <el-dropdown-item>
-                      <el-button v-if="permissions.indexOf( '6m')>-1&&selStatus ===10" @click.native.prevent="goBack(cscope.row)" size="mini" type="warning">退回</el-button>
+                    <el-dropdown-item divided v-if="permissions.indexOf( '6m')>-1&&selStatus ===10">
+                      <el-button @click.native.prevent="goBack(cscope.row)" size="mini" type="warning">退回</el-button>
                     </el-dropdown-item>
-                    <el-dropdown-item>
-                      <el-button v-if="permissions.indexOf( '6t')>-1&&selStatus===0" @click.native.prevent="deleteFlow(cscope.row)" size="mini" type="danger">删除</el-button>
+                    <el-dropdown-item divided v-if="permissions.indexOf( '6t')>-1&&selStatus===0">
+                      <el-button @click.native.prevent="deleteFlow(cscope.row)" size="mini" type="danger">删除</el-button>
                     </el-dropdown-item>
-                    <el-dropdown-item>
-                      <el-button v-if="permissions.indexOf('76')>-1&&selStatus===100" @click.native.prevent="editFlow(cscope.row)" size="mini" type="info">编辑</el-button>
+                    <el-dropdown-item divided v-if="permissions.indexOf('76')>-1&&selStatus===100">
+                      <el-button @click.native.prevent="editFlow(cscope.row)" size="mini" type="info">编辑</el-button>
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </el-dropdown>
@@ -185,16 +288,16 @@
         </template>
       </el-table-column>
     </el-table>
-    <page class="page" :url="bankUrl" :sendParams="sendParams" @updateList="updateBankList"></page>
+    <page :sendParams="sendParams" :url="bankUrl" @updateList="updateBankList" class="page"></page>
 
     <!-- 分配弹窗 -->
-    <el-dialog :modal-append-to-body="false" title="分配流水" :visible.sync="allotDialog" width="400px">
+    <el-dialog :modal-append-to-body="false" :visible.sync="allotDialog" title="分配流水" width="400px">
       <el-form :model="allotForm" label-width="80px">
         <el-form-item label="预留信息" required>
-          <el-input v-model="allotForm.remark" type="textarea" :rows="3"></el-input>
+          <el-input :rows="3" type="textarea" v-model="allotForm.remark"></el-input>
         </el-form-item>
         <el-form-item label="商务" required>
-          <el-input v-model="allotForm.shangWu" disabled style="width:60%"></el-input>
+          <el-input disabled style="width:60%" v-model="allotForm.shangWu"></el-input>
           <el-button @click.native.prevent="selAllotUserDialog = true" type="primary">选择</el-button>
         </el-form-item>
         <div class="text-center">
@@ -203,18 +306,18 @@
       </el-form>
     </el-dialog>
     <!-- 选择人员弹窗 -->
-    <el-dialog :modal-append-to-body="false" title="选择人员" :visible.sync="selAllotUserDialog" width="550px">
-      <select-user :key="key_seluser" @userId="getAllotUserId" @closeDialog="selAllotUserDialog=false"></select-user>
+    <el-dialog :modal-append-to-body="false" :visible.sync="selAllotUserDialog" title="选择人员" width="550px">
+      <select-user :key="key_seluser" @closeDialog="selAllotUserDialog=false" @userId="getAllotUserId"></select-user>
     </el-dialog>
-    <el-dialog :modal-append-to-body="false" title="选择人员" :visible.sync="selUserDialog" width="550px">
-      <select-user :key="key_seluser" @userId="getUserId" @closeDialog="selUserDialog=false"></select-user>
+    <el-dialog :modal-append-to-body="false" :visible.sync="selUserDialog" title="选择人员" width="550px">
+      <select-user :key="key_seluser" @closeDialog="selUserDialog=false" @userId="getUserId"></select-user>
     </el-dialog>
-    <el-dialog :modal-append-to-body="false" title="选择维护客服" :visible.sync="selKeepUserDialog" width="550px">
-      <select-user :key="key_selkeepuser" @userId="getKeepUserId" @closeDialog="selKeepUserDialog=false"></select-user>
+    <el-dialog :modal-append-to-body="false" :visible.sync="selKeepUserDialog" title="选择维护客服" width="550px">
+      <select-user :key="key_selkeepuser" @closeDialog="selKeepUserDialog=false" @userId="getKeepUserId"></select-user>
     </el-dialog>
     <!-- 拆账弹窗 -->
-    <el-dialog :modal-append-to-body="false" title="拆账" :visible.sync="splitDialog" width="500px">
-      <el-form label-position="left" :model="splitForm" label-width="140px">
+    <el-dialog :modal-append-to-body="false" :visible.sync="splitDialog" title="拆账" width="500px">
+      <el-form :model="splitForm" label-position="left" label-width="140px">
         <el-form-item label="总金额 :">
           <span>{{splitForm.totalMoney | currency1}}</span>
         </el-form-item>
@@ -224,9 +327,16 @@
         <el-form-item label="剩余可拆账金额 :">
           <span>{{restMoney | currency1}}</span>
         </el-form-item>
-        <div v-for="(item,index) in splitForm.splitItem" :key="index" class="mt10px">
-          <el-input v-model="item.money" class="contact-phone"></el-input>
-          <el-button @click.native.prevent="addContact(index)" class="circle-btn" :type="index===0?'success':'danger'" size="mini" :icon="index===0?'fa fa-plus':'fa fa-minus'" circle></el-button>
+        <div :key="index" class="mt10px" v-for="(item,index) in splitForm.splitItem">
+          <el-input class="contact-phone" v-model="item.money"></el-input>
+          <el-button
+            :icon="index===0?'fa fa-plus':'fa fa-minus'"
+            :type="index===0?'success':'danger'"
+            @click.native.prevent="addContact(index)"
+            circle
+            class="circle-btn"
+            size="mini"
+          ></el-button>
         </div>
         <div class="text-center mt10px">
           <el-button @click.native.prevent="confirmSplit" type="primary">确认</el-button>
@@ -234,10 +344,10 @@
       </el-form>
     </el-dialog>
     <!-- 认领弹窗 -->
-    <el-dialog :modal-append-to-body="false" title="认领" :visible.sync="claimDialog" width="400px">
+    <el-dialog :modal-append-to-body="false" :visible.sync="claimDialog" title="认领" width="400px">
       <el-form :model="claimForm" label-width="80px">
         <el-form-item label="备注" required>
-          <el-input v-model="claimForm.remark" type="textarea" :rows="3"></el-input>
+          <el-input :rows="3" type="textarea" v-model="claimForm.remark"></el-input>
         </el-form-item>
         <div class="text-center">
           <el-button @click.native.prevent="confirmClaim" type="primary">确认</el-button>
@@ -245,19 +355,24 @@
       </el-form>
     </el-dialog>
     <!-- 编辑流水弹窗 -->
-    <el-dialog :modal-append-to-body="false" :title="'编辑流水信息----金额 : '+ flowMoney" :visible.sync="editDialog" width="800px">
+    <el-dialog
+      :modal-append-to-body="false"
+      :title="'编辑流水信息----金额 : '+ flowMoney"
+      :visible.sync="editDialog"
+      width="800px"
+    >
       <el-form :model="editForm" label-width="140px">
-        <el-form-item label="" required>
+        <el-form-item label required>
           <template slot="label">
             <el-button @click.native.prevent="selUser('user')" type="primary">选择使用人</el-button>
           </template>
-          <el-input v-model="editForm.user" disabled></el-input>
+          <el-input disabled v-model="editForm.user"></el-input>
         </el-form-item>
-        <el-form-item label="" required>
+        <el-form-item label required>
           <template slot="label">
             <el-button @click.native.prevent="selCompanyDialog=true" type="primary">选择公司</el-button>
           </template>
-          <el-input v-model="editForm.company" disabled></el-input>
+          <el-input disabled v-model="editForm.company"></el-input>
         </el-form-item>
         <el-form-item label="百度账号 :" required>
           <el-input v-model="editForm.bdAccount"></el-input>
@@ -265,21 +380,21 @@
         <el-form-item label="用户ID :" required>
           <el-input v-model="editForm.id"></el-input>
         </el-form-item>
-        <el-form-item label="" required>
+        <el-form-item label required>
           <template slot="label">
             <el-button @click.native.prevent="selUser('keepUser')" type="primary">选择维护客服</el-button>
           </template>
-          <el-input v-model="editForm.keepUser" disabled></el-input>
+          <el-input disabled v-model="editForm.keepUser"></el-input>
         </el-form-item>
         <!-- <el-form-item label="类型 :" required>
           <el-radio v-model="editForm.radio" label="1">新开</el-radio>
           <el-radio v-model="editForm.radio" label="0">续费</el-radio>
-        </el-form-item> -->
+        </el-form-item>-->
         <!-- <el-form-item label="产品类型 :">
           <el-checkbox-group @change="selProduct" v-model="editForm.productType">
             <el-checkbox v-for="(item,index) in editForm.productList" :key="index" :label="item">{{item.code_desc}}</el-checkbox>
           </el-checkbox-group>
-        </el-form-item> -->
+        </el-form-item>-->
         <!-- <el-form-item v-if="editForm.productMoneyList.length!==0">
           <el-table :data="editForm.productMoneyList" border size="mini">
             <el-table-column label="" prop="" width="100">
@@ -306,7 +421,7 @@
               </template>
             </el-table-column>
           </el-table>
-        </el-form-item> -->
+        </el-form-item>-->
         <!-- <el-form-item label="大搜服务费 :" required>
           <el-input v-model="editForm.searvice"></el-input>
         </el-form-item>
@@ -314,21 +429,21 @@
           <el-input v-model="editForm.searviceYear">
             <span slot="prepend">月</span>
           </el-input>
-        </el-form-item> -->
+        </el-form-item>-->
         <el-form-item label="提单金额 :">
           <el-input v-model="editForm.money"></el-input>
         </el-form-item>
         <el-form-item label="提单时间 :" required>
           <el-date-picker
-            v-model="editForm.subOrderDate"
-            type="datetime"
-            value-format="yyyy-MM-dd HH:mm"
             format="yyyy-MM-dd HH:mm"
-            placeholder="选择提单时间">
-          </el-date-picker>
+            placeholder="选择提单时间"
+            type="datetime"
+            v-model="editForm.subOrderDate"
+            value-format="yyyy-MM-dd HH:mm"
+          ></el-date-picker>
         </el-form-item>
         <el-form-item label="预留信息 :">
-          <el-input v-model="editForm.remark" type="textarea" :rows="2"></el-input>
+          <el-input :rows="2" type="textarea" v-model="editForm.remark"></el-input>
         </el-form-item>
         <div class="text-center">
           <el-button @click.native.prevent="subEdit" type="primary">提交</el-button>
@@ -336,35 +451,43 @@
       </el-form>
     </el-dialog>
     <!-- 选择公司弹窗 -->
-    <el-dialog :modal-append-to-body="false" title="选择公司" :visible.sync="selCompanyDialog" width="900px">
-      <el-input @click.native.prevent="searchCompany($event)" @keydown.enter.native="searchCompany('enter')" v-model="comForm.companyName" style="margin-top:10px;" placeholder="搜索客服">
-        <span slot="append" class="search-service">搜索客服</span>
+    <el-dialog :modal-append-to-body="false" :visible.sync="selCompanyDialog" title="选择公司" width="900px">
+      <el-input
+        @click.native.prevent="searchCompany($event)"
+        @keydown.enter.native="searchCompany('enter')"
+        placeholder="搜索客服"
+        style="margin-top:10px;"
+        v-model="comForm.companyName"
+      >
+        <span class="search-service" slot="append">搜索客服</span>
       </el-input>
-      <el-table id="cus-out-table" :data="comList" class="table-width">
-        <el-table-column prop="companyname" label="客户名称" min-width="170">
-        </el-table-column>
-        <el-table-column prop="" label="客户类型">
+      <el-table :data="comList" class="table-width" id="cus-out-table">
+        <el-table-column label="客户名称" min-width="170" prop="companyname"></el-table-column>
+        <el-table-column label="客户类型" prop>
           <span slot-scope="scope">{{scope.row.producttype | cusState('cusType')}}</span>
         </el-table-column>
-        <el-table-column prop="companyname" label="公司状态">
+        <el-table-column label="公司状态" prop="companyname">
           <span slot-scope="scope">{{scope.row.ctype | cusState('cusStatus')}}</span>
         </el-table-column>
-        <el-table-column prop="" label="业务状态">
+        <el-table-column label="业务状态" prop>
           <span slot-scope="scope">{{scope.row.cltype + '' + scope.row.cltype | businessStatus}}</span>
         </el-table-column>
-        <el-table-column prop="kefa" label="所属商务">
-        </el-table-column>
-        <el-table-column prop="kefu" label="所属客服">
-        </el-table-column>
-        <el-table-column prop="baidu_account" label="百度账号">
-        </el-table-column>
-        <el-table-column prop="" label="操作" align="center">
+        <el-table-column label="所属商务" prop="kefa"></el-table-column>
+        <el-table-column label="所属客服" prop="kefu"></el-table-column>
+        <el-table-column label="百度账号" prop="baidu_account"></el-table-column>
+        <el-table-column align="center" label="操作" prop>
           <template slot-scope="scope">
-            <el-button @click.native.prevent="confirmSelCompany(scope.row)" type="success" class="xsbtn">选择</el-button>
+            <el-button @click.native.prevent="confirmSelCompany(scope.row)" class="xsbtn" type="success">选择</el-button>
           </template>
         </el-table-column>
       </el-table>
-      <page :simpleLayout="'total, prev, next, jumper'" class="page" :url="comUrl" :sendParams="comParams" @updateList="getComList"></page>
+      <page
+        :sendParams="comParams"
+        :simpleLayout="'total, prev, next, jumper'"
+        :url="comUrl"
+        @updateList="getComList"
+        class="page"
+      ></page>
     </el-dialog>
   </div>
 </template>
@@ -378,7 +501,7 @@ import SelectUser from 'base/selectUser/selectUser'
 import UpFile from 'base/upLoad/upFile'
 import { serverUrl } from 'api/http'
 export default {
-  data () {
+  data() {
     return {
       serverUrl: serverUrl,
       rid: cookie.get('rid'),
@@ -427,7 +550,7 @@ export default {
       splitDialog: false,
       splitForm: {
         totalMoney: 0,
-        splitItem: [{money: 0}]
+        splitItem: [{ money: 0 }]
       },
       claimDialog: false,
       claimForm: {
@@ -465,7 +588,7 @@ export default {
   },
   computed: {
     // 已拆账金额
-    splitedMoney () {
+    splitedMoney() {
       let sum = 0
       this.splitForm.splitItem.forEach(val => {
         sum += parseFloat(val.money || 0)
@@ -473,13 +596,15 @@ export default {
       return sum
     },
     // 剩余可拆账金额
-    restMoney () {
-      return parseFloat(this.splitForm.totalMoney) - parseFloat(this.splitedMoney)
+    restMoney() {
+      return (
+        parseFloat(this.splitForm.totalMoney) - parseFloat(this.splitedMoney)
+      )
     }
   },
-  created () {
+  created() {
     let width = document.documentElement.clientWidth
-    width < 768 ? this.isFixed = false : this.isFixed = true
+    width < 768 ? (this.isFixed = false) : (this.isFixed = true)
     this.params = {
       alloctype: -10,
       bank: '0',
@@ -488,43 +613,44 @@ export default {
     this._getBankType()
   },
   methods: {
-    setCellStyle ({row, column, rowIndex, columnIndex}) {
-      console.log(row)
-    },
-    exportFlow () {
+    exportFlow() {
       this.$export('/receipt.do?bankReceiptExport', this.sendParams)
     },
     // 分配流水
-    allot (data) {
+    allot(data) {
       this.rowData = data
       // this.allotForm.shangWu = ''
       this.allotDialog = true
     },
-    selUser (type) {
-      type === 'user' ? this.selUserDialog = true : this.selKeepUserDialog = true
+    selUser(type) {
+      type === 'user'
+        ? (this.selUserDialog = true)
+        : (this.selKeepUserDialog = true)
       this.key_seluser = new Date() + ''
       this.key_selkeepuser = new Date() + '1'
     },
-    getUserId (id, name) {
+    getUserId(id, name) {
       this.selUserId = id
       this.editForm.user = name
     },
-    getKeepUserId (id, name) {
+    getKeepUserId(id, name) {
       this.editForm.keepUser = name
     },
-    getAllotUserId (id, name) {
+    getAllotUserId(id, name) {
       this.selAllotUserId = id
       this.allotForm.shangWu = name
     },
-    confirmAllot () {
+    confirmAllot() {
       let params = {
-        'receiptid': [{
-          id: this.rowData.id,
-          pid: this.rowData.pid
-        }],
-        'uid': this.selAllotUserId,
-        'alloc_remark': this.allotForm.remark,
-        'type': 10
+        receiptid: [
+          {
+            id: this.rowData.id,
+            pid: this.rowData.pid
+          }
+        ],
+        uid: this.selAllotUserId,
+        alloc_remark: this.allotForm.remark,
+        type: 10
       }
       if (!params.alloc_remark || !params.uid) {
         this.$message({
@@ -543,12 +669,12 @@ export default {
       })
     },
     // 拆账
-    split (data) {
+    split(data) {
       this.rowData = data
       this.splitForm.totalMoney = data.split_amount
       this.splitDialog = true
     },
-    addContact (index) {
+    addContact(index) {
       if (index === 0) {
         this.splitForm.splitItem.push({
           money: 0
@@ -557,7 +683,7 @@ export default {
         this.splitForm.splitItem.splice(index, 1)
       }
     },
-    confirmSplit () {
+    confirmSplit() {
       let hasZero = this.splitForm.splitItem.some(val => {
         return val.money == 0 // eslint-disable-line
       })
@@ -595,20 +721,21 @@ export default {
       })
     },
     // 认领
-    claim (data) {
+    claim(data) {
       this.rowData = data
-      console.log(data)
       this.claimDialog = true
     },
-    confirmClaim () {
+    confirmClaim() {
       let params = {
-        'receiptid': [{
-          id: this.rowData.id,
-          pid: this.rowData.pid
-        }],
-        'uid': this.userId,
-        'alloc_remark': this.claimForm.remark,
-        'type': 20
+        receiptid: [
+          {
+            id: this.rowData.id,
+            pid: this.rowData.pid
+          }
+        ],
+        uid: this.userId,
+        alloc_remark: this.claimForm.remark,
+        type: 20
       }
       if (!params.alloc_remark) {
         this.$message({
@@ -617,7 +744,6 @@ export default {
         })
         return
       }
-      console.log(params)
       this.$post('/receipt.do?allocationbankreceipt', params).then(res => {
         if (res.data[0].data) {
           this.$message({
@@ -630,70 +756,78 @@ export default {
       })
     },
     // 退回
-    goBack (data) {
+    goBack(data) {
       this.rowData = data
       this.$confirm('确定要退回吗?', '', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(() => {
-        this.$get('/receipt.do?receiptClaimBack', {brcId: this.rowData.id}).then(res => {
-          if (res.data.success) {
-            this.$message({
-              type: 'success',
-              message: '退回成功'
-            })
-            this.search()
-          } else {
-            this.$message({
-              type: 'error',
-              message: '此笔流水不能退回'
-            })
-          }
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消'
-        })
       })
+        .then(() => {
+          this.$get('/receipt.do?receiptClaimBack', {
+            brcId: this.rowData.id
+          }).then(res => {
+            if (res.data.success) {
+              this.$message({
+                type: 'success',
+                message: '退回成功'
+              })
+              this.search()
+            } else {
+              this.$message({
+                type: 'error',
+                message: '此笔流水不能退回'
+              })
+            }
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          })
+        })
     },
     // 删除
-    deleteFlow (data) {
+    deleteFlow(data) {
       this.$confirm('确定要删除此笔流水吗?', '', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(() => {
-        let params = {
-          idsarray: [{
-            id: data.id,
-            pid: data.pid
-          }]
-        }
-        this.$post('/receipt.do?delBankRecept', params).then(res => {
-          if (res.data.success) {
-            this.$message({
-              type: 'success',
-              message: '删除成功'
-            })
-            this.search()
-          } else {
-            this.$message({
-              type: 'error',
-              message: `${res.data.msg}`
-            })
-          }
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消'
-        })
       })
+        .then(() => {
+          let params = {
+            idsarray: [
+              {
+                id: data.id,
+                pid: data.pid
+              }
+            ]
+          }
+          this.$post('/receipt.do?delBankRecept', params).then(res => {
+            if (res.data.success) {
+              this.$message({
+                type: 'success',
+                message: '删除成功'
+              })
+              this.search()
+            } else {
+              this.$message({
+                type: 'error',
+                message: `${res.data.msg}`
+              })
+            }
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          })
+        })
     },
     // 编辑
-    editFlow (data) {
+    editFlow(data) {
       this.editForm.money = data.split_amount
       this.selUserId = ''
       this.comInfo = {}
@@ -706,13 +840,12 @@ export default {
       this.editDialog = true
       this._getProductList()
     },
-    _getProductList () {
+    _getProductList() {
       getByCode(38).then(res => {
         this.editForm.productList = res.data.data
       })
     },
-    selProduct (val) {
-      console.log(val)
+    selProduct(val) {
       this.editForm.productMoneyList = []
       val.forEach(item => {
         this.editForm.productMoneyList.push({
@@ -727,17 +860,17 @@ export default {
         })
       })
     },
-    searchCompany (e) {
+    searchCompany(e) {
       if (e === 'enter' || e.target.nodeName !== 'INPUT') {
         this.comParams = {
-          'companyname': this.comForm.companyName
+          companyname: this.comForm.companyName
         }
       }
     },
-    getComList (res) {
+    getComList(res) {
       this.comList = res.data[0].data
     },
-    confirmSelCompany (data) {
+    confirmSelCompany(data) {
       this.comInfo = data
       this.editForm.bdAccount = this.comInfo.baidu_account
       this.editForm.company = this.comInfo.companyname
@@ -746,7 +879,7 @@ export default {
       this.editForm.cpid = this.comInfo.cpid
       this.selCompanyDialog = false
     },
-    subEdit () {
+    subEdit() {
       let params = {
         bsid: this.rowData.id,
         uid: this.selUserId,
@@ -765,7 +898,12 @@ export default {
         cpid: this.editForm.cpid
       }
       console.log(params)
-      if (!params.baidu_account || !params.bill_time || !params.companyid || !params.uid) {
+      if (
+        !params.baidu_account ||
+        !params.bill_time ||
+        !params.companyid ||
+        !params.uid
+      ) {
         this.$message({
           type: 'warning',
           message: '请完善必填信息！'
@@ -793,36 +931,38 @@ export default {
       //     return
       //   }
       // }
-      this.$post('/receipt.do?manualUserReceive', params).then(res => {
-        if (res.data.success) {
-          this.$message({
-            type: 'success',
-            message: '编辑成功'
-          })
-          this.editDialog = false
-          this.search()
-        }
-      }).catch(err => {
-        console.log(err)
-      })
+      this.$post('/receipt.do?manualUserReceive', params)
+        .then(res => {
+          if (res.data.success) {
+            this.$message({
+              type: 'success',
+              message: '编辑成功'
+            })
+            this.editDialog = false
+            this.search()
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
     },
-    search () {
+    search() {
       this.sendParams = {
-        'type': this.selStatus,
-        'bank': this.selBank,
-        'start_time': this.businessDate[0],
-        'start_end': this.businessDate[1],
-        'bill_start': this.orderDate[0], // 提单时间
-        'bill_end': this.orderDate[1],
-        'remark': this.remarkSearch, // 摘要
-        'fm_name': this.payAccount, // 付款名
-        'companyname': this.companyName,
-        'alloc_remark': this.reserveInfo, // 预留信息
-        'invoice': this.invoiceStatus,
-        'baidu_account2': this.bdAccount
+        type: this.selStatus,
+        bank: this.selBank,
+        start_time: this.businessDate[0],
+        start_end: this.businessDate[1],
+        bill_start: this.orderDate[0], // 提单时间
+        bill_end: this.orderDate[1],
+        remark: this.remarkSearch, // 摘要
+        fm_name: this.payAccount, // 付款名
+        companyname: this.companyName,
+        alloc_remark: this.reserveInfo, // 预留信息
+        invoice: this.invoiceStatus,
+        baidu_account2: this.bdAccount
       }
     },
-    reset () {
+    reset() {
       this.selBank = ''
       this.key_bank = new Date() + ''
       this.invoiceStatus = '100'
@@ -836,15 +976,15 @@ export default {
       this.orderDate = []
     },
     // 状态按钮change事件
-    changeStatus (val) {
+    changeStatus(val) {
       this.search()
     },
-    _getBankType () {
+    _getBankType() {
       getByCode(42).then(res => {
         this.bankList = res.data.data
       })
     },
-    updateBankList (res) {
+    updateBankList(res) {
       this.bankFlowList = res.data[0].data
     }
   },
@@ -858,7 +998,7 @@ export default {
 </script>
 
 <style>
-.el-dropdown-menu--small .el-dropdown-menu__item{
+.el-dropdown-menu--small .el-dropdown-menu__item {
   padding: 2px 15px;
 }
 </style>
@@ -876,7 +1016,7 @@ export default {
       .status-item {
         margin-top: 10px;
         margin-left: 10px;
-        width: 230px;
+        width: 210px;
       }
     }
     .btns {
@@ -894,25 +1034,42 @@ export default {
     .search-item {
       margin-top: 10px;
       margin-left: 10px;
-      width: 295px;
+      width: 310px;
     }
   }
-  .splited-col{
+  .splited-col {
     padding: 0;
-    >div.cell{
+    > div.cell {
       padding: 0;
     }
+    .split-item {
+      table {
+        border-collapse: collapse; // 为tr设置边框需要
+      }
+      .el-table__body-wrapper {
+        overflow: hidden;
+      }
+      &::before {
+        z-index: inherit; // 消除table最下面的边框
+      }
+    }
+    .add-border:not(:last-child) {
+      border-bottom: 1px solid #000 !important;
+    }
   }
-  .split-item-col{
-    border: none;
+  .split-item-col {
+    border-bottom: none;
     padding: 2px 0;
-    border-bottom: 1px solid #000;
+    > div.cell {
+      height: 25px;
+      line-height: 25px;
+    }
   }
-  .el-dropdown .el-button{
+  .el-dropdown .el-button {
     padding: 5px 7px;
   }
   .contact-phone {
-    width: calc(~'(100% - 30px)');
+    width: calc(~'(100% - 35px)');
   }
 }
 </style>

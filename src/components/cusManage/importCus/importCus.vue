@@ -9,7 +9,7 @@
         <el-button @click.native="reset" type="warning" class="import-item">重 置</el-button>
       </div>
       <div class="import-item">
-        <up-file :title="'导入'" :upIcon="'el-icon-upload'" :uploadUrl="serverUrl+'/Company.do?importcompanyinfo'+'&tk='+tk" :otherParams="{uid: userId}" :isHiddenFileList="true"></up-file>
+        <up-file :title="'导入'" :upIcon="'fa fa-cloud-download'" :uploadUrl="serverUrl+'/Company.do?importcompanyinfo'+'&tk='+tk" :otherParams="{uid: userId}" :isHiddenFileList="true"></up-file>
       </div>
     </div>
 
@@ -18,13 +18,13 @@
       </el-table-column>
       <el-table-column prop="contactname" label="联系人">
       </el-table-column>
-      <el-table-column prop="contact" label="手机">
+      <el-table-column prop="contact" label="手机" min-width="150">
       </el-table-column>
       <el-table-column prop="full_name" label="行业">
       </el-table-column>
-      <el-table-column prop="address" label="地址" min-width="200px">
+      <el-table-column prop="address" label="地址">
       </el-table-column>
-      <el-table-column prop="uploadusername" label="导入人">
+      <el-table-column prop="uploadusername" label="导入人" width="100">
       </el-table-column>
     </el-table>
     <page class="page" :url="myFollowUrl" :sendParams="sendParams" @updateList="updateMyFollowList"></page>

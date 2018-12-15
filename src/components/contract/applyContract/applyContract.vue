@@ -13,7 +13,7 @@
         <el-option label="待分配" value="20"></el-option>
         <el-option label="已分配" value="30"></el-option>
       </auto-select>
-      <el-date-picker v-model="applyTime" value-format="yyyy/MM/dd HH:mm" format="yyyy/MM/dd HH:mm" type="datetimerange" range-separator="至" start-placeholder="申请开始日期" end-placeholder="申请结束日期" class="apply-item" style="width:300px;"></el-date-picker>
+      <el-date-picker v-model="applyTime" value-format="yyyy/MM/dd HH:mm" format="yyyy/MM/dd HH:mm" type="datetimerange" range-separator="至" start-placeholder="申请开始日期" end-placeholder="申请结束日期" class="apply-item item-width" style="width: 310px;"></el-date-picker>
       <div class="apply-item">
         <el-button @click.native="search" type="primary">查 询</el-button>
         <el-button @click.native="reset" type="warning">重 置</el-button>
@@ -27,10 +27,10 @@
       </el-table-column>
       <el-table-column prop="contractnumber" label="合同编号">
       </el-table-column>
-      <el-table-column prop="" label="申请时间" min-width="135">
+      <el-table-column prop="" label="申请时间" min-width="100">
         <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
       </el-table-column>
-      <el-table-column prop="" label="状态" min-width="80">
+      <el-table-column prop="" label="状态" min-width="80" align="center">
         <el-button slot-scope="scope" plain class="xsbtn"
         :type="scope.row.status==20?'warning':
         scope.row.status==10?'danger':'success'">{{scope.row.status | cusState('applyStatus')}}</el-button>

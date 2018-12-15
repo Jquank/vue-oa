@@ -12,11 +12,11 @@
         <el-button @click.native="reset" type="warning">重 置</el-button>
       </div>
       <div class="search-item countTip">
-        <span class="tipfont">当前可保A数量 :
+        <span class="tipfont">(当前可保A数量 :
           <span class="red"> {{baoANum}}</span>
         </span>
         <span  class="tipfont">当前可跟踪数量 :
-          <span class="red"> {{followNum}}</span>
+          <span class="red"> {{followNum}}</span>)
         </span>
       </div>
     </div>
@@ -35,9 +35,9 @@
       <el-table-column prop="pname" label="业务状态" min-width="100">
         <span slot-scope="scope">{{scope.row.cltype+''+scope.row.clstatus | businessStatus}}</span>
       </el-table-column>
-      <el-table-column prop="areaname" label="地区" min-width="120">
+      <el-table-column prop="areaname" label="地区" min-width="150">
       </el-table-column>
-      <el-table-column prop="companycatname" label="行业" min-width="100">
+      <el-table-column prop="companycatname" label="行业" min-width="150">
       </el-table-column>
       <template v-if="permissions.indexOf('73')>-1">
         <el-table-column prop="baidu_account" label="百度账号">
@@ -46,7 +46,7 @@
         </el-table-column>
         <el-table-column prop="kefa" label="商务姓名">
         </el-table-column>
-        <el-table-column prop="kefaDept" label="商务部门">
+        <el-table-column prop="kefaDept" label="商务部门" min-width="110">
         </el-table-column>
         <el-table-column prop="kefu" label="客服虚拟账号" min-width="100">
         </el-table-column>
@@ -64,8 +64,8 @@
     <page class="page" :url="url" :sendParams="sendParams" @updateList="getList"></page>
 
     <!-- 查看弹窗 -->
-    <el-dialog width="800px" title="客户详情" :visible.sync="cusDetailDialog">
-      <el-form ref="form" :model="form" label-width="90px">
+    <el-dialog width="850px" title="客户详情" :visible.sync="cusDetailDialog">
+      <el-form ref="form" :model="form" label-width="95px">
         <el-row :gutter="20">
           <el-col :md="12" class="maxwidth">
             <el-form-item label="客户名称 :">
@@ -132,7 +132,7 @@
         <el-row :gutter="20">
           <el-col :md="24" style="max-width:1000px;">
             <el-form-item label="经营范围 :">
-              <el-input v-model="cusDetail.business_scope" type="textarea" :rows="3" disabled></el-input>
+              <el-input v-model="cusDetail.business_scope" type="textarea" :rows="4" disabled></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -523,7 +523,7 @@ export default {
       margin-top: 10px;
     }
     .item-width {
-      width: 280px;
+      width: 300px;
     }
     .countTip {
       display: flex;
@@ -534,7 +534,7 @@ export default {
     }
   }
   .input-btn{
-    width: calc(~"(100% - 32px)");
+    width: calc(~"(100% - 35px)");
   }
 }
 </style>

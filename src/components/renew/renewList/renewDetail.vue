@@ -293,7 +293,7 @@
               </el-table>
             </template>
           </el-table-column>
-          <el-table-column header-align="center" class-name="splited-col" label="分配时间" prop="" width="135">
+          <el-table-column header-align="center" class-name="splited-col" label="分配时间" prop="" width="140">
             <template slot-scope="scope">
               <el-table class="split-item" :data="scope.row.split" :show-header="false">
                 <el-table-column show-overflow-tooltip class-name="split-item-col" label="" prop="">
@@ -338,7 +338,7 @@
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column prop="" label="时间" min-width="135">
+          <el-table-column prop="" label="时间" min-width="140">
             <template slot-scope="scope">
               <el-select v-model="scope.row.receivetime">
                 <el-option v-for="(item,index) in renewFlowList" :key="index" :value="item.tm" :label="timeFormat1(item.tm)"></el-option>
@@ -479,7 +479,7 @@
         <div class="line"></div>
       </div>
       <el-table :data="recordList" class="table-width" max-height="400">
-        <el-table-column prop="inserttime" label="操作时间" width="135">
+        <el-table-column prop="inserttime" label="操作时间" width="140">
           <span slot-scope="scope">{{scope.row.inserttime | timeFormat}}</span>
         </el-table-column>
         <el-table-column prop="name" label="操作人">

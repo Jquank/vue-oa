@@ -43,23 +43,23 @@
         </el-table-column>
         <el-table-column prop="companyname" label="客户名称" min-width="220">
         </el-table-column>
-        <el-table-column prop="companytype" label="公司状态" width="70">
+        <el-table-column prop="companytype" label="公司状态" min-width="80">
           <span :class="scope.row.companytype===-10?'red':''" slot-scope="scope">
             {{scope.row.companytype | comType}}
           </span>
         </el-table-column>
-        <el-table-column prop="producttype" label="客户类型" width="70">
+        <el-table-column prop="producttype" label="客户类型" min-width="80">
           <span slot-scope="scope">
             {{scope.row.producttype | cusStatus}} {{scope.row.producttype===0?scope.row.productnumber+1:''}}
           </span>
         </el-table-column>
         <el-table-column prop="areaname" label="地区" min-width="150">
         </el-table-column>
-        <el-table-column prop="catname" label="行业" min-width="130">
+        <el-table-column prop="catname" label="行业" min-width="150">
         </el-table-column>
-        <el-table-column prop="productname" label="业务类型" width="70">
+        <el-table-column prop="productname" label="业务类型" min-width="80">
         </el-table-column>
-        <el-table-column prop="" label="业务状态" width="120">
+        <el-table-column prop="" label="业务状态" min-width="120">
           <span :class="scope.row.companylogstatus===10?'red':''" slot-scope="scope">
             {{scope.row.companylogtype+""+scope.row.companylogstatus | businessStatus}}
           </span>
@@ -70,26 +70,38 @@
         </el-table-column>
         <el-table-column v-if="myKind==20" prop="traceName" label="跟踪人" width="80">
         </el-table-column>
-        <el-table-column v-if="myKind==30" prop="auditor_time" label="最后审核时间" width="135">
+        <el-table-column v-if="myKind==30" prop="auditor_time" label="最后审核时间" width="150">
           <span slot-scope="scope">{{scope.row.auditor_time | timeFormat}}</span>
         </el-table-column>
-        <el-table-column prop="" label="最后跟进时间" width="140">
+        <el-table-column prop="" label="最后跟进时间" width="150">
           <span :class="scope.row.tip?'red':''" slot-scope="scope">
             {{scope.row.visittime | timeFormat}}
           </span>
         </el-table-column>
-        <el-table-column v-if="myKind==40" prop="auditor_time" label="最后降E时间" width="135">
+        <el-table-column v-if="myKind==40" prop="auditor_time" label="最后降E时间" width="140">
           <span slot-scope="scope">{{scope.row.jiangE | timeFormat}}</span>
         </el-table-column>
-        <el-table-column label="操作" width="180" align="center">
+        <el-table-column label="操作" width="120" align="center">
           <template slot-scope="scope">
-            <el-button @click.native.prevent="view(scope.row)" type="success" class="xsbtn">查看</el-button>
-
-            <el-button v-if="((myKind==20&&scope.row.companylogtype==10&&(scope.row.companylogstatus>20||scope.row.companylogstatus==0))||(myKind==30&&scope.row.companylogtype>=20&&scope.row.companylogstatus>20))" @click.native.prevent="follow(scope.row)" type="warning" class="xsbtn">跟进</el-button>
-
-            <el-button v-if="((myKind==20&&scope.row.companylogtype==10&&(scope.row.companylogstatus>20||scope.row.companylogstatus==0))||(myKind==30&&scope.row.companylogtype>=20&&scope.row.companylogstatus>20))" @click.native.prevent="visit(scope.row)" type="primary" class="xsbtn">出访</el-button>
-
-            <el-button v-if="(scope.row.userid==USER_ID)&&scope.row.companylogtype==20&&scope.row.companylogstatus==10&&scope.row.companytype==10&&scope.row.auditor_now_h!==null&&(scope.row.tb_field_name-scope.row.auditor_now_h>=0)" @click.native.prevent="stop(scope.row)" type="danger" class="xsbtn">放弃</el-button>
+            <el-dropdown trigger="click">
+              <el-button type="primary" size="mini">
+                操作<i class="el-icon-arrow-down el-icon--right"></i>
+              </el-button>
+              <el-dropdown-menu slot="dropdown" class="text-center">
+                <el-dropdown-item>
+                  <el-button @click.native.prevent="view(scope.row)" type="success" class="xsbtn">查看</el-button>
+                </el-dropdown-item>
+                <el-dropdown-item divided>
+                  <el-button v-if="((myKind==20&&scope.row.companylogtype==10&&(scope.row.companylogstatus>20||scope.row.companylogstatus==0))||(myKind==30&&scope.row.companylogtype>=20&&scope.row.companylogstatus>20))" @click.native.prevent="follow(scope.row)" type="warning" class="xsbtn">跟进</el-button>
+                </el-dropdown-item>
+                <el-dropdown-item divided>
+                  <el-button v-if="((myKind==20&&scope.row.companylogtype==10&&(scope.row.companylogstatus>20||scope.row.companylogstatus==0))||(myKind==30&&scope.row.companylogtype>=20&&scope.row.companylogstatus>20))" @click.native.prevent="visit(scope.row)" type="primary" class="xsbtn">出访</el-button>
+                </el-dropdown-item>
+                <el-dropdown-item divided>
+                  <el-button v-if="(scope.row.userid==USER_ID)&&scope.row.companylogtype==20&&scope.row.companylogstatus==10&&scope.row.companytype==10&&scope.row.auditor_now_h!==null&&(scope.row.tb_field_name-scope.row.auditor_now_h>=0)" @click.native.prevent="stop(scope.row)" type="danger" class="xsbtn">放弃</el-button>
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
           </template>
         </el-table-column>
       </el-table>

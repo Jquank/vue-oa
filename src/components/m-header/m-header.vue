@@ -241,7 +241,7 @@ export default {
   font-size: 16px;
   z-index: 1000;
   position: fixed;
-  top: 17px;
+  top: 14px;
   left: 170px;
   transition: all 0.5s;
   cursor: pointer;

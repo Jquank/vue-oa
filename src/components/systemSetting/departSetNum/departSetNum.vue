@@ -9,15 +9,15 @@
         <el-button @click.native="reset" type="warning">重 置</el-button>
       </div>
     </div>
-    <el-table stripe :data="cycleList" style="width: 100%">
-      <el-table-column prop="fullname" label="部门名称">
+    <el-table border stripe :data="cycleList" style="width: 100%">
+      <el-table-column prop="fullname" label="部门名称" align="center">
       </el-table-column>
-      <el-table-column prop="" label="已使用保a数量 / 总保A配额">
+      <el-table-column prop="" label="已使用保a数量 / 总保A配额" align="center">
         <span slot-scope="scope">{{scope.row.dept_true_a+' / '+scope.row.dept_max_a}}</span>
       </el-table-column>
-      <el-table-column prop="" label="操作">
+      <el-table-column prop="" label="操作" align="center">
         <template slot-scope="scope">
-          <el-button type="primary" class="xsbtn" @click.native="editCycle(scope.row.id,scope.row.dept_max_a)">编辑
+          <el-button type="warning" class="xsbtn" icon="fa fa-pencil" @click.native="editCycle(scope.row.id,scope.row.dept_max_a)"> 编辑
           </el-button>
         </template>
       </el-table-column>

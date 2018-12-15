@@ -4,13 +4,13 @@
       <el-button @click.native="addRule" type="primary" icon="fa fa-plus"> 新 增</el-button>
       <el-button @click.native="backWard" type="warning" icon="fa fa-step-backward"> 返回上一级</el-button>
     </div>
-    <el-table :data="tableData" style="width: 100%">
+    <el-table :data="tableData" border stripe style="width: 100%">
       <el-table-column type="index"></el-table-column>
-      <el-table-column prop="name" label="权限名称"></el-table-column>
-      <el-table-column label="操作" width="200">
+      <el-table-column prop="name" label="权限名称" align="center"></el-table-column>
+      <el-table-column label="操作" align="center">
         <template slot-scope="scope">
           <el-button class="xsbtn" type="success" @click="handleCheckNext(scope.row.id)">查看下级权限</el-button>
-          <el-button class="xsbtn" type="primary" @click="handleEdit(scope.row.id,scope.row.name,scope.row.pid)">编辑</el-button>
+          <el-button class="xsbtn" type="warning" icon="fa fa-pencil" @click="handleEdit(scope.row.id,scope.row.name,scope.row.pid)"> 编辑</el-button>
         </template>
       </el-table-column>
     </el-table>

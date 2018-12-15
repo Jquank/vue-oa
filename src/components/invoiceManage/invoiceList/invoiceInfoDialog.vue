@@ -142,7 +142,7 @@
     <el-table stripe border :data="invoiceLogs" class="table-width">
       <el-table-column prop="uname" label="审核人" width="100">
       </el-table-column>
-      <el-table-column prop="insert_time" label="审核时间" width="135">
+      <el-table-column prop="insert_time" label="审核时间" width="140">
         <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
       </el-table-column>
       <el-table-column prop="remark" label="审核备注">

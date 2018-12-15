@@ -54,7 +54,7 @@
         <el-table-column prop="tmoney" label="总金额" width="110">
           <span slot-scope="scope">{{scope.row.tmoney | currency}}</span>
         </el-table-column>
-        <el-table-column prop="inserttime" label="申请时间" width="90">
+        <el-table-column prop="inserttime" label="申请时间" width="140">
           <span slot-scope="scope">{{scope.row.inserttime | timeFormat}}</span>
         </el-table-column>
         <el-table-column prop="ttype" label="发票类型" width="70">

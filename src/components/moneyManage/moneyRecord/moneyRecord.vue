@@ -19,8 +19,8 @@
       </div>
     </div>
 
-    <el-table stripe border :data="list" style="width: 100%;margin-top:10px;">
-      <el-table-column prop="companyname" label="公司名称/法人">
+    <el-table stripe border :data="list" class="table-width">
+      <el-table-column prop="companyname" label="公司名称/法人" min-width="180">
       </el-table-column>
       <el-table-column prop="name" label="提交人">
       </el-table-column>
@@ -33,7 +33,7 @@
       <el-table-column prop="" label="操作" min-width="80" align="center">
         <template slot-scope="scope">
           <el-button @click.native="viewMoney(scope.row)" type="success" class="xsbtn">查看</el-button>
-          <el-button @click.native="editMoney(scope.row)" type="warning" class="xsbtn">编辑</el-button>
+          <el-button @click.native="editMoney(scope.row)" type="warning" class="xsbtn" icon="fa fa-pencil"> 编辑</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -129,7 +129,7 @@ export default {
       margin-top: 10px;
     }
     .item-width {
-      width: 280px;
+      width: 300px;
     }
   }
 }

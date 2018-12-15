@@ -222,7 +222,7 @@
         </el-table-column>
         <el-table-column prop="baidu_account" label="百度账户" width="80">
         </el-table-column>
-        <el-table-column prop="inserttime" label="申请时间" width="135">
+        <el-table-column prop="inserttime" label="申请时间" width="140">
           <span slot-scope="scope">{{scope.row.inserttime | timeFormat}}</span>
         </el-table-column>
         <el-table-column prop="receiptmoney" label="到账金额" width="100">

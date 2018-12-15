@@ -160,11 +160,11 @@ export default {
   }
   .fade-enter{
     opacity: 0;
-    transform: translateX(-40px);
+    transform: translate3d(-40px, 0, 0);
   }
   .fade-leave-to{
     opacity: 0;
-    transform: translateX(40px);
+    transform: translate3d(40px, 0, 0);
   }
 }
 </style>

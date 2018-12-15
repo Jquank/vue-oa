@@ -7,20 +7,21 @@
     </el-row>
     <el-row>
       <el-table
+        border
         stripe
         :data="authList"
         style="width: 100%">
         <el-table-column type="index">
         </el-table-column>
-        <el-table-column prop="name" label="角色名称">
+        <el-table-column prop="name" label="角色名称" align="center">
         </el-table-column>
-        <el-table-column prop="" label="操作">
+        <el-table-column prop="" label="操作" align="center">
           <template slot-scope="scope">
             <el-button type="success" class="xsbtn"
               @click.native="editRoleName(scope.row.name,scope.row.id)">修改名称
             </el-button>
-            <el-button type="primary" class="xsbtn"
-              @click.native="editRoleAuth(scope.row.name,scope.row.id)">编辑角色权限
+            <el-button type="warning" class="xsbtn"
+              @click.native="editRoleAuth(scope.row.name,scope.row.id)">编辑权限
             </el-button>
           </template>
         </el-table-column>
