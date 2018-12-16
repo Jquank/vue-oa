@@ -17,9 +17,9 @@
           <div id="call-center" v-if="isShow">
             <iframe ref="iframecall" id="iframe-call" src="http://gccp.baidu.com/gaiamgmt/fe-communication/communications/index.html#/" frameborder="0"></iframe>
           </div>
-          <transition name="fade" mode="out-in">
+          <!-- <transition name="fade" mode="out-in"> -->
             <router-view></router-view>
-          </transition>
+          <!-- </transition> -->
         </el-main>
       </el-container>
     </el-container>

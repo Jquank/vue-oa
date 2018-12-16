@@ -188,10 +188,10 @@ div.el-dialog__body {
 }
 .weight-label label.el-form-item__label {
   font-weight: 600;
-  font-size: 12px;
+  font-size: 13px;
 }
 .weight-label .el-form-item__content {
-  font-size: 12px;
+  font-size: 13px;
 }
 .weight-label .el-form-item {
   margin-bottom: 0 !important;

@@ -127,96 +127,98 @@
           </el-table>
         </template>
       </el-table-column>
-      <el-table-column class-name="splited-col" label="预留信息" prop v-if="selStatus!=0" width="120">
-        <template slot-scope="scope">
-          <el-table
-            :data="scope.row.split"
-            :row-class-name="scope.row.split.length>1?'add-border':''"
-            :show-header="false"
-            class="split-item"
-          >
-            <el-table-column class-name="split-item-col" label prop show-overflow-tooltip>
-              <span slot-scope="scope">{{scope.row.alloc_remark || '.'}}</span>
-            </el-table-column>
-          </el-table>
-        </template>
-      </el-table-column>
-      <el-table-column class-name="splited-col" label="使用人" prop v-if="selStatus!=0" width="100">
-        <template slot-scope="scope">
-          <el-table
-            :data="scope.row.split"
-            :row-class-name="scope.row.split.length>1?'add-border':''"
-            :show-header="false"
-            class="split-item"
-          >
-            <el-table-column class-name="split-item-col" label prop="useName" show-overflow-tooltip>
-              <span slot-scope="scope">{{scope.row.useName || '.'}}</span>
-            </el-table-column>
-          </el-table>
-        </template>
-      </el-table-column>
-      <el-table-column class-name="splited-col" label="公司名称" prop v-if="selStatus!=0" width="180">
-        <template slot-scope="scope">
-          <el-table
-            :data="scope.row.split"
-            :row-class-name="scope.row.split.length>1?'add-border':''"
-            :show-header="false"
-            class="split-item"
-          >
-            <el-table-column class-name="split-item-col" label prop show-overflow-tooltip>
-              <span
-                slot-scope="scope"
-              >{{(scope.row.wfndStatus===300||scope.row.reckStatus===300)?scope.row.companyname:'.'}}</span>
-            </el-table-column>
-          </el-table>
-        </template>
-      </el-table-column>
-      <el-table-column class-name="splited-col" label="用户名" prop v-if="selStatus!=0" width="120">
-        <template slot-scope="scope">
-          <el-table
-            :data="scope.row.split"
-            :row-class-name="scope.row.split.length>1?'add-border':''"
-            :show-header="false"
-            class="split-item"
-          >
-            <el-table-column class-name="split-item-col" label prop show-overflow-tooltip>
-              <span slot-scope="scope">{{scope.row.reckStatus===300?scope.row.baidu_account:'.'}}</span>
-            </el-table-column>
-          </el-table>
-        </template>
-      </el-table-column>
-      <el-table-column class-name="splited-col" label="提单金额" prop v-if="selStatus!=0" width="120">
-        <template slot-scope="scope">
-          <el-table
-            :data="scope.row.split"
-            :row-class-name="scope.row.split.length>1?'add-border':''"
-            :show-header="false"
-            class="split-item"
-          >
-            <el-table-column class-name="split-item-col" label prop show-overflow-tooltip>
-              <span
-                slot-scope="scope"
-              >{{(scope.row.wfndStatus===300||scope.row.reckStatus===300)?scope.row.split_amount:'.' |currency1}}</span>
-            </el-table-column>
-          </el-table>
-        </template>
-      </el-table-column>
-      <el-table-column class-name="splited-col" label="提单时间" prop v-if="selStatus!=0" width="120">
-        <template slot-scope="scope">
-          <el-table
-            :data="scope.row.split"
-            :row-class-name="scope.row.split.length>1?'add-border':''"
-            :show-header="false"
-            class="split-item"
-          >
-            <el-table-column class-name="split-item-col" label prop show-overflow-tooltip>
-              <span
-                slot-scope="scope"
-              >{{(scope.row.wfndStatus===300?scope.row.bill_time:(scope.row.reckStatus===300?scope.row.bill_time:'.')) | timeFormat1}}</span>
-            </el-table-column>
-          </el-table>
-        </template>
-      </el-table-column>
+      <template v-if="selStatus!=0">
+        <el-table-column class-name="splited-col" label="预留信息" prop width="120">
+          <template slot-scope="scope">
+            <el-table
+              :data="scope.row.split"
+              :row-class-name="scope.row.split.length>1?'add-border':''"
+              :show-header="false"
+              class="split-item"
+            >
+              <el-table-column class-name="split-item-col" label prop show-overflow-tooltip>
+                <span slot-scope="scope">{{scope.row.alloc_remark || ''}}</span>
+              </el-table-column>
+            </el-table>
+          </template>
+        </el-table-column>
+        <el-table-column class-name="splited-col" label="使用人" prop width="100">
+          <template slot-scope="scope">
+            <el-table
+              :data="scope.row.split"
+              :row-class-name="scope.row.split.length>1?'add-border':''"
+              :show-header="false"
+              class="split-item"
+            >
+              <el-table-column class-name="split-item-col" label prop="useName" show-overflow-tooltip>
+                <span slot-scope="scope">{{scope.row.useName || ''}}</span>
+              </el-table-column>
+            </el-table>
+          </template>
+        </el-table-column>
+        <el-table-column class-name="splited-col" label="公司名称" prop width="200">
+          <template slot-scope="scope">
+            <el-table
+              :data="scope.row.split"
+              :row-class-name="scope.row.split.length>1?'add-border':''"
+              :show-header="false"
+              class="split-item"
+            >
+              <el-table-column class-name="split-item-col" label prop show-overflow-tooltip>
+                <span
+                  slot-scope="scope"
+                >{{(scope.row.wfndStatus===300||scope.row.reckStatus===300)?scope.row.companyname:''}}</span>
+              </el-table-column>
+            </el-table>
+          </template>
+        </el-table-column>
+        <el-table-column class-name="splited-col" label="用户名" prop width="160">
+          <template slot-scope="scope">
+            <el-table
+              :data="scope.row.split"
+              :row-class-name="scope.row.split.length>1?'add-border':''"
+              :show-header="false"
+              class="split-item"
+            >
+              <el-table-column class-name="split-item-col" label prop show-overflow-tooltip>
+                <span slot-scope="scope">{{scope.row.reckStatus===300?scope.row.baidu_account:''}}</span>
+              </el-table-column>
+            </el-table>
+          </template>
+        </el-table-column>
+        <el-table-column class-name="splited-col" label="提单金额" prop width="120">
+          <template slot-scope="scope">
+            <el-table
+              :data="scope.row.split"
+              :row-class-name="scope.row.split.length>1?'add-border':''"
+              :show-header="false"
+              class="split-item"
+            >
+              <el-table-column class-name="split-item-col" label prop show-overflow-tooltip>
+                <span
+                  slot-scope="scope"
+                >{{(scope.row.wfndStatus===300||scope.row.reckStatus===300)?scope.row.split_amount:'' |currency1}}</span>
+              </el-table-column>
+            </el-table>
+          </template>
+        </el-table-column>
+        <el-table-column class-name="splited-col" label="提单时间" prop width="120">
+          <template slot-scope="scope">
+            <el-table
+              :data="scope.row.split"
+              :row-class-name="scope.row.split.length>1?'add-border':''"
+              :show-header="false"
+              class="split-item"
+            >
+              <el-table-column class-name="split-item-col" label prop show-overflow-tooltip>
+                <span
+                  slot-scope="scope"
+                >{{(scope.row.wfndStatus===300?scope.row.bill_time:(scope.row.reckStatus===300?scope.row.bill_time:'')) | timeFormat1}}</span>
+              </el-table-column>
+            </el-table>
+          </template>
+        </el-table-column>
+      </template>
       <el-table-column class-name="splited-col" label="余额" prop v-if="selStatus==100" width="120">
         <template slot-scope="scope">
           <el-table
@@ -228,7 +230,7 @@
             <el-table-column class-name="split-item-col" label prop show-overflow-tooltip>
               <span
                 slot-scope="scope"
-              >{{(scope.row.wfndStatus!==300||scope.row.reckStatus!==300)?scope.row.split_amount:'.' |currency1}}</span>
+              >{{(scope.row.wfndStatus!==300||scope.row.reckStatus!==300)?scope.row.split_amount:'' |currency1}}</span>
             </el-table-column>
           </el-table>
         </template>
@@ -297,7 +299,7 @@
           <el-input :rows="3" type="textarea" v-model="allotForm.remark"></el-input>
         </el-form-item>
         <el-form-item label="商务" required>
-          <el-input disabled style="width:60%" v-model="allotForm.shangWu"></el-input>
+          <el-input disabled v-model="allotForm.shangWu" class="input-btn"></el-input>
           <el-button @click.native.prevent="selAllotUserDialog = true" type="primary">选择</el-button>
         </el-form-item>
         <div class="text-center">
@@ -317,7 +319,7 @@
     </el-dialog>
     <!-- 拆账弹窗 -->
     <el-dialog :modal-append-to-body="false" :visible.sync="splitDialog" title="拆账" width="500px">
-      <el-form :model="splitForm" label-position="left" label-width="140px">
+      <el-form :model="splitForm" label-position="left" label-width="140px" class="weight-label">
         <el-form-item label="总金额 :">
           <span>{{splitForm.totalMoney | currency1}}</span>
         </el-form-item>
@@ -339,6 +341,7 @@
           ></el-button>
         </div>
         <div class="text-center mt10px">
+          <el-button @click.native.prevent="clearSplit" type="warning">清除</el-button>
           <el-button @click.native.prevent="confirmSplit" type="primary">确认</el-button>
         </div>
       </el-form>
@@ -346,7 +349,7 @@
     <!-- 认领弹窗 -->
     <el-dialog :modal-append-to-body="false" :visible.sync="claimDialog" title="认领" width="400px">
       <el-form :model="claimForm" label-width="80px">
-        <el-form-item label="备注" required>
+        <el-form-item label="备注 :" required>
           <el-input :rows="3" type="textarea" v-model="claimForm.remark"></el-input>
         </el-form-item>
         <div class="text-center">
@@ -682,6 +685,9 @@ export default {
       } else {
         this.splitForm.splitItem.splice(index, 1)
       }
+    },
+    clearSplit() {
+      this.splitForm.splitItem = [{ money: 0 }]
     },
     confirmSplit() {
       let hasZero = this.splitForm.splitItem.some(val => {
@@ -1054,7 +1060,7 @@ export default {
       }
     }
     .add-border:not(:last-child) {
-      border-bottom: 1px solid #000 !important;
+      border-bottom: 1px solid #d0d2d8;
     }
   }
   .split-item-col {

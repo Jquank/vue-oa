@@ -20,7 +20,7 @@
         </el-table-column>
         <el-table-column prop="username" label="作者">
         </el-table-column>
-        <el-table-column label="发布时间" width="140">
+        <el-table-column label="发布时间" width="150">
           <span slot-scope="scope">{{scope.row.opttime | timeFormat}}</span>
         </el-table-column>
         <el-table-column prop="" label="操作" align="center">
