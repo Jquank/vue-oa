@@ -10,46 +10,44 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row>
+        <el-row :gutter="5">
           <el-col :md="24" class="maxwidth">
             <el-form-item label="到款记录:" required v-if="showEditWJ">
-              <el-select v-model="form.record" value-key="id" placeholder="请选择到款记录">
-                <el-option v-for="(r,index) in moneyRecord.recordList" :key="index" :label="r[0].companyname" :value="r"></el-option>
-              </el-select>
+              <el-col :md="10">
+                <el-select v-model="form.record" value-key="id" placeholder="请选择到款记录" style="width:100%;">
+                  <el-option v-for="r in moneyRecord.recordList" :key="r.id" :label="r[0].companyname" :value="r"></el-option>
+                </el-select>
+              </el-col>
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row>
+        <el-row :gutter="5">
           <el-col :md="24" class="maxwidth">
             <el-form-item label="客户网站信息:" class="web-info">
-              <el-row :gutter="5" type="flex" style="flex-wrap:wrap;">
-                <el-col :md="12">
+                <el-col :md="10">
                   <el-input v-model="form.pcWeb" placeholder="pc端网址"></el-input>
                 </el-col>
-              </el-row>
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row>
+        <el-row :gutter="5">
           <el-col :md="24" class="maxwidth">
             <el-form-item label="联系人信息:" required>
-              <el-row v-for="(item,index) in form.contactList" :key="index" :class="{'mt10px':index!==0}" :gutter="5" type="flex" style="flex-wrap:wrap;">
-                <el-col :md="5">
+              <el-col v-for="(item,index) in form.contactList" :key="index" :class="{'mt10px':index!==0}">
+                <el-col :md="4">
                   <el-input v-model="item.name" placeholder="联系人"></el-input>
                 </el-col>
-                <el-col :md="7">
+                <el-col :md="6">
                   <el-input v-model="item.contact" placeholder="手机号码"></el-input>
                 </el-col>
-                <el-col :md="5">
+                <el-col :md="6">
                   <el-input v-model="item.fixedNumber" placeholder="座机号码"></el-input>
                 </el-col>
-                <el-col :md="5">
-                  <el-input v-model="item.email" placeholder="邮箱"></el-input>
+                <el-col :md="8">
+                  <el-input v-model="item.email" placeholder="邮箱" class="contact-phone"></el-input>
+                  <el-button :type="index===0?'success':'danger'" circle class="xsbtn" :icon="index===0?isPlusIcon:isMinusIcon" @click.native="addContact(index)"></el-button>
                 </el-col>
-                <el-col :md="2">
-                  <el-button :type="index===0?'success':'danger'" size="mini" circle class="ml10px" :icon="index===0?isPlusIcon:isMinusIcon" @click.native="addContact(index)"></el-button>
-                </el-col>
-              </el-row>
+              </el-col>
             </el-form-item>
           </el-col>
         </el-row>
@@ -60,17 +58,21 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row>
-          <el-col :md="12" class="maxwidth">
+        <el-row :gutter="5">
+          <el-col :md="24" class="maxwidth">
             <el-form-item label="PC站订单金额:" required>
-              <el-input v-model="form.pcMoney" placeholder="PC站订单金额"></el-input>
+              <el-col :md="10">
+                <el-input v-model="form.pcMoney" placeholder="PC站订单金额"></el-input>
+              </el-col>
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row>
-          <el-col :md="12" class="maxwidth">
+        <el-row :gutter="5">
+          <el-col :md="24" class="maxwidth">
             <el-form-item label="手机站订单金额:" required>
-              <el-input v-model="form.appMoney" placeholder="手机站订单金额"></el-input>
+              <el-col :md="10">
+                <el-input v-model="form.appMoney" placeholder="手机站订单金额"></el-input>
+              </el-col>
             </el-form-item>
           </el-col>
         </el-row>
@@ -84,16 +86,14 @@
           </el-col>
         </el-row>
         <!-- 合同 -->
-        <el-row>
+        <el-row :gutter="5">
           <el-col :md="24" class="maxwidth">
             <el-form-item label="合同编号:">
-              <el-row :gutter="5" type="flex" style="flex-wrap:wrap;">
-                <el-col :md="8">
-                  <el-select v-model="form.bdOrderNumber" placeholder="网站商务合同书">
+                <el-col :md="10">
+                  <el-select v-model="form.bdOrderNumber" placeholder="网站商务合同书" style="width: 100%;">
                     <el-option v-for="(contract0,index) in contract.bdOrderNumber" :key="index" :label="contract0.number" :value="contract0.id"></el-option>
                   </el-select>
                 </el-col>
-              </el-row>
             </el-form-item>
           </el-col>
         </el-row>
@@ -101,7 +101,7 @@
           <el-col :md="24" class="maxwidth">
             <!-- 订单详情   -->
             <el-form-item label="订单详情:">
-              <el-tabs type="border-card" @tab-click="handleTabClick">
+              <el-tabs type="border-card" @tab-click="handleTabClick" style="min-height: 300px;">
                 <!-- 网建基本信息 -->
                 <el-tab-pane label="网建基本信息">
                   <el-card shadow="always" class="card-tips">
@@ -232,7 +232,7 @@
                   </el-card>
                   <!-- 编辑页回显企业资质照片 -->
                   <slot name="echoQualify"></slot>
-                  <el-row :gutter="10">
+                  <el-row :gutter="10" class="mt10px">
                     <el-col :sm="16">
                       <el-select value-key="id" @change="qualifySelectChange" v-model="form.zizhiName" placeholder="请选择上传资质类型" style="width:100%">
                         <el-option v-for="(qualify,index) in qualifyType" :key="index" :label="qualify.code_desc" :value="qualify"></el-option>
@@ -394,8 +394,8 @@ export default {
         zizhiList: []
       },
       // qualifyUploaded: [], // 上传的资质照
-      isPlusIcon: 'el-icon-plus',
-      isMinusIcon: 'el-icon-minus',
+      isPlusIcon: 'fa fa-plus',
+      isMinusIcon: 'fa fa-minus',
       comDialog: {
         selCompanyDialog: false,
         handleCompanyName: '',

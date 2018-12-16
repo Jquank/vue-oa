@@ -90,7 +90,7 @@
       >
         <el-table-column prop="ordernum" label="订单ID" min-width="180"></el-table-column>
         <el-table-column prop="cname" label="订单名称" min-width="150"></el-table-column>
-        <el-table-column prop label="提交时间" width="90">
+        <el-table-column prop label="提交时间" width="100">
           <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
         </el-table-column>
         <el-table-column prop="username" label="下单人" min-width="80"></el-table-column>
@@ -105,7 +105,7 @@
           <el-table-column prop label="订单金额" width="110">
             <span slot-scope="scope">{{scope.row.amount_real | currency}}</span>
           </el-table-column>
-          <el-table-column prop label="提单时间" width="90">
+          <el-table-column prop label="提单时间" width="100">
             <span slot-scope="scope">{{scope.row.bill_time | timeFormat}}</span>
           </el-table-column>
           <el-table-column prop label="业绩新开时间" width="100">
@@ -140,60 +140,60 @@
         <el-table-column prop label="订单状态" width="120">
           <span slot-scope="scope">{{scope.row.audittype === 0 ? "仅降E":"降E并提单"}}</span>
         </el-table-column>
-        <el-table-column prop label="最后操作时间" width="140">
+        <el-table-column prop label="最后操作时间" width="150">
           <span slot-scope="scope">{{scope.row.opt_time | timeFormat}}</span>
         </el-table-column>
         <el-table-column prop="deptname" label="商务大区部门" min-width="110"></el-table-column>
-        <el-table-column prop label="操作" :width="orderKind==500?'200':'70'" align="center">
+        <el-table-column prop label="操作" width="100" align="center">
           <template slot-scope="scope">
-            <div class="btns">
-              <el-button type="success" @click.native="viewOrder(scope.row)" class="xsbtn">查看</el-button>
-              <template v-if="orderKind==500">
-                <el-button
-                  v-if="(scope.row.invoice_type===0 ||scope.row.invoiceTmoney<scope.row.amount_real)&&permissions.indexOf('6g') > -1"
-                  @click.native="applyInvoice(scope.row)"
-                  type="primary"
-                  class="xsbtn"
-                >申请发票</el-button>
-                <el-button
-                  v-if="permissions.indexOf('6o') > -1"
-                  @click.native="onlineStop(scope.row)"
-                  type="danger"
-                  class="xsbtn"
-                >线上终止</el-button>
-                <el-button
-                  v-if="permissions.indexOf('6o') > -1"
-                  @click.native="changeFlow(scope.row)"
-                  type="primary"
-                  class="xsbtn"
-                >变更流水</el-button>
-                <router-link
-                  v-if="permissions.indexOf('6d') > -1"
-                  target="_blank"
-                  :to="{path:`orderList/print/${scope.row.cpid}`,query: scope.row}"
-                  class="printbtn xsbtn"
-                >打印</router-link>
-                <el-button
-                  v-if="permissions.indexOf('83') > -1"
-                  @click.native="changeShangWu(scope.row)"
-                  type="warning"
-                  class="xsbtn"
-                >更换商务</el-button>
-                <el-button
-                  v-if="scope.row.hasinvoice && scope.row.hasinvoice >= 10 && permissions.indexOf('7d')>-1"
-                  @click.native="applyInvoice(scope.row)"
-                  type="primary"
-                  class="xsbtn"
-                >发票开错冲红</el-button>
-              </template>
-            </div>
+            <el-dropdown trigger="click">
+              <el-button type="primary" size="mini">
+                操作
+                <i class="el-icon-arrow-down el-icon--right"></i>
+              </el-button>
+              <el-dropdown-menu slot="dropdown" class="text-center">
+                <el-dropdown-item>
+                  <el-button type="success" @click.native="viewOrder(scope.row)" class="xsbtn">查看</el-button>
+                </el-dropdown-item>
+                <template v-if="orderKind==500">
+                  <el-dropdown-item
+                    divided
+                    v-if="(scope.row.invoice_type===0 ||scope.row.invoiceTmoney<scope.row.amount_real)&&permissions.indexOf('6g') > -1"
+                  >
+                    <el-button @click.native="applyInvoice(scope.row)" type="primary" class="xsbtn">申请发票</el-button>
+                  </el-dropdown-item>
+                  <el-dropdown-item divided v-if="permissions.indexOf('6o') > -1">
+                    <el-button @click.native="onlineStop(scope.row)" type="danger" class="xsbtn">线上终止</el-button>
+                  </el-dropdown-item>
+                  <el-dropdown-item divided v-if="permissions.indexOf('6o') > -1">
+                    <el-button @click.native="changeFlow(scope.row)" type="primary" class="xsbtn">变更流水</el-button>
+                  </el-dropdown-item>
+                  <el-dropdown-item divided v-if="permissions.indexOf('6d') > -1">
+                    <router-link
+                      target="_blank"
+                      :to="{path:`orderList/print/${scope.row.cpid}`,query: scope.row}"
+                      class="printbtn xsbtn"
+                    >打印</router-link>
+                  </el-dropdown-item>
+                  <el-dropdown-item divided v-if="permissions.indexOf('83') > -1">
+                    <el-button @click.native="changeShangWu(scope.row)" type="warning" class="xsbtn">更换商务</el-button>
+                  </el-dropdown-item>
+                  <el-dropdown-item
+                    divided
+                    v-if="scope.row.hasinvoice && scope.row.hasinvoice >= 10 && permissions.indexOf('7d')>-1"
+                  >
+                    <el-button @click.native="applyInvoice(scope.row)" type="primary" class="xsbtn">发票开错冲红</el-button>
+                  </el-dropdown-item>
+                </template>
+              </el-dropdown-menu>
+            </el-dropdown>
           </template>
         </el-table-column>
       </el-table>
 
       <!-- 转户出纳列表 -->
       <el-table v-if="permissions.indexOf('5q') > -1" :data="orderListData" class="table-width" max-height="800">
-        <el-table-column prop label="加款时间" min-width="90">
+        <el-table-column prop label="加款时间" min-width="100">
           <span slot-scope="scope">{{scope.row.addMoneyTime | timeFormat}}</span>
         </el-table-column>
         <el-table-column prop="cname" label="订单名称" min-width="150"></el-table-column>
@@ -229,7 +229,7 @@
         <el-table-column prop="baiducount" label="用户名" min-width="80"></el-table-column>
         <el-table-column prop="kefu" label="维护客服" min-width="80"></el-table-column>
         <el-table-column prop="webName" label="网站维护人员" min-width="80"></el-table-column>
-        <el-table-column prop label="提交时间" min-width="90">
+        <el-table-column prop label="提交时间" min-width="100">
           <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
         </el-table-column>
         <el-table-column prop="username" label="下单人" min-width="80"></el-table-column>
@@ -248,7 +248,7 @@
         <el-table-column prop label="订单状态" min-width="80">
           <span slot-scope="scope">{{scope.row.audittype == 0 ? "仅降E":"降E并提单"}}</span>
         </el-table-column>
-        <el-table-column prop="username" label="最后操作时间" width="140">
+        <el-table-column prop="username" label="最后操作时间" width="150">
           <span slot-scope="scope">{{scope.row.opt_time | timeFormat}}</span>
         </el-table-column>
         <el-table-column prop="deptname" label="商务大区部门" min-width="80"></el-table-column>
@@ -635,6 +635,18 @@ export default {
 .el-alert {
   padding: 0;
 }
+.el-dropdown-menu .printbtn {
+      display: inline-block;
+      padding: 5px 8px;
+      font-size: 12px;
+      color: #fff;
+      background-color: #67c23a;
+      border-color: #67c23a;
+      line-height: 1;
+      border-radius: 3px;
+      border: 1px solid #dcdfe6;
+      margin: 0 5px;
+    }
 </style>
 
 <style lang="less" scoped>
@@ -654,32 +666,6 @@ export default {
       }
       .item-width {
         width: 250px;
-      }
-    }
-    .pagination {
-      padding-top: 10px;
-      display: flex;
-      justify-content: flex-end;
-    }
-    .printbtn {
-      display: inline-block;
-      padding: 5px 8px;
-      font-size: 12px;
-      color: #fff;
-      background-color: #67c23a;
-      border-color: #67c23a;
-      line-height: 1;
-      border-radius: 3px;
-      border: 1px solid #dcdfe6;
-      margin: 0 5px;
-    }
-    .btns {
-      display: flex;
-      flex-direction: flex-start;
-      flex-wrap: wrap;
-      // justify-content: space-between;
-      .xsbtn {
-        margin-top: 2px;
       }
     }
     .check-status {

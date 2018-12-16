@@ -1,24 +1,14 @@
 <template>
   <div class="view-detail child-component-container media-padding">
     <div class="detail-content">
-      <el-tabs type="border-card"
-               @tab-click="tab">
+      <el-tabs type="border-card" @tab-click="tab">
         <!-- 订单基本信息 -->
-        <el-tab-pane v-if="pid==='BAITUI'"
-                     label="百度订单基本信息">
-          <el-row class="text-right mb10px"
-                  v-if="permissions.indexOf('6z')>-1">
-            <el-button type="warning"
-                       @click.native="changeInfo"
-                       class="xsbtn">修改基本信息</el-button>
+        <el-tab-pane v-if="pid==='BAITUI'" label="百度订单基本信息">
+          <el-row class="text-right mb10px" v-if="permissions.indexOf('6z')>-1">
+            <el-button type="warning" @click.native="changeInfo" class="xsbtn">修改基本信息</el-button>
           </el-row>
-          <el-table :data="baituiBasicInfo"
-                    border
-                    class="table-width">
-            <el-table-column prop="type"
-                             label="信息分类"
-                             :width="tableFirstColumWidth">
-            </el-table-column>
+          <el-table :data="baituiBasicInfo" border class="table-width">
+            <el-table-column prop="type" label="信息分类" :width="tableFirstColumWidth"></el-table-column>
             <el-table-column label="详细信息">
               <template slot-scope="scope">
                 <div v-if="scope.$index===0">
@@ -29,18 +19,20 @@
                     </div>
                     <div>
                       <b>PC网址：</b>
-                      <a :href="((orderInfo.pcwebsite+'').indexOf('http')>-1?'':'http://')+orderInfo.pcwebsite"
-                         target="_blank">{{orderInfo.pcwebsite}}</a>
+                      <a
+                        :href="((orderInfo.pcwebsite+'').indexOf('http')>-1?'':'http://')+orderInfo.pcwebsite"
+                        target="_blank"
+                      >{{orderInfo.pcwebsite}}</a>
                     </div>
                     <div>
                       <b>手机网址：</b>
-                      <a :href="((orderInfo.mobilewebsite+'').indexOf('http')>-1?'':'http://')+orderInfo.mobilewebsite"
-                         target="_blank">{{orderInfo.mobilewebsite}}</a>
+                      <a
+                        :href="((orderInfo.mobilewebsite+'').indexOf('http')>-1?'':'http://')+orderInfo.mobilewebsite"
+                        target="_blank"
+                      >{{orderInfo.mobilewebsite}}</a>
                     </div>
                   </div>
-                  <div v-for="(c,index) in contactInfoList"
-                       :key="index"
-                       class="mt10px row-container">
+                  <div v-for="(c,index) in contactInfoList" :key="index" class="mt10px row-container">
                     <div>
                       <b>联系人{{index?index:''}}：姓名{{index?index:''}}：</b>
                       <span>{{c.contactname}}</span>
@@ -83,7 +75,7 @@
                   <div class="row-container">
                     <div>
                       <b>网建类型：</b>
-                      <span>{{productInfo[0].websitetype | productType}}</span>
+                      <span>{{productInfo[0].websitetype | wjStyle}}</span>
                     </div>
                   </div>
                 </div>
@@ -99,24 +91,28 @@
                     </div>
                   </div>
                   <!-- 老合同 -->
-                  <div v-if="orderInfo.ordernumber && orderInfo.ordernumber.indexOf('BJHT')==-1"
-                       class="mt10px row-container">
+                  <div
+                    v-if="orderInfo.ordernumber && orderInfo.ordernumber.indexOf('BJHT')==-1"
+                    class="mt10px row-container"
+                  >
                     <div>
                       <b>百度推广服务订单编号：</b>
                       <span>{{orderInfo.ordernumber}}</span>
                     </div>
                     <div>
-                      <b> 百度推广首消授权书：</b>
+                      <b>百度推广首消授权书：</b>
                       <span>{{orderInfo.order2number ? orderInfo.order2number : "无首消授权书"}}</span>
                     </div>
                     <div>
-                      <b> 百度推广专业服务协议：</b>
+                      <b>百度推广专业服务协议：</b>
                       <span>{{orderInfo.order3number}}</span>
                     </div>
                   </div>
                   <!-- 新合同 -->
-                  <div v-if="orderInfo.ordernumber && orderInfo.ordernumber.indexOf('BJHT')>-1"
-                       class="mt10px row-container">
+                  <div
+                    v-if="orderInfo.ordernumber && orderInfo.ordernumber.indexOf('BJHT')>-1"
+                    class="mt10px row-container"
+                  >
                     <div>
                       <b>百度推广服务合同：</b>
                       <span>{{orderInfo.ordernumber}}</span>
@@ -140,11 +136,11 @@
                       <span>{{originUser.hi}}</span>
                     </div>
                     <div>
-                      <b> 手机号：</b>
+                      <b>手机号：</b>
                       <span>{{originUser.mobile}}</span>
                     </div>
                     <div>
-                      <b> 下单日期：</b>
+                      <b>下单日期：</b>
                       <span>{{orderInfo.insert_time | timeFormat}}</span>
                     </div>
                   </div>
@@ -153,28 +149,19 @@
             </el-table-column>
           </el-table>
         </el-tab-pane>
-        <el-tab-pane v-if="pid==='ZTC2' || pid==='ZTC'"
-                     label="直通车订单基本信息">
-          <el-table :data="ztcBasicInfo"
-                    border
-                    class="table-width">
-            <el-table-column prop="type"
-                             label="信息分类"
-                             :width="tableFirstColumWidth">
-            </el-table-column>
-            <el-table-column prop="type"
-                             label="详细信息">
+        <el-tab-pane v-if="pid==='ZTC2' || pid==='ZTC'" label="直通车订单基本信息">
+          <el-table :data="ztcBasicInfo" border class="table-width">
+            <el-table-column prop="type" label="信息分类" :width="tableFirstColumWidth"></el-table-column>
+            <el-table-column prop="type" label="详细信息">
               <div slot-scope="scope">
                 <div v-if="scope.$index===0">
                   <div class="row-container">
                     <div>
                       <b>公司名称：</b>
-                      <span>{{moneyRecord.companyname}}</span>
+                      <span>{{contactInfoList[0].name}}</span>
                     </div>
                   </div>
-                  <div v-for="(c,index) in contactInfoList"
-                       :key="index"
-                       class="mt10px row-container">
+                  <div v-for="(c,index) in contactInfoList" :key="index" class="mt10px row-container">
                     <div>
                       <b>联系人{{index?index:''}}：姓名{{index?index:''}}：</b>
                       <span>{{c.contactname}}</span>
@@ -234,7 +221,7 @@
                       <span>{{orderInfo.order2number}}</span>
                     </div>
                     <div>
-                      <b> 百度本地直通车授权书：</b>
+                      <b>百度本地直通车授权书：</b>
                       <span>{{orderInfo.order3number}}</span>
                     </div>
                   </div>
@@ -256,11 +243,11 @@
                       <span>{{originUser.hi}}</span>
                     </div>
                     <div>
-                      <b> 手机号：</b>
+                      <b>手机号：</b>
                       <span>{{originUser.mobile}}</span>
                     </div>
                     <div>
-                      <b> 下单日期：</b>
+                      <b>下单日期：</b>
                       <span>{{orderInfo.insert_time | timeFormat}}</span>
                     </div>
                   </div>
@@ -269,22 +256,16 @@
             </el-table-column>
           </el-table>
         </el-tab-pane>
-        <el-tab-pane v-if="pid==='WEBSITE' || pid==='ZTC_WEBSITE'"
-                     label="网建订单基本信息">
-          <el-table :data="wjBasicInfo"
-                    border
-                    class="table-width">
-            <el-table-column prop="type"
-                             label="信息分类"
-                             :width="tableFirstColumWidth">
-            </el-table-column>
+        <el-tab-pane v-if="pid==='WEBSITE' || pid==='ZTC_WEBSITE'" label="网建订单基本信息">
+          <el-table :data="wjBasicInfo" border class="table-width">
+            <el-table-column prop="type" label="信息分类" :width="tableFirstColumWidth"></el-table-column>
             <el-table-column label="详细信息">
-              <div slot-scope="scope">
+              <template slot-scope="scope">
                 <div v-if="scope.$index===0">
                   <div class="row-container">
                     <div>
                       <b>公司名称：</b>
-                      <span>{{moneyRecord.companyname}}</span>
+                      <span>{{contactInfoList[0].name}}</span>
                     </div>
                     <div>
                       <b>PC网址：</b>
@@ -295,9 +276,7 @@
                       <span>{{orderInfo.mobilewebsite}}</span>
                     </div>
                   </div>
-                  <div v-for="(c,index) in contactInfoList"
-                       :key="index"
-                       class="mt10px row-container">
+                  <div v-for="(c,index) in contactInfoList" :key="index" class="mt10px row-container">
                     <div>
                       <b>联系人{{index?index:''}}：姓名{{index?index:''}}：</b>
                       <span>{{c.contactname}}</span>
@@ -365,51 +344,46 @@
                       <span>{{originUser.hi}}</span>
                     </div>
                     <div>
-                      <b> 手机号：</b>
+                      <b>手机号：</b>
                       <span>{{originUser.mobile}}</span>
                     </div>
                     <div>
-                      <b> 下单日期：</b>
+                      <b>下单日期：</b>
                       <span>{{orderInfo.insert_time | timeFormat}}</span>
                     </div>
                   </div>
                 </div>
-              </div>
+              </template>
             </el-table-column>
           </el-table>
         </el-tab-pane>
-        <el-tab-pane v-if="pid_ka==='KA'"
-                     label="大客订单基本信息">
-          <el-table :data="kaBasicInfo"
-                    border
-                    class="table-width">
-            <el-table-column prop="type"
-                             label="信息分类"
-                             :width="tableFirstColumWidth">
-            </el-table-column>
-            <el-table-column prop=""
-                             label="详细信息">
+        <el-tab-pane v-if="pid_ka==='KA'" label="大客订单基本信息">
+          <el-table :data="kaBasicInfo" border class="table-width">
+            <el-table-column prop="type" label="信息分类" :width="tableFirstColumWidth"></el-table-column>
+            <el-table-column prop label="详细信息">
               <div slot-scope="scope">
                 <div v-if="scope.$index===0">
                   <div class="row-container">
                     <div>
                       <b>公司名称：</b>
-                      <span>{{moneyRecord.companyname}}</span>
+                      <span>{{contactInfoList[0].name}}</span>
                     </div>
                     <div>
                       <b>PC网址：</b>
-                      <a :href="((orderInfo.pcwebsite+'').indexOf('http')>-1?'':'http://')+orderInfo.pcwebsite"
-                         target="_blank">{{orderInfo.pcwebsite}}</a>
+                      <a
+                        :href="((orderInfo.pcwebsite+'').indexOf('http')>-1?'':'http://')+orderInfo.pcwebsite"
+                        target="_blank"
+                      >{{orderInfo.pcwebsite}}</a>
                     </div>
                     <div>
                       <b>手机网址：</b>
-                      <a :href="((orderInfo.mobilewebsite+'').indexOf('http')>-1?'':'http://')+orderInfo.mobilewebsite"
-                         target="_blank">{{orderInfo.mobilewebsite}}</a>
+                      <a
+                        :href="((orderInfo.mobilewebsite+'').indexOf('http')>-1?'':'http://')+orderInfo.mobilewebsite"
+                        target="_blank"
+                      >{{orderInfo.mobilewebsite}}</a>
                     </div>
                   </div>
-                  <div v-for="(c,index) in contactInfoList"
-                       :key="index"
-                       class="mt10px row-container">
+                  <div v-for="(c,index) in contactInfoList" :key="index" class="mt10px row-container">
                     <div>
                       <b>联系人{{index?index:''}}：姓名{{index?index:''}}：</b>
                       <span>{{c.contactname}}</span>
@@ -481,11 +455,11 @@
                       <span>{{originUser.hi}}</span>
                     </div>
                     <div>
-                      <b> 手机号：</b>
+                      <b>手机号：</b>
                       <span>{{originUser.mobile}}</span>
                     </div>
                     <div>
-                      <b> 下单日期：</b>
+                      <b>下单日期：</b>
                       <span>{{orderInfo.insert_time | timeFormat}}</span>
                     </div>
                   </div>
@@ -496,18 +470,18 @@
         </el-tab-pane>
         <!-- 发票信息 -->
         <el-tab-pane label="发票信息">
-          <el-table :data="invoiceBasicInfo"
-                    border
-                    class="table-width">
-            <el-table-column prop="type"
-                             label="信息分类"
-                             :width="tableFirstColumWidth">
-            </el-table-column>
+          <el-table :data="invoiceBasicInfo" border class="table-width">
+            <el-table-column prop="type" label="信息分类" :width="tableFirstColumWidth"></el-table-column>
             <el-table-column>
               <template slot="header" slot-scope="scope">
                 <div class="invoice-header">
                   <span>详细信息</span>
-                  <el-button v-if="permissions.indexOf('55') >-1&&invoiceInfo.cpmpanyname" @click.native="editInvoiceDialog = true" type="warning" size="mini">编辑发票</el-button>
+                  <el-button
+                    v-if="permissions.indexOf('55') >-1&&invoiceInfo.cpmpanyname"
+                    @click.native="editInvoiceDialog = true"
+                    type="warning"
+                    size="mini"
+                  >编辑发票</el-button>
                 </div>
               </template>
               <template slot-scope="scope">
@@ -538,38 +512,25 @@
                     </div>
                   </div>
                 </div>
-                <!-- todo -->
-                <div v-if="scope.$index===2 && invoiceList.length > 0">
-                </div>
+                <div v-if="scope.$index===2 && invoiceList.length > 0"></div>
               </template>
             </el-table-column>
           </el-table>
         </el-tab-pane>
         <!-- 企业资质 -->
-        <el-tab-pane v-if="pid_ka!=='KA'"
-                     label="企业资质">
+        <el-tab-pane v-if="pid_ka!=='KA'" label="企业资质">
           <div v-if="permissions.indexOf('5c') > -1" class="qualify">
-            <show-qualify v-if="showQualify.length" :showDel="false"
-            :showQualify="showQualify" class="qualify-left"></show-qualify>
-            <div class="qualify-right">
-              <el-button @click.native="editQualify"
-                         type="warning"
-                         class="xsbtn">修改资质</el-button>
+            <show-qualify v-if="showQualify.length" :showDel="false" :showQualify="showQualify" class="qualify-left"></show-qualify>
+            <div class="qualify-right" v-if="showQualify.length">
+              <el-button @click.native="editQualify" type="warning" class="xsbtn">修改资质</el-button>
             </div>
           </div>
         </el-tab-pane>
         <!-- 信息 -->
-        <el-tab-pane v-if="pid==='BAITUI'"
-                     label="百度推广信息">
-          <el-table :data="baituiExtendInfo"
-                    border
-                    class="table-width">
-            <el-table-column prop="type"
-                             label="信息分类"
-                             :width="tableFirstColumWidth">
-            </el-table-column>
-            <el-table-column prop="data"
-                             label="详细信息">
+        <el-tab-pane v-if="pid==='BAITUI'" label="百度推广信息">
+          <el-table :data="baituiExtendInfo" border class="table-width">
+            <el-table-column prop="type" label="信息分类" :width="tableFirstColumWidth"></el-table-column>
+            <el-table-column prop="data" label="详细信息">
               <div slot-scope="scope">
                 <div v-if="scope.$index===0">
                   <div>
@@ -591,8 +552,7 @@
                     </div>
                   </div>
                   <div>
-                    <div v-for="(item,index) in moneyInfo"
-                         :key="index">
+                    <div v-for="(item,index) in moneyInfo" :key="index">
                       <template v-if="item.type < 100 && item.type!=8">
                         <b>{{item.type | productType}}：</b>
                         <span>{{item.value | currency1}}</span>
@@ -642,17 +602,10 @@
             </el-table-column>
           </el-table>
         </el-tab-pane>
-        <el-tab-pane v-if="pid==='ZTC2' || pid==='ZTC'"
-                     label="直通车信息">
-          <el-table :data="ztcExtendInfo"
-                    border
-                    class="table-width">
-            <el-table-column prop="type"
-                             label="信息分类"
-                             :width="tableFirstColumWidth">
-            </el-table-column>
-            <el-table-column prop="data"
-                             label="详细信息">
+        <el-tab-pane v-if="pid==='ZTC2' || pid==='ZTC'" label="直通车信息">
+          <el-table :data="ztcExtendInfo" border class="table-width">
+            <el-table-column prop="type" label="信息分类" :width="tableFirstColumWidth"></el-table-column>
+            <el-table-column prop="data" label="详细信息">
               <div slot-scope="scope">
                 <div v-if="scope.$index===0">
                   <div class="row-container">
@@ -674,8 +627,7 @@
                     </div>
                   </div>
                   <div class="mt10px row-container">
-                    <div v-for="(item,index) in moneyInfo9"
-                         :key="index">
+                    <div v-for="(item,index) in moneyInfo9" :key="index">
                       <template v-if="item.type < 100">
                         <b>{{item.type | productType}}：</b>
                         <span>{{item.value | currency1}}</span>
@@ -717,15 +669,9 @@
             </el-table-column>
           </el-table>
         </el-tab-pane>
-        <el-tab-pane v-if="pid==='WEBSITE' || pid==='ZTC_WEBSITE'"
-                     label="PC/WAP信息">
-          <el-table :data="wjExtendInfo"
-                    border
-                    class="table-width">
-            <el-table-column prop="type"
-                             label="信息分类"
-                             :width="tableFirstColumWidth">
-            </el-table-column>
+        <el-tab-pane v-if="pid==='WEBSITE' || pid==='ZTC_WEBSITE'" label="PC/WAP信息">
+          <el-table :data="wjExtendInfo" border class="table-width">
+            <el-table-column prop="type" label="信息分类" :width="tableFirstColumWidth"></el-table-column>
             <el-table-column label="详细信息">
               <template slot-scope="scope">
                 <div v-if="scope.$index===0">
@@ -759,8 +705,7 @@
                     <div>
                       <div v-if="productInfo[0].websitetype != 30">
                         <b>网站栏目：</b>
-                        <div v-for="(item,index) in JSON.parse(productInfo[0].column)"
-                             :key="index">
+                        <div v-for="(item,index) in productInfo[0].column" :key="index">
                           <b>{{item.webcolumn_name}}</b>&nbsp;&nbsp;
                           <span>{{item.webcolumn_type}}</span>
                         </div>
@@ -789,8 +734,10 @@
                       </div>
                       <div>
                         <b>空间服务商：</b>
-                        <span>{{productInfo[0].spacefacilitator | facilitatorType}}
-                          {{'/'+ productInfo[0].area ==0?'国内':productInfo[0].area ==10?'海外':''}}</span>
+                        <span>
+                          {{productInfo[0].spacefacilitator | facilitatorType}}
+                          {{'/'+ productInfo[0].area ==0?'国内':productInfo[0].area ==10?'海外':''}}
+                        </span>
                       </div>
                       <div>
                         <b>空间信息：</b>
@@ -823,17 +770,10 @@
             </el-table-column>
           </el-table>
         </el-tab-pane>
-        <el-tab-pane v-if="pid_ka==='KA'"
-                     label="大客推广信息">
-          <el-table :data="kaExtendInfo"
-                    border
-                    class="table-width">
-            <el-table-column prop="type"
-                             label="信息分类"
-                             :width="tableFirstColumWidth">
-            </el-table-column>
-            <el-table-column prop="data"
-                             label="详细信息">
+        <el-tab-pane v-if="pid_ka==='KA'" label="大客推广信息">
+          <el-table :data="kaExtendInfo" border class="table-width">
+            <el-table-column prop="type" label="信息分类" :width="tableFirstColumWidth"></el-table-column>
+            <el-table-column prop="data" label="详细信息">
               <div slot-scope="scope">
                 <div v-if="scope.$index===0">
                   <div>
@@ -856,8 +796,7 @@
                     </div>
                   </div>
                   <div>
-                    <div v-for="(item,index) in moneyInfo"
-                         :key="index">
+                    <div v-for="(item,index) in moneyInfo" :key="index">
                       <template v-if="item.type < 100 && item.type!=8">
                         <b>{{item.type | productType}}：</b>
                         <span>{{item.value | currency1}}</span>
@@ -876,8 +815,7 @@
                   </div>
                 </div>
                 <div v-if="scope.$index===1">
-                  <div>
-                  </div>
+                  <div></div>
                 </div>
                 <div v-if="scope.$index===2">
                   <div>
@@ -893,496 +831,513 @@
         </el-tab-pane>
         <!-- 审核记录 -->
         <el-tab-pane label="审核记录">
-          <el-steps :active="isChecked"
-                    space="14%"
-                    finish-status="success">
-            <el-step v-for="step in stepList.slice(0,8)"
-                     :key="step.id"
-                     :title="step.name"
-                     style="margin-top:15px">
-              <span v-if="step.status>0"
-                    slot="description">{{step.opt_time | timeFormat}}</span>
+          <el-steps :active="isChecked" space="14%" finish-status="success">
+            <el-step v-for="step in stepList.slice(0,8)" :key="step.id" :title="step.name" style="margin-top:15px">
+              <span v-if="step.status>0" slot="description">{{step.opt_time | timeFormat}}</span>
             </el-step>
           </el-steps>
-          <el-steps :active="isNextChecked"
-                    space="12.5%"
-                    finish-status="success">
-            <el-step v-for="(step,index) in stepList.slice(8)"
-                     :key="step.id"
-                     :title="step.name"
-                     style="margin-top:15px">
+          <el-steps :active="isNextChecked" space="12.5%" finish-status="success">
+            <el-step
+              v-for="(step,index) in stepList.slice(8)"
+              :key="step.id"
+              :title="step.name"
+              style="margin-top:15px"
+            >
               <span slot="icon">{{9+index}}</span>
-              <span v-if="step.status>0"
-                    slot="description">{{step.opt_time | timeFormat}}</span>
+              <span v-if="step.status>0" slot="description">{{step.opt_time | timeFormat}}</span>
             </el-step>
           </el-steps>
-          <el-table :data="checkRecord"
-                    stripe
-                    class="table-width">
-            <el-table-column prop=""
-                             label="时间"
-                             width="160">
+          <el-table :data="checkRecord" stripe class="table-width">
+            <el-table-column prop label="时间" width="160">
               <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
             </el-table-column>
-            <el-table-column prop="username"
-                             label="操作人"
-                             width="100">
-            </el-table-column>
-            <el-table-column prop="remark"
-                             label="审核内容">
-            </el-table-column>
+            <el-table-column prop="username" label="操作人" width="100"></el-table-column>
+            <el-table-column prop="remark" label="审核内容"></el-table-column>
           </el-table>
         </el-tab-pane>
         <!-- 订单处理 -->
-        <el-tab-pane v-if="mark!=='from_orderList'"
-                     label="订单处理">
+        <el-tab-pane v-if="mark!=='from_orderList'" label="订单处理">
           <!-- 理单员审核(质检经理) -->
-          <order-keeper v-if="sn===20 && templateInfo.cpid"
-                        :moneyInfo="moneyInfo"
-                        :moneyRecord="moneyRecord"
-                        :orderFlowDatas="orderFlowDatas"
-                        :orderInfo="orderInfo"
-                        :templateInfo="templateInfo"
-                        :originUser="originUser"
-                        :sn="sn"
-                        :invoiceInfo="invoiceInfo"
-                        :pid="pid"
-                        title="理单员审核"></order-keeper>
+          <order-keeper
+            v-if="sn===20 && templateInfo.cpid"
+            :moneyInfo="moneyInfo"
+            :moneyRecord="moneyRecord"
+            :orderFlowDatas="orderFlowDatas"
+            :orderInfo="orderInfo"
+            :templateInfo="templateInfo"
+            :originUser="originUser"
+            :sn="sn"
+            :invoiceInfo="invoiceInfo"
+            :pid="pid"
+            title="理单员审核"
+          ></order-keeper>
           <!-- 综合部初审 -->
-          <init-finance v-if="sn===100 && moneyInfo.length"
-                        :moneyInfo="moneyInfo"
-                        :moneyRecord="moneyRecord"
-                        :orderFlowDatas="orderFlowDatas"
-                        :orderInfo="orderInfo"
-                        :templateInfo="templateInfo"
-                        :originUser="originUser"
-                        :sn="sn"
-                        :invoiceInfo="invoiceInfo"
-                        :pid="pid"
-                        title="综合部初审"></init-finance>
+          <init-finance
+            v-if="sn===100 && moneyInfo.length"
+            :moneyInfo="moneyInfo"
+            :moneyRecord="moneyRecord"
+            :orderFlowDatas="orderFlowDatas"
+            :orderInfo="orderInfo"
+            :templateInfo="templateInfo"
+            :originUser="originUser"
+            :sn="sn"
+            :invoiceInfo="invoiceInfo"
+            :pid="pid"
+            title="综合部初审"
+          ></init-finance>
           <!-- 业支外审 -->
-          <out-quality v-if="sn===120 && templateInfo.cpid"
-                       :moneyInfo="moneyInfo"
-                       :moneyRecord="moneyRecord"
-                       :orderFlowDatas="orderFlowDatas"
-                       :orderInfo="orderInfo"
-                       :templateInfo="templateInfo"
-                       :originUser="originUser"
-                       :sn="sn"
-                       :invoiceInfo="invoiceInfo"
-                       :pid="pid"
-                       title="业支外审"></out-quality>
+          <out-quality
+            v-if="sn===120 && templateInfo.cpid"
+            :moneyInfo="moneyInfo"
+            :moneyRecord="moneyRecord"
+            :orderFlowDatas="orderFlowDatas"
+            :orderInfo="orderInfo"
+            :templateInfo="templateInfo"
+            :originUser="originUser"
+            :sn="sn"
+            :invoiceInfo="invoiceInfo"
+            :pid="pid"
+            title="业支外审"
+          ></out-quality>
           <!-- 业支开户 -->
-          <business-support-account v-if="sn===150 && templateInfo.cpid"
-                                    :moneyInfo="moneyInfo"
-                                    :moneyInfo9="moneyInfo9"
-                                    :moneyRecord="moneyRecord"
-                                    :orderFlowDatas="orderFlowDatas"
-                                    :orderInfo="orderInfo"
-                                    :templateInfo="templateInfo"
-                                    :originUser="originUser"
-                                    :sn="sn"
-                                    :invoiceInfo="invoiceInfo"
-                                    :pid="pid"
-                                    title="业支开户"></business-support-account>
+          <business-support-account
+            v-if="sn===150 && templateInfo.cpid"
+            :moneyInfo="moneyInfo"
+            :moneyInfo9="moneyInfo9"
+            :moneyRecord="moneyRecord"
+            :orderFlowDatas="orderFlowDatas"
+            :orderInfo="orderInfo"
+            :templateInfo="templateInfo"
+            :originUser="originUser"
+            :sn="sn"
+            :invoiceInfo="invoiceInfo"
+            :pid="pid"
+            title="业支开户"
+          ></business-support-account>
           <!-- 业支派单 -->
-          <in-quality-order v-if="sn===160 && templateInfo.cpid"
-                            :moneyInfo="moneyInfo"
-                            :moneyRecord="moneyRecord"
-                            :orderFlowDatas="orderFlowDatas"
-                            :orderInfo="orderInfo"
-                            :templateInfo="templateInfo"
-                            :originUser="originUser"
-                            :sn="sn"
-                            :invoiceInfo="invoiceInfo"
-                            :pid="pid"
-                            title="直通车接口派单"></in-quality-order>
+          <in-quality-order
+            v-if="sn===160 && templateInfo.cpid"
+            :moneyInfo="moneyInfo"
+            :moneyRecord="moneyRecord"
+            :orderFlowDatas="orderFlowDatas"
+            :orderInfo="orderInfo"
+            :templateInfo="templateInfo"
+            :originUser="originUser"
+            :sn="sn"
+            :invoiceInfo="invoiceInfo"
+            :pid="pid"
+            title="直通车接口派单"
+          ></in-quality-order>
           <!-- 客服申请加款（直通车） -->
-          <quality-add-money v-if="sn===170 && templateInfo.cpid"
-                             :moneyInfo="moneyInfo"
-                             :moneyInfo9="moneyInfo9"
-                             :moneyRecord="moneyRecord"
-                             :orderFlowDatas="orderFlowDatas"
-                             :orderInfo="orderInfo"
-                             :templateInfo="templateInfo"
-                             :originUser="originUser"
-                             :sn="sn"
-                             :invoiceInfo="invoiceInfo"
-                             :pid="pid"
-                             title="客服申请加款"></quality-add-money>
+          <quality-add-money
+            v-if="sn===170 && templateInfo.cpid"
+            :moneyInfo="moneyInfo"
+            :moneyInfo9="moneyInfo9"
+            :moneyRecord="moneyRecord"
+            :orderFlowDatas="orderFlowDatas"
+            :orderInfo="orderInfo"
+            :templateInfo="templateInfo"
+            :originUser="originUser"
+            :sn="sn"
+            :invoiceInfo="invoiceInfo"
+            :pid="pid"
+            title="客服申请加款"
+          ></quality-add-money>
           <!-- 业支内审（直通车） -->
-          <out-quality v-if="sn===190 && templateInfo.cpid"
-                       :moneyInfo="moneyInfo"
-                       :moneyRecord="moneyRecord"
-                       :orderFlowDatas="orderFlowDatas"
-                       :orderInfo="orderInfo"
-                       :templateInfo="templateInfo"
-                       :originUser="originUser"
-                       :sn="sn"
-                       :invoiceInfo="invoiceInfo"
-                       :pid="pid"
-                       title="直通车业支内审"></out-quality>
+          <out-quality
+            v-if="sn===190 && templateInfo.cpid"
+            :moneyInfo="moneyInfo"
+            :moneyRecord="moneyRecord"
+            :orderFlowDatas="orderFlowDatas"
+            :orderInfo="orderInfo"
+            :templateInfo="templateInfo"
+            :originUser="originUser"
+            :sn="sn"
+            :invoiceInfo="invoiceInfo"
+            :pid="pid"
+            title="直通车业支内审"
+          ></out-quality>
           <!-- 业支外审（直通车） -->
-          <out-quality v-if="sn===200 && templateInfo.cpid && pid==='ZTC_WEBSITE'"
-                       :moneyInfo="moneyInfo"
-                       :moneyRecord="moneyRecord"
-                       :orderFlowDatas="orderFlowDatas"
-                       :orderInfo="orderInfo"
-                       :templateInfo="templateInfo"
-                       :originUser="originUser"
-                       :sn="sn"
-                       :invoiceInfo="invoiceInfo"
-                       :pid="pid"
-                       title="业支外审"></out-quality>
+          <out-quality
+            v-if="sn===200 && templateInfo.cpid && pid==='ZTC_WEBSITE'"
+            :moneyInfo="moneyInfo"
+            :moneyRecord="moneyRecord"
+            :orderFlowDatas="orderFlowDatas"
+            :orderInfo="orderInfo"
+            :templateInfo="templateInfo"
+            :originUser="originUser"
+            :sn="sn"
+            :invoiceInfo="invoiceInfo"
+            :pid="pid"
+            title="业支外审"
+          ></out-quality>
           <!-- 业支主管审核（直通车） -->
-          <out-quality v-if="sn===200 && templateInfo.cpid && pid==='ZTC2'"
-                       :moneyInfo="moneyInfo"
-                       :moneyRecord="moneyRecord"
-                       :orderFlowDatas="orderFlowDatas"
-                       :orderInfo="orderInfo"
-                       :templateInfo="templateInfo"
-                       :originUser="originUser"
-                       :sn="sn"
-                       :invoiceInfo="invoiceInfo"
-                       :pid="pid"
-                       title="业支主管审核"></out-quality>
+          <out-quality
+            v-if="sn===200 && templateInfo.cpid && pid==='ZTC2'"
+            :moneyInfo="moneyInfo"
+            :moneyRecord="moneyRecord"
+            :orderFlowDatas="orderFlowDatas"
+            :orderInfo="orderInfo"
+            :templateInfo="templateInfo"
+            :originUser="originUser"
+            :sn="sn"
+            :invoiceInfo="invoiceInfo"
+            :pid="pid"
+            title="业支主管审核"
+          ></out-quality>
           <!-- 质检外审 -->
-          <out-quality v-if="sn===200 && templateInfo.cpid && pid==='BAITUI'"
-                       :moneyInfo="moneyInfo"
-                       :moneyRecord="moneyRecord"
-                       :orderFlowDatas="orderFlowDatas"
-                       :orderInfo="orderInfo"
-                       :templateInfo="templateInfo"
-                       :originUser="originUser"
-                       :sn="sn"
-                       :invoiceInfo="invoiceInfo"
-                       :pid="pid"
-                       title="质检外审"></out-quality>
+          <out-quality
+            v-if="sn===200 && templateInfo.cpid && pid==='BAITUI'"
+            :moneyInfo="moneyInfo"
+            :moneyRecord="moneyRecord"
+            :orderFlowDatas="orderFlowDatas"
+            :orderInfo="orderInfo"
+            :templateInfo="templateInfo"
+            :originUser="originUser"
+            :sn="sn"
+            :invoiceInfo="invoiceInfo"
+            :pid="pid"
+            title="质检外审"
+          ></out-quality>
           <!-- 质检内审派单 -->
-          <in-quality-order v-if="sn===210 && templateInfo.cpid"
-                            :moneyInfo="moneyInfo"
-                            :moneyRecord="moneyRecord"
-                            :orderFlowDatas="orderFlowDatas"
-                            :orderInfo="orderInfo"
-                            :templateInfo="templateInfo"
-                            :originUser="originUser"
-                            :sn="sn"
-                            :invoiceInfo="invoiceInfo"
-                            :pid="pid"
-                            title="质检内审派单"></in-quality-order>
+          <in-quality-order
+            v-if="sn===210 && templateInfo.cpid"
+            :moneyInfo="moneyInfo"
+            :moneyRecord="moneyRecord"
+            :orderFlowDatas="orderFlowDatas"
+            :orderInfo="orderInfo"
+            :templateInfo="templateInfo"
+            :originUser="originUser"
+            :sn="sn"
+            :invoiceInfo="invoiceInfo"
+            :pid="pid"
+            title="质检内审派单"
+          ></in-quality-order>
           <!-- 网数派单（直通车网建） -->
-          <in-quality v-if="sn===220 && templateInfo.cpid && pid==='ZTC_WEBSITE'"
-                      :moneyInfo="moneyInfo"
-                      :moneyRecord="moneyRecord"
-                      :orderFlowDatas="orderFlowDatas"
-                      :orderInfo="orderInfo"
-                      :templateInfo="templateInfo"
-                      :originUser="originUser"
-                      :sn="sn"
-                      :invoiceInfo="invoiceInfo"
-                      :pid="pid"
-                      title="网数派单"></in-quality>
+          <in-quality
+            v-if="sn===220 && templateInfo.cpid && pid==='ZTC_WEBSITE'"
+            :moneyInfo="moneyInfo"
+            :moneyRecord="moneyRecord"
+            :orderFlowDatas="orderFlowDatas"
+            :orderInfo="orderInfo"
+            :templateInfo="templateInfo"
+            :originUser="originUser"
+            :sn="sn"
+            :invoiceInfo="invoiceInfo"
+            :pid="pid"
+            title="网数派单"
+          ></in-quality>
           <!-- 质检内审 -->
-          <in-quality v-if="sn===220 && templateInfo.cpid && pid!=='ZTC_WEBSITE'"
-                      :moneyInfo="moneyInfo"
-                      :moneyRecord="moneyRecord"
-                      :orderFlowDatas="orderFlowDatas"
-                      :orderInfo="orderInfo"
-                      :templateInfo="templateInfo"
-                      :originUser="originUser"
-                      :sn="sn"
-                      :invoiceInfo="invoiceInfo"
-                      :pid="pid"
-                      title="质检内审"></in-quality>
+          <in-quality
+            v-if="sn===220 && templateInfo.cpid && pid!=='ZTC_WEBSITE'"
+            :moneyInfo="moneyInfo"
+            :moneyRecord="moneyRecord"
+            :orderFlowDatas="orderFlowDatas"
+            :orderInfo="orderInfo"
+            :templateInfo="templateInfo"
+            :originUser="originUser"
+            :sn="sn"
+            :invoiceInfo="invoiceInfo"
+            :pid="pid"
+            title="质检内审"
+          ></in-quality>
           <!-- 网建外审 -->
-          <in-quality v-if="sn===230 && templateInfo.cpid"
-                      :moneyInfo="moneyInfo"
-                      :moneyRecord="moneyRecord"
-                      :orderFlowDatas="orderFlowDatas"
-                      :orderInfo="orderInfo"
-                      :templateInfo="templateInfo"
-                      :originUser="originUser"
-                      :sn="sn"
-                      :invoiceInfo="invoiceInfo"
-                      :pid="pid"
-                      title="网建外审"></in-quality>
+          <in-quality
+            v-if="sn===230 && templateInfo.cpid"
+            :moneyInfo="moneyInfo"
+            :moneyRecord="moneyRecord"
+            :orderFlowDatas="orderFlowDatas"
+            :orderInfo="orderInfo"
+            :templateInfo="templateInfo"
+            :originUser="originUser"
+            :sn="sn"
+            :invoiceInfo="invoiceInfo"
+            :pid="pid"
+            title="网建外审"
+          ></in-quality>
           <!-- 网开空域 -->
-          <web-space v-if="sn===240 && templateInfo.cpid"
-                     :moneyInfo="moneyInfo"
-                     :moneyRecord="moneyRecord"
-                     :orderFlowDatas="orderFlowDatas"
-                     :orderInfo="orderInfo"
-                     :templateInfo="templateInfo"
-                     :originUser="originUser"
-                     :sn="sn"
-                     :invoiceInfo="invoiceInfo"
-                     :pid="pid"
-                     title="网开空域"></web-space>
+          <web-space
+            v-if="sn===240 && templateInfo.cpid"
+            :moneyInfo="moneyInfo"
+            :moneyRecord="moneyRecord"
+            :orderFlowDatas="orderFlowDatas"
+            :orderInfo="orderInfo"
+            :templateInfo="templateInfo"
+            :originUser="originUser"
+            :sn="sn"
+            :invoiceInfo="invoiceInfo"
+            :pid="pid"
+            title="网开空域"
+          ></web-space>
           <!-- 质检申请加款 -->
-          <quality-add-money v-if="sn===260 && templateInfo.cpid && pid === 'BAITUI'"
-                             :moneyInfo="moneyInfo"
-                             :moneyInfo9="moneyInfo9"
-                             :moneyRecord="moneyRecord"
-                             :orderFlowDatas="orderFlowDatas"
-                             :orderInfo="orderInfo"
-                             :templateInfo="templateInfo"
-                             :originUser="originUser"
-                             :sn="sn"
-                             :invoiceInfo="invoiceInfo"
-                             :pid="pid"
-                             title="质检申请加款"></quality-add-money>
+          <quality-add-money
+            v-if="sn===260 && templateInfo.cpid && pid === 'BAITUI'"
+            :moneyInfo="moneyInfo"
+            :moneyInfo9="moneyInfo9"
+            :moneyRecord="moneyRecord"
+            :orderFlowDatas="orderFlowDatas"
+            :orderInfo="orderInfo"
+            :templateInfo="templateInfo"
+            :originUser="originUser"
+            :sn="sn"
+            :invoiceInfo="invoiceInfo"
+            :pid="pid"
+            title="质检申请加款"
+          ></quality-add-money>
           <!-- 理单员申请加款 -->
-          <quality-add-money v-if="sn===260 && templateInfo.cpid && pid_ka === 'KA'"
-                             :moneyInfo="moneyInfo"
-                             :moneyInfo9="moneyInfo9"
-                             :moneyRecord="moneyRecord"
-                             :orderFlowDatas="orderFlowDatas"
-                             :orderInfo="orderInfo"
-                             :templateInfo="templateInfo"
-                             :originUser="originUser"
-                             :sn="sn"
-                             :invoiceInfo="invoiceInfo"
-                             :pid="pid"
-                             title="理单员申请加款"></quality-add-money>
+          <quality-add-money
+            v-if="sn===260 && templateInfo.cpid && pid_ka === 'KA'"
+            :moneyInfo="moneyInfo"
+            :moneyInfo9="moneyInfo9"
+            :moneyRecord="moneyRecord"
+            :orderFlowDatas="orderFlowDatas"
+            :orderInfo="orderInfo"
+            :templateInfo="templateInfo"
+            :originUser="originUser"
+            :sn="sn"
+            :invoiceInfo="invoiceInfo"
+            :pid="pid"
+            title="理单员申请加款"
+          ></quality-add-money>
           <!-- 网建经理派单 -->
-          <web-order v-if="sn===260 && templateInfo.cpid && (pid==='WEBSITE'||pid==='ZTC_WEBSITE')"
-                     :moneyInfo="moneyInfo"
-                     :moneyRecord="moneyRecord"
-                     :orderFlowDatas="orderFlowDatas"
-                     :orderInfo="orderInfo"
-                     :templateInfo="templateInfo"
-                     :originUser="originUser"
-                     :sn="sn"
-                     :invoiceInfo="invoiceInfo"
-                     :pid="pid"
-                     title="网建经理派单"></web-order>
+          <web-order
+            v-if="sn===260 && templateInfo.cpid && (pid==='WEBSITE'||pid==='ZTC_WEBSITE')"
+            :moneyInfo="moneyInfo"
+            :moneyRecord="moneyRecord"
+            :orderFlowDatas="orderFlowDatas"
+            :orderInfo="orderInfo"
+            :templateInfo="templateInfo"
+            :originUser="originUser"
+            :sn="sn"
+            :invoiceInfo="invoiceInfo"
+            :pid="pid"
+            title="网建经理派单"
+          ></web-order>
           <!-- 网站制作 -->
-          <web-make v-if="sn===280 && templateInfo.cpid && (pid==='WEBSITE'||pid==='ZTC_WEBSITE')"
-                    :moneyInfo="moneyInfo"
-                    :moneyRecord="moneyRecord"
-                    :orderFlowDatas="orderFlowDatas"
-                    :orderInfo="orderInfo"
-                    :templateInfo="templateInfo"
-                    :originUser="originUser"
-                    :sn="sn"
-                    :invoiceInfo="invoiceInfo"
-                    :pid="pid"
-                    title="网站制作"></web-make>
+          <web-make
+            v-if="sn===280 && templateInfo.cpid && (pid==='WEBSITE'||pid==='ZTC_WEBSITE')"
+            :moneyInfo="moneyInfo"
+            :moneyRecord="moneyRecord"
+            :orderFlowDatas="orderFlowDatas"
+            :orderInfo="orderInfo"
+            :templateInfo="templateInfo"
+            :originUser="originUser"
+            :sn="sn"
+            :invoiceInfo="invoiceInfo"
+            :pid="pid"
+            title="网站制作"
+          ></web-make>
           <!-- 网建内审 -->
-          <web-make v-if="sn===300 && templateInfo.cpid && (pid==='WEBSITE'||pid==='ZTC_WEBSITE')"
-                    :moneyInfo="moneyInfo"
-                    :moneyRecord="moneyRecord"
-                    :orderFlowDatas="orderFlowDatas"
-                    :orderInfo="orderInfo"
-                    :templateInfo="templateInfo"
-                    :originUser="originUser"
-                    :sn="sn"
-                    :invoiceInfo="invoiceInfo"
-                    :pid="pid"
-                    title="网建内审、网站提出"></web-make>
+          <web-make
+            v-if="sn===300 && templateInfo.cpid && (pid==='WEBSITE'||pid==='ZTC_WEBSITE')"
+            :moneyInfo="moneyInfo"
+            :moneyRecord="moneyRecord"
+            :orderFlowDatas="orderFlowDatas"
+            :orderInfo="orderInfo"
+            :templateInfo="templateInfo"
+            :originUser="originUser"
+            :sn="sn"
+            :invoiceInfo="invoiceInfo"
+            :pid="pid"
+            title="网建内审、网站提出"
+          ></web-make>
           <!-- 质检经理审核 -->
-          <quality-manager v-if="sn===300 && templateInfo.cpid && pid !== 'WEBSITE' && pid !=='ZTC_WEBSITE'"
-                           :moneyInfo="moneyInfo"
-                           :moneyRecord="moneyRecord"
-                           :orderFlowDatas="orderFlowDatas"
-                           :orderInfo="orderInfo"
-                           :templateInfo="templateInfo"
-                           :originUser="originUser"
-                           :sn="sn"
-                           :invoiceInfo="invoiceInfo"
-                           :pid="pid"
-                           title="质检经理审核"></quality-manager>
+          <quality-manager
+            v-if="sn===300 && templateInfo.cpid && pid !== 'WEBSITE' && pid !=='ZTC_WEBSITE'"
+            :moneyInfo="moneyInfo"
+            :moneyRecord="moneyRecord"
+            :orderFlowDatas="orderFlowDatas"
+            :orderInfo="orderInfo"
+            :templateInfo="templateInfo"
+            :originUser="originUser"
+            :sn="sn"
+            :invoiceInfo="invoiceInfo"
+            :pid="pid"
+            title="质检经理审核"
+          ></quality-manager>
           <!-- 综合部复审 -->
-          <second-finance v-if="sn===305 && templateInfo.cpid"
-                          :moneyInfo="moneyInfo"
-                          :moneyRecord="moneyRecord"
-                          :orderFlowDatas="orderFlowDatas"
-                          :orderInfo="orderInfo"
-                          :templateInfo="templateInfo"
-                          :originUser="originUser"
-                          :sn="sn"
-                          :invoiceInfo="invoiceInfo"
-                          :pid="pid"
-                          title="综合部复审"></second-finance>
+          <second-finance
+            v-if="sn===305 && templateInfo.cpid"
+            :moneyInfo="moneyInfo"
+            :moneyRecord="moneyRecord"
+            :orderFlowDatas="orderFlowDatas"
+            :orderInfo="orderInfo"
+            :templateInfo="templateInfo"
+            :originUser="originUser"
+            :sn="sn"
+            :invoiceInfo="invoiceInfo"
+            :pid="pid"
+            title="综合部复审"
+          ></second-finance>
           <!-- 账户加款(已移动到续费加款列表，暂时没用) -->
-          <finance-add-money v-if="sn===310 && templateInfo.cpid"
-                             :moneyInfo="moneyInfo"
-                             :moneyRecord="moneyRecord"
-                             :orderFlowDatas="orderFlowDatas"
-                             :orderInfo="orderInfo"
-                             :templateInfo="templateInfo"
-                             :originUser="originUser"
-                             :sn="sn"
-                             :invoiceInfo="invoiceInfo"
-                             :pid="pid"
-                             title="账户加款"></finance-add-money>
+          <finance-add-money
+            v-if="sn===310 && templateInfo.cpid"
+            :moneyInfo="moneyInfo"
+            :moneyRecord="moneyRecord"
+            :orderFlowDatas="orderFlowDatas"
+            :orderInfo="orderInfo"
+            :templateInfo="templateInfo"
+            :originUser="originUser"
+            :sn="sn"
+            :invoiceInfo="invoiceInfo"
+            :pid="pid"
+            title="账户加款"
+          ></finance-add-money>
           <!-- 质检开户(加款完成) -->
-          <quality-open-account v-if="sn===320 && templateInfo.cpid"
-                                :moneyInfo="moneyInfo"
-                                :moneyRecord="moneyRecord"
-                                :orderFlowDatas="orderFlowDatas"
-                                :orderInfo="orderInfo"
-                                :templateInfo="templateInfo"
-                                :originUser="originUser"
-                                :sn="sn"
-                                :invoiceInfo="invoiceInfo"
-                                :pid="pid"
-                                title="质检开户(加款完成)"></quality-open-account>
+          <quality-open-account
+            v-if="sn===320 && templateInfo.cpid"
+            :moneyInfo="moneyInfo"
+            :moneyRecord="moneyRecord"
+            :orderFlowDatas="orderFlowDatas"
+            :orderInfo="orderInfo"
+            :templateInfo="templateInfo"
+            :originUser="originUser"
+            :sn="sn"
+            :invoiceInfo="invoiceInfo"
+            :pid="pid"
+            title="质检开户(加款完成)"
+          ></quality-open-account>
           <!-- 质检一部 -->
-          <quality-one v-if="sn===330 && templateInfo.cpid"
-                       :moneyInfo="moneyInfo"
-                       :moneyRecord="moneyRecord"
-                       :orderFlowDatas="orderFlowDatas"
-                       :orderInfo="orderInfo"
-                       :templateInfo="templateInfo"
-                       :originUser="originUser"
-                       :sn="sn"
-                       :invoiceInfo="invoiceInfo"
-                       :pid="pid"
-                       title="质检一部"></quality-one>
+          <quality-one
+            v-if="sn===330 && templateInfo.cpid"
+            :moneyInfo="moneyInfo"
+            :moneyRecord="moneyRecord"
+            :orderFlowDatas="orderFlowDatas"
+            :orderInfo="orderInfo"
+            :templateInfo="templateInfo"
+            :originUser="originUser"
+            :sn="sn"
+            :invoiceInfo="invoiceInfo"
+            :pid="pid"
+            title="质检一部"
+          ></quality-one>
           <!-- 客服提单 -->
-          <service-order v-if="sn===400 && templateInfo.cpid"
-                         :moneyInfo="moneyInfo"
-                         :moneyRecord="moneyRecord"
-                         :orderFlowDatas="orderFlowDatas"
-                         :orderInfo="orderInfo"
-                         :templateInfo="templateInfo"
-                         :originUser="originUser"
-                         :sn="sn"
-                         :invoiceInfo="invoiceInfo"
-                         :pid="pid"
-                         title="客服提单"></service-order>
+          <service-order
+            v-if="sn===400 && templateInfo.cpid"
+            :moneyInfo="moneyInfo"
+            :moneyRecord="moneyRecord"
+            :orderFlowDatas="orderFlowDatas"
+            :orderInfo="orderInfo"
+            :templateInfo="templateInfo"
+            :originUser="originUser"
+            :sn="sn"
+            :invoiceInfo="invoiceInfo"
+            :pid="pid"
+            title="客服提单"
+          ></service-order>
           <!-- 客服派单 -->
-          <service-dispatch v-if="sn===410 && templateInfo.cpid"
-                            :moneyInfo="moneyInfo"
-                            :moneyRecord="moneyRecord"
-                            :orderFlowDatas="orderFlowDatas"
-                            :orderInfo="orderInfo"
-                            :templateInfo="templateInfo"
-                            :originUser="originUser"
-                            :sn="sn"
-                            :invoiceInfo="invoiceInfo"
-                            :pid="pid"
-                            title="客服派单"></service-dispatch>
+          <service-dispatch
+            v-if="sn===410 && templateInfo.cpid"
+            :moneyInfo="moneyInfo"
+            :moneyRecord="moneyRecord"
+            :orderFlowDatas="orderFlowDatas"
+            :orderInfo="orderInfo"
+            :templateInfo="templateInfo"
+            :originUser="originUser"
+            :sn="sn"
+            :invoiceInfo="invoiceInfo"
+            :pid="pid"
+            title="客服派单"
+          ></service-dispatch>
           <!-- 提单完成 -->
-          <order-done v-if="sn===420 && templateInfo.cpid"
-                      :moneyInfo="moneyInfo"
-                      :moneyRecord="moneyRecord"
-                      :orderFlowDatas="orderFlowDatas"
-                      :orderInfo="orderInfo"
-                      :templateInfo="templateInfo"
-                      :originUser="originUser"
-                      :sn="sn"
-                      :invoiceInfo="invoiceInfo"
-                      :pid="pid"
-                      title="提单完成"></order-done>
+          <order-done
+            v-if="sn===420 && templateInfo.cpid"
+            :moneyInfo="moneyInfo"
+            :moneyRecord="moneyRecord"
+            :orderFlowDatas="orderFlowDatas"
+            :orderInfo="orderInfo"
+            :templateInfo="templateInfo"
+            :originUser="originUser"
+            :sn="sn"
+            :invoiceInfo="invoiceInfo"
+            :pid="pid"
+            title="提单完成"
+          ></order-done>
           <!-- 新客内审 -->
-          <new-cus-check v-if="sn===430 && templateInfo.cpid"
-                         :moneyInfo="moneyInfo"
-                         :moneyRecord="moneyRecord"
-                         :orderFlowDatas="orderFlowDatas"
-                         :orderInfo="orderInfo"
-                         :templateInfo="templateInfo"
-                         :originUser="originUser"
-                         :sn="sn"
-                         :invoiceInfo="invoiceInfo"
-                         :pid="pid"
-                         title="新客内审"></new-cus-check>
+          <new-cus-check
+            v-if="sn===430 && templateInfo.cpid"
+            :moneyInfo="moneyInfo"
+            :moneyRecord="moneyRecord"
+            :orderFlowDatas="orderFlowDatas"
+            :orderInfo="orderInfo"
+            :templateInfo="templateInfo"
+            :originUser="originUser"
+            :sn="sn"
+            :invoiceInfo="invoiceInfo"
+            :pid="pid"
+            title="新客内审"
+          ></new-cus-check>
         </el-tab-pane>
         <!-- 日志 -->
         <el-tab-pane :label="logLabel">
           <el-card class="box-card">
-            <div slot="header"
-                 class="clearfix">
-              <el-button type="text"
-                         size="medium">填写日志：</el-button>
-              <el-input v-model="logMark"
-                        type="textarea"
-                        :rows="3"></el-input>
-              <el-button @click.native="subLog"
-                         class="mt10px"
-                         type="success">提交</el-button>
+            <div slot="header" class="clearfix">
+              <el-button type="text" size="medium">填写日志：</el-button>
+              <el-input v-model="logMark" type="textarea" :rows="3"></el-input>
+              <el-button @click.native="subLog" class="mt10px" type="success">提交</el-button>
             </div>
-            <el-table :data="log"
-                      stripe
-                      class="table-width">
-              <el-table-column prop=""
-                               label="时间"
-                               width="160">
+            <el-table :data="log" stripe class="table-width">
+              <el-table-column prop label="时间" width="160">
                 <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
               </el-table-column>
-              <el-table-column prop="name"
-                               label="提交人"
-                               width="100">
-              </el-table-column>
-              <el-table-column prop="remark"
-                               label="日志内容">
-              </el-table-column>
+              <el-table-column prop="name" label="提交人" width="100"></el-table-column>
+              <el-table-column prop="remark" label="日志内容"></el-table-column>
             </el-table>
-            <page class="page"
-                  :url="logUrl"
-                  :sendParams="logParams"
-                  @updateList="updateLogList"></page>
+            <page class="page" :url="logUrl" :sendParams="logParams" @updateList="updateLogList"></page>
           </el-card>
         </el-tab-pane>
         <!-- 记业绩 -->
-        <el-tab-pane label="记业绩"
-                     v-if="permissions.indexOf('4d') > -1">
-          <el-form ref="form"
-                   :model="pfForm"
-                   :label-width="pfLabelWidth">
+        <el-tab-pane label="记业绩" v-if="permissions.indexOf('4d') > -1">
+          <el-form ref="form" :model="pfForm" :label-width="pfLabelWidth">
             <el-row :gutter="20">
-              <el-col :md="12"
-                      class="maxwidth">
+              <el-col :md="12" class="maxwidth">
                 <el-form-item label="新开业绩时间 :">
-                  <el-date-picker v-model="pfForm.newPFdate"
-                                  value-format="yyyy/MM/dd HH:mm"
-                                  type="date"
-                                  placeholder="选择入职日期"
-                                  style="width:100%"></el-date-picker>
+                  <el-date-picker
+                    v-model="pfForm.newPFdate"
+                    value-format="yyyy/MM/dd HH:mm"
+                    type="date"
+                    placeholder="选择入职日期"
+                    style="width:100%"
+                  ></el-date-picker>
                 </el-form-item>
               </el-col>
-              <el-col :md="12"
-                      class="maxwidth">
+              <el-col :md="12" class="maxwidth">
                 <el-form-item label="上线业绩时间 :">
-                  <el-date-picker v-model="pfForm.onlinePFdate"
-                                  value-format="yyyy/MM/dd HH:mm"
-                                  type="date"
-                                  style="width:100%"></el-date-picker>
+                  <el-date-picker
+                    v-model="pfForm.onlinePFdate"
+                    value-format="yyyy/MM/dd HH:mm"
+                    type="date"
+                    style="width:100%"
+                  ></el-date-picker>
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row :gutter="20">
-              <el-col :md="12"
-                      class="maxwidth">
+              <el-col :md="12" class="maxwidth">
                 <el-form-item label="新开记业绩 :">
                   <el-input v-model="pfForm.openAchievement"></el-input>
                 </el-form-item>
               </el-col>
-              <el-col :md="12"
-                      class="maxwidth">
+              <el-col :md="12" class="maxwidth">
                 <el-form-item label="管理层新开记业绩 :">
                   <el-input v-model="pfForm.m_openAchievement"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row :gutter="20">
-              <el-col :md="12"
-                      class="maxwidth">
+              <el-col :md="12" class="maxwidth">
                 <el-form-item label="上线记业绩 :">
                   <el-input v-model="pfForm.onlineAchievement"></el-input>
                 </el-form-item>
               </el-col>
-              <el-col :md="12"
-                      class="maxwidth">
+              <el-col :md="12" class="maxwidth">
                 <el-form-item label="管理层上线记业绩 :">
                   <el-input v-model="pfForm.m_onlineAchievement"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
             <div>
-              <el-button @click.native="addPFTime"
-                         type="primary">保存</el-button>
+              <el-button @click.native="addPFTime" type="primary">保存</el-button>
             </div>
           </el-form>
         </el-tab-pane>
@@ -1390,83 +1345,66 @@
     </div>
 
     <!-- 修改订单信息弹窗 -->
-    <el-dialog title="修改订单基本信息"
-               width="800px"
-               :visible.sync="changeInfoDialog"
-               :modal-append-to-body="false">
+    <el-dialog title="修改订单基本信息" width="800px" :visible.sync="changeInfoDialog" :modal-append-to-body="false">
       <el-form :model="form">
         <el-row :gutter="20">
           <el-col :sm="12">
-            <el-form-item label="公司名称"
-                          :label-width="formLabelWidth"
-                          disabled>
-              <el-input v-model="form.cName"
-                        disabled></el-input>
+            <el-form-item label="公司名称" :label-width="formLabelWidth" disabled>
+              <el-input v-model="form.cName" disabled></el-input>
             </el-form-item>
           </el-col>
           <el-col :sm="12">
-            <el-form-item label="公司地址"
-                          :label-width="formLabelWidth"
-                          required>
+            <el-form-item label="公司地址" :label-width="formLabelWidth" required>
               <el-input v-model="form.addr"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :sm="12">
-            <el-form-item label="对公账号"
-                          :label-width="formLabelWidth">
+            <el-form-item label="对公账号" :label-width="formLabelWidth">
               <el-input v-model="form.accountNum"></el-input>
             </el-form-item>
           </el-col>
           <el-col :sm="12">
-            <el-form-item label="开户行"
-                          :label-width="formLabelWidth">
+            <el-form-item label="开户行" :label-width="formLabelWidth">
               <el-input v-model="form.bType"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :sm="12">
-            <el-form-item label="PC网址"
-                          :label-width="formLabelWidth">
+            <el-form-item label="PC网址" :label-width="formLabelWidth">
               <el-input v-model="form.pcWeb"></el-input>
             </el-form-item>
           </el-col>
           <el-col :sm="12">
-            <el-form-item label="手机网址"
-                          :label-width="formLabelWidth">
+            <el-form-item label="手机网址" :label-width="formLabelWidth">
               <el-input v-model="form.phoneWeb"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row :gutter="20"
-                v-for="(c,index) in form.contactList"
-                :key="index">
+        <el-row :gutter="20" v-for="(c,index) in form.contactList" :key="index">
           <el-col :sm="12">
-            <el-form-item :label-width="formLabelWidth"
-                          required>
+            <el-form-item :label-width="formLabelWidth" required>
               <span slot="label">
-                <el-button v-show="index===0" @click="addContact(index)"
-                           type="success"
-                           circle
-                           size="mini"
-                           :icon="addIcon"></el-button>
+                <el-button
+                  v-show="index===0"
+                  @click="addContact(index)"
+                  type="success"
+                  circle
+                  size="mini"
+                  :icon="addIcon"
+                ></el-button>
                 <span>联系人{{index?index:''}}</span>
               </span>
               <el-input v-model="c.contactname"></el-input>
             </el-form-item>
           </el-col>
           <el-col :sm="12">
-            <el-form-item :label-width="formLabelWidth"
-                          required>
+            <el-form-item :label-width="formLabelWidth" required>
               <span slot="label">手机号{{index?index:''}}</span>
               <el-input v-model="c.contactnumber" class="contact-phone"></el-input>
-              <el-button @click="addContact(index,'del')"
-                           type="danger"
-                           circle
-                           size="mini"
-                           :icon="minusIcon"></el-button>
+              <el-button @click="addContact(index,'del')" type="danger" circle size="mini" :icon="minusIcon"></el-button>
             </el-form-item>
           </el-col>
           <el-col :sm="12">
@@ -1476,8 +1414,7 @@
             </el-form-item>
           </el-col>
           <el-col :sm="12">
-            <el-form-item :label-width="formLabelWidth"
-                          required>
+            <el-form-item :label-width="formLabelWidth" required>
               <span slot="label">邮箱{{index?index:''}}</span>
               <el-input v-model="c.mailnumber"></el-input>
             </el-form-item>
@@ -1485,54 +1422,47 @@
         </el-row>
         <el-row :gutter="20">
           <el-col :sm="12">
-            <el-form-item label="客户类型"
-                          :label-width="formLabelWidth">
-              <el-input v-model="form.cusType"
-                        disabled></el-input>
+            <el-form-item label="客户类型" :label-width="formLabelWidth">
+              <el-input v-model="form.cusType" disabled></el-input>
             </el-form-item>
           </el-col>
         </el-row>
       </el-form>
-      <div slot="footer"
-           class="dialog-footer">
+      <div slot="footer" class="dialog-footer">
         <el-button @click="changeInfoDialog = false">取 消</el-button>
-        <el-button type="primary"
-                   @click="subBaseInfo">提 交</el-button>
+        <el-button type="primary" @click="subBaseInfo">提 交</el-button>
       </div>
     </el-dialog>
     <!-- 编辑资质弹窗 -->
-    <el-dialog title="编辑资质"
-               width="800px"
-               :visible.sync="editQualifyDialog"
-               :modal-append-to-body="false">
-      <show-qualify v-if="copy_showQualify.length"
-      :showQualify="copy_showQualify" class="qualify-left"></show-qualify>
+    <el-dialog title="编辑资质" width="800px" :visible.sync="editQualifyDialog" :modal-append-to-body="false">
+      <show-qualify v-if="copy_showQualify.length" :showQualify="copy_showQualify" class="qualify-left"></show-qualify>
       <div>
-        <el-select  value-key="id" @change="qualifySelectChange" v-model="form.zizhiName" placeholder="请选择上传资质类型" class="input-btn">
+        <el-select
+          value-key="id"
+          @change="qualifySelectChange"
+          v-model="form.zizhiName"
+          placeholder="请选择上传资质类型"
+          class="input-btn"
+        >
           <el-option v-for="(qualify,index) in qualifyType" :key="index" :label="qualify.code_desc" :value="qualify"></el-option>
         </el-select>
         <el-button @click.native="addQualify" type="success" icon="el-icon-plus" circle></el-button>
       </div>
       <el-table border :data="form.zizhiList" :key="form.zizhiList.id" class="table-width">
-        <el-table-column prop="code_desc" label="资质类型" width="130">
-        </el-table-column>
+        <el-table-column prop="code_desc" label="资质类型" width="130"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
             <up-file @fileUrl="(file)=>getFileData(file,scope.row)"></up-file>
           </template>
         </el-table-column>
       </el-table>
-      <div slot="footer"
-           class="dialog-footer">
+      <div slot="footer" class="dialog-footer">
         <el-button @click.native="editQualifyDialog = false">取 消</el-button>
         <el-button type="success" @click.native="confirmEditQualify">确 定</el-button>
       </div>
     </el-dialog>
     <!-- 编辑发票信息弹窗 -->
-    <el-dialog title="编辑发票信息弹窗"
-               width="800px"
-               :visible.sync="editInvoiceDialog"
-               :modal-append-to-body="false">
+    <el-dialog title="编辑发票信息弹窗" width="800px" :visible.sync="editInvoiceDialog" :modal-append-to-body="false">
       <el-form :model="editInvoiceInfo" label-width="110px">
         <div class="title">
           <el-button class="title-btn" type="warning">开票信息</el-button>
@@ -1540,14 +1470,12 @@
         </div>
         <el-row :gutter="20">
           <el-col :sm="12">
-            <el-form-item label="发票抬头"
-                          required>
+            <el-form-item label="发票抬头" required>
               <el-input v-model="editInvoiceInfo.companyname"></el-input>
             </el-form-item>
           </el-col>
           <el-col :sm="12">
-            <el-form-item label="纳税人识别号"
-                          required>
+            <el-form-item label="纳税人识别号" required>
               <el-input v-model="editInvoiceInfo.identinum"></el-input>
             </el-form-item>
           </el-col>
@@ -1734,7 +1662,7 @@ const WebMake = resolve => {
   })
 }
 export default {
-  data () {
+  data() {
     return {
       permissions: cookie.getJSON('permissions'),
       receiveData: {},
@@ -1781,9 +1709,9 @@ export default {
         { type: '特殊说明' }
       ],
       wjBasicInfo: [
-        { type: '客户基本信息' },
-        { type: '订单/金额' },
-        { type: '商务信息' }
+        { type: '客户基本信息', info: '' },
+        { type: '订单/金额', info: '' },
+        { type: '商务信息', info: '' }
       ],
       wjExtendInfo: [{ type: '网建基本信息' }, { type: '网站制作信息' }],
       contactInfoList: [{ name: '', producttype: '', productnumber: '' }],
@@ -1853,7 +1781,7 @@ export default {
       handleClickCid: ''
     }
   },
-  created () {
+  created() {
     this.receiveData = this.$route.query.data
     if (!this.receiveData.cpid) {
       this.$router.push('/indexPage/orderPending')
@@ -1871,11 +1799,11 @@ export default {
     this.mark = this.receiveData._mark
     this._getBasicInfo()
   },
-  mounted () {
+  mounted() {
     this._getRecord()
   },
   methods: {
-    tab (val) {
+    tab(val) {
       if (val.label === this.logLabel) {
         this.logParams = {
           cpid: this.templateInfo.cpid
@@ -1883,7 +1811,7 @@ export default {
       }
     },
     // 修改基本信息按钮
-    changeInfo () {
+    changeInfo() {
       let messUrl = '/Company.do?getCompanyByCpid'
       let messParams = {
         cpid: this.receiveData.cpid
@@ -1910,7 +1838,7 @@ export default {
       this.changeInfoDialog = true
     },
     // 提交修改
-    subBaseInfo () {
+    subBaseInfo() {
       let subUrl = '/Company.do?setCompanyOrder'
       let subParams = {
         name: this.form.cName,
@@ -1947,7 +1875,7 @@ export default {
       this.changeInfoDialog = false
     },
     // 编辑发票信息
-    subEditInvoice () {
+    subEditInvoice() {
       let params = {}
       Object.keys(this.editInvoiceInfo).forEach(val => {
         params[val] = this.editInvoiceInfo[val]
@@ -1966,7 +1894,7 @@ export default {
       })
     },
     // 修改资质
-    editQualify () {
+    editQualify() {
       getByCode(32).then(res => {
         this.qualifyType = res.data.data
       })
@@ -1979,16 +1907,20 @@ export default {
       this.delQulifyArr = []
       this.editQualifyDialog = true
     },
-    qualifySelectChange (val) {
+    qualifySelectChange(val) {
       this.selectedQualify = val
     },
-    addQualify () {
+    addQualify() {
       console.log(this.copy_showQualify)
       if (!this.selectedQualify.id) {
         this.$message.warning('请下拉选择资质类型！')
         return
       }
-      if (this.copy_showQualify.some(val => val.label === this.selectedQualify.tb_field_name)) {
+      if (
+        this.copy_showQualify.some(
+          val => val.label === this.selectedQualify.tb_field_name
+        )
+      ) {
         this.$message.warning('已存在该资质！')
         return
       }
@@ -1998,7 +1930,7 @@ export default {
       }
       this.form.zizhiList.push(this.selectedQualify)
     },
-    getFileData (file, data) {
+    getFileData(file, data) {
       console.log(data)
       this.copy_showQualify.push({
         cid: this.handleClickCid,
@@ -2007,7 +1939,7 @@ export default {
       })
     },
     // todo
-    confirmEditQualify () {
+    confirmEditQualify() {
       this.showQualify.forEach(val => {
         let bool = this.copy_showQualify.some(item => item.label === val.label)
         if (!bool) {
@@ -2036,10 +1968,10 @@ export default {
       })
     },
     // 日志
-    updateLogList (res) {
+    updateLogList(res) {
       this.log = res.data[0].data
     },
-    subLog () {
+    subLog() {
       if (!this.logMark) {
         this.$message({
           type: 'warning',
@@ -2064,7 +1996,7 @@ export default {
       })
     },
     // 记业绩
-    addPFTime () {
+    addPFTime() {
       let params = {
         orderid: this.receiveData.orderid,
         opentime: this.pfForm.newPFdate,
@@ -2086,7 +2018,7 @@ export default {
       })
     },
     // 点击添加联系人
-    addContact (index, type) {
+    addContact(index, type) {
       if (type === 'del') {
         this.form.contactList.splice(index, 1)
       } else if (index === 0) {
@@ -2099,7 +2031,7 @@ export default {
       }
     },
     // 获取订单基本信息
-    _getBasicInfo () {
+    _getBasicInfo() {
       let baseUrl = '/wf.do?ndget'
       let baseParams = {
         sn: this.receiveData.sn,
@@ -2115,6 +2047,7 @@ export default {
           this.orderInfo = res.data.data[1]
           this.orderInfo.applytime = ''
           this.productInfo = res.data.data[4]
+          this.productInfo[0].column = JSON.parse(this.productInfo[0].column) // template不要用JSON.parse,易出错
           this.originUser = res.data.data[3]
           this.cusAttrList = res.data.data[5]
           this.showQualify = res.data.data[5]
@@ -2130,7 +2063,7 @@ export default {
       })
     },
     // 获取审核记录信息
-    _getRecord () {
+    _getRecord() {
       let lastIndex = 0
       let progressUrl = '/wf/order.do?Schedule'
       let progressParam = {
@@ -2181,21 +2114,21 @@ export default {
 </script>
 
 <style lang="less">
-.invoice-basic-info{
-  .el-form-item{
+.invoice-basic-info {
+  .el-form-item {
     margin-bottom: 0;
-    .el-form-item__label{
+    .el-form-item__label {
       font-size: 13px;
       line-height: 24px;
     }
-    .el-form-item__content{
+    .el-form-item__content {
       font-size: 13px;
       line-height: 24px;
     }
   }
 }
-.contact-phone{
-  width: calc(~"(100% - 30px)");
+.contact-phone {
+  width: calc(~'(100% - 30px)');
 }
 </style>
 
@@ -2209,28 +2142,28 @@ export default {
         margin-right: 20px;
       }
     }
-    .qualify{
+    .qualify {
       display: flex;
-      .qualify-left{
-        flex: 1
+      .qualify-left {
+        flex: 1;
       }
-      .qualify-right{
+      .qualify-right {
         flex: 0 0 80px;
         width: 80px;
       }
     }
-    .invoice-header{
+    .invoice-header {
       width: 100%;
       height: 28px;
       line-height: 28px;
       display: flex;
       justify-content: space-between;
     }
-    .invoice-wrapper{
+    .invoice-wrapper {
       display: flex;
       flex-wrap: wrap;
-      .invoice-item{
-        h4{
+      .invoice-item {
+        h4 {
           margin: 0;
         }
       }

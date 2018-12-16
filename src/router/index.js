@@ -1033,6 +1033,9 @@ const router = new Router({
     }
   ],
   scrollBehavior(to, from, savedPosition) {
+    if(to.name === 'login'){
+      return
+    }
     if (savedPosition) {
       return savedPosition
     } else {

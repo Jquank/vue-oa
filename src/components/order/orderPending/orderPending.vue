@@ -46,9 +46,9 @@
       <el-table size="mini" v-if="permissions.indexOf('5q')<0&&permissions.indexOf('6n')<0" :data="pendingList" class="table-width" max-height="550">
         <el-table-column prop="ordernum" label="订单ID" min-width="180">
         </el-table-column>
-        <el-table-column prop="cname" label="订单名称" min-width="150">
+        <el-table-column prop="cname" label="订单名称" min-width="180">
         </el-table-column>
-        <el-table-column prop="" label="提交时间" width="90">
+        <el-table-column prop="" label="提交时间" width="100">
           <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
         </el-table-column>
         <el-table-column prop="username" label="下单人" min-width="80">
@@ -70,12 +70,12 @@
             {{scope.row.audittype === 0 ? "仅降E":"降E并提单"}}
           </span>
         </el-table-column>
-        <el-table-column prop="" label="最后操作时间" width="140">
+        <el-table-column prop="" label="最后操作时间" width="100">
           <span slot-scope="scope">{{scope.row.opt_time | timeFormat}}</span>
         </el-table-column>
         <el-table-column prop="deptname" label="商务大区部门" min-width="110">
         </el-table-column>
-        <el-table-column prop="" label="操作" min-width="148" align="center">
+        <el-table-column prop="" label="操作" width="150" align="center">
           <template slot-scope="scope">
             <el-button type="primary" @click.native="viewOrder(scope.row)" class="xsbtn">查看</el-button>
             <el-button v-if="permissions.indexOf('5a')>-1" type="warning" @click.native="updateOrder(scope.row)" class="xsbtn">修改订单</el-button>
@@ -85,10 +85,10 @@
 
       <!-- 转户出纳列表 -->
       <el-table v-if="permissions.indexOf('5q') > -1" :data="pendingList" class="table-width" max-height="550">
-        <el-table-column prop="" label="加款时间" min-width="90">
+        <el-table-column prop="" label="加款时间" width="150">
           <span slot-scope="scope">{{scope.row.addMoneyTime | timeFormat}}</span>
         </el-table-column>
-        <el-table-column prop="cname" label="订单名称" min-width="150">
+        <el-table-column prop="cname" label="订单名称" min-width="180">
         </el-table-column>
         <el-table-column prop="" label="客户类型" min-width="90">
           <span slot-scope="scope">{{scope.row.producttype | cusState('cusType')}}{{scope.row.productnumber}}</span>
@@ -130,7 +130,7 @@
         </el-table-column>
         <el-table-column prop="webName" label="网站维护人员" min-width="80">
         </el-table-column>
-        <el-table-column prop="" label="提交时间" min-width="90">
+        <el-table-column prop="" label="提交时间" min-width="100">
           <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
         </el-table-column>
         <el-table-column prop="username" label="下单人" min-width="80">
@@ -142,7 +142,7 @@
             <span v-if="scope.row.pid!='WEBSITE'">{{scope.row.pname}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="currentname" label="审核状态" min-width="80">
+        <el-table-column prop="currentname" label="审核状态" width="140">
           <template slot-scope="scope">
             <el-button type="warning" plain class="xsbtn">{{scope.row.currentname?scope.row.currentname:'订单完成'}}</el-button>
           </template>
@@ -150,12 +150,12 @@
         <el-table-column prop="currentname" label="订单状态" min-width="80">
           <span slot-scope="scope">{{scope.row.audittype == 0 ? "仅降E":"降E并提单"}}</span>
         </el-table-column>
-        <el-table-column prop="username" label="最后操作时间" width="140">
+        <el-table-column prop="username" label="最后操作时间" width="100">
           <span slot-scope="scope">{{scope.row.opt_time | timeFormat}}</span>
         </el-table-column>
         <el-table-column prop="deptname" label="商务大区部门" min-width="80">
         </el-table-column>
-        <el-table-column prop="" label="操作" min-width="148">
+        <el-table-column prop="" label="操作" width="150">
           <template slot-scope="scope">
             <el-button type="primary" @click.native="viewOrder(scope.row)" class="xsbtn">查看</el-button>
             <el-button v-if="permissions.indexOf('5a')>-1" type="warning" @click.native="updateOrder(scope.row)" class="xsbtn">修改订单</el-button>

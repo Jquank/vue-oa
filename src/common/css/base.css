@@ -178,6 +178,9 @@ div.el-dialog__body {
 .input-btn {
   width: calc((100% - 65px));
 }
+.contact-phone {
+  width: calc((100% - 36px));
+}
 .a-search-number {
   text-decoration: underline;
   color: #06c;

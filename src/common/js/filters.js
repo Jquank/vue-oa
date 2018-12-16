@@ -1,12 +1,13 @@
-
 import storage from 'good-storage'
 // import { getByCode } from 'api/getOptions'
 // import { $post } from 'api/http'
 
-function _getProductType (arr, num, str) {
+function _getProductType(arr, num, str) {
   let type = ''
   arr.forEach(val => {
-    if (num == val.code_val) { //eslint-disable-line
+    if (!num) {
+      type = ''
+    } else if (num == val.code_val) { //eslint-disable-line
       type = val.code_desc
     } else if (num == '1000') { //eslint-disable-line
       type = '总计'
@@ -16,7 +17,7 @@ function _getProductType (arr, num, str) {
 }
 
 // todo
-export function productType (num, str) {
+export function productType(num, str) {
   let productTypes = []
   let res = storage.get('x52')
   if (res) {
@@ -32,7 +33,7 @@ export function productType (num, str) {
   // return b
 }
 
-export function comType (num) {
+export function comType(num) {
   switch (num) {
     case -10:
       return '异常'
@@ -43,7 +44,7 @@ export function comType (num) {
   }
 }
 
-export function facilitatorType (num) {
+export function facilitatorType(num) {
   switch (num) {
     case 1:
       return '35'
@@ -55,7 +56,7 @@ export function facilitatorType (num) {
       return '自备'
   }
 }
-export function cusStatus (num) {
+export function cusStatus(num) {
   switch (num) {
     case 0:
       return '新开'
@@ -72,7 +73,7 @@ export function cusStatus (num) {
   }
 }
 
-export function cusState (num, type) {
+export function cusState(num, type) {
   if (type === 'cusStatus') {
     switch (num) {
       case -10:
@@ -156,7 +157,7 @@ export function cusState (num, type) {
   }
 }
 
-export function invoiceState (num, type) {
+export function invoiceState(num, type) {
   if (type === 'invoiceKind') {
     switch (num) {
       case '11':
@@ -207,7 +208,7 @@ export function invoiceState (num, type) {
     }
   }
 }
-export function renewState (num, type) {
+export function renewState(num, type) {
   if (type === 'activity') {
     switch (num) {
       case '10':
@@ -231,7 +232,7 @@ export function renewState (num, type) {
   }
 }
 
-export function businessStatus (num) {
+export function businessStatus(num) {
   switch (num) {
     case '010':
       return '公共库审核不通过'
@@ -262,14 +263,35 @@ export function businessStatus (num) {
   }
 }
 
+export function wjStyle(num) {
+  switch (num + '') {
+    case '0':
+      return '客建双站'
+    case '1':
+      return '自建双站'
+    case '2':
+      return '客建PC+自建WAP'
+    case '3':
+      return '客建双站+自建双站'
+    case '4':
+      return '营销页建站'
+  }
+}
 const reg = /[\u4E00-\u9FA5]{1,}/g
-export function timeFormat (num) {
-  if (num === '.') { return '.' }
-  if (!num) { return '' }
+export function timeFormat(num) {
+  if (num === '.') {
+    return '.'
+  }
+  if (!num) {
+    return ''
+  }
   if (reg.test(num)) {
     return num
   }
-  function add0 (m) { return m < 10 ? '0' + m : m }
+
+  function add0(m) {
+    return m < 10 ? '0' + m : m
+  }
   let time = new Date(num)
   let year = time.getFullYear()
   let month = time.getMonth() + 1
@@ -279,22 +301,33 @@ export function timeFormat (num) {
   let seconds = time.getSeconds()
   return year + '-' + add0(month) + '-' + add0(date) + ' ' + add0(hours) + ':' + add0(minutes) + ':' + add0(seconds)
 }
-export function timeFormat1 (num, bool = true) {
-  if (num === '.') { return '.' }
-  if (!num) { return '' }
+export function timeFormat1(num, bool = true) {
+  if (num === '.') {
+    return '.'
+  }
+  if (!num) {
+    return ''
+  }
   if (reg.test(num)) {
     return num
   }
-  function add0 (m) { return m < 10 ? '0' + m : m }
+
+  function add0(m) {
+    return m < 10 ? '0' + m : m
+  }
   let time = new Date(num)
   let year = time.getFullYear()
   let month = time.getMonth() + 1
   let date = time.getDate()
   return year + '-' + add0(month) + (bool ? ('-' + add0(date)) : '')
 }
-export function currency (num) {
-  if (num === '.') { return '.' }
-  if (num === 0) { return '¥ 0.00' }
+export function currency(num) {
+  if (num === '.') {
+    return '.'
+  }
+  if (num === 0) {
+    return '¥ 0.00'
+  }
   num = +num
   if (num && !isNaN(num)) {
     return '¥ ' + parseFloat(num).toFixed(2)
@@ -302,8 +335,10 @@ export function currency (num) {
     return ''
   }
 }
-export function currency1 (num) {
-  if (num === '.') { return '.' }
+export function currency1(num) {
+  if (num === '.') {
+    return '.'
+  }
   num = +num
   if (!isNaN(num)) {
     return '¥ ' + parseFloat(num).toFixed(2)
@@ -311,7 +346,7 @@ export function currency1 (num) {
     return ''
   }
 }
-export function bankType (num) {
+export function bankType(num) {
   switch (num) {
     case 0:
       return '阳光快付'

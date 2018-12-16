@@ -162,7 +162,7 @@
     </div>
 
     <!-- 选择流水弹窗 -->
-    <el-dialog :modal-append-to-body="false" title="分配合同" :visible.sync="selFlowDialog" width="600px">
+    <el-dialog :modal-append-to-body="false" title="选择流水" :visible.sync="selFlowDialog" width="650px">
       <el-table @selection-change="handleSelectionChange" stripe border :data="selFlowList" style="width: 100%;margin-top:10px;">
         <el-table-column type="selection" width="55">
         </el-table-column>
@@ -170,6 +170,9 @@
           <span slot-scope="scope">{{scope.row.split_amount | currency1}}</span>
         </el-table-column>
         <el-table-column prop="code_desc" label="银行类型">
+        </el-table-column>
+        <el-table-column prop="" label="交易时间" width="150">
+          <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
         </el-table-column>
         <el-table-column prop="allocRemark" label="预留信息">
         </el-table-column>
