@@ -55,8 +55,8 @@
       </el-table-column>
       <el-table-column prop="" label="转出/接收合同" min-width="120">
         <template slot-scope="scope">
-          <el-button v-if="scope.row.status==20 && scope.row.uid == userId">转出合同</el-button>
-          <el-button v-if="scope.row.status==20 && scope.row.switchuid != '' && scope.row.switchuid!=null && userId != scope.row.uid">接收合同</el-button>
+          <el-button @click.native="switchContract(scope.row)" v-if="scope.row.status==20 && scope.row.uid == userId" type="warning" class="xsbtn">转出合同</el-button>
+          <el-button @click.native="receiveContract(scope.row)" v-if="scope.row.status==20 && scope.row.switchuid ==userId" type="success" class="xsbtn">接收合同</el-button>
         </template>
       </el-table-column>
       <el-table-column v-if="permissions.indexOf('76') > -1" prop="" label="操作" width="60px" align="center">
@@ -193,13 +193,45 @@ export default {
       selUserDialog: false, // 选择人员弹窗
       selUserId: '',
 
-      statusnamebefore: ''
+      statusnamebefore: '',
+      getUserMark: ''
     }
   },
   created () {
     this._getContractTypeList()
   },
   methods: {
+    switchContract(data) {
+      this.rowData = data
+      this.getUserMark = 'switchContract'
+      this.selUserDialog = true
+    },
+    receiveContract(data) {
+      this.$confirm(`确认接收${data.username}转发的合同吗？`, '', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          let params = {
+            'conId': data.id,
+            'switchuid': data.switchuid,
+            'contractUid': data.uid,
+            'contractNumber': data.number
+          }
+          this.$post('/Contract.do?RecieveCon', params).then(res => {
+            if (res.data.success) {
+              this.search()
+            }
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          })
+        })
+    },
     search () {
       this.sendParams = {
         contractnumber: this.contractNum,
@@ -266,14 +298,24 @@ export default {
       })
     },
     selUser () {
+      this.getUserMark = 'selUser'
       this.selUserDialog = true
     },
     getUserId (id, name) {
-      this.selUserId = id
       if (id) {
         this.selUserDialog = false
       }
-      this.detailInfo.username = name
+      if (this.getUserMark === 'switchContract') {
+        let params = {
+          'conId': this.rowData.id,
+          'switchUid': id,
+          'contractNumber': this.rowData.number
+        }
+        this.$post('/Contract.do?SwitchApply', params).then(res => {})
+      } else if (this.getUserMark === 'selUser') {
+        this.selUserId = id
+        this.detailInfo.username = name
+      }
     },
     _getContractTypeList () {
       this.$get('/Contract.do?catlst').then(res => {

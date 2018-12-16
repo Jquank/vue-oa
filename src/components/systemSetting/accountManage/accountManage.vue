@@ -7,7 +7,7 @@
       </el-table-column>
       <el-table-column prop="" label="操作" align="center">
         <template slot-scope="scope">
-          <el-switch @change="turnOff(scope.row)" v-model="scope.row.allowed" active-color="#13ce66" inactive-color="#ff4949" :active-value="1" :inactive-value="0"></el-switch>
+          <el-switch @change="turnOff(scope.row)" v-model="scope.row.allocation" active-color="#13ce66" inactive-color="#ff4949" :active-value="1" :inactive-value="0"></el-switch>
         </template>
       </el-table-column>
     </el-table>
@@ -31,7 +31,7 @@ export default {
     turnOff (val) {
       let params = {
         'uid': val.id,
-        'allocation': val.allocation === 0 ? 1 : 0
+        'allocation': val.allocation
       }
       this.$post('/Oper.do?EditAlloc', params).then(res => {
         if (res.data.success) {

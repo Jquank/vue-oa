@@ -1,10 +1,10 @@
 <template>
   <div class="cus-search component-container media-padding">
     <div class="search">
-      <el-input placeholder="搜索客户名称" v-model="cusName" class="search-item item-width">
+      <el-input placeholder="搜索客户名称" @keyup.enter.native="search" v-model="cusName" class="search-item item-width">
         <template slot="prepend">客户名称:</template>
       </el-input>
-      <el-input placeholder="搜索百度账号" v-model="bdAccount" class="search-item item-width">
+      <el-input placeholder="搜索百度账号" @keyup.enter.native="search" v-model="bdAccount" class="search-item item-width">
         <template slot="prepend">百度账号:</template>
       </el-input>
       <div class="search-item">
@@ -53,7 +53,7 @@
         <el-table-column prop="kefuDept" label="客服部门">
         </el-table-column>
       </template>
-      <el-table-column prop="" label="操作" min-width="120px" v-if="permissions.indexOf('84')>-1">
+      <el-table-column prop="" label="操作" min-width="150px" v-if="permissions.indexOf('84')>-1" align="center">
         <template slot-scope="scope">
           <el-button @click.native="view(scope.row)" type="success" class="xsbtn">查看</el-button>
           <el-button @click.native="turnFollow(scope.row)" v-if="!(scope.row.cltype>=20&&scope.row.clstatus>=20)" type="primary" class="xsbtn">转跟踪</el-button>
@@ -81,24 +81,24 @@
         <el-row :gutter="20">
           <el-col :md="12" class="maxwidth">
             <el-form-item label="客户法人 :">
-              <el-input v-model="cusDetail.legal_person" disabled></el-input>
+              <el-input v-model="cusDetail.legal_person" :disabled="disableInput"></el-input>
             </el-form-item>
           </el-col>
           <el-col :md="12" class="maxwidth">
             <el-form-item label="客户地址 :">
-              <el-input v-model="cusDetail.address"  type="textarea" disabled></el-input>
+              <el-input v-model="cusDetail.address"  type="textarea" :disabled="disableInput"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :md="12" class="maxwidth">
             <el-form-item label="成立日期 :">
-              <el-date-picker v-model="cusDetail.establishment_date" value-format="yyyy-MM-dd" type="date" disabled style="width:100%"></el-date-picker>
+              <el-date-picker v-model="cusDetail.establishment_date" value-format="yyyy-MM-dd" type="date" :disabled="disableInput" style="width:100%"></el-date-picker>
             </el-form-item>
           </el-col>
           <el-col :md="12" class="maxwidth">
             <el-form-item label="所属地区 :">
-              <select-area v-model="form.area" :areaDisabled="true" :echoArea="form.area" style="width:100%"></select-area>
+              <select-area v-model="form.area" :key="key_area" :echoArea="form.area" :areaDisabled="disableInput" style="width:100%"></select-area>
             </el-form-item>
           </el-col>
         </el-row>
@@ -110,7 +110,7 @@
           </el-col>
           <el-col :md="12" class="maxwidth">
             <el-form-item label="客户来源 :">
-              <el-select v-model="cusDetail.fm" style="width:100%;" disabled>
+              <el-select v-model="cusDetail.fm" style="width:100%;" :disabled="disableInput">
                 <el-option v-for="(item,index) in fmList" :key="index" :value="item.id" :label="item.code_desc"></el-option>
               </el-select>
             </el-form-item>
@@ -132,7 +132,7 @@
         <el-row :gutter="20">
           <el-col :md="24" style="max-width:1000px;">
             <el-form-item label="经营范围 :">
-              <el-input v-model="cusDetail.business_scope" type="textarea" :rows="4" disabled></el-input>
+              <el-input v-model="cusDetail.business_scope" type="textarea" :rows="4" :disabled="disableInput"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -228,7 +228,10 @@ export default {
       viewRemark: '',
 
       applyEditDialog: false, // 申请修改弹窗
-      applyEditRemark: ''
+      applyEditRemark: '',
+      disableInput: true,
+      key_area: '',
+      key_form: ''
     }
   },
   created () {
@@ -356,8 +359,6 @@ export default {
         'area': this.cusDetail.county || this.cusDetail.city || this.cusDetail.province,
         'business_scope': this.cusDetail.business_scope
       }
-      console.log(params)
-      return
       this.$post('/Company.do?compset', params).then(res => {
         if (res.data[0].success) {
           this.cusDetailDialog = false
@@ -424,6 +425,10 @@ export default {
       this.cusDetailDialog = true
     },
     search () {
+      if (!this.cusName || this.cusName.length <= 4) {
+        this.$message.error('搜索关键字需大于4个字符')
+        return
+      }
       const regKeyWords = /(湖北省)|(武汉市)|(江岸区)|(江汉区)|(硚口区)|(汉阳区)|(武昌区)|(青山区)|(洪山区)|(蔡甸区)|(江夏区)|(黄陂区)|(新洲区)|(东西湖区)|(汉南区)|(东湖区)|(化学区)|(八吉府区)|(汉口区)|(北京市)|(上海市)|(天津市)|(深圳市)|(东莞市)|(重庆市)|(成都市)|(四川市)|(广东省)|(广州市)|(顺德市)|(佛山市)|(河源市)|(惠州市)|(西安市)|(陕西省)|(山东省)|(济南市)|(山西省)|(太原市)|(广西省)|(桂林市)|(云南省)|(昆明市)|(湖南省)|(长沙市)|(株洲市)|(常德市)|(安徽省)|(黄山市)|(合肥市)|(浙江省)|(杭州市)|(江苏省)|(苏州市)|(南京市)|(哈尔滨省)|(黑龙江省)|(吉林市)|(长春市)|(辽宁市)|(沈阳市)|(内蒙古)|(呼和浩特)|(河北省)|(石家庄市)|(新疆省)|(乌鲁木齐市)|(甘肃省)|(兰州市)|(青海省)|(西宁市)|(宁夏市)|(银川市)|(河南省)|(郑州市)|(贵州市)|(贵阳市)|(西藏)|(拉萨)|(江西省)|(南昌市)|(福建省)|(福州市)|(台湾)|(台北)|(海南省)|(海口市)|(香港)|(澳门)|(湖北)|(武汉)|(江岸)|(江汉)|(硚口)|(汉阳)|(武昌)|(青山)|(洪山)|(蔡甸)|(江夏)|(黄陂)|(新洲)|(东西湖)|(汉南)|(东湖)|(化学)|(八吉府)|(汉口)|(北京)|(上海)|(天津)|(深圳)|(东莞)|(重庆)|(成都)|(四川)|(广东)|(广州)|(顺德)|(佛山)|(河源)|(惠州)|(西安)|(陕西)|(山东)|(济南)|(山西)|(太原)|(广西)|(桂林)|(云南)|(昆明)|(湖南)|(长沙)|(株洲)|(常德)|(安徽)|(黄山)|(合肥)|(浙江)|(杭州)|(江苏)|(苏州)|(南京)|(哈乐滨)|(黑龙江)|(吉林)|(长春)|(辽宁)|(沈阳)|(内蒙古)|(呼和浩特)|(河北)|(石家庄)|(新疆)|(乌鲁木齐)|(甘肃)|(兰州)|(青海)|(西宁)|(宁夏)|(银川)|(河南)|(郑州)|(贵州)|(贵阳)|(西藏)|(拉萨)|(江西)|(南昌)|(福建)|(福州)|(台湾)|(台北)|(海南)|(海口)|(香港)|(澳门)|(分公司)/g
       this.sendParams = {
         'companyname': this.cusName.trim().replace(regKeyWords, ''),
@@ -435,6 +440,7 @@ export default {
       this.bdAccount = ''
     },
     changeProType (val) {
+      this.cusType = ''
       this._getCusTypeList(val)
     },
     _getCusTypeList (pid) {
@@ -468,6 +474,9 @@ export default {
         'companylogid': data.companylogid
       }).then(res => {
         this.cusDetail = res.data[0].data[0]
+        if (this.cusDetail.ctype === -10) {
+          this.disableInput = false
+        }
         fn(fnParams)
         console.log(this.cusDetail)
         this.form.cusName = this.cusDetail.name

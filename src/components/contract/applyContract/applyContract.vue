@@ -104,6 +104,7 @@ export default {
             type: 'success',
             message: '申请成功'
           })
+          this.search()
         }
       })
     },

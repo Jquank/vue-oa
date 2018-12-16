@@ -142,8 +142,8 @@
           <el-row :gutter="20">
             <el-col :md="24" style="max-width:1000px;">
               <el-form-item label="审核被拒原因 :">
-                <el-select multiple v-model="reason" style="width:100%;">
-                  <el-option v-for="(item,index) in rejectData" :key="index" :value="index" :label="item.code_desc"></el-option>
+                <el-select multiple v-model="reason" value-key="id" style="width:100%;">
+                  <el-option v-for="item in rejectData" :key="item.id" :value="item" :label="item.code_desc"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -419,10 +419,16 @@ export default {
     if (this.receiveData.cltype === 20) {
       getByCode(30).then(res => {
         this.rejectData = res.data.data
+        this.rejectData.forEach(val => {
+          val.label = val.code_desc
+        })
       })
     } else {
       getByCode(29).then(res => {
         this.rejectData = res.data.data
+        this.rejectData.forEach(val => {
+          val.label = val.code_desc
+        })
       })
     }
     this.applyChangeParams = this.stopParams = {
@@ -572,14 +578,11 @@ export default {
         .replace((/\)/g, '）'))
       let params = {
         cid: this.receiveData.id,
-        cat: this.cusDetail.bid || this.cusDetail.cid,
+        cat: this.form.trade[1] || this.form.trade[0],
         fm: this.cusDetail.fm,
         name:
           this.cusDetail.name === this.form.cusName ? '' : this.form.cusName,
-        area:
-          this.cusDetail.county ||
-          this.cusDetail.city ||
-          this.cusDetail.province,
+        area: this.form.area[2] || this.form.area[1] || this.form.area[0],
         address: this.cusDetail.address,
         legal_person: this.cusDetail.legal_person,
         website: this.cusDetail.website,
@@ -594,15 +597,13 @@ export default {
         companylogid: this.receiveData.check_id,
         pid: this.receiveData.pid
       }
+      console.log(params)
+      return
       this.$post('/CheckOut.do?EditCustomer', params).then(res => {
         if (res.data[0].success) {
           this.$message({
             type: 'success',
             message: '保存成功'
-          })
-          this.$router.push({
-            path: '/indexPage/dealCheck',
-            query: { data: 'fromDetail' }
           })
         } else {
           this.$message({
