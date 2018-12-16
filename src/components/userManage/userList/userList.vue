@@ -95,7 +95,7 @@
       <add-user @closeDialog="closeDialog" :key="key_add_user" :echoUserInfo="userInfo" :quotaDisable="true"></add-user>
     </el-dialog>
     <!-- 编辑部门弹窗 -->
-    <el-dialog title="编辑部门管理" :visible.sync="deptTreeDialog" width="350px">
+    <el-dialog title="编辑部门管理" :visible.sync="deptTreeDialog" width="400px">
       <select-dept @subParams="subParams" :defaultChecked="defaultChecked" :key="key_dept_manage"></select-dept>
     </el-dialog>
   </div>
@@ -216,14 +216,17 @@ export default {
       })
     },
     // 提交部门设置
-    // todo
     subParams (data) {
       if (!data) {
         return
       }
       let params = {codes: data, uid: this.uid}
-      this.$get('/User/managerDeptCode.do', params).then(res => {
-        console.log(res) // get请求参数有问题，可改post
+      console.log(params)
+      this.$post('/User/managerDeptCode.do', params).then(res => {
+        if (res.data.success) {
+          this.$message.success('修改成功！')
+          this.deptTreeDialog = false
+        }
       })
     },
     // 编辑配额

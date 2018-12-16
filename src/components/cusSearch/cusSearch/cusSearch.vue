@@ -334,7 +334,7 @@ export default {
         this.$message.error('请选择产品类型！')
         return
       }
-      if (!this.cusType) {
+      if (this.cusType === undefined || this.cusType === null || this.cusType === '') {
         this.$message.error('请选择客户类型！')
         return
       }
@@ -356,6 +356,8 @@ export default {
         'area': this.cusDetail.county || this.cusDetail.city || this.cusDetail.province,
         'business_scope': this.cusDetail.business_scope
       }
+      console.log(params)
+      return
       this.$post('/Company.do?compset', params).then(res => {
         if (res.data[0].success) {
           this.cusDetailDialog = false
