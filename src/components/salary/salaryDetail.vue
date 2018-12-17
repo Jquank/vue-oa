@@ -7,13 +7,13 @@
     <div class="line"></div>
     <el-table :span-method="arraySpanMethod" :row-class-name="rowClass" :cell-class-name="cellClass" size="mini" :data="tableData" border :show-header="false">
       <el-table-column prop="name1"></el-table-column>
-      <el-table-column prop="value1" width="130"></el-table-column>
+      <el-table-column prop="value1" width="150" align="center"></el-table-column>
       <el-table-column prop="name2"></el-table-column>
-      <el-table-column prop="value2" width="130"></el-table-column>
+      <el-table-column prop="value2" width="150" align="center"></el-table-column>
       <el-table-column prop="name3"></el-table-column>
-      <el-table-column prop="value3" width="130"></el-table-column>
+      <el-table-column prop="value3" width="130" align="center"></el-table-column>
       <el-table-column prop="name4"></el-table-column>
-      <el-table-column prop="value4" width="130"></el-table-column>
+      <el-table-column prop="value4" width="130" align="center"></el-table-column>
     </el-table>
   </div>
 </template>

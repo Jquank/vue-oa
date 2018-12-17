@@ -20,7 +20,7 @@
         <el-input v-model="applyName" placeholder="发票申请人" class="cus-item item-width">
           <template slot="prepend">发票申请人:</template>
         </el-input>
-        <el-date-picker v-model="checkDate" format="yyyy/MM/dd HH:mm" value-format="yyyy/MM/dd HH:mm" :unlink-panels="true" type="datetimerange" range-separator="至" start-placeholder="审核时间" end-placeholder="审核时间" class="cus-item" style="width:300px;"></el-date-picker>
+        <el-date-picker v-model="checkDate" format="yyyy/MM/dd HH:mm" value-format="yyyy/MM/dd HH:mm" :unlink-panels="true" type="datetimerange" range-separator="至" start-placeholder="审核时间" end-placeholder="审核时间" class="cus-item" style="width:310px;"></el-date-picker>
         <div class="cus-item">
           <el-button @click.native="search" type="primary">查 询</el-button>
           <el-button @click.native="reset" type="warning">重 置</el-button>
@@ -29,7 +29,7 @@
 
       <!-- 列表 -->
       <el-table stripe border :data="makeInvoiceList" max-height="550" style="width: 100%">
-        <el-table-column prop="tnumber" label="单据号码" width="100">
+        <el-table-column prop="tnumber" label="单据号码" width="110">
         </el-table-column>
         <el-table-column prop="applyuser" label="申请人" width="100">
           <template slot-scope="scope">
@@ -37,9 +37,9 @@
             <span>{{scope.row.bindName?('('+scope.row.bindName+')'):((scope.row.true_name && scope.row.true_name!=scope.row.username)?('('+scope.row.true_name+')'):'')}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="companyname" label="发票抬头" min-width="150">
+        <el-table-column prop="companyname" label="发票抬头" min-width="180">
         </el-table-column>
-        <el-table-column prop="comName" label="保A公司名" min-width="150">
+        <el-table-column prop="comName" label="保A公司名" min-width="180">
         </el-table-column>
         <el-table-column prop="chargename" label="货物名称" width="100">
         </el-table-column>
@@ -52,17 +52,17 @@
         <el-table-column prop="" label="未销金额" width="110">
           <span slot-scope="scope">{{scope.row.tmoney-scope.row.invReceiveMoney | currency}}</span>
         </el-table-column>
-        <el-table-column prop="ttype" label="发票类型" width="70">
+        <el-table-column prop="ttype" label="发票类型" width="80">
           <span slot-scope="scope">{{scope.row.ttype | invoiceState('invoiceKind')}}</span>
         </el-table-column>
         <el-table-column prop="invoicenumber" label="发票号码" width="100">
         </el-table-column>
-        <el-table-column prop="baidu_account" label="百度账户" width="100">
+        <el-table-column prop="baidu_account" label="百度账户" width="110">
         </el-table-column>
-        <el-table-column prop="offset_money" label="销账金额" width="100">
+        <el-table-column prop="offset_money" label="销账金额" width="110">
           <span slot-scope="scope">{{scope.row.offset_money | currency}}</span>
         </el-table-column>
-        <el-table-column prop="billtime" label="提单时间" width="90">
+        <el-table-column prop="billtime" label="提单时间" width="100">
           <span slot-scope="scope">{{scope.row.billtime | timeFormat}}</span>
         </el-table-column>
         <el-table-column label="操作" width="65">

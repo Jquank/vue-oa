@@ -1,12 +1,12 @@
 <template>
   <div class="incoice-list-component component-container media-padding">
     <div class="visit-search mt-10px">
-      <up-file v-if="permissions.indexOf('53') > -1 && (mark==='list' || mark==='handled')" :title="'导入'" :upIcon="'fa fa-download'" :uploadUrl="serverUrl+'/Invoice.do?import'"  :isHiddenFileList="true" :otherParams="{'code': '50', 'tk': tk}" class="visit-item"></up-file>
-      <el-button @click.native="exportExcellHandled" v-if="mark==='handled'" type="info" class="visit-item fa fa-upload"> 导出Excell</el-button>
-      <el-button @click.native="exportExcellSend" v-if="permissions.indexOf('7c') > -1 && mark==='list'" type="warning" class="visit-item fa fa-upload"> 寄发票导出Excell</el-button>
+      <up-file v-if="permissions.indexOf('53') > -1 && (mark==='list' || mark==='handled')" :title="'导入'" :upIcon="'fa fa-cloud-download'" :uploadUrl="serverUrl+'/Invoice.do?import'"  :isHiddenFileList="true" :otherParams="{'code': '50', 'tk': tk}" class="visit-item"></up-file>
+      <el-button @click.native="exportExcellHandled" v-if="mark==='handled'" icon="fa fa-cloud-upload" type="info" class="visit-item"> 导出Excell</el-button>
+      <el-button @click.native="exportExcellSend" v-if="permissions.indexOf('7c') > -1 && mark==='list'" type="warning" icon="fa fa-cloud-upload" class="visit-item"> 寄发票导出Excell</el-button>
 
-      <el-button @click.native="exportTxt" v-if="permissions.indexOf('50') > -1 && mark==='pending'" type="primary" class="visit-item fa fa-upload"> 导出txt</el-button>
-      <el-button @click.native="exportExcell" v-if="permissions.indexOf('51') > -1 && mark==='pending'" type="warning" class="visit-item fa fa-upload"> 导出Excell</el-button>
+      <el-button @click.native="exportTxt" v-if="permissions.indexOf('50') > -1 && mark==='pending'" type="primary" class="visit-item" icon="fa fa-cloud-upload"> 导出txt</el-button>
+      <el-button @click.native="exportExcell" v-if="permissions.indexOf('51') > -1 && mark==='pending'" type="warning"  icon="fa fa-cloud-upload" class="visit-item"> 导出Excell</el-button>
       <span v-if="mark==='list'" class="visit-item tipfont fa fa-search" style="line-height:34px;color:#06c;">
         <a href="http://www.kuaidi100.com/?from=openv" target="_blank" class="a-search-number"> 查询快递单号</a>
       </span>
@@ -49,7 +49,7 @@
         <el-option label="未填写快递单号" value="0"></el-option>
         <el-option label="已填写快递单号" value="10"></el-option>
       </auto-select>
-      <el-date-picker v-model="applyDate" format="yyyy/MM/dd HH:mm" value-format="yyyy/MM/dd HH:mm" :unlink-panels="true" type="datetimerange" range-separator="至" start-placeholder="申请时间" end-placeholder="申请时间" class="visit-item" style="width:300px;"></el-date-picker>
+      <el-date-picker v-model="applyDate" format="yyyy/MM/dd HH:mm" value-format="yyyy/MM/dd HH:mm" :unlink-panels="true" type="datetimerange" range-separator="至" start-placeholder="申请时间" end-placeholder="申请时间" class="visit-item" style="width:310px;"></el-date-picker>
       <div class="visit-item">
         <el-button @click.native="search" type="primary">查 询</el-button>
         <el-button @click.native="reset" type="warning">重 置</el-button>
@@ -73,7 +73,7 @@
         </el-table-column>
         <el-table-column prop="companyname" label="购方名称" min-width="150">
         </el-table-column>
-        <el-table-column prop="invoicetime" label="开票日期" width="90">
+        <el-table-column prop="invoicetime" label="开票日期" width="100">
           <span slot-scope="scope">{{scope.row.invoicetime | timeFormat1}}</span>
         </el-table-column>
         <el-table-column prop="tmoney" label="总金额" width="120">
@@ -94,11 +94,11 @@
         </el-table-column>
         <el-table-column prop="tname" label="收件人姓名" width="100">
         </el-table-column>
-        <el-table-column prop="tmobile" label="收件人电话" width="100">
+        <el-table-column prop="tmobile" label="收件人电话" width="110">
         </el-table-column>
-        <el-table-column prop="tphone" label="收件人手机" width="100">
+        <el-table-column prop="tphone" label="收件人手机" width="110">
         </el-table-column>
-        <el-table-column prop="" label="操作" width="150">
+        <el-table-column prop="" label="操作" width="150" align="center">
           <template slot-scope="scope">
             <div v-if="mark==='handled'">
               <el-button @click.native="view(scope.row)" type="success" class="xsbtn">查看</el-button>
@@ -116,29 +116,29 @@
       <el-table :key="key_table" border :data="invoiceList" class="table-width" id="invoice-list-table" max-height="500">
         <el-table-column prop="banktype" :fixed="fixed" label="银行类型" width="80">
         </el-table-column>
-        <el-table-column prop="tm" label="交易时间" :fixed="fixed" width="90">
+        <el-table-column prop="tm" label="交易时间" :fixed="fixed" width="100">
           <span slot-scope="scope">{{scope.row.tm | timeFormat}}</span>
         </el-table-column>
         <el-table-column prop="fm_name" label="付款公司名" :fixed="fixed" width="120">
         </el-table-column>
         <el-table-column prop="bsremark" label="备注" :fixed="fixed" width="120">
         </el-table-column>
-        <el-table-column prop="amount" label="交易金额" :fixed="fixed" width="100">
+        <el-table-column prop="amount" label="交易金额" :fixed="fixed" width="110">
           <span slot-scope="scope">{{scope.row.amount | currency}}</span>
         </el-table-column>
         <el-table-column prop="bsid" label="bsid" :fixed="fixed" width="50" show-overflow-tooltip>
         </el-table-column>
         <!-- 此处dom有合并，但数据并没有合并，故用不了table的selection -->
-        <el-table-column prop="id" label="选择" width="45" :fixed="fixed">
+        <el-table-column prop="id" label="选择" width="50" :fixed="fixed" align="center">
           <template slot-scope="scope">
             <el-checkbox @change="((val,$event)=>singleCheck(val,$event,scope.row))" :true-label="scope.row.id"></el-checkbox>
           </template>
         </el-table-column>
-        <el-table-column prop="tnumber" label="单据号码" width="100">
+        <el-table-column prop="tnumber" label="单据号码" width="110">
         </el-table-column>
         <el-table-column prop="applyusername" label="申请人" width="90">
         </el-table-column>
-        <el-table-column prop="baiducount" label="百度账户" width="80">
+        <el-table-column prop="baiducount" label="百度账户" width="100">
         </el-table-column>
         <el-table-column prop="companyname" label="购方名称(发票公司名)" width="150">
         </el-table-column>
@@ -147,10 +147,10 @@
         <el-table-column prop="chargetype" label="货物名称" width="100">
           <span slot-scope="scope">{{scope.row.chargetype+'' | invoiceState('invoiceMoneyType')}}</span>
         </el-table-column>
-        <el-table-column prop="tmoney" label="总金额" width="100">
+        <el-table-column prop="tmoney" label="总金额" width="120">
           <span slot-scope="scope">{{scope.row.tmoney | currency}}</span>
         </el-table-column>
-        <el-table-column prop="ttype" label="发票类型" min-width="130">
+        <el-table-column prop="ttype" label="发票类型" width="90">
           <span slot-scope="scope">{{scope.row.ttype==11?'电子普票':
             scope.row.ttype==10?'纸质普票':'专票'}}</span>
         </el-table-column>
@@ -166,23 +166,36 @@
             <el-button v-if="scope.row.invoice==20" plain type="warning" class="xsbtn">寄出</el-button>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="160">
+        <el-table-column label="操作" width="110" align="center">
           <template slot-scope="scope">
-            <div class="table-btns">
-              <el-button @click.native="view(scope.row)" type="success" class="xsbtn">查看</el-button>
-
-              <el-button v-if="permissions.indexOf('52') > -1&&mark==='pending'" @click.native="editInvoice(scope.row)" type="warning" class="xsbtn">编辑</el-button>
-
-              <el-button v-if="mark==='pending'" @click.native="del(scope.row)" type="danger" class="xsbtn">删除</el-button>
-
-              <el-button v-if="scope.row.step < 300 && scope.row.hasinvoice == 0 && permissions.indexOf('52') > -1 && mark==='list'" @click.native="del(scope.row)" type="danger" class="xsbtn">删除</el-button>
-
-              <el-button v-if="scope.row.hasinvoice>=10" @click.native="moreCancle(scope.row)" type="warning" class="xsbtn">开多废除</el-button>
-
-              <el-button v-if="scope.row.is_advance == 20 && scope.row.receive_money < scope.row.tmoney && mark==='list'" @click.native="repayment(scope.row)" type="primary" class="xsbtn">还款</el-button>
-
-              <el-button v-if="scope.row.hasinvoice >= 10 && permissions.indexOf('7d')>-1" @click.native="errorRed(scope.row)" type="warning" class="xsbtn">发票开错冲红</el-button>
-            </div>
+            <el-dropdown trigger="click">
+              <el-button type="primary" size="mini">
+                操作<i class="el-icon-arrow-down el-icon--right"></i>
+              </el-button>
+              <el-dropdown-menu slot="dropdown" class="text-center">
+                <el-dropdown-item>
+                  <el-button @click.native="view(scope.row)" type="success" class="xsbtn">查看</el-button>
+                </el-dropdown-item>
+                <el-dropdown-item divided v-if="permissions.indexOf('52') > -1&&mark==='pending'">
+                  <el-button @click.native="editInvoice(scope.row)" type="warning" class="xsbtn">编辑</el-button>
+                </el-dropdown-item>
+                <el-dropdown-item divided v-if="mark==='pending'">
+                  <el-button @click.native="del(scope.row)" type="danger" class="xsbtn">删除</el-button>
+                </el-dropdown-item>
+                <el-dropdown-item divided v-if="scope.row.step < 300 && scope.row.hasinvoice == 0 && permissions.indexOf('52') > -1 && mark==='list'">
+                  <el-button @click.native="del(scope.row)" type="danger" class="xsbtn">删除</el-button>
+                </el-dropdown-item>
+                <el-dropdown-item divided v-if="scope.row.hasinvoice>=10" @click.native="moreCancle(scope.row)">
+                  <el-button type="warning" class="xsbtn">开多废除</el-button>
+                </el-dropdown-item>
+                <el-dropdown-item divided v-if="scope.row.is_advance == 20 && scope.row.receive_money < scope.row.tmoney && mark==='list'" >
+                  <el-button @click.native="repayment(scope.row)" type="primary" class="xsbtn">还款</el-button>
+                </el-dropdown-item>
+                <el-dropdown-item divided v-if="scope.row.hasinvoice >= 10 && permissions.indexOf('7d')>-1">
+                  <el-button @click.native="errorRed(scope.row)" type="warning" class="xsbtn">发票开错冲红</el-button>
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
           </template>
         </el-table-column>
       </el-table>
@@ -222,7 +235,7 @@
         </el-table-column>
         <el-table-column prop="baidu_account" label="百度账户" width="80">
         </el-table-column>
-        <el-table-column prop="inserttime" label="申请时间" width="140">
+        <el-table-column prop="inserttime" label="申请时间" width="150">
           <span slot-scope="scope">{{scope.row.inserttime | timeFormat}}</span>
         </el-table-column>
         <el-table-column prop="receiptmoney" label="到账金额" width="100">

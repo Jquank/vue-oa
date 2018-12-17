@@ -1058,17 +1058,17 @@ export default {
       &::before {
         z-index: inherit; // 消除table最下面的边框
       }
+      .split-item-col {
+        border-bottom: none;
+        padding: 2px 0;
+        > div.cell {
+          height: 25px;
+          line-height: 25px;
+        }
+      }
     }
     .add-border:not(:last-child) {
       border-bottom: 1px solid #d0d2d8;
-    }
-  }
-  .split-item-col {
-    border-bottom: none;
-    padding: 2px 0;
-    > div.cell {
-      height: 25px;
-      line-height: 25px;
     }
   }
   .el-dropdown .el-button {

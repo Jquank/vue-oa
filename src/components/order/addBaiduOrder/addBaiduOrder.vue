@@ -540,6 +540,7 @@ export default {
       console.log(params)
       this.$post('/wf.do?go', params).then(res => {
         if (res.data[0].success) {
+          this.$message.success('已提交！')
           this.$router.push({
             path: '/indexPage/orderPending',
             query: { data: 'fromDetail' }

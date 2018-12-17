@@ -22,7 +22,7 @@
             <el-table border :data="flows" style="max-width: 400px;">
               <el-table-column prop="code_desc" label="到款方式">
               </el-table-column>
-              <el-table-column prop="" label="到款时间" width="140">
+              <el-table-column prop="" label="到款时间" width="150">
                 <span slot-scope="scope">{{scope.row.tm | timeFormat}}</span>
               </el-table-column>
               <el-table-column prop="" label="金额">
@@ -262,7 +262,7 @@
     <!-- 续费审核记录 -->
     <div v-if="isEdit" class="maxwidth">
       <el-table stripe border :data="checkRecords">
-        <el-table-column prop="" label="操作时间" width="140">
+        <el-table-column prop="" label="操作时间" width="150">
           <span slot-scope="scope">{{scope.row.inserttime | timeFormat}}</span>
         </el-table-column>
         <el-table-column prop="name" label="操作人" width="100">
@@ -301,7 +301,7 @@
         </el-table-column>
         <el-table-column prop="code_desc" label="银行类型" width="80">
         </el-table-column>
-        <el-table-column prop="" label="交易时间" width="90">
+        <el-table-column prop="" label="交易时间" width="100">
           <span slot-scope="scope">{{scope.row.tm | timeFormat}}</span>
         </el-table-column>
         <el-table-column prop="fm_name" label="付款名" min-width="140">

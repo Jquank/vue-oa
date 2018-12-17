@@ -27,13 +27,13 @@
       </el-table-column>
       <el-table-column prop="baidu_account" label="百度账号">
       </el-table-column>
-      <el-table-column prop="receiptmoney" label="到账金额">
+      <el-table-column prop="receiptmoney" label="到账金额" width="110">
         <span slot-scope="scope">{{scope.row.receiptmoney | currency}}</span>
       </el-table-column>
-      <el-table-column prop="receiptmoney" label="提单金额">
+      <el-table-column prop="receiptmoney" label="提单金额" width="110">
         <span slot-scope="scope">{{scope.row.usemoney+scope.row.servicemoney+scope.row.usevoucher | currency}}</span>
       </el-table-column>
-      <el-table-column prop="receiptmoney" label="提单时间" width="140">
+      <el-table-column prop="receiptmoney" label="提单时间" width="150">
         <span slot-scope="scope">{{scope.row.inserttime | timeFormat}}</span>
       </el-table-column>
       <el-table-column prop="username" label="提单人">
@@ -52,10 +52,10 @@
       <el-table-column prop="checktime" label="审核时间" v-if="stateRadio==300">
         <span slot-scope="scope">{{scope.row.checktime | timeFormat}}</span>
       </el-table-column>
-      <el-table-column prop="invoice" label="是否开发票" width="85">
+      <el-table-column prop="invoice" label="发票状态" width="80">
         <span slot-scope="scope">{{scope.row.invoice==10?'已开':'未开'}}</span>
       </el-table-column>
-      <el-table-column prop="" label="操作" width="145">
+      <el-table-column prop="" label="操作" width="130" align="center">
         <template slot-scope="scope">
           <el-button @click.native="view(scope.row)" type="success" class="xsbtn">查 看</el-button>
           <el-button v-if="permissions.indexOf('7n') > -1&&scope.row.step!=400" @click.native="stop(scope.row)" type="danger" class="xsbtn">终 止</el-button>

@@ -24,7 +24,7 @@
 
       <!-- 列表 -->
       <el-table @selection-change="handleSelectionChange" stripe border :data="makeInvoiceList" max-height="550" style="width: 100%">
-        <el-table-column fixed type="selection" width="55">
+        <el-table-column fixed type="selection" width="45">
         </el-table-column>
         <el-table-column prop="" label="审核" min-width="85">
           <template slot-scope="scope">
@@ -42,7 +42,7 @@
             <span>{{scope.row.true_name != scope.row.applyusername?'('+scope.row.true_name+')':''}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="tnumber" label="单据号码" width="100">
+        <el-table-column prop="tnumber" label="单据号码" width="110">
         </el-table-column>
         <el-table-column prop="companyname" label="购方名称(发票公司名)" min-width="150">
         </el-table-column>
@@ -51,18 +51,18 @@
         <el-table-column prop="chargetype" label="货物名称" width="100">
           <span slot-scope="scope">{{scope.row.chargetype+'' | invoiceState('invoiceMoneyType')}}</span>
         </el-table-column>
-        <el-table-column prop="tmoney" label="总金额" width="110">
+        <el-table-column prop="tmoney" label="总金额" width="120">
           <span slot-scope="scope">{{scope.row.tmoney | currency}}</span>
         </el-table-column>
-        <el-table-column prop="inserttime" label="申请时间" width="140">
+        <el-table-column prop="inserttime" label="申请时间" width="150">
           <span slot-scope="scope">{{scope.row.inserttime | timeFormat}}</span>
         </el-table-column>
-        <el-table-column prop="ttype" label="发票类型" width="70">
+        <el-table-column prop="ttype" label="发票类型" width="80">
           <span slot-scope="scope">{{scope.row.ttype | invoiceState('invoiceKind')}}</span>
         </el-table-column>
         <el-table-column prop="ttype" label="状态" width="110">
           <template slot-scope="scope">
-            <el-button plain class="xsbtn" :class="{'el-button--success':scope.row.step==300,'el-button--info':scope.row.step<300&&scope.row.step>0,'el-button--danger':scope.row.step==0}">{{scope.row.stepName+''+scope.row.step}}</el-button>
+            <el-button plain class="xsbtn" :class="{'el-button--success':scope.row.step==300,'el-button--warning':scope.row.step<300&&scope.row.step>0,'el-button--danger':scope.row.step==0}">{{scope.row.stepName+''+scope.row.step}}</el-button>
           </template>
         </el-table-column>
         <el-table-column label="操作" width="65">

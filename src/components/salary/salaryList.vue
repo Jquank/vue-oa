@@ -22,10 +22,11 @@
             :isHiddenFileList="true"
             :otherParams="otherParams"
             :title="'导入'"
+            :upIcon="'fa fa-cloud-download'"
             :uploadUrl="serverUrl + '/salary.do?import' + '&tk=' + tk"
             @fileUrl="search()"
           ></up-file>
-          <el-button @click.native="exportExcell" class="ml10px" type="warning">导 出</el-button>
+          <el-button @click.native="exportExcell" class="ml10px" type="warning" icon="fa fa-cloud-upload">导 出</el-button>
         </div>
       </div>
       <div class="salary-search">

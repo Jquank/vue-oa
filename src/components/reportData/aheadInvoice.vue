@@ -44,46 +44,61 @@
         </span>
       </div>
       <el-tab-pane label="提前开票" name="invoice" class="mt10px">
-        <el-table show-summary :summary-method="getSummaries" stripe border :data="invoiceList" class="table-width" max-height="500">
-          <el-table-column prop="applytime" label="申请时间" width="90">
-            <span slot-scope="scope">{{scope.row.applytime | timeFormat1}}</span>
+        <el-table stripe border :data="invoiceList" class="table-width" max-height="500" :row-class-name="setLastRowStyle">
+          <el-table-column prop="applytime" label="申请时间" width="100">
+            <template slot-scope="scope">
+              <span v-if="scope.row.mark!=='lastRow'">{{scope.row.applytime | timeFormat1}}</span>
+              <span v-else>合计</span>
+            </template>
           </el-table-column>
           <el-table-column prop="fullname" label="部门" width="100">
           </el-table-column>
           <el-table-column prop="" label="姓名" min-width="100">
             <template slot-scope="scope">
-              <span>{{scope.row.uname}}</span><span>{{scope.row.bindName?('('+scope.row.bindName+')'): ((scope.row.true_name && scope.row.true_name!=scope.row.username)?('('+scope.row.true_name+')'):'')}}</span>
+              <span v-if="scope.row.mark!=='lastRow'">{{scope.row.uname}}</span><span>{{scope.row.bindName?('('+scope.row.bindName+')'): ((scope.row.true_name && scope.row.true_name!=scope.row.username)?('('+scope.row.true_name+')'):'')}}</span>
             </template>
           </el-table-column>
           <el-table-column prop="comName" label="保A公司名" min-width="150">
+            <span slot-scope="scope" v-if="scope.row.mark!=='lastRow'">{{scope.row.comName}}</span>
           </el-table-column>
           <el-table-column prop="invoicecname" label="发票公司名" min-width="150">
+            <span slot-scope="scope" v-if="scope.row.mark!=='lastRow'">{{scope.row.invoicecname}}</span>
           </el-table-column>
-          <el-table-column prop="invoicetime" label="开票时间" width="90">
-            <span slot-scope="scope">{{scope.row.invoicetime | timeFormat1}}</span>
+          <el-table-column prop="invoicetime" label="开票时间" width="100">
+            <span slot-scope="scope" v-if="scope.row.mark!=='lastRow'">{{scope.row.invoicetime | timeFormat1}}</span>
           </el-table-column>
-          <el-table-column prop="tmoney" label="开票金额" width="110">
-            <span slot-scope="scope">{{scope.row.tmoney | currency}}</span>
+          <el-table-column prop="tmoney" label="开票金额" width="120">
+            <template slot-scope="scope">
+              <span v-if="scope.row.mark!=='lastRow'">{{scope.row.tmoney | currency}}</span>
+              <span v-else>{{scope.row.sumInvMoney | currency}}</span>
+            </template>
           </el-table-column>
           <el-table-column prop="invoicenumber" label="发票号码" width="110">
+            <span slot-scope="scope" v-if="scope.row.mark!=='lastRow'">{{scope.row.invoicenumber}}</span>
           </el-table-column>
           <el-table-column prop="" label="开票类型" width="80">
-            <span slot-scope="scope">{{scope.row.ttype | invoiceState('invoiceType')}}</span>
+            <span slot-scope="scope" v-if="scope.row.mark!=='lastRow'">{{scope.row.ttype | invoiceState('invoiceType')}}</span>
           </el-table-column>
-          <el-table-column prop="" label="预计销账时间" width="95">
-            <span slot-scope="scope">{{scope.row.offset_time | timeFormat1}}</span>
+          <el-table-column prop="" label="预计销账时间" width="100">
+            <span slot-scope="scope" v-if="scope.row.mark!=='lastRow'">{{scope.row.offset_time | timeFormat1}}</span>
           </el-table-column>
           <el-table-column prop="receive_money" label="已销金额" width="110">
-            <span slot-scope="scope">{{scope.row.receive_money | currency}}</span>
+            <template slot-scope="scope">
+              <span v-if="scope.row.mark!=='lastRow'">{{scope.row.receive_money | currency}}</span>
+              <span v-else>{{scope.row.sumReceiptmoney | currency}}</span>
+            </template>
           </el-table-column>
           <el-table-column prop="toRemoveMoney" label="未销金额" width="110">
-            <span slot-scope="scope">{{scope.row.tmoney-scope.row.receive_money | currency}}</span>
+            <template slot-scope="scope">
+              <span v-if="scope.row.mark!=='lastRow'">{{scope.row.tmoney-scope.row.receive_money | currency}}</span>
+              <span v-else>{{scope.row.sumUnsoldmoney | currency}}</span>
+            </template>
           </el-table-column>
-          <el-table-column prop="" label="实际销账时间" width="95">
-            <span slot-scope="scope">{{scope.row.maxcktime | timeFormat1}}</span>
+          <el-table-column prop="" label="实际销账时间" width="100">
+            <span slot-scope="scope" v-if="scope.row.mark!=='lastRow'">{{scope.row.maxcktime | timeFormat1}}</span>
           </el-table-column>
           <el-table-column label="操作" width="80">
-            <template slot-scope="scope">
+            <template slot-scope="scope" v-if="scope.row.mark!=='lastRow'">
               <el-button @click.native.prevent="viewAheadInvoice(scope.row)" type="primary" class="xsbtn">查看</el-button>
             </template>
           </el-table-column>
@@ -112,7 +127,7 @@
           <el-table-column prop="usemoney" label="加款金额" width="110">
             <span slot-scope="scope">{{scope.row.usemoney | currency}}</span>
           </el-table-column>
-          <el-table-column prop="" label="预计销账时间" width="95">
+          <el-table-column prop="" label="预计销账时间" width="100">
             <span slot-scope="scope">{{scope.row.offset_time | timeFormat1}}</span>
           </el-table-column>
           <el-table-column prop="receiptmoney" label="已销金额" width="110">
@@ -121,7 +136,7 @@
           <el-table-column prop="toRemoveMoney" label="未销金额" width="110">
             <span slot-scope="scope">{{scope.row.usemoney-scope.row.receiptmoney | currency}}</span>
           </el-table-column>
-          <el-table-column prop="" label="实际销账时间" width="95">
+          <el-table-column prop="" label="实际销账时间" width="100">
             <span slot-scope="scope">{{scope.row.maxcktime | timeFormat1}}</span>
           </el-table-column>
           <el-table-column label="操作" width="80">
@@ -217,6 +232,7 @@ export default {
       this.type = val.name
       this.search()
     },
+    // 弃用
     getSummaries (param) {
       let mark = true
       this.activeName === 'invoice' ? mark = true : mark = false
@@ -255,8 +271,16 @@ export default {
       })
       return sums
     },
-    updateInvoiceList (data) {
-      this.invoiceList = data.data[0].data
+    updateInvoiceList (res) {
+      this.invoiceList = res.data[0].data
+      let total = res.data[2].data
+      total.mark = 'lastRow'
+      this.invoiceList.push(total)
+    },
+    setLastRowStyle({row, rowIndex}) {
+      if (row.mark === 'lastRow') {
+        return 'red'
+      }
     }
   },
   components: {
@@ -288,7 +312,7 @@ export default {
       margin-top: 10px;
     }
     .item-width {
-      width: 250px;
+      width: 310px;
     }
   }
   .maxwidth {

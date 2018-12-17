@@ -5,7 +5,7 @@
         <el-button class="title-btn" type="warning">发票信息</el-button>
         <div class="line"></div>
       </div>
-      <el-form :model="rowData" label-width="118px" class="weight-label">
+      <el-form :model="rowData" label-width="90px" class="weight-label">
         <el-row>
           <el-col :md="8">
             <el-form-item label="客户名称 :">
@@ -64,7 +64,7 @@
           <el-col :md="5" class="maxwidth">
             <el-form-item label="垫款证明 :">
               <div>
-                <img :src="rowData.prove_img || ''" alt="" width="50px" height="50px">
+                <img :src="rowData.prove_img || ''" alt width="50px" height="50px">
               </div>
             </el-form-item>
           </el-col>
@@ -77,7 +77,7 @@
         <el-button class="title-btn" type="warning">续费信息</el-button>
         <div class="line"></div>
       </div>
-      <el-form :model="baseInfo" label-width="118px" class="weight-label">
+      <el-form :model="baseInfo" label-width="100px" class="weight-label">
         <el-row>
           <el-col :md="8">
             <el-form-item label="公司名称 :">
@@ -129,7 +129,7 @@
             </el-form-item>
           </el-col>
           <el-col :md="6">
-            <el-form-item label="是否需要发票 :">
+            <el-form-item label="是否需要发票 :" label-width="120px">
               <div>{{baseInfo.invoice+'' | invoiceState('needInvoice')}}</div>
             </el-form-item>
           </el-col>
@@ -141,23 +141,23 @@
         </el-row>
         <el-row>
           <el-col :md="24" v-if="!baseInfo.order3number">
-            <el-form-item label="百度推广服务合同 :">
+            <el-form-item label="百度推广服务合同 :" label-width="130px">
               <div>{{baseInfo.ordernumber}}</div>
             </el-form-item>
           </el-col>
           <template v-else>
             <el-col :md="8">
-              <el-form-item label="百度推广服务订单编号 :">
+              <el-form-item label="百度推广服务订单编号 :" label-width="140px">
                 <div>{{baseInfo.ordernumber}}</div>
               </el-form-item>
             </el-col>
             <el-col :md="6" class="maxwidth">
-              <el-form-item label="百度推广首消授权书 :">
+              <el-form-item label="百度推广首消授权书 :" label-width="135px">
                 <div>{{baseInfo.order2number}}</div>
               </el-form-item>
             </el-col>
             <el-col :md="5" class="maxwidth">
-              <el-form-item label="百度推广服务协议 :">
+              <el-form-item label="百度推广服务协议 :" label-width="130px">
                 <div>{{baseInfo.order3number}}</div>
               </el-form-item>
             </el-col>
@@ -189,7 +189,7 @@
         <div class="line"></div>
       </div>
       <el-table :data="moneyDetail" border>
-        <el-table-column prop="" label="实际到款" min-width="150">
+        <el-table-column prop label="实际到款" min-width="150">
           <template slot-scope="scope">
             <span v-if="!scope.row.mark">
               <b>{{scope.row.type | productType}}</b>&nbsp;:&nbsp;
@@ -201,7 +201,7 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column prop="" label="代金券|返款金额" min-width="150">
+        <el-table-column prop label="代金券|返款金额" min-width="150">
           <template slot-scope="scope">
             <span v-if="!scope.row.mark" v-show="scope.row.type<500">
               <b>{{scope.row.type | productType}}</b>&nbsp;:&nbsp;
@@ -213,7 +213,7 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column prop="" label="申请加款" min-width="150">
+        <el-table-column prop label="申请加款" min-width="150">
           <template slot-scope="scope">
             <span v-if="!scope.row.mark" v-show="scope.row.type<500">
               <b>{{scope.row.type | productType}}</b>&nbsp;:&nbsp;
@@ -225,7 +225,7 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column prop="" label="活动备注" min-width="200" v-if="permissions.indexOf('7y') > -1">
+        <el-table-column prop label="活动备注" min-width="200" v-if="permissions.indexOf('7y') > -1">
           <template slot-scope="scope">
             <span v-if="!scope.row.mark && scope.row.type<500">
               <el-input v-model="scope.row.activity" type="textarea" :rows="2"></el-input>
@@ -233,79 +233,94 @@
           </template>
         </el-table-column>
       </el-table>
-      <div v-if="toMark==='renewReceive' || toMark==='chargeOffCheck'">
+      <div v-if="(toMark==='renewReceive' || toMark==='chargeOffCheck')&& renewFlowList.length">
         <el-table :data="renewFlowList" max-height="550" class="table-width" border>
           <!-- <el-table-column type="selection" width="35"></el-table-column> -->
           <el-table-column label="银行类型" prop="code_desc" width="80"></el-table-column>
-          <el-table-column label="交易时间" prop="B_JYSJ" width="90">
+          <el-table-column label="交易时间" prop="B_JYSJ" width="100">
             <span slot-scope="scope">{{scope.row.tm | timeFormat}}</span>
           </el-table-column>
           <el-table-column label="参考号" prop="no" width="90"></el-table-column>
           <el-table-column label="付款名" prop="fm_name" width="100"></el-table-column>
-          <el-table-column label="付款账号" prop="fm_account" width="90"></el-table-column>
+          <el-table-column label="付款账号" prop="fm_account" width="110"></el-table-column>
           <el-table-column label="现金收款人" prop="fm_uid" width="90"></el-table-column>
           <el-table-column label="付款公司名" prop="company_name" min-width="90"></el-table-column>
           <el-table-column label="摘要|备注" prop="remark"></el-table-column>
           <el-table-column label="百度账户" prop="baidu_account2"></el-table-column>
           <el-table-column label="账户类型" prop="account_type"></el-table-column>
-          <el-table-column label="交易金额" prop="" min-width="100">
+          <el-table-column label="交易金额" prop min-width="120">
             <span slot-scope="scope">{{scope.row.amount | currency1}}</span>
           </el-table-column>
           <!-- 拆 -->
-          <el-table-column header-align="center" class-name="splited-col" label="拆分后金额" prop="" width="100">
+          <el-table-column header-align="center" class-name="splited-col" label="拆分后金额" prop width="110">
             <template slot-scope="scope">
-              <el-table class="split-item" :data="scope.row.split" :show-header="false">
-                <el-table-column class-name="split-item-col" label="" prop="">
-                  <span slot-scope="scope" :class="{'red':baseInfo.id === scope.row.reid}">
-                    {{scope.row.split_amount | currency1}}
-                  </span>
+              <el-table
+                class="split-item"
+                :data="scope.row.split"
+                :row-class-name="scope.row.split.length>1?'add-border':''"
+                :show-header="false"
+              >
+                <el-table-column class-name="split-item-col" label prop show-overflow-tooltip>
+                  <span
+                    slot-scope="scope"
+                    :class="{'red':baseInfo.id === scope.row.reid}"
+                  >{{scope.row.split_amount | currency1}}</span>
                 </el-table-column>
               </el-table>
             </template>
           </el-table-column>
-          <el-table-column header-align="center" class-name="splited-col" label="预留信息" prop="" width="120">
+          <el-table-column header-align="center" class-name="splited-col" label="预留信息" prop width="120">
             <template slot-scope="scope">
-              <el-table class="split-item" :data="scope.row.split" :show-header="false">
-                <el-table-column show-overflow-tooltip class-name="split-item-col" label="" prop="">
-                  <span slot-scope="scope" :class="{'red':baseInfo.id === scope.row.reid}">
-                    {{scope.row.id===scope.row.bsid?scope.row.alloc_remark || '.':'.'}}</span>
+              <el-table class="split-item" :data="scope.row.split" :row-class-name="scope.row.split.length>1?'add-border':''" :show-header="false">
+                <el-table-column show-overflow-tooltip class-name="split-item-col" label prop>
+                  <span
+                    slot-scope="scope"
+                    :class="{'red':baseInfo.id === scope.row.reid}"
+                  >{{scope.row.id===scope.row.bsid?scope.row.alloc_remark:''}}</span>
                 </el-table-column>
               </el-table>
             </template>
           </el-table-column>
-          <el-table-column header-align="center" class-name="splited-col" label="使用人" prop="" width="100">
+          <el-table-column header-align="center" class-name="splited-col" label="使用人" prop width="100">
             <template slot-scope="scope">
-              <el-table class="split-item" :data="scope.row.split" :show-header="false">
-                <el-table-column show-overflow-tooltip class-name="split-item-col" label="" prop="useName">
-                  <span slot-scope="scope" :class="{'red':baseInfo.id === scope.row.reid}">
-                    {{scope.row.id===scope.row.bsid?scope.row.useName || '.':'.'}}</span>
+              <el-table class="split-item" :data="scope.row.split" :row-class-name="scope.row.split.length>1?'add-border':''" :show-header="false">
+                <el-table-column show-overflow-tooltip class-name="split-item-col" label prop="useName">
+                  <span
+                    slot-scope="scope"
+                    :class="{'red':baseInfo.id === scope.row.reid}"
+                  >{{scope.row.id===scope.row.bsid?scope.row.useName:''}}</span>
                 </el-table-column>
               </el-table>
             </template>
           </el-table-column>
-          <el-table-column header-align="center" class-name="splited-col" label="公司名称" prop="" width="200">
+          <el-table-column header-align="center" class-name="splited-col" label="公司名称" prop width="200">
             <template slot-scope="scope">
-              <el-table class="split-item" :data="scope.row.split" :show-header="false">
-                <el-table-column show-overflow-tooltip class-name="split-item-col" label="" prop="">
-                  <span slot-scope="scope" :class="{'red':baseInfo.id === scope.row.reid}">
-                    {{scope.row.id===scope.row.bsid?scope.row.companyname||'.':'.'}}</span>
+              <el-table class="split-item" :data="scope.row.split" :row-class-name="scope.row.split.length>1?'add-border':''" :show-header="false">
+                <el-table-column show-overflow-tooltip class-name="split-item-col" label prop>
+                  <span
+                    slot-scope="scope"
+                    :class="{'red':baseInfo.id === scope.row.reid}"
+                  >{{scope.row.id===scope.row.bsid?scope.row.companyname:''}}</span>
                 </el-table-column>
               </el-table>
             </template>
           </el-table-column>
-          <el-table-column header-align="center" class-name="splited-col" label="分配时间" prop="" width="140">
+          <el-table-column header-align="center" class-name="splited-col" label="分配时间" prop width="160">
             <template slot-scope="scope">
-              <el-table class="split-item" :data="scope.row.split" :show-header="false">
-                <el-table-column show-overflow-tooltip class-name="split-item-col" label="" prop="">
-                  <span slot-scope="scope" :class="{'red':baseInfo.id === scope.row.reid}">
-                    {{scope.row.id===scope.row.bsid?scope.row.alloc_time||'.':'.' | timeFormat}}</span>
+              <el-table class="split-item" :data="scope.row.split" :row-class-name="scope.row.split.length>1?'add-border':''" :show-header="false">
+                <el-table-column show-overflow-tooltip class-name="split-item-col" label prop>
+                  <span
+                    slot-scope="scope"
+                    :class="{'red':baseInfo.id === scope.row.reid}"
+                  >{{scope.row.id===scope.row.bsid?scope.row.alloc_time:'' | timeFormat}}</span>
                 </el-table-column>
               </el-table>
             </template>
           </el-table-column>
         </el-table>
         <div class="text-center" v-if="toMark!=='chargeOffCheck'">
-          <b>实际到账金额：</b><span>{{realReceive | currency}}</span>
+          <b>实际到账金额：</b>
+          <span>{{realReceive | currency}}</span>
         </div>
       </div>
     </div>
@@ -317,81 +332,125 @@
       </div>
       <div v-if="permissions.indexOf('7x') > -1 && toMark!=='chargeOffCheck'">
         <el-table :data="productMoneyList" border>
-          <el-table-column prop="" label="产品类型" min-width="200">
+          <el-table-column prop label="产品类型" min-width="200">
             <template slot-scope="scope">
               <el-select v-model="scope.row.type" style="width:100%">
-                <el-option v-for="(item,index) in productList" :key="index" :value="item.code_val+''" :label="item.code_desc"></el-option>
+                <el-option
+                  v-for="(item,index) in productList"
+                  :key="index"
+                  :value="item.code_val+''"
+                  :label="item.code_desc"
+                ></el-option>
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column prop="" label="产品金额" min-width="120">
+          <el-table-column prop label="产品金额" min-width="120">
             <template slot-scope="scope">
               <el-input v-model="scope.row.receive_money">
                 <span slot="prepend">¥</span>
               </el-input>
             </template>
           </el-table-column>
-          <el-table-column prop="" label="银行类型" min-width="120">
+          <el-table-column prop label="银行类型" min-width="120">
             <template slot-scope="scope">
               <el-select v-model="scope.row.receivetype">
-                <el-option v-for="(item,index) in renewFlowList" :key="index" :value="item.code_val" :label="item.code_desc"></el-option>
+                <el-option
+                  v-for="(item,index) in renewFlowList"
+                  :key="index"
+                  :value="item.code_val"
+                  :label="item.code_desc"
+                ></el-option>
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column prop="" label="时间" min-width="140">
+          <el-table-column prop label="时间" min-width="150">
             <template slot-scope="scope">
               <el-select v-model="scope.row.receivetime">
-                <el-option v-for="(item,index) in renewFlowList" :key="index" :value="item.tm" :label="timeFormat1(item.tm)"></el-option>
+                <el-option
+                  v-for="(item,index) in renewFlowList"
+                  :key="index"
+                  :value="item.tm"
+                  :label="timeFormat1(item.tm)"
+                ></el-option>
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column prop="" label="毛利" min-width="120">
+          <el-table-column prop label="毛利" min-width="120">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.profit"><span slot="prepend">¥</span></el-input>
+              <el-input v-model="scope.row.profit">
+                <span slot="prepend">¥</span>
+              </el-input>
             </template>
           </el-table-column>
-          <el-table-column prop="" label="操作" width="60">
+          <el-table-column prop label="操作" width="60">
             <template slot-scope="scope">
-              <el-button @click.native="add(scope.$index)" :type="scope.$index===0?'success':'danger'" :icon="scope.$index===0?'el-icon-plus':'el-icon-minus'" circle class="xsbtn"></el-button>
+              <el-button
+                @click.native="add(scope.$index)"
+                :type="scope.$index===0?'success':'danger'"
+                :icon="scope.$index===0?'el-icon-plus':'el-icon-minus'"
+                circle
+                class="xsbtn"
+              ></el-button>
             </template>
           </el-table-column>
         </el-table>
         <div class="text-center">
-          <b>产品总金额：</b><span>{{productTotal | currency}}</span>
+          <b>产品总金额：</b>
+          <span>{{productTotal | currency}}</span>
         </div>
       </div>
       <!-- 续费主管选择退款 -->
       <div v-for="(back,outIndex) in backList" :key="outIndex">
         <p>{{back.cname}}</p>
         <el-table :data="back.attrs" border :show-header="false">
-          <el-table-column prop="" label="产品类型" min-width="200">
+          <el-table-column prop label="产品类型" min-width="200">
             <template slot-scope="scope">
               <el-select v-model="scope.row.type" style="width:100%">
-                <el-option v-for="(item,index) in productList" :key="index" :value="item.code_val" :label="item.code_desc"></el-option>
+                <el-option
+                  v-for="(item,index) in productList"
+                  :key="index"
+                  :value="item.code_val"
+                  :label="item.code_desc"
+                ></el-option>
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column prop="" label="产品金额" min-width="120">
+          <el-table-column prop label="产品金额" min-width="120">
             <template slot-scope="scope">
               <el-input v-model="scope.row.receive_money">
                 <span slot="prepend">¥</span>
               </el-input>
             </template>
           </el-table-column>
-          <el-table-column prop="" label="时间" min-width="150">
+          <el-table-column prop label="时间" min-width="150">
             <template slot-scope="scope">
               <el-date-picker disabled v-model="scope.row.receivetime" type="datetime"></el-date-picker>
             </template>
           </el-table-column>
-          <el-table-column prop="" label="毛利" min-width="120">
+          <el-table-column prop label="毛利" min-width="120">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.refprofitund"><span slot="prepend">¥</span></el-input>
+              <el-input v-model="scope.row.refprofitund">
+                <span slot="prepend">¥</span>
+              </el-input>
             </template>
           </el-table-column>
-          <el-table-column prop="" label="操作" width="100">
+          <el-table-column prop label="操作" width="100">
             <template slot-scope="scope">
-              <el-button v-if="scope.$index===0" @click.native="add1(outIndex)" type="success" icon="el-icon-plus" circle class="xsbtn"></el-button>
-              <el-button @click.native="minus(outIndex,scope.$index)" type="danger" icon="el-icon-minus" circle class="xsbtn"></el-button>
+              <el-button
+                v-if="scope.$index===0"
+                @click.native="add1(outIndex)"
+                type="success"
+                icon="el-icon-plus"
+                circle
+                class="xsbtn"
+              ></el-button>
+              <el-button
+                @click.native="minus(outIndex,scope.$index)"
+                type="danger"
+                icon="el-icon-minus"
+                circle
+                class="xsbtn"
+              ></el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -400,7 +459,13 @@
         <el-row v-if="permissions.indexOf('7x') > -1 && toMark!=='chargeOffCheck'">
           <el-col :md="24" class="maxwidth">
             <el-form-item label="提单时间 :">
-              <el-date-picker v-model="billTime" value-format="yyyy-MM-dd" format="yyyy-MM-dd" type="date" placeholder="选择日期"></el-date-picker>
+              <el-date-picker
+                v-model="billTime"
+                value-format="yyyy-MM-dd"
+                format="yyyy-MM-dd"
+                type="date"
+                placeholder="选择日期"
+              ></el-date-picker>
             </el-form-item>
           </el-col>
         </el-row>
@@ -446,8 +511,7 @@
       </div>
       <el-table :data="inreList" class="table-width" max-height="400">
         <el-table-column prop="tnumber" label="单据号码"></el-table-column>
-        <el-table-column prop="companyname" label="购方名称(发票公司名)" min-width="120">
-        </el-table-column>
+        <el-table-column prop="companyname" label="购方名称(发票公司名)" min-width="120"></el-table-column>
         <el-table-column prop="chargename" label="货物名称"></el-table-column>
         <el-table-column prop="tmoney" label="发票金额">
           <span slot-scope="scope">{{scope.row.tmoney | currency}}</span>
@@ -455,10 +519,8 @@
         <el-table-column prop="ttype" label="发票类型">
           <span slot-scope="scope">{{scope.row.ttype | invoiceState('invoiceKind')}}</span>
         </el-table-column>
-        <el-table-column prop="invoicecode" label="发票代码" width="100">
-        </el-table-column>
-        <el-table-column prop="invoicenumber" label="发票号码" width="100">
-        </el-table-column>
+        <el-table-column prop="invoicecode" label="发票代码" width="100"></el-table-column>
+        <el-table-column prop="invoicenumber" label="发票号码" width="100"></el-table-column>
         <el-table-column prop="invoicetime" label="开票日期" width="90">
           <span slot-scope="scope">{{scope.row.invoicetime | timeFormat}}</span>
         </el-table-column>
@@ -470,7 +532,13 @@
           </template>
         </el-table-column>
       </el-table>
-      <page :simpleLayout="'total, prev, next, jumper'" class="page" :url="inreUrl" :sendParams="inreParams" @updateList="updateInreList"></page>
+      <page
+        :simpleLayout="'total, prev, next, jumper'"
+        class="page"
+        :url="inreUrl"
+        :sendParams="inreParams"
+        @updateList="updateInreList"
+      ></page>
     </div>
     <!-- 操作记录 -->
     <div>
@@ -479,7 +547,7 @@
         <div class="line"></div>
       </div>
       <el-table :data="recordList" class="table-width" max-height="400">
-        <el-table-column prop="inserttime" label="操作时间" width="140">
+        <el-table-column prop="inserttime" label="操作时间" width="150">
           <span slot-scope="scope">{{scope.row.inserttime | timeFormat}}</span>
         </el-table-column>
         <el-table-column prop="name" label="操作人">
@@ -488,38 +556,54 @@
             <span>{{scope.row.bindName?('('+scope.row.bindName+')'): ((scope.row.true_name && scope.row.true_name!=scope.row.name)?('('+scope.row.true_name+')'):'')}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="record" label="操作记录" min-width="140">
-        </el-table-column>
+        <el-table-column prop="record" label="操作记录" min-width="140"></el-table-column>
         <el-table-column prop="remark" label="处理备注"></el-table-column>
       </el-table>
-      <page :simpleLayout="'total, prev, next, jumper'" class="page" :url="recordUrl" :sendParams="recordParams" @updateList="updateRecordList"></page>
+      <page
+        :simpleLayout="'total, prev, next, jumper'"
+        class="page"
+        :url="recordUrl"
+        :sendParams="recordParams"
+        @updateList="updateRecordList"
+      ></page>
     </div>
 
     <!-- 选择公司弹窗 -->
     <el-dialog :key="key_com_table" :append-to-body="true" title="选择公司" :visible.sync="selCompanyDialog" width="750px">
-      <el-input @click.native="searchService($event)" @keyup.enter.native="searchService($event,'enter')" v-model="companyName" placeholder="搜索公司名">
+      <el-input
+        @click.native="searchService($event)"
+        @keyup.enter.native="searchService($event,'enter')"
+        v-model="companyName"
+        placeholder="搜索公司名"
+      >
         <span slot="append" class="search-service">搜索</span>
       </el-input>
       <el-table @selection-change="handleSelectionChange" id="cus-out-table" :data="companyList" class="table-width">
         <el-table-column type="selection" width="40"></el-table-column>
-        <el-table-column prop="companyname" label="公司名称" min-width="140">
-        </el-table-column>
-        <el-table-column prop="baidu_account" label="百度账号">
-        </el-table-column>
+        <el-table-column prop="companyname" label="公司名称" min-width="140"></el-table-column>
+        <el-table-column prop="baidu_account" label="百度账号"></el-table-column>
         <el-table-column prop="receiptmoney" label="金额">
           <span slot-scope="scope">{{scope.row.receiptmoney | currency}}</span>
         </el-table-column>
         <el-table-column prop="receiptmoney" label="记账日期" width="90">
           <span slot-scope="scope">{{scope.row.bill_time | timeFormat1}}</span>
         </el-table-column>
-        <el-table-column prop="receiptmoney" label="申请时间" width="90">
+        <el-table-column prop="receiptmoney" label="申请时间" width="100">
           <span slot-scope="scope">{{scope.row.inserttime | timeFormat1}}</span>
         </el-table-column>
         <el-table-column prop="receiptmoney" label="商务|客服">
-          <span slot-scope="scope">{{scope.row.username}}{{scope.row.username != scope.row.true_name ? (','+scope.row.true_name) : ''}}</span>
+          <span
+            slot-scope="scope"
+          >{{scope.row.username}}{{scope.row.username != scope.row.true_name ? (','+scope.row.true_name) : ''}}</span>
         </el-table-column>
       </el-table>
-      <page :simpleLayout="'total, prev, next, jumper'" class="page" :url="companyUrl" :sendParams="companyParams" @updateList="getCompanyList"></page>
+      <page
+        :simpleLayout="'total, prev, next, jumper'"
+        class="page"
+        :url="companyUrl"
+        :sendParams="companyParams"
+        @updateList="getCompanyList"
+      ></page>
       <div class="text-center">
         <el-button @click.native="confirmHandleCheck" type="success">确 认</el-button>
       </div>
@@ -537,7 +621,7 @@ export default {
   props: {
     rowData: {
       type: Object,
-      default: function () {
+      default: function() {
         return {}
       }
     },
@@ -555,7 +639,7 @@ export default {
     }
   },
   computed: {
-    productTotal () {
+    productTotal() {
       let sum = 0
       this.productMoneyList.forEach(val => {
         sum += parseFloat(val.receive_money || 0)
@@ -563,7 +647,7 @@ export default {
       return sum
     }
   },
-  data () {
+  data() {
     return {
       permissions: cookie.getJSON('permissions'),
       timeFormat1: timeFormat1,
@@ -593,28 +677,29 @@ export default {
       viewer: null
     }
   },
-  created () {
+  created() {
     this._getRenewBaseInfo()
     this._getProductList()
   },
-  mounted () {
+  mounted() {
     this.$nextTick(() => {
       if (this.viewer) {
         this.viewer.destroy()
       }
-      this.viewer = new Viewer(document.getElementById('renew-detail'), { // eslint-disable-line
+      this.viewer = new Viewer(document.getElementById('renew-detail'), {
+        // eslint-disable-line
         zIndex: 1000000
       })
     })
-    setTimeout(() => {
-
-    }, 500)
+    setTimeout(() => {}, 500)
   },
   methods: {
     // 销账审核
-    chargeOffCheck (type) {
+    chargeOffCheck(type) {
       let params = {
-        inreids: [{'inreid': this.rowData.inreid, 'invoiceid': this.rowData.invoiceid}],
+        inreids: [
+          { inreid: this.rowData.inreid, invoiceid: this.rowData.invoiceid }
+        ],
         reid: this.rowData.reid,
         remark: this.subRemark,
         status: type
@@ -625,8 +710,10 @@ export default {
         }
       })
     },
-    confirmHandleCheck () {
-      this.$post('/Renew.do?renewRefundCK', { reidArr: this.multipleSelection }).then(res => {
+    confirmHandleCheck() {
+      this.$post('/Renew.do?renewRefundCK', {
+        reidArr: this.multipleSelection
+      }).then(res => {
         if (res.data.success) {
           this.selCompanyDialog = false
           this.backList = res.data.data
@@ -634,22 +721,22 @@ export default {
         }
       })
     },
-    handleSelectionChange (val) {
+    handleSelectionChange(val) {
       val.forEach(val => {
         this.multipleSelection.push(val.id)
       })
     },
-    searchService (e, type) {
+    searchService(e, type) {
       if (type === 'enter' || e.target.nodeName !== 'INPUT') {
         this.companyParams = {
           companyName: this.companyName
         }
       }
     },
-    getCompanyList (res) {
+    getCompanyList(res) {
       this.companyList = res.data[0].data
     },
-    selBackMoney () {
+    selBackMoney() {
       this.backList = []
       this.multipleSelection = []
       this.companyList = []
@@ -658,7 +745,7 @@ export default {
         this.selCompanyDialog = true
       }, 200)
     },
-    checkAdd (type) {
+    checkAdd(type) {
       let params = {
         checkresult: type,
         reid: this.rowData.reid,
@@ -670,12 +757,13 @@ export default {
         }
       })
     },
-    checkReceive (type) {
+    checkReceive(type) {
       if (type === 200 && !this.subRemark) {
         this.$message.warning('请填写驳回备注！')
         return
       }
-      if (this.permissions.indexOf('7x') > -1) { // 收单出纳校验
+      if (this.permissions.indexOf('7x') > -1) {
+        // 收单出纳校验
         let testProInfo = this.productMoneyList.every(val => {
           return (
             val.type && val.receive_money && val.receivetype && val.receivetime
@@ -747,7 +835,7 @@ export default {
         }
       })
     },
-    add (index) {
+    add(index) {
       if (index === 0) {
         this.productMoneyList.push({
           type: '',
@@ -761,42 +849,42 @@ export default {
         this.productMoneyList.splice(index, 1)
       }
     },
-    add1 (outIndex) {
+    add1(outIndex) {
       this.backList[outIndex].attrs.push({
         type: '',
         receive_money: 0,
         reid: this.backList[outIndex].attrs[0].reid
       })
     },
-    minus (outIndex, index) {
+    minus(outIndex, index) {
       this.backList[outIndex].attrs.splice(index, 1)
     },
-    _getProductList () {
+    _getProductList() {
       getByCode(52).then(res => {
         this.productList = res.data.data
       })
     },
-    _getRenewMoney () {
-      this.$get('/Renew.do?renewBankReceive', { reid: this.rowData.id || this.rowData.reid }).then(
-        res => {
-          this.renewFlowList = res.data.data.receiveList
-          this.productMoneyList = res.data.data.renewAttrList
-          if (this.renewFlowList.length && this.toMark !== 'chargeOffCheck') {
-            this.renewFlowList.forEach(val => {
-              val.split.forEach(item => {
-                if (item.reid === this.baseInfo.id) {
-                  this.realReceive += parseFloat(item.split_amount || 0) // 实际总到款
-                  item.bill_time
-                    ? (this.billTime = timeFormat1(item.bill_time))
-                    : (this.billTime = new Date())
-                }
-              })
+    _getRenewMoney() {
+      this.$get('/Renew.do?renewBankReceive', {
+        reid: this.rowData.id || this.rowData.reid
+      }).then(res => {
+        this.renewFlowList = res.data.data.receiveList
+        this.productMoneyList = res.data.data.renewAttrList
+        if (this.renewFlowList.length && this.toMark !== 'chargeOffCheck') {
+          this.renewFlowList.forEach(val => {
+            val.split.forEach(item => {
+              if (item.reid === this.baseInfo.id) {
+                this.realReceive += parseFloat(item.split_amount || 0) // 实际总到款
+                item.bill_time
+                  ? (this.billTime = timeFormat1(item.bill_time))
+                  : (this.billTime = new Date())
+              }
             })
-          }
+          })
         }
-      )
+      })
     },
-    _getRenewBaseInfo () {
+    _getRenewBaseInfo() {
       this.inreParams = {
         reid: this.rowData.id || this.rowData.reid,
         status: 100
@@ -808,7 +896,10 @@ export default {
         reid: this.rowData.id || this.rowData.reid
       }).then(res => {
         this.baseInfo = res.data[0].data || {}
-        if (this.toMark === 'renewReceive' || this.toMark === 'chargeOffCheck') {
+        if (
+          this.toMark === 'renewReceive' ||
+          this.toMark === 'chargeOffCheck'
+        ) {
           this._getRenewMoney()
         }
         this.moneyDetail = res.data[1].data
@@ -835,7 +926,7 @@ export default {
         })
       })
     },
-    check (type) {
+    check(type) {
       let params = {
         checkresult: type,
         reid: this.rowData.id,
@@ -850,7 +941,7 @@ export default {
         }
       })
     },
-    addCheckRemark () {
+    addCheckRemark() {
       let params = {
         reid: this.baseInfo.id,
         checkRemark: this.subRemark
@@ -861,10 +952,10 @@ export default {
         }
       })
     },
-    updateInreList (res) {
+    updateInreList(res) {
       this.inreList = res.data[0].data
     },
-    updateRecordList (res) {
+    updateRecordList(res) {
       this.recordList = res.data[0].data
     }
   },
@@ -881,18 +972,27 @@ export default {
     > div.cell {
       padding: 0;
     }
-  }
-  .split-item {
-    table {
-      border: 0;
-      td,
-      th.is-leaf {
-        border: 0;
+    .split-item {
+      table {
+        border-collapse: collapse; // 为tr设置边框需要
+      }
+      .el-table__body-wrapper {
+        overflow: hidden;
+      }
+      &::before {
+        z-index: inherit; // 消除table最下面的边框
+      }
+      .split-item-col {
+        border-bottom: none;
+        padding: 2px 0;
+        > div.cell {
+          height: 25px;
+          line-height: 25px;
+        }
       }
     }
-    .split-item-col {
-      padding: 2px 0;
-      border-bottom: 1px solid #000;
+    .add-border:not(:last-child) {
+      border-bottom: 1px solid #d0d2d8;
     }
   }
 }

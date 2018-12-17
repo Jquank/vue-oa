@@ -28,7 +28,7 @@
       <el-table-column prop="receiptmoney" label="提单金额">
         <span slot-scope="scope">{{scope.row.usemoney+scope.row.servicemoney+scope.row.usevoucher | currency}}</span>
       </el-table-column>
-      <el-table-column prop="receiptmoney" label="提单时间" width="140">
+      <el-table-column prop="receiptmoney" label="提单时间" width="150">
         <span slot-scope="scope">{{scope.row.inserttime | timeFormat}}</span>
       </el-table-column>
       <el-table-column prop="username" label="提单人">
@@ -44,7 +44,7 @@
           <el-button type="warning" plain class="xsbtn">{{scope.row.code_desc}}</el-button>
         </template>
       </el-table-column>
-      <el-table-column prop="" label="操作" width="75">
+      <el-table-column prop="" label="操作" width="75" align="center">
         <template slot-scope="scope">
           <el-button @click.native="view(scope.row)" type="success" class="xsbtn">查 看</el-button>
         </template>

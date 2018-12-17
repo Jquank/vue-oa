@@ -30,7 +30,7 @@
 
     <el-table @selection-change="handleSelectionChange" stripe border :data="list" max-height="550" class="table-width">
       <el-table-column type="selection" fixed width="45"></el-table-column>
-      <el-table-column prop="companyname" label="公司名称" min-width="120"></el-table-column>
+      <el-table-column prop="companyname" label="公司名称" min-width="160"></el-table-column>
       <el-table-column prop="baidu_account" label="百度账号"></el-table-column>
       <el-table-column prop label="到账金额" width="110">
         <span slot-scope="scope">{{scope.row.receiptmoney | currency1}}</span>
@@ -38,7 +38,7 @@
       <el-table-column prop label="提单金额" width="110">
         <span slot-scope="scope">{{scope.row.usemoney+scope.row.servicemoney+scope.row.usevoucher | currency1}}</span>
       </el-table-column>
-      <el-table-column prop label="申请时间" width="90">
+      <el-table-column prop label="申请时间" width="100">
         <span slot-scope="scope">{{scope.row.inserttime | timeFormat}}</span>
       </el-table-column>
       <el-table-column prop label="提单人">
@@ -58,36 +58,49 @@
           >{{scope.row.step >= 100 && scope.row.checkName ? (scope.row.checkBindName?(scope.row.checkBindName): ((scope.row.checkTrueName && scope.row.checkTrueName!=scope.row.checkName)?(scope.row.checkTrueName):scope.row.checkName)) : scope.row.code_desc}}</el-button>
         </template>
       </el-table-column>
-      <el-table-column prop label="操作" width="160">
+      <el-table-column prop label="操作" width="110" align="center">
         <template slot-scope="scope">
-          <div class="btns">
-            <el-button @click.native="view(scope.row)" type="success" class="xsbtn">查看</el-button>
-            <el-button @click.native="editRenew(scope.row)" type="warning" class="xsbtn">编辑</el-button>
-            <el-button
-              v-if=" ( (scope.row.invoice=='0' || scope.row.invoice=='10' || (scope.row.invoice=='-1' && scope.row.invoiceCha =='1') ) && scope.row.receiptmoney > 0 && scope.row.invoiceTmoney < scope.row.receiptmoney)"
-              @click.native="applyInvoice(scope.row)"
-              type="primary"
-              class="xsbtn"
-            >申请发票</el-button>
-            <el-button
-              v-if="scope.row.receiptmoney<scope.row.usemoney&&permissions.indexOf('6u')>-1"
-              @click.native="chargeOff(scope.row)"
-              type="danger"
-              class="xsbtn"
-            >销账</el-button>
-            <el-button
-              v-if="permissions.indexOf('7n') > -1&&scope.row.step!=400"
-              @click.native="stop(scope.row)"
-              type="danger"
-              class="xsbtn"
-            >终止</el-button>
-            <el-button
-              v-if="scope.row.hasinvoice >= 10 && permissions.indexOf('7d')>-1"
-              @click.native="errInvoice(scope.row)"
-              type="primary"
-              class="xsbtn"
-            >发票开错冲红</el-button>
-          </div>
+          <el-dropdown trigger="click">
+            <el-button type="primary" size="mini">
+              操作<i class="el-icon-arrow-down el-icon--right"></i>
+            </el-button>
+            <el-dropdown-menu slot="dropdown" class="text-center">
+              <el-dropdown-item>
+                <el-button @click.native="view(scope.row)" type="success" class="xsbtn">查看</el-button>
+              </el-dropdown-item>
+              <el-dropdown-item divided>
+                <el-button @click.native="editRenew(scope.row)" type="warning" class="xsbtn">编辑</el-button>
+              </el-dropdown-item>
+              <el-dropdown-item divided v-if="( (scope.row.invoice=='0' || scope.row.invoice=='10' || (scope.row.invoice=='-1' && scope.row.invoiceCha =='1') ) && scope.row.receiptmoney > 0 && scope.row.invoiceTmoney < scope.row.receiptmoney)">
+                <el-button
+                  @click.native="applyInvoice(scope.row)"
+                  type="primary"
+                  class="xsbtn"
+                >申请发票</el-button>
+              </el-dropdown-item>
+              <el-dropdown-item divided v-if="scope.row.receiptmoney<scope.row.usemoney&&permissions.indexOf('6u')>-1">
+                <el-button
+                  @click.native="chargeOff(scope.row)"
+                  type="danger"
+                  class="xsbtn"
+                >销账</el-button>
+              </el-dropdown-item>
+              <el-dropdown-item divided v-if="permissions.indexOf('7n') > -1&&scope.row.step!=400">
+                <el-button
+                  @click.native="stop(scope.row)"
+                  type="danger"
+                  class="xsbtn"
+                >终止</el-button>
+              </el-dropdown-item>
+              <el-dropdown-item divided v-if="scope.row.hasinvoice >= 10 && permissions.indexOf('7d')>-1">
+                <el-button
+                  @click.native="errInvoice(scope.row)"
+                  type="primary"
+                  class="xsbtn"
+                >发票开错冲红</el-button>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </template>
       </el-table-column>
     </el-table>
@@ -166,7 +179,7 @@
       <el-table :data="chargeOffList" class="table-width" @selection-change="handleSelFlow">
         <el-table-column type="selection" width="40"></el-table-column>
         <el-table-column prop="code_desc" label="银行类型" width="80"></el-table-column>
-        <el-table-column prop="tm" label="时间" width="140">
+        <el-table-column prop="tm" label="时间" width="150">
           <span slot-scope="scope">{{scope.row.tm | timeFormat}}</span>
         </el-table-column>
         <el-table-column prop="split_amount" label="金额" width="120">

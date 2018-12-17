@@ -15,7 +15,7 @@
             v-if="item.where.type==='datetime'"
             v-model="item.where.val[0]"
             value-format="yyyy/MM/dd HH:mm"
-            format="yyyy/MM/dd HH:mm"
+            format="yyyy/MM/dd"
             type="datetimerange"
             range-separator="至"
             :start-placeholder="item.as"
@@ -65,7 +65,7 @@
           :key="index"
           prop
           :label="item.as"
-          :width="(item.where && item.where.type==='datetime')?'90':''"
+          :width="getWidth(item)"
         >
           <span slot-scope="scope">
             <span v-if="!item.where || item.where.type!=='datetime'">{{scope.row[item.as]}}</span>
@@ -120,10 +120,32 @@ export default {
         // rpt_data: {
         //   columns: []
         // }
+      },
+      mapWidth: {
+        'datetime': '100',
+        'indu': '150',
+        'area': '150'
       }
     }
   },
   methods: {
+    getWidth (item) {
+      if (!item.where) {
+        return '100'
+      }
+      let width = this.mapWidth[item.where.type]
+      if (width) {
+        return width
+      } else {
+        if (item.where.type === 'text' && item.as === '公司名称') {
+          return '180'
+        }
+        if (item.as === '订单ID') {
+          return '120'
+        }
+        return '100'
+      }
+    },
     exportExcell(data) {
       this.$export('/' + data.url, this.sendParams)
     },

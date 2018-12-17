@@ -23,12 +23,12 @@
     </div>
 
     <el-table stripe border :data="myFollowList" class="table-width" max-height="500">
-      <el-table-column prop="odre" label="ID" min-width="70">
+      <el-table-column prop="odre" label="ID" width="70">
       </el-table-column>
-      <el-table-column prop="inserttime" label="日期" width="90">
+      <el-table-column prop="inserttime" label="日期" width="100">
         <span slot-scope="scope">{{scope.row.inserttime | timeFormat}}</span>
       </el-table-column>
-      <el-table-column prop="companyname" label="公司名称" min-width="130">
+      <el-table-column prop="companyname" label="公司名称" min-width="160">
       </el-table-column>
       <el-table-column prop="username" label="提交人">
         <template slot-scope="scope">
@@ -40,19 +40,19 @@
       </el-table-column>
       <el-table-column prop="baidu_id" label="用户ID">
       </el-table-column>
-      <el-table-column prop="addtype" label="推广共享资金" min-width="110">
+      <el-table-column prop="addtype" label="推广共享资金" width="110">
         <span slot-scope="scope">{{scope.row.tgbonus | currency}}</span>
       </el-table-column>
-      <el-table-column prop="ggbonus" label="广告共享资金" min-width="110">
+      <el-table-column prop="ggbonus" label="广告共享资金" width="110">
         <span slot-scope="scope">{{scope.row.ggbonus | currency}}</span>
       </el-table-column>
-      <el-table-column prop="ysdltg" label="代理原生推广" min-width="110">
+      <el-table-column prop="ysdltg" label="代理原生推广" width="110">
         <span slot-scope="scope">{{scope.row.ysdltg | currency}}</span>
       </el-table-column>
-      <el-table-column prop="checktime" label="加款时间" width="90">
+      <el-table-column prop="checktime" label="加款时间" width="100">
         <span slot-scope="scope">{{scope.row.checktime | timeFormat}}</span>
       </el-table-column>
-      <el-table-column prop="" label="操作" width="75">
+      <el-table-column prop="" label="操作" width="75" align="center">
         <template slot-scope="scope">
           <el-button @click.native="view(scope.row)" type="success" class="xsbtn">查看</el-button>
         </template>
@@ -72,7 +72,7 @@
           <el-button class="title-btn" type="warning">续费信息</el-button>
           <div class="line"></div>
         </div>
-        <el-form label-width="134px" class="weight-label">
+        <el-form label-width="110px" class="weight-label">
           <el-row>
             <el-col :md="8">
               <el-form-item label="客户名称 :">
@@ -97,23 +97,23 @@
           </el-row>
           <el-row>
             <el-col :md="24" v-if="!baseInfo1.order3number">
-              <el-form-item label="百度推广服务合同 :">
+              <el-form-item label="百度推广服务合同 :" label-width="140px">
                 <div>{{baseInfo1.ordernumber}}</div>
               </el-form-item>
             </el-col>
             <template v-else>
               <el-col :md="8">
-                <el-form-item label="百度推广服务订单编号 :" label-width="180px">
+                <el-form-item label="百度推广服务订单编号 :" label-width="160px">
                   <div>{{baseInfo1.ordernumber}}</div>
                 </el-form-item>
               </el-col>
-              <el-col :md="8" class="maxwidth">
-                <el-form-item label="百度推广首消授权书 :" label-width="180px">
+              <el-col :md="6" class="maxwidth">
+                <el-form-item label="百度推广首消授权书 :" label-width="140px">
                   <div>{{baseInfo1.order2number}}</div>
                 </el-form-item>
               </el-col>
-              <el-col :md="8" class="maxwidth">
-                <el-form-item label="百度推广服务协议 :" label-width="180px">
+              <el-col :md="5" class="maxwidth">
+                <el-form-item label="百度推广服务协议 :" label-width="140px">
                   <div>{{baseInfo1.order3number}}</div>
                 </el-form-item>
               </el-col>
@@ -205,7 +205,7 @@
           <div class="line"></div>
         </div>
         <el-table :data="recordList" class="table-width" max-height="400">
-          <el-table-column prop="inserttime" label="操作时间" width="140">
+          <el-table-column prop="inserttime" label="操作时间" width="150">
             <span slot-scope="scope">{{scope.row.inserttime | timeFormat}}</span>
           </el-table-column>
           <el-table-column prop="name" label="操作人">
@@ -402,7 +402,7 @@ export default {
       margin-top: 10px;
     }
     .item-width {
-      width: 300px;
+      width: 310px;
     }
   }
 }

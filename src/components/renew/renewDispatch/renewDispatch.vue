@@ -19,7 +19,7 @@
     <el-table  @selection-change="handleSelectionChange" stripe border :data="myFollowList" style="width: 100%;margin-top:10px;">
       <el-table-column type="selection" width="40">
       </el-table-column>
-      <el-table-column prop="inserttime" label="日期" width="140">
+      <el-table-column prop="inserttime" label="日期" width="150">
         <span slot-scope="scope">{{scope.row.inserttime | timeFormat}}</span>
       </el-table-column>
       <el-table-column prop="username" label="客服">
@@ -37,12 +37,12 @@
       <el-table-column prop="addtype" label="续费类型">
         <span slot-scope="scope">{{scope.row.addtype+'' | renewState('addType')}}</span>
       </el-table-column>
-      <el-table-column prop="stepName" label="审核状态" min-width="120" v-if="step!=150">
+      <el-table-column prop="stepName" label="审核状态" width="130" v-if="step!=150">
         <template slot-scope="scope">
           <el-button type="warning" plain class="xsbtn">{{scope.row.stepName}}</el-button>
         </template>
       </el-table-column>
-      <el-table-column prop="" label="操作" width="85">
+      <el-table-column prop="" label="操作" width="85" align="center">
         <template slot-scope="scope">
           <el-button @click.native="confirm(scope.row)" type="success" class="xsbtn">确认转出</el-button>
         </template>

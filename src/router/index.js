@@ -356,6 +356,11 @@ const AheadInvoice = (resolve) => {
     resolve(module)
   })
 }
+const OrderReport = (resolve) => {
+  import('components/reportData/orderReport').then((module) => {
+    resolve(module)
+  })
+}
 const BranchAdd = (resolve) => {
   import('components/reportData/branchAdd').then((module) => {
     resolve(module)
@@ -943,6 +948,12 @@ const router = new Router({
           name: 'REP_MONEY_ORDER',
           meta: { text: '新开活动明细' },
           component: ReportData
+        },
+        {
+          path: 'orderReport',
+          name: 'orderReport',
+          meta: { text: '岗位效能数据' },
+          component: OrderReport
         },
         {
           path: 'REP_ZJJLDC',
