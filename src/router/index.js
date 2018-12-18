@@ -371,94 +371,6 @@ const MoneyChart = (resolve) => {
     resolve(module)
   })
 }
-// import Login from 'components/login/login'
-// 首页
-// import IndexPage from 'components/indexPage/indexPage'
-// import IndexContent from 'components/indexContent/indexContent'
-// 系统配置
-// import Rule from 'components/systemSetting/rule/rule'
-// import Auth from 'components/systemSetting/auth/auth'
-// import SystemCycle from 'components/systemSetting/systemCycle/systemCycle'
-// import DepartSetNum from 'components/systemSetting/departSetNum/departSetNum'
-// import AccountManage from 'components/systemSetting/accountManage/accountManage'
-// import News from 'components/systemSetting/news/news'
-// import Activity from 'components/systemSetting/activity/activity'
-// import Editor from 'components/systemSetting/news/editor'
-// import ViewNews from 'components/systemSetting/news/viewNews'
-// 人员管理
-// import AddUser from 'components/userManage/addUser/addUser'
-// import UserList from 'components/userManage/userList/userList'
-// 客户管理
-// import AddCus from 'components/cusManage/addCus/addCus'
-// import ApplyCus from 'components/cusManage/applyCus/applyCus'
-// import ApplyDetail from 'components/cusManage/applyCus/applyDetail'
-// import MyCus from 'components/cusManage/myCus/myCus'
-// import MyCusDetail from 'components/cusManage/myCus/myCusDetail'
-// import VisitRecord from 'components/cusManage/visitRecord/visitRecord'
-// import FollowRecord from 'components/cusManage/followRecord/followRecord'
-// import ImportCus from 'components/cusManage/importCus/importCus'
-// 客户审核
-// import DealCheck from 'components/cusCheck/dealCheck/dealCheck'
-// import CheckDetail from 'components/cusCheck/dealCheck/checkDetail'
-// import CheckRecord from 'components/cusCheck/checkRecord/checkRecord'
-// import CusInfo from 'components/cusCheck/cusInfo/cusInfo'
-// import viewCusInfo from 'components/cusCheck/cusInfo/viewCusInfo'
-// import CusPoolManage from 'components/cusCheck/cusPoolManage/cusPoolManage'
-// import ViewCusInfo from 'components/cusCheck/cusPoolManage/viewCusInfo'
-
-// 客户搜索
-// import CusSearch from 'components/cusSearch/cusSearch/cusSearch'
-// import CusOut from 'components/cusSearch/cusOut/cusOut'
-// 合同管理
-// import AllotContract from 'components/contract/allotContract/allotContract'
-// import ContractList from 'components/contract/contractList/contractList'
-// import ApplyContract from 'components/contract/applyContract/applyContract'
-// 续费管理
-// import RenewApply from 'components/renew/renewApply/renewApply'
-// import RenewList from 'components/renew/renewList/renewList'
-// import RenewCheck from 'components/renew/renewCheck/renewCheck'
-// import RenewReceive from 'components/renew/renewReceive/renewReceive'
-// import RenewDispatch from 'components/renew/renewDispatch/renewDispatch'
-// import RenewAdd from 'components/renew/renewAdd/renewAdd'
-// import AccountOut from 'components/renew/accountOut/accountOut'
-
-// 工资管理
-// import SalaryList from 'components/salary/salaryList'
-// import SalaryDetail from 'components/salary/salaryDetail'
-// import SalaryError from 'components/salary/salaryError'
-// 到款管理
-// import MoneyRecord from 'components/moneyManage/moneyRecord/moneyRecord'
-// import AddMoney from 'components/moneyManage/moneyRecord/addMoney'
-// import ViewMoney from 'components/moneyManage/moneyRecord/viewMoney'
-// import EditMoney from 'components/moneyManage/moneyRecord/editMoney'
-// import BankflowList from 'components/moneyManage/bankflowList/bankflowList'
-// import MyFlow from 'components/moneyManage/myFlow/myFlow'
-// import MoneyCount from 'components/moneyManage/moneyCount/moneyCount'
-// 订单管理
-// import AddBaiduOrder from 'components/order/addBaiduOrder/addBaiduOrder'
-// import AddWjOrder from 'components/order/addWjOrder/addWjOrder'
-// import AddZtcOrder from 'components/order/addZtcOrder/addZtcOrder'
-// import AddKaOrder from 'components/order/addKaOrder/addKaOrder'
-// import OrderPending from 'components/order/orderPending/orderPending'
-// import PendingDetail from 'components/order/orderPending/pendingDetail'
-// import EditOrder from 'components/order/orderPending/editOrder'
-// import OrderList from 'components/order/orderList/orderList'
-// import Print from 'components/order/print/print'
-
-// 发票管理
-// import InvoicePending from 'components/invoiceManage/invoicePending/invoicePending'
-// import InvoiceList from 'components/invoiceManage/invoiceList/invoiceList'
-// import InvoiceHandled from 'components/invoiceManage/invoiceHandled/invoiceHandled'
-// import InvoiceSend from 'components/invoiceManage/invoiceSend/invoiceSend'
-// import InvoiceCheck from 'components/invoiceManage/invoiceCheck/invoiceCheck'
-// import ChargeOffCheck from 'components/invoiceManage/chargeOffCheck/chargeOffCheck'
-
-// 报表统计
-// import ReportData from 'components/reportData/reportData'
-// import AheadInvoice from 'components/reportData/aheadInvoice'
-// import BranchAdd from 'components/reportData/branchAdd'
-// import MoneyChart from 'components/reportData/moneyChart'
-
 // 呼叫中心
 import PhoneChange from 'components/callCenter/phoneChange'
 import _History from 'components/callCenter/history'
@@ -469,6 +381,27 @@ import AcdWatch from 'components/callCenter/acdWatch'
 import WorkerWatch from 'components/callCenter/workerWatch'
 import BlackList from 'components/callCenter/blackList'
 import CallCenter from 'components/callCenter/callCenter'
+// 产品列表
+const ProductManage = (resolve) => {
+  import('components/productList/productManage').then((module) => {
+    resolve(module)
+  })
+}
+const ProductEditor = (resolve) => {
+  import('components/productList/productEditor').then((module) => {
+    resolve(module)
+  })
+}
+const ViewProduct = (resolve) => {
+  import('components/productList/viewProduct').then((module) => {
+    resolve(module)
+  })
+}
+const AddClassify = (resolve) => {
+  import('components/productList/addClassify').then((module) => {
+    resolve(module)
+  })
+}
 
 // import store from '../store'
 import cookie from 'js-cookie'
@@ -920,6 +853,12 @@ const router = new Router({
           component: ReportData
         },
         {
+          path: 'REP_ZTC_ORDER',
+          name: 'REP_ZTC_ORDER',
+          meta: { text: '直通车订单统计' },
+          component: ReportData
+        },
+        {
           path: 'REP_KHXQ',
           name: 'REP_KHXQ',
           meta: { text: '薪资计算业绩' },
@@ -970,7 +909,13 @@ const router = new Router({
         {
           path: 'REP_BUSINESS_RENEW',
           name: 'REP_BUSINESS_RENEW',
-          meta: { text: '商务续费统计' },
+          meta: { text: '续费统计' },
+          component: ReportData
+        },
+        {
+          path: 'REP_ORDER_RENEW',
+          name: 'REP_ORDER_RENEW',
+          meta: { text: '开户统计' },
           component: ReportData
         },
         {
@@ -1039,7 +984,37 @@ const router = new Router({
           name: 'callCenter',
           meta: { text: '拨号中心' },
           component: CallCenter
-        }
+        },
+        // 产品列表
+        {
+          path: 'productManage',
+          name: 'productManage',
+          meta: { text: '产品管理' },
+          component: ProductManage,
+          children: [
+            {
+              path: 'add/:id',
+              meta: { text: '新增产品' },
+              component: ProductEditor
+            },
+            {
+              path: 'edit/:id',
+              meta: { text: '编辑产品' },
+              component: ProductEditor
+            },
+            {
+              path: 'view/:id',
+              meta: { text: '产品详情' },
+              component: ViewProduct
+            }
+          ]
+        },
+        {
+          path: 'addClassify',
+          name: 'addClassify',
+          meta: { text: '添加分类' },
+          component: AddClassify
+        },
       ]
     }
   ],

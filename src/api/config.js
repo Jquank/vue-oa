@@ -244,6 +244,7 @@ export const navList = [
       { cid: '7e', to: '/indexPage/REP_BACUS', text: '保A客户统计' },
       // { cid: 141, to: '/indexPage/REP_RECEIVE', text: '到款统计' },
       { cid: '7g', to: '/indexPage/REP_ORDER', text: '订单统计' },
+      { cid: '8f', to: '/indexPage/REP_ZTC_ORDER', text: '直通车订单统计' },
       { cid: '7a', to: '/indexPage/REP_KHXQ', text: '薪资计算业绩' },
       { cid: '7b', to: '/indexPage/REP_JYJ', text: '外审业绩时间' },
       { cid: '56', to: '/indexPage/moneyChart', text: '资金明细表' },
@@ -252,7 +253,8 @@ export const navList = [
       { cid: '7m', to: '/indexPage/OrderReport', text: '岗位效能数据' },
       { cid: '7s', to: '/indexPage/REP_ZJJLDC', text: '质检经理导出表' },
       { cid: '7t', to: '/indexPage/REP_PERCENTAGE', text: '提成统计' },
-      { cid: '7u', to: '/indexPage/REP_BUSINESS_RENEW', text: '商务续费统计' },
+      { cid: '7u', to: '/indexPage/REP_BUSINESS_RENEW', text: '续费统计' },
+      { cid: '8e', to: '/indexPage/REP_ORDER_RENEW', text: '开户统计' },
       { cid: '7v', to: '/indexPage/REP_BUSINESS_ACHIEVEMENT', text: '商务业绩查看' },
       { cid: '81', to: '/indexPage/branchAdd', text: '分公司加款' }
     ]
@@ -271,6 +273,23 @@ export const navList = [
       { cid: '7q', to: '/indexPage/workerWatch', text: '员工工作情况' },
       { cid: '7r', to: '/indexPage/blackList', text: '黑名单管理' },
       { cid: '7p', to: '/indexPage/callCenter', text: '拨号中心' }
+    ]
+  },
+  {
+    id: '159',
+    fontIcon: 'fa fa-phone fa-fw fa-lg',
+    text: '产品列表',
+    cList: [
+      { cid: '111', to: '/indexPage/productManage', text: '文章列表' },
+      { cid: '112', to: '/indexPage/addClassify', text: '添加分类' }
+    ]
+  },
+  {
+    id: '189',
+    fontIcon: 'fa fa-phone fa-fw fa-lg',
+    text: '反馈流程',
+    cList: [
+      { cid: '121', to: '/indexPage/phoneChange', text: '坐席分机修改' }
     ]
   }
 ]

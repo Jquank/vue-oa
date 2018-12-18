@@ -172,7 +172,7 @@ export default {
       margin-top: 10px;
     }
     .item-width {
-      width: 250px;
+      width: 280px;
     }
   }
 }

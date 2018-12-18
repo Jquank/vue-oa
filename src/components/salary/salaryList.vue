@@ -17,7 +17,7 @@
           v-model="date"
           value-format="yyyy-MM"
         ></el-date-picker>
-        <div class="salary-item export">
+        <div class="salary-item export"  v-if="permissions.indexOf('4n') > -1">
           <up-file
             :isHiddenFileList="true"
             :otherParams="otherParams"

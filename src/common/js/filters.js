@@ -277,7 +277,7 @@ export function wjStyle(num) {
       return '营销页建站'
   }
 }
-const reg = /[\u4E00-\u9FA5]{1,}/g
+const reg = /[\u4E00-\u9FA5]{1,}/
 export function timeFormat(num) {
   if (num === '.') {
     return '.'

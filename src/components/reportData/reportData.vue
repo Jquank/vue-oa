@@ -11,9 +11,9 @@
           >
             <template slot="prepend">{{item.as}}:</template>
           </el-input>
-          <el-date-picker
+          <el-date-picker :key="item.as"
             v-if="item.where.type==='datetime'"
-            v-model="item.where.val[0]"
+            v-model="item.where.val"
             value-format="yyyy/MM/dd HH:mm"
             format="yyyy/MM/dd"
             type="datetimerange"
@@ -28,6 +28,7 @@
             v-if="item.where.type==='dropdown'"
             v-model="item.where.val[0]"
             :title="item.as"
+            :classMark="item.as"
             class="item item-width"
           >
             <el-option v-for="(op,index) in item.where.options" :key="index" :label="op.text" :value="op.type"></el-option>
@@ -68,8 +69,8 @@
           :width="getWidth(item)"
         >
           <span slot-scope="scope">
-            <span v-if="!item.where || item.where.type!=='datetime'">{{scope.row[item.as]}}</span>
             <span v-if="item.where && item.where.type==='datetime'">{{scope.row[item.as] | timeFormat}}</span>
+            <span v-else>{{scope.row[item.as]}}</span>
           </span>
         </el-table-column>
       </template>
@@ -143,7 +144,6 @@ export default {
         if (item.as === '订单ID') {
           return '120'
         }
-        return '100'
       }
     },
     exportExcell(data) {
@@ -232,7 +232,7 @@ export default {
       margin-top: 10px;
     }
     .item-width {
-      width: 250px;
+      width: 280px;
     }
   }
   .export {

@@ -6,12 +6,15 @@
           <i class="fa fa-home fa-fw fa-lg"></i>
           <span slot="title">&nbsp;首页</span>
         </el-menu-item>
-        <el-submenu v-for="(item, index) in navList" :key="index" :index="item.id+''"  v-if="permissions.indexOf(item.id)>-1">
+        <!-- <el-submenu v-for="(item, index) in navList" :key="index" :index="item.id+''"  v-if="permissions.indexOf(item.id)>-1"> -->
+        <el-submenu v-for="(item, index) in navList" :key="index" :index="item.id+''">
           <span slot="title">
             <i :class="item.fontIcon"></i>&nbsp;
             <span>{{item.text}}</span>
           </span>
-          <el-menu-item class="item-active" ref="item" v-for="(child, index) in item.cList" :key="index" :index="child.to"  v-if="permissions.indexOf(child.cid)>-1 || child.cid === '1000' || child.cid === '1100'">{{child.text}}
+          <!-- <el-menu-item class="item-active" ref="item" v-for="(child, index) in item.cList" :key="index" :index="child.to"  v-if="permissions.indexOf(child.cid)>-1 || child.cid === '1000' || child.cid === '1100'"> -->
+          <el-menu-item class="item-active" ref="item" v-for="(child, index) in item.cList" :key="index" :index="child.to">
+            {{child.text}}
             <!-- 1000: 客户搜索，1100：工资管理 -->
           </el-menu-item>
         </el-submenu>

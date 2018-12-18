@@ -34,8 +34,12 @@
       </div>
     </div>
 
-    <el-table show-summary :summary-method="getSummaries" stripe border :data="invoiceList" class="table-width" max-height="500">
+    <el-table stripe border :data="invoiceList" :row-class-name="setLastRowStyle" class="table-width" max-height="500">
       <el-table-column prop="comName" label="代付账号" min-width="150">
+        <template slot-scope="scope">
+          <span v-if="scope.row.mark!=='lastRow'">{{scope.row.comName}}</span>
+          <span v-else>合计</span>
+        </template>
       </el-table-column>
       <el-table-column prop="baidu_account" label="带子" width="100">
       </el-table-column>
@@ -43,24 +47,39 @@
       </el-table-column>
       <el-table-column prop="addtype" label="加款类型" min-width="80">
       </el-table-column>
-      <el-table-column prop="tm" label="到款时间" min-width="90">
+      <el-table-column prop="tm" label="到款时间" width="100">
       </el-table-column>
-      <el-table-column prop="split_amount" label="到款金额" width="100">
-        <span slot-scope="scope">{{scope.row.split_amount | currency}}</span>
+      <el-table-column prop="split_amount" label="到款金额" width="110">
+        <template slot-scope="scope">
+          <span v-if="scope.row.mark!=='lastRow'">{{scope.row.split_amount | currency}}</span>
+          <span v-else>{{scope.row.sumSplitAmount | currency}}</span>
+        </template>
       </el-table-column>
-      <el-table-column prop="addtime" label="加款时间" min-width="90">
+      <el-table-column prop="addtime" label="加款时间" width="100">
       </el-table-column>
       <el-table-column prop="addmoney" label="加款金额" width="100">
-        <span slot-scope="scope">{{scope.row.addmoney | currency}}</span>
+        <template slot-scope="scope">
+          <span v-if="scope.row.mark!=='lastRow'">{{scope.row.addmoney | currency}}</span>
+          <span v-else>{{scope.row.sumAddmoney | currency}}</span>
+        </template>
       </el-table-column>
       <el-table-column prop="tgbonus" label="推广共享资金" width="100">
-        <span slot-scope="scope">{{scope.row.tgbonus | currency}}</span>
+        <template slot-scope="scope">
+          <span v-if="scope.row.mark!=='lastRow'">{{scope.row.tgbonus | currency}}</span>
+          <span v-else>{{scope.row.sumTgbonus | currency}}</span>
+        </template>
       </el-table-column>
       <el-table-column prop="ggbonus" label="广告共享资金" width="100">
-        <span slot-scope="scope">{{scope.row.ggbonus | currency}}</span>
+        <template slot-scope="scope">
+          <span v-if="scope.row.mark!=='lastRow'">{{scope.row.ggbonus | currency}}</span>
+          <span v-else>{{scope.row.sumGgbonus | currency}}</span>
+        </template>
       </el-table-column>
       <el-table-column prop="ysdltg" label="原生代理推广" width="100">
-        <span slot-scope="scope">{{scope.row.ysdltg | currency}}</span>
+        <template slot-scope="scope">
+          <span v-if="scope.row.mark!=='lastRow'">{{scope.row.ysdltg | currency}}</span>
+          <span v-else>{{scope.row.sumYsdltg | currency}}</span>
+        </template>
       </el-table-column>
     </el-table>
     <page class="page" :url="invoiceUrl" :sendParams="invoiceParams" @updateList="updateInvoiceList"></page>
@@ -127,6 +146,7 @@ export default {
     exportExcell () {
       this.$export('/wf.do?renewExport', this.invoiceParams)
     },
+    // 弃用合计
     getSummaries (param) {
       const { columns, data } = param
       const sums = []
@@ -160,8 +180,16 @@ export default {
       })
       return sums
     },
-    updateInvoiceList (data) {
-      this.invoiceList = data.data[0].data
+    updateInvoiceList (res) {
+      this.invoiceList = res.data[0].data
+      let total = res.data[2].data
+      total.mark = 'lastRow'
+      this.invoiceList.push(total)
+    },
+    setLastRowStyle({row, rowIndex}) {
+      if (row.mark === 'lastRow') {
+        return 'red'
+      }
     }
   },
   components: {

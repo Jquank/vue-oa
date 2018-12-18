@@ -3,7 +3,7 @@
     <el-upload
       class="upload-file"
       id="upload-file"
-      :action="uploadUrl"
+      :action="uploadUrl?(serverUrl+uploadUrl+'&tk='+tk):baseUrl"
       :on-success="upSuccess"
       :before-remove="beforeRemove"
       multiple
@@ -21,13 +21,14 @@
 </template>
 
 <script>
-import { uploadUrl } from 'api/http'
+import { uploadUrl, serverUrl } from 'api/http'
 import Viewer from 'viewerjs'
+import cookie from 'js-cookie'
 export default {
   props: {
     uploadUrl: {
       type: String,
-      default: uploadUrl
+      default: ''
     },
     listType: {
       type: String,
@@ -58,6 +59,9 @@ export default {
   },
   data () {
     return {
+      baseUrl: uploadUrl,
+      serverUrl: serverUrl,
+      tk: cookie.get('token'),
       fileList: [],
       showFileList: true,
       viewer: null

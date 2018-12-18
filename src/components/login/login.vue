@@ -123,7 +123,7 @@ export default {
             message: '网络错误，请检查！',
             type: 'error'
           })
-          console.log(err)
+          console.error(err)
         })
     }
   }
