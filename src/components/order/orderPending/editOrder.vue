@@ -7,7 +7,7 @@
       <add-wj-order v-if="pid==='WEBSITE'" :showQualify="showQualify" :deledQualify="deledQualify" :showEditWJ="false" :editData="editData">
         <show-qualify v-if="showQualify.length" slot="echoQualify" :showQualify="showQualify" @getQualifyList="getQualifyList"></show-qualify>
       </add-wj-order>
-      <add-ztc-order v-if="pid==='ZTC2'" :showQualify="showQualify" :deledQualify="deledQualify" :showEditZTC="false" :editData="editData">
+      <add-ztc-order v-if="pid==='ZTC'" :showQualify="showQualify" :deledQualify="deledQualify" :showEditZTC="false" :editData="editData">
         <show-qualify v-if="showQualify.length" slot="echoQualify" :showQualify="showQualify" @getQualifyList="getQualifyList"></show-qualify>
       </add-ztc-order>
       <add-ka-order v-if="pid==='GD' || pid==='PZ' || pid==='KP'" :showQualify="showQualify" :deledQualify="deledQualify" :showEditKA="false" :editData="editData">

@@ -6,8 +6,7 @@
           <i class="fa fa-home fa-fw fa-lg"></i>
           <span slot="title">&nbsp;首页</span>
         </el-menu-item>
-        <!-- <el-submenu v-for="(item, index) in navList" :key="index" :index="item.id+''"  v-if="permissions.indexOf(item.id)>-1"> -->
-        <el-submenu v-for="(item, index) in navList" :key="index" :index="item.id+''">
+        <el-submenu v-for="(item, index) in navList" :key="index" :index="item.id+''"  v-if="permissions.indexOf(item.id)>-1">
           <span slot="title">
             <i :class="item.fontIcon"></i>&nbsp;
             <span>{{item.text}}</span>

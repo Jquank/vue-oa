@@ -210,7 +210,7 @@
               <el-table-column prop="remark" label="操作内容">
               </el-table-column>
             </el-table>
-            <page class="page" :url="changeUrl" :sendParams="changeParams" @updateList="getChangeLogs"></page>
+            <page :defaultSearch="defaultSearch" class="page" :url="changeUrl" :sendParams="changeParams" @updateList="getChangeLogs"></page>
           </el-tab-pane>
           <el-tab-pane label="申请修改记录" name="3">
             <el-table :data="applyChangeLogs" border stripe style="width: 100%;">
@@ -232,7 +232,7 @@
               <el-table-column prop="refuseremark" label="被拒原因">
               </el-table-column>
             </el-table>
-            <page class="page" :url="applyChangeUrl" :sendParams="applyChangeParams" @updateList="getApplyChangeLogs"></page>
+            <page :defaultSearch="defaultSearch" class="page" :url="applyChangeUrl" :sendParams="applyChangeParams" @updateList="getApplyChangeLogs"></page>
           </el-tab-pane>
           <el-tab-pane label="放弃保A日志" name="4">
             <el-table :data="stopBaoALogs" border stripe style="width: 100%;">
@@ -246,7 +246,7 @@
               <el-table-column prop="remark" label="备注" min-width="200">
               </el-table-column>
             </el-table>
-            <page class="page" :url="stopUrl" :sendParams="stopParams" @updateList="getStopBaoALogs"></page>
+            <page :defaultSearch="defaultSearch" class="page" :url="stopUrl" :sendParams="stopParams" @updateList="getStopBaoALogs"></page>
           </el-tab-pane>
         </el-tabs>
       </div>
@@ -388,6 +388,7 @@ export default {
       stopBaoALogs: [], // 放弃保A记录
       stopUrl: '/Company.do?userCompanylogRecord',
       stopParams: {},
+      defaultSearch: false,
 
       phoneRepeatDialog: false, // 电话查重弹窗
       repeatList: [],
@@ -431,7 +432,12 @@ export default {
         })
       })
     }
-    this.applyChangeParams = this.stopParams = {
+    this.defaultSearch = true
+    this.applyChangeParams = {
+      companyid: this.receiveData.id,
+      companylogid: this.receiveData.companylogid
+    }
+    this.stopParams = {
       companyid: this.receiveData.id,
       companylogid: this.receiveData.companylogid
     }

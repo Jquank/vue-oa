@@ -64,13 +64,13 @@ export default {
         console.log(err)
       })
     },
-    addRule (pid) {
+    addRule () {
       let that = this
       submitBox(that, {
         url: '/Permission.do?set',
         editParams: {
           name: '',
-          permission: ''
+          permission: null
         },
         title: '新增权限名称',
         inputValue: ''

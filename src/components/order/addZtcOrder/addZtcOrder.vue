@@ -68,6 +68,18 @@
         </el-row>
         <el-row>
           <el-col :md="24" class="maxwidth">
+            <el-form-item label="落地页:" required>
+              <el-checkbox-group v-model="finalSite">
+                <el-checkbox label="10">团单</el-checkbox>
+                <el-checkbox label="20">旺铺</el-checkbox>
+                <el-checkbox label="30">官网</el-checkbox>
+                <el-checkbox label="40">本地FEED</el-checkbox>
+              </el-checkbox-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :md="24" class="maxwidth">
             <el-form-item label="验证方式:" required>
               <el-radio v-model="form.checkType" label="10">对公验证</el-radio>
               <el-radio v-model="form.checkType" label="20">法人认证</el-radio>
@@ -368,7 +380,8 @@ export default {
       companyData: {},
       rowData: {}, // 资质表格一行的数据
       selectedQualify: {},
-      viewer: null
+      viewer: null,
+      finalSite: []
     }
   },
   computed: {
@@ -409,6 +422,7 @@ export default {
         this.form.zizhiList = [] // 清空默认资质列表
         this.form.record = newval.record
         this.record_detail = newval.recordDetail
+        this.finalSite = newval.finalSite
         // 更改contactList中对象的key
         this.form.contactList = JSON.parse(JSON.stringify(newval.contacts))
         let keyMap = {
@@ -440,7 +454,7 @@ export default {
       'CONTRACT_ZTCSQS'
     ) // 合同
     this._getQualifyType(32) // 获取资质
-    this._getReceiveBanks()
+    // this._getReceiveBanks()
 
     // console.log(this.productType)
   },
@@ -472,7 +486,8 @@ export default {
         addr: this.form.cusAddress,
         contacts: this.form.contactList,
         order_status: '',
-        user_name: this.companyData.username || this.editData.user_name // 下单人
+        user_name: this.companyData.username || this.editData.user_name, // 下单人
+        finalSite: this.finalSite
       }
       let params = {
         cpid: this.cpid || this.editData.rowData.cpid,
@@ -563,6 +578,7 @@ export default {
       console.log(params)
       this.$post('/wf.do?go', params).then(res => {
         if (res.data[0].success) {
+          this.$message.success('新增订单成功！')
           this.$router.push({path: '/indexPage/orderPending'})
         }
       })

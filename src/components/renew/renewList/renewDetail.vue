@@ -330,7 +330,7 @@
         <el-button class="title-btn mt10px" type="warning">操作</el-button>
         <div class="line"></div>
       </div>
-      <div v-if="permissions.indexOf('7x') > -1 && toMark!=='chargeOffCheck'">
+      <div v-if="(permissions.indexOf('7x') > -1 && toMark!=='chargeOffCheck') || toMark==='renewReceive'">
         <el-table :data="productMoneyList" border>
           <el-table-column prop label="产品类型" min-width="200">
             <template slot-scope="scope">
@@ -456,7 +456,7 @@
         </el-table>
       </div>
       <el-form label-width="80px" class="mt10px">
-        <el-row v-if="permissions.indexOf('7x') > -1 && toMark!=='chargeOffCheck'">
+        <el-row v-if="(permissions.indexOf('7x') > -1 && toMark!=='chargeOffCheck') || toMark==='renewReceive'">
           <el-col :md="24" class="maxwidth">
             <el-form-item label="提单时间 :">
               <el-date-picker
@@ -479,9 +479,9 @@
       </el-form>
       <div class="text-center">
         <!-- 续费主管 -->
-        <template v-if="permissions.indexOf('7y') > -1 && toMark==='renewReceive'">
-          <el-button v-if="isPass" @click.native="checkReceive(300)" type="success">通 过</el-button>
-          <el-button @click.native="selBackMoney" type="warning">选 择</el-button>
+        <template v-if="(isPass && toMark==='renewReceive' && permissions.indexOf('7y') > -1) || rid==='0'">
+          <el-button @click.native="checkReceive(300)" type="success">通 过</el-button>
+          <el-button @click.native="selBackMoney" type="warning">退款选择</el-button>
           <el-button @click.native="checkReceive(200)" type="danger">驳 回</el-button>
         </template>
         <!-- 收单出纳 7x -->
@@ -499,8 +499,8 @@
           <el-button @click.native="chargeOffCheck(200)" v-if="chargeOffStep==100" type="danger">驳 回</el-button>
           <el-button @click.native="chargeOffCheck(-10)" v-if="chargeOffStep==300" type="warning">撤 回</el-button>
         </template>
-        <el-button v-if="toMark==='renewList'" @click.native="addCheckRemark" type="success">提交备注</el-button>
         <el-button v-if="toMark==='renewAdd'" @click.native="checkAdd(300)" type="success">通过</el-button>
+        <el-button v-if="toMark==='renewList' && permissions.indexOf('86') > -1" @click.native="addCheckRemark" type="success">提交备注</el-button>
       </div>
     </div>
     <!-- 销账发票 -->
@@ -556,8 +556,8 @@
             <span>{{scope.row.bindName?('('+scope.row.bindName+')'): ((scope.row.true_name && scope.row.true_name!=scope.row.name)?('('+scope.row.true_name+')'):'')}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="record" label="操作记录" min-width="140"></el-table-column>
-        <el-table-column prop="remark" label="处理备注"></el-table-column>
+        <el-table-column prop="record" label="操作记录"></el-table-column>
+        <el-table-column prop="remark" label="处理备注" min-width="200"></el-table-column>
       </el-table>
       <page
         :simpleLayout="'total, prev, next, jumper'"
@@ -578,14 +578,14 @@
       >
         <span slot="append" class="search-service">搜索</span>
       </el-input>
-      <el-table @selection-change="handleSelectionChange" id="cus-out-table" :data="companyList" class="table-width">
+      <el-table @selection-change="handleSelectionChange" id="cus-out-table" :data="companyList" border class="table-width">
         <el-table-column type="selection" width="40"></el-table-column>
         <el-table-column prop="companyname" label="公司名称" min-width="140"></el-table-column>
         <el-table-column prop="baidu_account" label="百度账号"></el-table-column>
         <el-table-column prop="receiptmoney" label="金额">
           <span slot-scope="scope">{{scope.row.receiptmoney | currency}}</span>
         </el-table-column>
-        <el-table-column prop="receiptmoney" label="记账日期" width="90">
+        <el-table-column prop="receiptmoney" label="记账日期" width="100">
           <span slot-scope="scope">{{scope.row.bill_time | timeFormat1}}</span>
         </el-table-column>
         <el-table-column prop="receiptmoney" label="申请时间" width="100">
@@ -603,6 +603,7 @@
         :url="companyUrl"
         :sendParams="companyParams"
         @updateList="getCompanyList"
+        :defaultSearch="defaultSearch"
       ></page>
       <div class="text-center">
         <el-button @click.native="confirmHandleCheck" type="success">确 认</el-button>
@@ -633,7 +634,7 @@ export default {
       type: Number,
       default: 100
     },
-    isPass: {
+    isPass: { // 待处理
       type: Boolean,
       default: true
     }
@@ -649,6 +650,7 @@ export default {
   },
   data() {
     return {
+      rid: cookie.get('rid'),
       permissions: cookie.getJSON('permissions'),
       timeFormat1: timeFormat1,
       baseInfo: {},
@@ -668,13 +670,14 @@ export default {
       key_com_table: '',
       companyName: '',
       companyList: [],
-      companyUrl: '/Renew.do?renewapplylist',
+      companyUrl: '/Renew.do?renewRefundList',
       companyParams: {
         companyName: ''
       },
       multipleSelection: [],
       backList: [],
-      viewer: null
+      viewer: null,
+      defaultSearch: false
     }
   },
   created() {
@@ -717,16 +720,16 @@ export default {
         if (res.data.success) {
           this.selCompanyDialog = false
           this.backList = res.data.data
-          console.log(this.backList)
         }
       })
     },
     handleSelectionChange(val) {
       val.forEach(val => {
-        this.multipleSelection.push(val.id)
+        this.multipleSelection.push(val.fkid)
       })
     },
     searchService(e, type) {
+      this.defaultSearch = true
       if (type === 'enter' || e.target.nodeName !== 'INPUT') {
         this.companyParams = {
           companyName: this.companyName
@@ -762,7 +765,7 @@ export default {
         this.$message.warning('请填写驳回备注！')
         return
       }
-      if (this.permissions.indexOf('7x') > -1) {
+      if (this.permissions.indexOf('7x') > -1 && type === 300) {
         // 收单出纳校验
         let testProInfo = this.productMoneyList.every(val => {
           return (
@@ -877,7 +880,7 @@ export default {
                 this.realReceive += parseFloat(item.split_amount || 0) // 实际总到款
                 item.bill_time
                   ? (this.billTime = timeFormat1(item.bill_time))
-                  : (this.billTime = new Date())
+                  : (this.billTime = timeFormat1((new Date()).getTime()))
               }
             })
           })

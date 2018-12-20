@@ -68,7 +68,7 @@
               <el-dropdown-item>
                 <el-button @click.native="view(scope.row)" type="success" class="xsbtn">查看</el-button>
               </el-dropdown-item>
-              <el-dropdown-item divided>
+              <el-dropdown-item divided v-if="scope.row.step<100">
                 <el-button @click.native="editRenew(scope.row)" type="warning" class="xsbtn">编辑</el-button>
               </el-dropdown-item>
               <el-dropdown-item divided v-if="( (scope.row.invoice=='0' || scope.row.invoice=='10' || (scope.row.invoice=='-1' && scope.row.invoiceCha =='1') ) && scope.row.receiptmoney > 0 && scope.row.invoiceTmoney < scope.row.receiptmoney)">

@@ -257,9 +257,6 @@ export default {
       this.form.websiteTypeList = res.data.data
     })
   },
-  mounted () {
-    this._getNum()
-  },
   methods: {
     // 提交
     _getMessage (num) {

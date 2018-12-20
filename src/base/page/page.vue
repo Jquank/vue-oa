@@ -43,6 +43,10 @@ export default {
     simpleLayout: {
       type: String,
       default: 'total, sizes, prev, pager, next, jumper'
+    },
+    defaultSearch: {
+      type: Boolean,
+      default: true
     }
   },
   watch: {
@@ -82,6 +86,9 @@ export default {
   methods: {
     // 获取列表的第一页
     _getFirstList() {
+      if (!this.defaultSearch) {
+        return
+      }
       let params = Object.assign(
         {},
         {

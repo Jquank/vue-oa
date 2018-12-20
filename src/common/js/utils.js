@@ -1,5 +1,5 @@
 import cookie from 'js-cookie'
-// import { addClass } from 'common/js/dom'
+import { addClass } from 'common/js/dom'
 function clearLastChildren (arr) {
   arr.forEach(val => {
     if (val.children.length === 0) {
@@ -86,8 +86,7 @@ export function autoHeight () { // 没有电话条的账户设置最小高度铺
   const bool = cookie.get('allowBar') === '9999'
   let container = document.getElementsByClassName('component-container')[0]
   if (bool && container) {
-    // addClass(container, 'component-bar-container')
-    container.style.minHeight = 'calc(100% - 130px)'
+    addClass(container, 'component-bar-container')
   }
 }
 
@@ -102,4 +101,8 @@ export function loadStyleSheet (cssCode) {
   }
   var head = document.getElementsByTagName('head')[0]
   head.appendChild(link)
+}
+
+export function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) + min)
 }

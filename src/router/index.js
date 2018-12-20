@@ -402,6 +402,11 @@ const AddClassify = (resolve) => {
     resolve(module)
   })
 }
+const ProductShow = (resolve) => {
+  import('components/productList/productShow').then((module) => {
+    resolve(module)
+  })
+}
 
 // import store from '../store'
 import cookie from 'js-cookie'
@@ -1008,6 +1013,12 @@ const router = new Router({
               component: ViewProduct
             }
           ]
+        },
+        {
+          path: 'productShow',
+          name: 'productShow',
+          meta: { text: '产品展示' },
+          component: ProductShow
         },
         {
           path: 'addClassify',

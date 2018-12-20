@@ -276,17 +276,18 @@ export const navList = [
     ]
   },
   {
-    id: '159',
-    fontIcon: 'fa fa-phone fa-fw fa-lg',
+    id: '8m',
+    fontIcon: 'fa fa-file-word-o fa-fw fa-lg',
     text: '产品列表',
     cList: [
-      { cid: '111', to: '/indexPage/productManage', text: '文章列表' },
+      { cid: '111', to: '/indexPage/productManage', text: '产品管理' },
+      { cid: '113', to: '/indexPage/productShow', text: '产品展示' },
       { cid: '112', to: '/indexPage/addClassify', text: '添加分类' }
     ]
   },
   {
-    id: '189',
-    fontIcon: 'fa fa-phone fa-fw fa-lg',
+    id: '8n',
+    fontIcon: 'fa fa-comments fa-fw fa-lg',
     text: '反馈流程',
     cList: [
       { cid: '121', to: '/indexPage/phoneChange', text: '坐席分机修改' }

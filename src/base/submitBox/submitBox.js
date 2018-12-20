@@ -27,7 +27,7 @@ export default function submitBox(that, obj = {}) {
       if (value && value !== obj.inputValue) {
         let params = {}
         for (var key in obj.editParams) {
-          params[key] = obj.editParams[key] || value
+          params[key] = obj.editParams[key] === '' ? value : obj.editParams[key]
         }
         that.$get(obj.url, params).then((res) => {
           if (res.data.success) {

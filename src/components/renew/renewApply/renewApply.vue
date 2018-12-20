@@ -5,7 +5,8 @@
         <el-col :md="24" class="maxwidth">
           <el-form-item label="公司名称 :" prop="comName">
             <el-input v-model="form.comName" disabled class="input-btn"></el-input>
-            <el-button @click.native="selCompanyDialog = true" type="primary">选 择</el-button>
+            <el-button v-if="!isEdit" @click.native="selCompanyDialog = true" type="primary">选 择</el-button>
+            <el-button v-else @click.native="$router.go(-1)" type="warning">返 回</el-button>
           </el-form-item>
         </el-col>
       </el-row>
@@ -40,7 +41,7 @@
               <el-tab-pane label="新合同" name="new">
                 <el-row :gutter="5" type="flex" style="flex-wrap:wrap;">
                   <el-col :md="8">
-                    <el-select v-model="form.bdOrderNumber" placeholder="百度推广服务订单编号">
+                    <el-select v-model="form.newBdOrderNumber" placeholder="百度推广服务订单编号">
                       <el-option label="百度推广服务合同" value="0"></el-option>
                       <el-option v-for="contract0 in contract.newBdOrderNumber" :key="contract0.id" :label="contract0.number" :value="contract0.id"></el-option>
                     </el-select>
@@ -175,8 +176,8 @@
       <el-row>
         <el-col :md="24" class="maxwidth">
           <el-form-item label="产品类型 :" prop="selProList">
-            <el-checkbox-group @change="handleProChange" v-model="form.selProList">
-              <el-checkbox v-for="item in form.productList" :key="item.id" :label="item.code_val">
+            <el-checkbox-group v-model="form.selProList">
+              <el-checkbox  @change="(val)=>handleProChange(val,item)" v-for="item in form.productList" :key="item.id" :label="item.code_val">
                 {{item.code_desc}}</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
@@ -368,7 +369,14 @@ export default {
     addTotal () {
       let sum = 0
       this.productMoneyList.forEach(val => {
-        sum += parseFloat(val.value || 0)
+        sum += parseFloat(val.value || 0) + parseFloat(val.truevalue || 0)
+      })
+      return sum
+    },
+    addTotal1 () {
+      let sum = 0
+      this.productMoneyList.forEach(val => {
+        sum += parseFloat(val.value || 0) + parseFloat(this.form.serviceMoney || 0)
       })
       return sum
     },
@@ -405,7 +413,11 @@ export default {
         productList: [],
         selProList: [],
         receiveTime: '',
-        expectTime: ''
+        expectTime: '',
+        newBdOrderNumber: '',
+        bdOrderNumber: '',
+        bdProxy: '',
+        bdServiceProtocol: ''
       },
       selCompanyDialog: false,
       companyName: '',
@@ -495,6 +507,7 @@ export default {
         return
       }
       this.detail = this.$route.query.detail
+      console.log(this.detail)
       this.pro = this.$route.query.pro
       this.flows = this.$route.query.flows
       this.form = {
@@ -515,6 +528,15 @@ export default {
         receiveTime: this.detail.receive_time,
         expectTime: this.detail.offset_time
       }
+      if (this.detail.con_id3) {
+        this.contractTab = 'old'
+        this.form.bdOrderNumber = this.detail.con_id
+        this.form.bdProxy = this.detail.con_id2
+        this.form.bdServiceProtocol = this.detail.con_id3
+      } else {
+        this.contractTab = 'new'
+        this.form.newBdOrderNumber = this.detail.con_id
+      }
       console.log(this.pro)
       this.pro.forEach(item => {
         this.form.selProList.push(item.type)
@@ -524,7 +546,8 @@ export default {
           code_desc: productType(item.type, ' :'),
           type: item.type,
           value: item.value,
-          truevalue: item.truevalue
+          truevalue: item.truevalue,
+          bonustype: item.bonustype
         })
       })
     },
@@ -532,6 +555,10 @@ export default {
       this.checkRecords = res.data[0].data
     },
     subApply (formName) {
+      if (this.form.addType === '10' && this.flows.length === 0) {
+        this.$message.error('请选择流水！')
+        return
+      }
       let hasValue = this.productMoneyList.every(val => {
         return val.value > 0
       })
@@ -539,7 +566,7 @@ export default {
         this.$message.error('请填写所勾选产品的金额！')
         return
       }
-      if (this.receiveTotal.toFixed(2) !== this.addTotal.toFixed(2)) {
+      if (this.receiveTotal && (this.receiveTotal.toFixed(2) !== this.addTotal1.toFixed(2))) {
         this.$message.error('下单金额与到款总金额不匹配！')
         return
       }
@@ -547,12 +574,17 @@ export default {
         this.$message.error('请填写备注！')
         return
       }
+      if (this.form.addType === '10' && this.receiveTotal < 1000) {
+        this.$message.error('到款总金额需大于等于1000元！')
+        return
+      }
       let params = {
+        reid: this.detail.id,
+        cpid: this.rowData.cpid || this.detail.cpid,
+        companylogid: this.rowData.companylogid || this.detail.companylogid,
+        companyid: this.rowData.companyid || this.detail.companyid, // 公司id
         prove_img: this.fileUrl,
         comName: this.form.comName,
-        cpid: this.rowData.cpid,
-        companylogid: this.rowData.companylogid,
-        companyid: this.rowData.companyid, // 公司id
         claim: this.flowArr, // 流水id
         invoiceIds: this.invoiceIdArr, // 发票id
         addtype: this.form.addType, // 续费类型
@@ -571,7 +603,7 @@ export default {
         special: this.form.special,
         receive_time: this.form.receiveTime,
         offsetTime: this.form.expectTime,
-        con_id: this.form.bdOrderNumber || undefined, // 服务订单
+        con_id: this.form.newBdOrderNumber || undefined, // 服务订单
         con_id2: this.form.bdProxy || undefined, // 首消授权书
         con_id3: this.form.bdServiceProtocol || undefined // 服务协议
       }
@@ -581,6 +613,7 @@ export default {
           // return
           this.$post('/Renew.do?apply', params).then(res => {
             if (res.data.success) {
+              this.$message.success('提交成功！')
               this.$router.push('/indexPage/renewList')
             }
           })
@@ -601,18 +634,21 @@ export default {
       this.$export('/Invoice.do?invoiceCushionProof', params)
     },
     // 勾选产品
-    handleProChange (val) {
-      this.productMoneyList = val.map(item => {
-        return {
+    handleProChange (isChecked, item) {
+      if (isChecked) {
+        this.productMoneyList.push({
           id: null,
-          code_val: item,
-          code_desc: productType(item, ' :'),
-          type: item,
+          code_val: item.code_val,
+          code_desc: item.code_desc,
+          type: item.code_val + '',
           value: '0',
-          truevalue: '0'
-        }
-      })
-      console.log(this.productMoneyList)
+          truevalue: '0',
+          bonustype: item.tb_field_name
+        })
+      } else {
+        let index = this.productMoneyList.findIndex(val => val.code_val === item.code_val)
+        this.productMoneyList.splice(index, 1)
+      }
     },
     // 勾选流水
     handleSelectionChange (val) {
@@ -642,6 +678,7 @@ export default {
       })
     },
     selFlow () {
+      this.flows = []
       this.selFlowDialog = true
       this.selFlowParams = {
         companyid: this.rowData.companyid

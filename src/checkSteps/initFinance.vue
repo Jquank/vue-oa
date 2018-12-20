@@ -39,9 +39,9 @@
         <span slot-scope="scope">{{scope.row.amount | currency}}</span>
       </el-table-column>
       <!-- 拆 -->
-      <el-table-column prop="" label="拆分后金额" class-name="splited-col" width="150">
+      <el-table-column prop="" label="拆分后金额" class-name="splited-col" width="110">
         <template slot-scope="scopeOut">
-          <el-table class="split-item" :data="scopeOut.row.split" :show-header="false">
+          <el-table class="split-item" :data="scopeOut.row.split" :show-header="false" :row-class-name="scope.row.split.length>1?'add-border':''">
             <el-table-column class-name="split-item-col" show-overflow-tooltip label="" prop="''">
               <span slot-scope="scope" :class="curid===scope.row.curid?'red':''">{{scope.row.split_amount | currency1}}</span>
             </el-table-column>
@@ -50,36 +50,36 @@
       </el-table-column>
       <el-table-column prop="" label="预留信息" class-name="splited-col" width="160">
         <template slot-scope="scopeOut">
-          <el-table class="split-item" :data="scopeOut.row.split" :show-header="false">
+          <el-table class="split-item" :data="scopeOut.row.split" :show-header="false" :row-class-name="scope.row.split.length>1?'add-border':''">
             <el-table-column class-name="split-item-col" show-overflow-tooltip label="" prop="''">
-              <span slot-scope="scope" :class="curid===scope.row.curid?'red':''">{{scope.row.id===scope.row.bsid?scope.row.alloc_remark:'.'}}</span>
+              <span slot-scope="scope" :class="curid===scope.row.curid?'red':''">{{scope.row.id===scope.row.bsid?scope.row.alloc_remark:''}}</span>
             </el-table-column>
           </el-table>
         </template>
       </el-table-column>
       <el-table-column prop="" label="使用人" class-name="splited-col" width="90">
         <template slot-scope="scopeOut">
-          <el-table class="split-item" :data="scopeOut.row.split" :show-header="false">
+          <el-table class="split-item" :data="scopeOut.row.split" :show-header="false" :row-class-name="scope.row.split.length>1?'add-border':''">
             <el-table-column class-name="split-item-col" show-overflow-tooltip label="" prop="''">
-              <span slot-scope="scope" :class="curid===scope.row.curid?'red':''">{{scope.row.useName || '.'}}</span>
+              <span slot-scope="scope" :class="curid===scope.row.curid?'red':''">{{scope.row.useName || ''}}</span>
             </el-table-column>
           </el-table>
         </template>
       </el-table-column>
       <el-table-column prop="" label="公司名称" class-name="splited-col" width="150">
         <template slot-scope="scopeOut">
-          <el-table class="split-item" :data="scopeOut.row.split" :show-header="false">
+          <el-table class="split-item" :data="scopeOut.row.split" :show-header="false" :row-class-name="scope.row.split.length>1?'add-border':''">
             <el-table-column class-name="split-item-col" show-overflow-tooltip label="" prop="''">
-              <span slot-scope="scope" :class="curid===scope.row.curid?'red':''">{{scope.row.id===scope.row.bsid?scope.row.companyname||'.':'.'}}</span>
+              <span slot-scope="scope" :class="curid===scope.row.curid?'red':''">{{scope.row.id===scope.row.bsid?scope.row.companyname:''}}</span>
             </el-table-column>
           </el-table>
         </template>
       </el-table-column>
       <el-table-column prop="" label="分配时间" class-name="splited-col" width="140">
         <template slot-scope="scopeOut">
-          <el-table class="split-item" :data="scopeOut.row.split" :show-header="false">
+          <el-table class="split-item" :data="scopeOut.row.split" :show-header="false" :row-class-name="scope.row.split.length>1?'add-border':''">
             <el-table-column class-name="split-item-col" show-overflow-tooltip label="" prop="''">
-              <span slot-scope="scope" :class="curid===scope.row.curid?'red':''">{{scope.row.id===scope.row.bsid?scope.row.alloc_time:'.' | timeFormat}}</span>
+              <span slot-scope="scope" :class="curid===scope.row.curid?'red':''">{{scope.row.id===scope.row.bsid?scope.row.alloc_time:'' | timeFormat}}</span>
             </el-table-column>
           </el-table>
         </template>
@@ -348,11 +348,28 @@ export default {
     > div.cell {
       padding: 0;
     }
-  }
-  .split-item-col {
-    border: none;
-    padding: 2px 0;
-    border-bottom: 1px solid #000;
+    .split-item {
+      table {
+        border-collapse: collapse; // 为tr设置边框需要
+      }
+      .el-table__body-wrapper {
+        overflow: hidden;
+      }
+      &::before {
+        z-index: inherit; // 消除table最下面的边框
+      }
+      .split-item-col {
+        border-bottom: none;
+        padding: 2px 0;
+        > div.cell {
+          height: 25px;
+          line-height: 25px;
+        }
+      }
+    }
+    .add-border:not(:last-child) {
+      border-bottom: 1px solid #d0d2d8;
+    }
   }
   label.el-form-item__label {
     padding: 0 0 0 10px;

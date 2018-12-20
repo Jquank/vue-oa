@@ -130,13 +130,13 @@ export default {
     $route (to, from) {
       this._findBread()
       this.lastRoutePath = from.path
-      // todo 此处transition会移除掉此样式
-      // this.$nextTick(() => {
-      //   autoHeight()
-      // })
-      setTimeout(() => {
+      // todo 此处transition会移除掉此样式(暂未使用动画，如用，请使用定时器)
+      this.$nextTick(() => {
         autoHeight()
-      }, 500)
+      })
+      // setTimeout(() => {
+      //   autoHeight()
+      // }, 500)
     }
   },
   created () {

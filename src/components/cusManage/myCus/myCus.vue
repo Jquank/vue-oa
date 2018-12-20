@@ -91,14 +91,14 @@
                 <el-dropdown-item>
                   <el-button @click.native.prevent="view(scope.row)" type="success" class="xsbtn">查看</el-button>
                 </el-dropdown-item>
-                <el-dropdown-item divided>
-                  <el-button v-if="((myKind==20&&scope.row.companylogtype==10&&(scope.row.companylogstatus>20||scope.row.companylogstatus==0))||(myKind==30&&scope.row.companylogtype>=20&&scope.row.companylogstatus>20))" @click.native.prevent="follow(scope.row)" type="warning" class="xsbtn">跟进</el-button>
+                <el-dropdown-item divided v-if="((myKind==20&&scope.row.companylogtype==10&&(scope.row.companylogstatus>20||scope.row.companylogstatus==0))||(myKind==30&&scope.row.companylogtype>=20&&scope.row.companylogstatus>20))" @click.native.prevent="follow(scope.row)">
+                  <el-button type="warning" class="xsbtn">跟进</el-button>
                 </el-dropdown-item>
-                <el-dropdown-item divided>
-                  <el-button v-if="((myKind==20&&scope.row.companylogtype==10&&(scope.row.companylogstatus>20||scope.row.companylogstatus==0))||(myKind==30&&scope.row.companylogtype>=20&&scope.row.companylogstatus>20))" @click.native.prevent="visit(scope.row)" type="primary" class="xsbtn">出访</el-button>
+                <el-dropdown-item divided v-if="((myKind==20&&scope.row.companylogtype==10&&(scope.row.companylogstatus>20||scope.row.companylogstatus==0))||(myKind==30&&scope.row.companylogtype>=20&&scope.row.companylogstatus>20))" @click.native.prevent="visit(scope.row)">
+                  <el-button type="primary" class="xsbtn">出访</el-button>
                 </el-dropdown-item>
-                <el-dropdown-item divided>
-                  <el-button v-if="(scope.row.userid==USER_ID)&&scope.row.companylogtype==20&&scope.row.companylogstatus==10&&scope.row.companytype==10&&scope.row.auditor_now_h!==null&&(scope.row.tb_field_name-scope.row.auditor_now_h>=0)" @click.native.prevent="stop(scope.row)" type="danger" class="xsbtn">放弃</el-button>
+                <el-dropdown-item divided v-if="(scope.row.userid==USER_ID)&&scope.row.companylogtype==20&&scope.row.companylogstatus==10&&scope.row.companytype==10&&scope.row.auditor_now_h!==null&&(scope.row.tb_field_name-scope.row.auditor_now_h>=0)" @click.native.prevent="stop(scope.row)">
+                  <el-button type="danger" class="xsbtn">放弃</el-button>
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>

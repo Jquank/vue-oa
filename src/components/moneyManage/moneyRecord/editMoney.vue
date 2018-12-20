@@ -13,8 +13,8 @@
         <el-row>
           <el-col :md="24">
             <el-form-item label="产品类型 :" required>
-              <el-checkbox-group @change="handleProChange" v-model="selProList">
-                <el-checkbox v-for="(item,index) in productList" :key="index" :label="+item.code_val">
+              <el-checkbox-group v-model="selProList">
+                <el-checkbox @change="(val)=>handleProChange(val,item)" v-for="(item,index) in productList" :key="index" :label="+item.code_val">
                   {{item.code_desc}}</el-checkbox>
               </el-checkbox-group>
             </el-form-item>
@@ -261,7 +261,8 @@ export default {
         if (this.receipt.cat.length === 4) {
           this.receipt.cat = [this.receipt.cat.slice(0, 2), this.receipt.cat]
         }
-        this.echoProductMoneyList = res.data[1].data
+        let moneyList = res.data[1].data
+        this.echoProductMoneyList = moneyList.filter(val => val.type < 500)
         this.productMoneyList = this.productMoneyList.concat(this.echoProductMoneyList)
         this.echoFlowList = res.data[3].data
         this.handleSelFlow = this.handleSelFlow.concat(this.echoFlowList)
@@ -279,19 +280,20 @@ export default {
       })
     },
     // 勾选产品
-    handleProChange (val) {
-      console.log(val)
-      this.productMoneyList = []
-      val.forEach(item => {
+    handleProChange (isChecked, item) {
+      if (isChecked) {
         this.productMoneyList.push({
           id: null,
-          code_desc: '',
-          code_val: item,
-          type: item + '',
+          code_desc: item.code_desc,
+          code_val: item.code_val,
+          type: item.code_val + '',
           value: 0,
           price: 0
         })
-      })
+      } else {
+        let index = this.productMoneyList.findIndex(val => val.code_val === item.code_val)
+        this.productMoneyList.splice(index, 1)
+      }
     },
     // 勾选流水
     handleSelectionChange (val) {

@@ -1,15 +1,15 @@
 <template>
-  <div class="view-news child-component-container media-padding">
+  <div class="view-product child-component-container media-padding">
     <h3 class="text-center">{{v.title}}</h3>
     <div class="text-center author">
-      <span>时间：{{v.opttime | timeFormat}}</span>
-      <span>发布者：{{v.username}}</span>
+      <span>发布时间：{{v.insert_time | timeFormat}}</span>
+      <!-- <span>发布者：{{v.userName}}</span> -->
       <div>
         <el-button type="primary" @click.native="$router.go(-1)" class="xsbtn">返回</el-button>
       </div>
     </div>
     <div class="article">
-      <div v-html="v.content"></div>
+      <div v-html="v.vtext"></div>
     </div>
   </div>
 </template>
@@ -22,10 +22,19 @@ export default {
     }
   },
   created () {
+    let href = window.location.href
+    let mark = href.split('@')[1]
+    if (mark) {
+
+    }
+    return
     this.v = this.$route.query.data
     if (!this.v.id) {
       this.$router.go(-1)
     }
+  },
+  methods: {
+
   },
   components: {
 
@@ -34,7 +43,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-  .view-news{
+  .view-product{
     .author{
       display: flex;
       font-size: 14px;
@@ -47,7 +56,8 @@ export default {
       display: flex;
       justify-content: center;
       div{
-        max-width: 750px;
+        max-width: 850px;
+        max-height: 600px;
         overflow: auto;
         // border: 1px solid #000;
       }

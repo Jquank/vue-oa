@@ -458,7 +458,8 @@ export const orderDeal = { // 订单处理
         newdomaininfo: this.newSpace,
         Designer: this.webOrderRemark,
         visitwebsite: this.browseAddr,
-        quickwebsite: this.cdAddr
+        quickwebsite: this.cdAddr,
+        websitetype: this.orderInfo.websitetype
       }
       if (this.orderInfo.con_id2) {
         params.contractid.push(this.orderInfo.con_id2)

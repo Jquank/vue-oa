@@ -8,20 +8,17 @@
             <el-button type="primary" @click="back">返回</el-button>
           </el-col>
         </el-form-item>
-        <el-form-item label="类型" required>
+        <!-- <el-form-item label="类型" required>
           <el-col :md=24 class="maxwidth">
             <el-select v-model="form.type">
-              <el-option label="百度商业产品资源全景图" :value="0"></el-option>
-              <el-option label="百度pc资源位" :value="10"></el-option>
-              <el-option label="百度移动端资源位" :value="20"></el-option>
-              <el-option label="百度聚屏资源位" :value="30"></el-option>
-              <el-option label="文章" :value="40"></el-option>
+              <el-option label="产品全景" :value="0"></el-option>
+              <el-option label="产品资源位" :value="10"></el-option>
             </el-select>
           </el-col>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="正文" required>
           <el-col :md=24 class="maxwidth">
-            <div ref="editor" class="text-left"></div>
+            <div ref="editor" class="editor"></div>
           </el-col>
         </el-form-item>
         <el-form-item>
@@ -35,26 +32,31 @@
 <script>
 import E from 'wangeditor'
 export default {
-  name: 'editor',
   data () {
     return {
       editor: null,
       selUserDialog: false,
       form: {
         id: undefined,
-        content: '',
+        vtext: '',
         title: '',
-        type: 0,
-        newsstatus: 0
+        type: 10
       },
-      echoData: {}
+      echoData: {},
+      echoType: 10
     }
   },
   created () {
-    this.echoData = this.$route.query.data
-    if (!this.echoData) {
+    console.log(this.$route.query.data)
+    let data = this.$route.query.data
+    if (data && !data.id) {
+      this.$router.go(-1)
       return
     }
+    this.echoData = data
+    this.echoType = this.$route.query.type
+    console.log(this.echoData)
+    console.log(this.echoType)
     this.form = Object.assign({}, this.form, this.echoData)
   },
   methods: {
@@ -63,22 +65,30 @@ export default {
     },
     sub () {
       let params = {
-        'id': this.form.id,
+        'id': this.echoData.id ? undefined : this.form.id,
         'title': this.form.title,
-        'content': this.form.content,
-        'newsstatus': this.form.newsstatus,
-        'type': this.form.type
+        'vtext': this.form.vtext,
+        'type': this.echoType || 10,
+        'cat': this.echoData.id
       }
-      if (!params.title || !params.content || !params.userid) {
+      let url = params.id ? '/res.do?set' : '/res.do?add'
+      if (!params.title || !params.vtext) {
         this.$message.error('请填写或选择带*项！')
         return
       }
-      this.$post('/User.do?AddOrUpdateInfo', params).then(res => {
+      this.$post(url, params).then(res => {
         if (res.data.success) {
-          this.$router.push({
-            path: '/indexPage/news',
-            query: {data: 'fromDetail'}
-          })
+          this.$message.success('发布成功！')
+          if (this.echoType === 20) {
+            this.$router.push({
+              path: '/indexPage/addClassify'
+            })
+          } else {
+            this.$router.push({
+              path: '/indexPage/productManage',
+              query: {data: 'fromDetail'}
+            })
+          }
         }
       })
     }
@@ -86,10 +96,10 @@ export default {
   mounted () {
     this.editor = new E(this.$refs.editor)
     this.editor.customConfig.onchange = html => {
-      this.form.content = html
+      this.form.vtext = html
     }
     this.editor.create()
-    this.editor.txt.html(this.form.content)
+    this.editor.txt.html(this.form.vtext)
   },
   components: {
   }
