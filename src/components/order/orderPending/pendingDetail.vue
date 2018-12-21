@@ -519,9 +519,9 @@
         </el-tab-pane>
         <!-- 企业资质 -->
         <el-tab-pane v-if="pid_ka!=='KA'" label="企业资质">
-          <div v-if="permissions.indexOf('5c') > -1" class="qualify">
+          <div class="qualify">
             <show-qualify v-if="showQualify.length" :showDel="false" :showQualify="showQualify" class="qualify-left"></show-qualify>
-            <div class="qualify-right" v-if="showQualify.length">
+            <div class="qualify-right" v-if="showQualify.length&&permissions.indexOf('5c') > -1">
               <el-button @click.native="editQualify" type="warning" class="xsbtn">修改资质</el-button>
             </div>
           </div>
@@ -2047,7 +2047,9 @@ export default {
           this.orderInfo = res.data.data[1]
           this.orderInfo.applytime = ''
           this.productInfo = res.data.data[4]
-          this.productInfo[0].column = JSON.parse(this.productInfo[0].column) // template不要用JSON.parse,易出错
+          if (this.productInfo[0]) {
+            this.productInfo[0].column = JSON.parse(this.productInfo[0].column)
+          }
           this.originUser = res.data.data[3]
           this.cusAttrList = res.data.data[5]
           this.showQualify = res.data.data[5]

@@ -290,6 +290,7 @@ export const orderDeal = { // 订单处理
         .then(() => {
           this.$post(this.url, params).then(res => {
             if (res.data[0].success) {
+              this.$message.success('已驳回！')
               this.$router.push({
                 path: '/indexPage/orderPending',
                 query: {
@@ -380,12 +381,14 @@ export const orderDeal = { // 订单处理
         }
       } else {
         if (this.sn === 260) {
-          if (!this.orderInfo.baiduid || !this.orderInfo.baiducount || !this.orderInfo.proxyid || !this.orderInfo.applytime) {
-            this.$message({
-              type: 'warning',
-              message: '请填写账户信息！'
-            })
-            return
+          if (this.pid === 'GD') {
+            if (!this.orderInfo.baiduid || !this.orderInfo.baiducount || !this.orderInfo.proxyid || !this.orderInfo.applytime) {
+              this.$message({
+                type: 'warning',
+                message: '请填写账户信息！'
+              })
+              return
+            }
           }
           this.remark = '账户ID：' + this.orderInfo.baiduid +
               '；账户名：' + this.orderInfo.baiducount +
@@ -492,6 +495,7 @@ export const orderDeal = { // 订单处理
         .then(() => {
           this.$post(this.url, params).then(res => {
             if (res.data[0].success) {
+              this.$message.success('审核通过！')
               if (this.tmark === '转户出纳') {
                 this.search()
               } else {

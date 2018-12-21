@@ -77,8 +77,8 @@
         </el-table-column>
         <el-table-column prop="" label="操作" width="150" align="center">
           <template slot-scope="scope">
-            <el-button type="primary" @click.native="viewOrder(scope.row)" class="xsbtn">查看</el-button>
-            <el-button v-if="permissions.indexOf('5a')>-1" type="warning" @click.native="updateOrder(scope.row)" class="xsbtn">修改订单</el-button>
+            <el-button type="success" @click.native="viewOrder(scope.row)" class="xsbtn">查看</el-button>
+            <el-button v-if="permissions.indexOf('5a')>-1" type="warning" @click.native="updateOrder(scope.row)" class="xsbtn">编辑</el-button>
           </template>
         </el-table-column>
       </el-table>

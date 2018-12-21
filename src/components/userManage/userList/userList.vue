@@ -57,7 +57,7 @@
       <el-table-column prop="rname" label="角色"  min-width="100">
       </el-table-column>
       <el-table-column prop="isResign" label="状态" width="50">
-        <span :class="scope.row.resignationtime!=''?'':'red'" slot-scope="scope">{{scope.row.resignationtime!=''?'在职':'离职'}}</span>
+        <span :class="scope.row.resignationtime?'red':''" slot-scope="scope">{{scope.row.resignationtime?'离职':'在职'}}</span>
       </el-table-column>
       <el-table-column v-if="permissions.indexOf('5e') > -1" prop="" label="账号开关" width="100" align="center">
         <template slot-scope="scope">

@@ -11,7 +11,8 @@
       <el-button @click.native="apply" :loading="applyBtnLoading" type="primary" class="apply-item">申 领</el-button>
       <el-button class="apply-item" type="primary" plain>公共库总客户: {{count1}}</el-button>
       <el-button class="apply-item" type="primary" plain>已申领客户: {{count2}}</el-button>
-      <el-button class="apply-item" type="primary" plain>申领次数大于5的客户: {{count1}}</el-button>
+      <el-button class="apply-item" type="primary" plain>申领次数大于5的客户: {{count3}}</el-button>
+      <el-button class="apply-item" type="primary" plain>申领次数等于2的客户: {{count4}}</el-button>
     </div>
     <div class="cut-line"></div>
     <div class="apply-search">
@@ -91,6 +92,7 @@ export default {
       count1: 0,
       count2: 0,
       count3: 0,
+      count4: 0,
       applyBtnLoading: false,
       key_dept: '',
       key_auto_sel: '1',
@@ -179,7 +181,8 @@ export default {
       this.applyList = res.data[0].data
       this.count1 = res.data[2].data.pubCnt
       this.count2 = res.data[2].data.applyCnt
-      this.count3 = res.data[2].data.applyCnt5
+      this.count3 = res.data[2].data.errCnt5
+      this.count4 = res.data[2].data.errCnt2
     },
     upDeptId (id) {
       this.dept = id

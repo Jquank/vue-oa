@@ -307,7 +307,8 @@ export default {
       this.rowData = data
       let params = {
         companyid: this.rowData.id,
-        remark: this.applyEditRemark
+        remark: this.applyEditRemark,
+        companylogid: this.rowData.companylogid
       }
       if (!this.applyEditRemark) {
         this.$message({

@@ -1,5 +1,5 @@
 <template>
-  <div class="product-manage component-container media-padding">
+  <div class="process-manage component-container media-padding">
     <div class="news-content">
       <div>
         <el-button icon="el-icon-plus" type="primary" @click.native="addNews">新增</el-button>
@@ -12,7 +12,7 @@
         <el-table-column label="发布时间">
           <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
         </el-table-column>
-        <el-table-column prop="" label="操作" width="240" align="center">
+        <el-table-column prop="" label="操作" width="220" align="center">
           <template slot-scope="scope">
             <el-button type="success" class="xsbtn" @click.native="viewNews(scope.row)">查看</el-button>
             <el-button type="warning" class="xsbtn" icon="fa fa-pencil" @click.native="editNews(scope.row)"> 编辑</el-button>
@@ -26,8 +26,8 @@
 </template>
 
 <script>
-const TYPE = 10
-const PAGE_ROUTER = 'productManage'
+const TYPE = 30
+const PAGE_ROUTER = 'processManage'
 export default {
   data () {
     return {
@@ -106,7 +106,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.product-manage {
+.process-manage {
   position: relative;
 }
 </style>

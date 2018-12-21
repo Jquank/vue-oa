@@ -90,7 +90,7 @@
       >
         <el-table-column prop="ordernum" label="订单ID" min-width="180"></el-table-column>
         <el-table-column prop="cname" label="订单名称" min-width="150"></el-table-column>
-        <el-table-column prop label="提交时间" width="100">
+        <el-table-column prop label="提交时间" width="150">
           <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
         </el-table-column>
         <el-table-column prop="username" label="下单人" min-width="80"></el-table-column>

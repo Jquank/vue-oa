@@ -3,7 +3,7 @@
     <div class="wrapper">
       <div class="tree">
         <div class="add-title mb10px">
-          <h3 class="title">产品树结构</h3>
+          <h3 class="title">流程树结构</h3>
           <el-button @click.native="addArticleByNode" class="btn" icon="fa fa-plus" type="primary" size="mini">添加文章</el-button>
         </div>
         <div class="tree-content">
@@ -79,8 +79,8 @@
 <script>
 import { serverUrl } from 'api/http'
 import Clipboard from 'clipboard'
-const PAGE_ROUTER = 'addClassify'
-const TYPE = 20
+const PAGE_ROUTER = 'processClassify'
+const TYPE = 40
 export default {
   data() {
     return {
@@ -152,7 +152,7 @@ export default {
       this.$post('res.do?catSet', params).then(res => {})
     },
     _getTreeData() {
-      this.$post('res.do?catGet', { type: TYPE }).then(res => {
+      this.$post('res.do?catGet', {type: TYPE}).then(res => {
         if (res.data.success) {
           this.data = JSON.parse(res.data.data[0].data)
         }

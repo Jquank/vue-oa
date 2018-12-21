@@ -1,7 +1,7 @@
 <template>
   <div class="control-scroll">
     <div ref="navbar" class="nav-bar">
-      <el-menu :collapse="myCollapse" router background-color="#19233C" text-color="#bfcbd9" active-text-color="#fff" :unique-opened="true" :default-active="$router.currentRoute.fullPath">
+      <el-menu :collapse="myCollapse" router background-color="#19233C" text-color="#bfcbd9" active-text-color="#fff" :unique-opened="false" :default-active="$router.currentRoute.fullPath">
         <el-menu-item index="/indexPage/indexContent" class="home-title">
           <i class="fa fa-home fa-fw fa-lg"></i>
           <span slot="title">&nbsp;首页</span>
@@ -12,7 +12,7 @@
             <span>{{item.text}}</span>
           </span>
           <!-- <el-menu-item class="item-active" ref="item" v-for="(child, index) in item.cList" :key="index" :index="child.to"  v-if="permissions.indexOf(child.cid)>-1 || child.cid === '1000' || child.cid === '1100'"> -->
-          <el-menu-item class="item-active" ref="item" v-for="(child, index) in item.cList" :key="index" :index="child.to">
+          <el-menu-item class="item-active" :ref="child.to" v-for="(child, index) in item.cList" :key="index" :index="child.to">
             {{child.text}}
             <!-- 1000: 客户搜索，1100：工资管理 -->
           </el-menu-item>
@@ -33,37 +33,12 @@ export default {
       myCollapse: false
     }
   },
-  mounted () {
-    // let that = this
-    // window.onresize = function () {
-    //   let width = document.body.clientWidth
-    //   if (width < 960 && !that.myCollapse) {
-    //     that.nested()
-    //   }
-    //   if (width >= 960 && that.myCollapse) {
-    //     that.nested()
-    //   }
-    // }
-  },
-  methods: {
-    // nested () {
-    //   let aside = document.getElementById('nav-aside')
-    //   if (this.myCollapse) {
-    //     this.myCollapse = false
-    //     aside.style.width = '180px'
-    //     this.$refs.navbar.style.width = '197px'
-    //     this.$refs.nested.style.left = '190px'
-    //     this.$refs.loginimg.style.left = '-10px'
-    //     this.collapseIcon = 'fa-outdent'
-    //   } else {
-    //     this.myCollapse = true
-    //     aside.style.width = '63px'
-    //     this.$refs.navbar.style.width = '63px'
-    //     this.$refs.nested.style.left = '73px'
-    //     this.$refs.loginimg.style.left = '-26px'
-    //     this.collapseIcon = 'fa-indent'
-    //   }
-    // }
+  watch: {
+    $route (to, from) {
+      if (this.$refs[to.path]) {
+        this.$refs[to.path][0].$el.style.backgroundColor = '#108cee !import' // 路由跳转时设置背景色
+      }
+    }
   }
 }
 </script>

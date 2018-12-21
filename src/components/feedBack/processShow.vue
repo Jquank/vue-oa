@@ -1,5 +1,5 @@
 <template>
-  <div class="product-show component-container media-padding">
+  <div class="process-show component-container media-padding">
     <el-tabs v-model="activeName" type="card">
       <template v-for="(item,index) in newsList">
         <el-tab-pane :label="item.title" :name="index===0?'first':item.id" :key="item.id">
@@ -19,7 +19,7 @@
 </template>
 
 <script>
-const TYPE = 10
+const TYPE = 30
 export default {
   data() {
     return {
@@ -44,7 +44,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.product-show {
+.process-show {
   .author {
     .title {
       display: inline-block;

@@ -85,7 +85,7 @@ export function appMark () {
 export function autoHeight () { // 没有电话条的账户设置最小高度铺满
   const bool = cookie.get('allowBar') === '9999'
   let container = document.getElementsByClassName('component-container')[0]
-  if (bool && container) {
+  if (!bool && container) {
     addClass(container, 'component-bar-container')
   }
 }

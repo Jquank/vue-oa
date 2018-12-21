@@ -1,9 +1,9 @@
 <template>
   <div class="view-product child-component-container media-padding">
-    <h3 class="text-center">{{v.title}}</h3>
+    <h2 class="text-center">{{v.title}}</h2>
     <div class="text-center author">
-      <span>发布时间：{{v.insert_time | timeFormat}}</span>
-      <!-- <span>发布者：{{v.userName}}</span> -->
+      <span><b>发布时间：</b>{{v.insert_time | timeFormat}}</span>
+      <span><b>浏览次数：</b>{{count}}</span>
       <div>
         <el-button type="primary" @click.native="$router.go(-1)" class="xsbtn">返回</el-button>
       </div>
@@ -18,23 +18,40 @@
 export default {
   data () {
     return {
-      v: {}
+      v: {},
+      count: 0
     }
   },
   created () {
     let href = window.location.href
-    let mark = href.split('@')[1]
-    if (mark) {
-
+    let type = href.split('@')[1]
+    if (type) {
+      let arr = href.split('@')[0].split('/')
+      let id = arr[arr.length - 1]
+      this._getList(type, id)
+      return
     }
-    return
     this.v = this.$route.query.data
     if (!this.v.id) {
       this.$router.go(-1)
     }
+    this._getCount(this.v)
   },
   methods: {
-
+    _getList(type, id) {
+      this.$post('/res.do?get', {type: type, id: id}).then(res => {
+        if (res.data.success) {
+          this.v = res.data.data[0]
+        }
+      })
+    },
+    _getCount(data) {
+      this.$post('/res.do?get', {id: data.id, type: data.type}).then(res => {
+        if (res.data.success) {
+          this.count = res.data.data[0].view_times
+        }
+      })
+    }
   },
   components: {
 
@@ -46,10 +63,15 @@ export default {
   .view-product{
     .author{
       display: flex;
-      font-size: 14px;
       justify-content: center;
+      font-size: 14px;
+      line-height: 24px;
       span{
         margin-right: 15px;
+      }
+      div{
+        display: inline-block;
+        vertical-align: middle;
       }
     }
     .article{

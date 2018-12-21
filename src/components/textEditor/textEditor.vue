@@ -1,5 +1,5 @@
 <template>
-  <div class="edit-news child-component-container media-padding">
+  <div class="text-edit child-component-container media-padding">
     <div class="edit-content">
       <el-form :model="form" label-width="80px">
         <el-form-item label="标题" required>
@@ -8,14 +8,6 @@
             <el-button type="primary" @click="back">返回</el-button>
           </el-col>
         </el-form-item>
-        <!-- <el-form-item label="类型" required>
-          <el-col :md=24 class="maxwidth">
-            <el-select v-model="form.type">
-              <el-option label="产品全景" :value="0"></el-option>
-              <el-option label="产品资源位" :value="10"></el-option>
-            </el-select>
-          </el-col>
-        </el-form-item> -->
         <el-form-item label="正文" required>
           <el-col :md=24 class="maxwidth">
             <div ref="editor" class="editor"></div>
@@ -35,29 +27,23 @@ export default {
   data () {
     return {
       editor: null,
-      selUserDialog: false,
       form: {
         id: undefined,
         vtext: '',
         title: '',
-        type: 10
+        type: undefined
       },
-      echoData: {},
-      echoType: 10
+      receiveData: {}
     }
   },
   created () {
-    console.log(this.$route.query.data)
-    let data = this.$route.query.data
-    if (data && !data.id) {
+    this.receiveData = this.$route.query.data
+    if (this.receiveData._status !== 'add' && !this.receiveData.id) {
+      console.log('back')
       this.$router.go(-1)
       return
     }
-    this.echoData = data
-    this.echoType = this.$route.query.type
-    console.log(this.echoData)
-    console.log(this.echoType)
-    this.form = Object.assign({}, this.form, this.echoData)
+    this.form = Object.assign({}, this.form, this.receiveData)
   },
   methods: {
     back () {
@@ -65,11 +51,11 @@ export default {
     },
     sub () {
       let params = {
-        'id': this.echoData.id ? undefined : this.form.id,
+        'id': this.form.id,
         'title': this.form.title,
         'vtext': this.form.vtext,
-        'type': this.echoType || 10,
-        'cat': this.echoData.id
+        'type': this.form.type,
+        'cat': this.form.cat
       }
       let url = params.id ? '/res.do?set' : '/res.do?add'
       if (!params.title || !params.vtext) {
@@ -79,13 +65,22 @@ export default {
       this.$post(url, params).then(res => {
         if (res.data.success) {
           this.$message.success('发布成功！')
-          if (this.echoType === 20) {
+          if (this.form.type === 10) {
             this.$router.push({
-              path: '/indexPage/addClassify'
+              path: '/indexPage/productManage',
+              query: {data: 'fromDetail'}
+            })
+          } else if (this.form.type === 20) {
+            let queryParams = {
+              cat: this.form.cat
+            }
+            this.$router.push({
+              path: '/indexPage/addClassify',
+              query: {data: 'fromDetail', queryParams: queryParams}
             })
           } else {
             this.$router.push({
-              path: '/indexPage/productManage',
+              path: '/indexPage/processManage',
               query: {data: 'fromDetail'}
             })
           }
@@ -107,7 +102,7 @@ export default {
 </script>
 
 <style lang="less">
-.edit-news {
+.text-edit {
   .edit-content {
     .maxwidth{
       width: 900px;

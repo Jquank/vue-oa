@@ -382,13 +382,13 @@ import WorkerWatch from 'components/callCenter/workerWatch'
 import BlackList from 'components/callCenter/blackList'
 import CallCenter from 'components/callCenter/callCenter'
 // 产品列表
-const ProductManage = (resolve) => {
-  import('components/productList/productManage').then((module) => {
+const TextEditor = (resolve) => {
+  import('components/textEditor/textEditor').then((module) => {
     resolve(module)
   })
 }
-const ProductEditor = (resolve) => {
-  import('components/productList/productEditor').then((module) => {
+const ProductManage = (resolve) => {
+  import('components/productList/productManage').then((module) => {
     resolve(module)
   })
 }
@@ -404,6 +404,22 @@ const AddClassify = (resolve) => {
 }
 const ProductShow = (resolve) => {
   import('components/productList/productShow').then((module) => {
+    resolve(module)
+  })
+}
+// 反馈流程
+const ProcessManage = (resolve) => {
+  import('components/feedBack/processManage').then((module) => {
+    resolve(module)
+  })
+}
+const ProcessShow = (resolve) => {
+  import('components/feedBack/processShow').then((module) => {
+    resolve(module)
+  })
+}
+const ProcessClassify = (resolve) => {
+  import('components/feedBack/processClassify').then((module) => {
     resolve(module)
   })
 }
@@ -998,18 +1014,18 @@ const router = new Router({
           component: ProductManage,
           children: [
             {
-              path: 'add/:id',
-              meta: { text: '新增产品' },
-              component: ProductEditor
+              path: 'add',
+              meta: { text: '新增' },
+              component: TextEditor
             },
             {
-              path: 'edit/:id',
-              meta: { text: '编辑产品' },
-              component: ProductEditor
+              path: 'edit',
+              meta: { text: '编辑' },
+              component: TextEditor
             },
             {
-              path: 'view/:id',
-              meta: { text: '产品详情' },
+              path: 'view',
+              meta: { text: '详情' },
               component: ViewProduct
             }
           ]
@@ -1024,7 +1040,77 @@ const router = new Router({
           path: 'addClassify',
           name: 'addClassify',
           meta: { text: '添加分类' },
-          component: AddClassify
+          component: AddClassify,
+          children: [
+            {
+              path: 'add',
+              meta: { text: '新增' },
+              component: TextEditor
+            },
+            {
+              path: 'edit',
+              meta: { text: '编辑' },
+              component: TextEditor
+            },
+            {
+              path: 'view/:id',
+              meta: { text: '详情' },
+              component: ViewProduct
+            }
+          ]
+        },
+        // 反馈流程
+        {
+          path: 'processManage',
+          name: 'processManage',
+          meta: { text: '流程分类' },
+          component: ProcessManage,
+          children: [
+            {
+              path: 'add',
+              meta: { text: '新增' },
+              component: TextEditor
+            },
+            {
+              path: 'edit',
+              meta: { text: '编辑' },
+              component: TextEditor
+            },
+            {
+              path: 'view',
+              meta: { text: '详情' },
+              component: ViewProduct
+            }
+          ]
+        },
+        {
+          path: 'processShow',
+          name: 'processShow',
+          meta: { text: '流程展示' },
+          component: ProcessShow
+        },
+        {
+          path: 'processClassify',
+          name: 'processClassify',
+          meta: { text: '流程分类' },
+          component: ProcessClassify,
+          children: [
+            {
+              path: 'add',
+              meta: { text: '新增' },
+              component: TextEditor
+            },
+            {
+              path: 'edit',
+              meta: { text: '编辑' },
+              component: TextEditor
+            },
+            {
+              path: 'view/:id',
+              meta: { text: '详情' },
+              component: ViewProduct
+            }
+          ]
         },
       ]
     }

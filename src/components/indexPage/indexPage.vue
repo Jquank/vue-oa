@@ -54,7 +54,7 @@ export default {
   },
   mounted () {
     // autoHeight()
-    let allowBar = cookie.get('allowBar')
+    let allowBar = cookie.getJSON('allowBar')
     if (allowBar) {
       window.agentbar.init('iframe-call')
       let iframe = document.getElementById('iframe-call')
