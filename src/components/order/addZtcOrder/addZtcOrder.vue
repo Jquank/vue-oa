@@ -7,6 +7,7 @@
             <el-form-item label="公司名称:" required>
               <el-input v-model="form.cName" class="input-btn" disabled placeholder="点击选择按钮选择公司"></el-input>
               <el-button type="primary" @click.native="selCompany" v-if="showEditZTC">选择</el-button>
+              <el-button type="warning" @click.native="$router.go(-1)" v-else>返回</el-button>
             </el-form-item>
           </el-col>
         </el-row>

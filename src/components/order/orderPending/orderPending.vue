@@ -43,7 +43,7 @@
         </div>
       </div>
       <!-- 列表 -->
-      <el-table size="mini" v-if="permissions.indexOf('5q')<0&&permissions.indexOf('6n')<0" :data="pendingList" class="table-width" max-height="550">
+      <el-table size="mini" v-if="permissions.indexOf('5q')<0&&permissions.indexOf('6n')<0" :data="pendingList" class="table-width" stripe border max-height="550">
         <el-table-column prop="ordernum" label="订单ID" min-width="180">
         </el-table-column>
         <el-table-column prop="cname" label="订单名称" min-width="180">
@@ -53,7 +53,7 @@
         </el-table-column>
         <el-table-column prop="username" label="下单人" min-width="80">
         </el-table-column>
-        <el-table-column prop="" label="类型" width="80">
+        <el-table-column prop="" label="类型" width="95">
           <template slot-scope="scope">
             <span v-if="scope.row.pid=='WEBSITE' && scope.row.websitetype==20">WAP</span>
             <span v-if="scope.row.pid=='WEBSITE' && scope.row.websitetype!=20">PC/WAP</span>

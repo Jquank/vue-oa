@@ -122,7 +122,7 @@
         </el-col>
         <el-col :md="4">
           <el-form-item :label="index?'':' 收款方式'">
-            <el-select v-model="p.typeAndBsid" placeholder="选择到款方式" :disabled="formDisable">
+            <el-select v-model="p.receivetype" placeholder="选择到款方式" :disabled="formDisable">
               <el-option v-for="(type,index) in orderFlowDatas" :key="index" :label="type.code_desc" :value="type.code_val+'#'+type.bsid" ></el-option>
             </el-select>
           </el-form-item>
@@ -294,23 +294,37 @@ export default {
     getByCode(52).then(res => {
       this.productType = res.data.data
     })
+    this.payList = this.moneyInfo
+    // this._getPayList()
+    this.payList.forEach(val => {
+      // 被驳回，100回显
+      if (
+        val.receivetype !== undefined &&
+        val.receivetype !== null &&
+        val.receivetype !== ''
+      ) {
+        val.receivetype = val.receivetype + '#' + val.bsid
+      }
+    })
+    this._getBsid()
   },
   mounted () {
-    this._getPayList()
     this._getUrl()
     this._getBackNode(this.sn, this.templateInfo.cpid)
     this.billTime = timeFormat1(this.orderInfo.bill_time || '')
     this.common = this.orderInfo.receivekind == 0 ? true : false // eslint-disable-line
-    this.orderFlowDatas.forEach(val => { // 取出[13]飘红的bsid
-      val.split.forEach(item => {
-        if (this.curid === item.curid) {
-          val.bsid = item.bsid
-        }
-      })
-    })
-    console.log(this.orderFlowDatas)
   },
   methods: {
+    _getBsid() {
+      this.orderFlowDatas.forEach(val => {
+        // 取出[13]飘红的bsid
+        val.split.forEach(item => {
+          if (this.curid === item.curid) {
+            val.bsid = item.bsid
+          }
+        })
+      })
+    },
     add (index) {
       if (index === 0) {
         this.payList.push({

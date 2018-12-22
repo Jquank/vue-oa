@@ -228,6 +228,7 @@
 import Page from 'base/page/page'
 import RenewDetail from 'components/renew/renewList/renewDetail'
 import { groupBy } from 'common/js/utils'
+import { productType } from 'common/js/filters'
 const STEP = 140
 export default {
   data () {
@@ -277,7 +278,8 @@ export default {
         companylogid: this.rowData.companylogid,
         order_id: this.rowData.orderid, // 订单id
         remark: this.subRemark,
-        go_sn: 10
+        go_sn: 10,
+        order_log: this.subRemark
       }
       this.$post('/wf.do?go', params).then(res => {
         this.orderDetailDialog = false
@@ -306,41 +308,48 @@ export default {
           uid: data.uid
         }
         this.$get('/wf.do?ndget', params).then(res => {
+          this.subRemark = ''
           this.baseInfo1 = res.data.data[1]
           this.baseInfo7 = res.data.data[7][0]
           this.baseInfo8 = res.data.data[8][0]
           let _moneyDetail = res.data.data[12]
+          let groupedArr = []
           let xxx = groupBy(_moneyDetail, function (item) {
             return [item.type]
           })
           xxx.forEach(val => {
-            let sum = 0
-            if (val.length > 1) {
-              val.forEach(item => {
-                sum += parseFloat(item.count || 0)
-                val[0].count = sum
-              })
-            }
+            let sumValue = 0
+            let sumCount = 0
+            let sumProfit = 0
+            val.forEach(item => {
+              sumValue += parseFloat(item.value)
+              sumCount += parseFloat(item.count)
+              sumProfit += parseFloat(item.profit)
+              val[0].count = sumCount.toFixed(2)
+              val[0].value = sumValue.toFixed(2)
+              val[0].profit = sumProfit.toFixed(2)
+            })
+            groupedArr.push(val[0])
           })
-          xxx.forEach(val => {
-            if (val[0].type === 1) {
-              val[0].voucher = this.baseInfo8.dsvoucher || 0
-              val[0].xjq = this.baseInfo8.dsxjq || 0
-            } else if (val[0].type === 2) {
-              val[0].voucher = this.baseInfo8.xxlvoucher || 0
-              val[0].xjq = this.baseInfo8.xxlxjq || 0
-            } else if (val[0].type === 51) {
-              val[0].voucher = this.baseInfo8.ztcvoucher || 0
-              val[0].xjq = this.baseInfo8.ztcxjq || 0
+          groupedArr.forEach(val => {
+            if (val.type === 1) {
+              val.voucher = this.baseInfo8.dsvoucher || 0
+              val.xjq = this.baseInfo8.dsxjq || 0
+            } else if (val.type === 2) {
+              val.voucher = this.baseInfo8.xxlvoucher || 0
+              val.xjq = this.baseInfo8.xxlxjq || 0
+            } else if (val.type === 51) {
+              val.voucher = this.baseInfo8.ztcvoucher || 0
+              val.xjq = this.baseInfo8.ztcxjq || 0
             } else {
-              val[0].voucher = 0
-              val[0].xjq = 0
+              val.voucher = 0
+              val.xjq = 0
             }
-            this.moneyDetail.push(val[0])
-            this.total1 += parseFloat(val[0].count || 0)
-            this.total2 += parseFloat(val[0].voucher || 0)
-            this.total3 += parseFloat(val[0].xjq || 0)
-            this.total4 += parseFloat(val[0].add_money || 0)
+            this.moneyDetail.push(val)
+            this.total1 += parseFloat(val.count || 0)
+            this.total2 += parseFloat(val.voucher || 0)
+            this.total3 += parseFloat(val.xjq || 0)
+            this.total4 += parseFloat(val.add_money || 0)
           })
           this.moneyDetail.push({ mark: 'last' })
           this.moneyDetail.forEach((val, index) => {
@@ -349,6 +358,9 @@ export default {
             val.total2 = this.total2
             val.total3 = this.total3
             val.total4 = this.total4
+            if (val.type < 500) {
+              this.subRemark += productType(val.type) + '加款金额：' + val.add_money + '，'
+            }
           })
           console.log(this.moneyDetail)
           this.key_order_detail = new Date() + '1'

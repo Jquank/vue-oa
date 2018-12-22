@@ -28,7 +28,7 @@
           <el-button @click.native="reset" type="warning">重 置</el-button>
         </div>
       </div>
-      <div class="list-item">
+      <div class="list-item" v-if="permissions.indexOf('8h') > -1">
         <el-button @click.native="exportContract" type="success" icon="el-icon-upload">导出合同</el-button>
       </div>
     </div>

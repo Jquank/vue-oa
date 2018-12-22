@@ -485,7 +485,7 @@
                 </div>
               </template>
               <template slot-scope="scope">
-                <div v-if="scope.$index===0">{{orderInfo.invoice_type+'' | invoiceState('invoiceType')}}</div>
+                <div v-if="scope.$index===0">{{orderInfo.invoice_type+'' | invoiceState('needInvoice')}}</div>
                 <div v-if="scope.$index===1 && invoiceInfo.cpmpanyname">
                   <div class="invoice-wrapper">
                     <div class="invoice-item mr10px">
@@ -552,7 +552,7 @@
                     </div>
                   </div>
                   <div>
-                    <div v-for="(item,index) in moneyInfo" :key="index">
+                    <div v-for="(item,index) in moneyInfo9" :key="index">
                       <template v-if="item.type < 100 && item.type!=8">
                         <b>{{item.type | productType}}：</b>
                         <span>{{item.value | currency1}}</span>
@@ -796,7 +796,7 @@
                     </div>
                   </div>
                   <div>
-                    <div v-for="(item,index) in moneyInfo" :key="index">
+                    <div v-for="(item,index) in moneyInfo9" :key="index">
                       <template v-if="item.type < 100 && item.type!=8">
                         <b>{{item.type | productType}}：</b>
                         <span>{{item.value | currency1}}</span>
@@ -856,7 +856,7 @@
           </el-table>
         </el-tab-pane>
         <!-- 订单处理 -->
-        <el-tab-pane v-if="mark!=='from_orderList'" label="订单处理">
+        <el-tab-pane v-if="mark!=='from_orderList'&&sn!=10" label="订单处理">
           <!-- 理单员审核(质检经理) -->
           <order-keeper
             v-if="sn===20 && templateInfo.cpid"
@@ -1267,6 +1267,23 @@
             :pid="pid"
             title="新客内审"
           ></new-cus-check>
+        </el-tab-pane>
+        <!-- 财务经理在订单列表修改 -->
+        <el-tab-pane v-if="mark==='from_orderList'&&permissions.indexOf('85')>-1" label="订单处理">
+          <!-- 综合部初审 -->
+          <init-finance
+            v-if="moneyInfo.length"
+            :moneyInfo="moneyInfo"
+            :moneyRecord="moneyRecord"
+            :orderFlowDatas="orderFlowDatas"
+            :orderInfo="orderInfo"
+            :templateInfo="templateInfo"
+            :originUser="originUser"
+            :sn="sn"
+            :invoiceInfo="invoiceInfo"
+            :pid="pid"
+            title="综合部初审"
+          ></init-finance>
         </el-tab-pane>
         <!-- 日志 -->
         <el-tab-pane :label="logLabel">
@@ -2047,7 +2064,7 @@ export default {
           this.orderInfo = res.data.data[1]
           this.orderInfo.applytime = ''
           this.productInfo = res.data.data[4]
-          if (this.productInfo[0]) {
+          if (this.productInfo[0] && this.productInfo[0].column) {
             this.productInfo[0].column = JSON.parse(this.productInfo[0].column)
           }
           this.originUser = res.data.data[3]
@@ -2080,6 +2097,11 @@ export default {
               lastIndex = index
             }
           })
+          if (!lastIndex) { // 审核完成
+            this.isChecked = 8
+            this.isNextChecked = this.stepList.length - 8
+            return
+          }
           this.isChecked = lastIndex
           if (this.isChecked > 7) {
             this.isNextChecked = this.isChecked - 8

@@ -11,8 +11,8 @@
             <i :class="item.fontIcon"></i>&nbsp;
             <span>{{item.text}}</span>
           </span>
-          <!-- <el-menu-item class="item-active" ref="item" v-for="(child, index) in item.cList" :key="index" :index="child.to"  v-if="permissions.indexOf(child.cid)>-1 || child.cid === '1000' || child.cid === '1100'"> -->
-          <el-menu-item class="item-active" :ref="child.to" v-for="(child, index) in item.cList" :key="index" :index="child.to">
+          <el-menu-item class="item-active" :ref="child.to" v-for="(child, index) in item.cList" :key="index" :index="child.to"  v-if="permissions.indexOf(child.cid)>-1 || child.cid === '1000' || child.cid === '1100'">
+          <!-- <el-menu-item class="item-active" :ref="child.to" v-for="(child, index) in item.cList" :key="index" :index="child.to"> -->
             {{child.text}}
             <!-- 1000: 客户搜索，1100：工资管理 -->
           </el-menu-item>
@@ -36,7 +36,7 @@ export default {
   watch: {
     $route (to, from) {
       if (this.$refs[to.path]) {
-        this.$refs[to.path][0].$el.style.backgroundColor = '#108cee !import' // 路由跳转时设置背景色
+        this.$refs[to.path][0].$el.style.backgroundColor = '#108cee !important' // 路由跳转时设置背景色
       }
     }
   }

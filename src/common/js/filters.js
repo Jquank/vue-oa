@@ -278,7 +278,7 @@ export function wjStyle(num) {
   }
 }
 const reg = /[\u4E00-\u9FA5]{1,}/
-export function timeFormat(num) {
+export function timeFormat(num, bool = true) {
   if (num === '.') {
     return '.'
   }

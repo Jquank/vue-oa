@@ -210,31 +210,31 @@
       </div>
       <el-row :gutter="20">
         <el-col :md="12" class="maxwidth">
-          <el-form-item label="公司名称 :" :prop="form.ttype==11?'tcname':''">
+          <el-form-item label="公司名称 :" :prop="form.ttype!=11?'tcname':''">
             <el-input v-model="form.tcname"></el-input>
           </el-form-item>
         </el-col>
         <el-col :md="12" class="maxwidth">
-          <el-form-item label="收票地址 :" :prop="form.ttype==11?'taddr':''">
+          <el-form-item label="收票地址 :" :prop="form.ttype!=11?'taddr':''">
             <el-input v-model="form.taddr"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
         <el-col :md="12" class="maxwidth">
-          <el-form-item label="收票电话 :" :prop="form.ttype==11?'tphone':''">
+          <el-form-item label="收票电话 :" :prop="form.ttype!=11?'tphone':''">
             <el-input v-model="form.tphone"></el-input>
           </el-form-item>
         </el-col>
         <el-col :md="12" class="maxwidth">
-          <el-form-item label="收票手机号 :" :prop="form.ttype==11?'tmobile':''">
+          <el-form-item label="收票手机号 :" :prop="form.ttype!=11?'tmobile':''">
             <el-input v-model="form.tmobile"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col class="maxwidth">
-          <el-form-item label="收票联系人 :" :prop="form.ttype==11?'tname':''">
+          <el-form-item label="收票联系人 :" :prop="form.ttype!=11?'tname':''">
             <el-input v-model="form.tname"></el-input>
           </el-form-item>
         </el-col>
@@ -253,7 +253,7 @@
       :visible.sync="mixinInvoiceDialog"
       width="650px"
     >
-      <el-table :data="mixinInvoiceList" border stripe class="table-width" @selection-change="handleSelectionChange">
+      <el-table :data="mixinInvoiceList" border stripe class="table-width" @selection-change="handleSelectionChange" max-height="500">
         <el-table-column type="selection" width="45" fixed></el-table-column>
         <el-table-column prop="companyname" label="公司名称" min-width="130"></el-table-column>
         <el-table-column prop="baidu_account" label="百度账号" width="100"></el-table-column>
@@ -271,7 +271,7 @@
             slot-scope="scope"
           >{{scope.row.applyUname+(scope.row.username !== scope.row.ckBdName ? (','+scope.row.ckBdName) : '')}}</span>
         </el-table-column>
-        <el-table-column prop="orderOrRenew" label="订单或续费" width="80"></el-table-column>
+        <el-table-column prop="orderOrRenew" label="订单或续费" width="95"></el-table-column>
       </el-table>
       <page
         :simpleLayout="'total, prev, next, jumper'"

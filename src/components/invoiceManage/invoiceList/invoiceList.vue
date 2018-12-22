@@ -308,7 +308,7 @@ import { rowSpan } from 'common/js/utils'
 import cookie from 'js-cookie'
 import { serverUrl } from 'api/http'
 import { timeFormat } from 'common/js/filters'
-import MakeInvoiceDialog from 'components/renew/renewList/makeInvoiceDialog'
+import MakeInvoiceDialog from 'components/makeInvoice/makeInvoiceDialog'
 export default {
   directives: { elDragDialog },
   props: {
@@ -396,8 +396,6 @@ export default {
       offset: '',
       isShowBtn: false
     }
-  },
-  mounted () {
   },
   methods: {
     search () {

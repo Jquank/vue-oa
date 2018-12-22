@@ -113,7 +113,9 @@ export const orderDeal = { // 订单处理
     _applyAddMoneyTotal () { // 加款金额总和，含冲单费
       let sum = 0
       this.payList.forEach(val => {
-        sum += parseFloat(val._value || 0)
+        if (val.type < 500) {
+          sum += parseFloat(val._value || 0)
+        }
       })
       sum += parseFloat(this.orderInfo.dscd || 0) + parseFloat(this.orderInfo.xxlcd || 0)
       return sum
@@ -143,6 +145,7 @@ export const orderDeal = { // 订单处理
       let tempArr = groupBy(this._moneyInfo, function (item) {
         return [item.type]
       })
+      console.log(tempArr)
       tempArr.forEach(val => {
         let sumValue = 0
         let sumCount = 0
@@ -150,15 +153,18 @@ export const orderDeal = { // 订单处理
         val.forEach(item => {
           sumValue += parseFloat(item.value)
           sumCount += parseFloat(item.count)
-          this.countTotal += parseFloat(item.count)
+          if (item.type < 500) {
+            this.countTotal += parseFloat(item.count)
+          }
           sumProfit += parseFloat(item.profit)
           val[0].count = sumCount.toFixed(2)
           val[0].value = sumValue.toFixed(2)
           val[0].profit = sumProfit.toFixed(2)
           this.$set(val[0], '_value', 0) // 触发vue的响应式（setter,getter）
-          this.payList.push(val[0])
         })
+        this.payList.push(val[0])
       })
+      console.log(this.payList)
     },
     _getUrl () { // 获取url
       this.url = '/wf.do?go'
@@ -309,6 +315,12 @@ export const orderDeal = { // 订单处理
     },
     // 审核通过
     pass () {
+      if (this.sn === 305) {
+        this.payList.forEach(val => {
+          val.bsid = (val.receivetype || '').split('#')[1]
+          val.receivetype = (val.receivetype || '').split('#')[0]
+        })
+      }
       if (this.sn === 100) {
         this.payList.forEach(val => {
           val.bsid = (val.receivetype || '').split('#')[1]
@@ -396,7 +408,7 @@ export const orderDeal = { // 订单处理
               '。申请加款时间：' + this.orderInfo.applytime + '。'
           this.payList.forEach(val => {
             if (val.type < 100 && val.type !== 8) {
-              this.remark += productType(val.type) + '加款：' + currency(val.count) + '；'
+              this.remark += productType(val.type) + '加款：' + currency(val._value || 0) + '；'
             }
           })
             if (this.orderInfo.dscd != 0) { // eslint-disable-line
@@ -427,8 +439,8 @@ export const orderDeal = { // 订单处理
         invoice_status: this.orderInfo.invoice_status, // 是否需要发票
         invoice_title: this.orderInfo.invoice_title, // 发票名称
         invoice_addr: this.orderInfo.invoice_addr, // 发票地址
-        amount: this.orderInfo.amount,
-        amount_real: this.totalReceive || 0,
+        amount: this.moneyRecord.service,
+        amount_real: this.moneyRecord.sum,
         gross_profit: this.profit || 0,
         remark_order: this.orderInfo.remark,
         pcwebsite: this.orderInfo.pcwebsite, // PC站

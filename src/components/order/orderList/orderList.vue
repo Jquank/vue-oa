@@ -90,11 +90,11 @@
       >
         <el-table-column prop="ordernum" label="订单ID" min-width="180"></el-table-column>
         <el-table-column prop="cname" label="订单名称" min-width="150"></el-table-column>
-        <el-table-column prop label="提交时间" width="150">
+        <el-table-column prop label="提交时间" width="100">
           <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
         </el-table-column>
         <el-table-column prop="username" label="下单人" min-width="80"></el-table-column>
-        <el-table-column prop label="类型" width="80">
+        <el-table-column prop label="类型" width="95">
           <template slot-scope="scope">
             <span v-if="scope.row.pid=='WEBSITE' && scope.row.websitetype==20">WAP</span>
             <span v-if="scope.row.pid=='WEBSITE' && scope.row.websitetype!=20">PC/WAP</span>
@@ -140,21 +140,19 @@
         <el-table-column prop label="订单状态" width="120">
           <span slot-scope="scope">{{scope.row.audittype === 0 ? "仅降E":"降E并提单"}}</span>
         </el-table-column>
-        <el-table-column prop label="最后操作时间" width="150">
+        <el-table-column prop label="最后操作时间" width="100">
           <span slot-scope="scope">{{scope.row.opt_time | timeFormat}}</span>
         </el-table-column>
         <el-table-column prop="deptname" label="商务大区部门" min-width="110"></el-table-column>
-        <el-table-column prop label="操作" width="100" align="center">
+        <el-table-column prop label="操作" width="150" align="center">
           <template slot-scope="scope">
+            <el-button type="success" @click.native="viewOrder(scope.row)" class="xsbtn">查看</el-button>
             <el-dropdown trigger="click">
-              <el-button type="primary" size="mini">
+              <el-button type="primary" class="xsbtn">
                 操作
                 <i class="el-icon-arrow-down el-icon--right"></i>
               </el-button>
               <el-dropdown-menu slot="dropdown" class="text-center">
-                <el-dropdown-item>
-                  <el-button type="success" @click.native="viewOrder(scope.row)" class="xsbtn">查看</el-button>
-                </el-dropdown-item>
                 <template v-if="orderKind==500">
                   <el-dropdown-item
                     divided
@@ -293,8 +291,8 @@
 
     <!-- 选择公司弹窗 -->
     <el-dialog title="选择公司" :visible.sync="selCompanyDialog" width="650px">
-      <el-input placeholder="请输入公司名进行搜索" v-model="handleCompanyName">
-        <el-button @click.native="searchCompany" slot="append" icon="el-icon-search"></el-button>
+      <el-input placeholder="请输入公司名进行搜索" v-model="handleCompanyName" @keyup.enter.native="searchCompany($event, 'enter')">
+        <el-button @click.native="searchCompany($event)" slot="append" icon="el-icon-search"></el-button>
       </el-input>
       <el-table :data="myCompany" class="table-width" max-height="500">
         <el-table-column prop="companyname" label="公司名称" min-width="130"></el-table-column>
@@ -338,7 +336,7 @@
 </template>
 
 <script>
-import MakeInvoiceDialog from 'components/renew/renewList/makeInvoiceDialog'
+import MakeInvoiceDialog from 'components/makeInvoice/makeInvoiceDialog'
 import Page from 'base/page/page'
 import AutoSelect from 'base/autoSelect/autoSelect'
 import cookie from 'js-cookie'
@@ -529,11 +527,13 @@ export default {
       }, 200)
     },
     // 选择公司
-    searchCompany() {
-      this.comParams = {
-        type: '20',
-        orderOrRenew: 'order',
-        companyname: this.handleCompanyName
+    searchCompany(e, type) {
+      if (type === 'enter' || e.target.nodeName !== 'INPUT') {
+        this.comParams = {
+          type: '20',
+          orderOrRenew: 'order',
+          companyname: this.handleCompanyName
+        }
       }
     },
     handleSelCompany(data) {
