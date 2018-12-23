@@ -65,13 +65,15 @@ import RenewDetail from 'components/renew/renewList/renewDetail'
 export default {
   data () {
     return {
-      stateRadio: '10',
+      stateRadio: '60',
       comName: '',
 
       myFollowList: [],
       myFollowUrl: '/Renew.do?renewlistkf',
       sendParams: {
-        'check': 100
+        'check': 100,
+        'beginmoney': '-1',
+        'endmoney': 'null'
       },
       radioMap: {
         '10': '1000#3000',

@@ -38,7 +38,7 @@
       </el-table-column>
       <el-table-column prop="username" label="提单人">
         <template slot-scope="scope">
-          <span>{{scope.row.username}}</span><span>{{scope.true_name?('('+scope.true_name+')'):''}}</span>
+          <span>{{scope.row.username+((scope.row.true_name && scope.row.true_name!=scope.row.username)?('('+scope.row.true_name+')'):'')}}</span>
         </template>
       </el-table-column>
       <el-table-column prop="addtype" label="续费类型">
@@ -55,14 +55,14 @@
       <el-table-column prop="invoice" label="发票状态" width="80">
         <span slot-scope="scope">{{scope.row.invoice==10?'已开':'未开'}}</span>
       </el-table-column>
-      <el-table-column prop="" label="操作" width="130" align="center">
+      <el-table-column prop="" label="操作" width="140" align="center">
         <template slot-scope="scope">
           <el-button @click.native="view(scope.row)" type="success" class="xsbtn">查 看</el-button>
           <el-button v-if="permissions.indexOf('7n') > -1&&scope.row.step!=400" @click.native="stop(scope.row)" type="danger" class="xsbtn">终 止</el-button>
         </template>
       </el-table-column>
     </el-table>
-    <page class="page" :url="myFollowUrl" :sendParams="sendParams" @updateList="updateMyFollowList"></page>
+    <page class="page" :url="myFollowUrl" :sendParams="sendParams" :isRememberStatus="false" @updateList="updateMyFollowList"></page>
 
     <!-- 查看弹窗 -->
     <el-dialog :key="key_renew_detail" :modal-append-to-body="false" title="续费详情" :visible.sync="renewDetailDialog" width="1100px">

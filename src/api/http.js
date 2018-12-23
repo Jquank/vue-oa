@@ -6,9 +6,13 @@ import {
   Loading,
   Message
 } from 'element-ui'
-export const uploadUrl = 'http://172.16.11.84:8080/upload/c'
+// 打包用地址
+export const uploadUrl = '/upload/c'
+export const serverUrl = '/BaiJieOA2'
+
+// export const uploadUrl = 'http://172.16.11.84:8080/upload/c'
 // export const serverUrl = 'http://bg.baijiegroup.com/BaiJieOA'
-export const serverUrl = 'http://172.16.11.84:8080/BaiJieOA'
+// export const serverUrl = 'http://172.16.11.84:8080/BaiJieOA'
 const instance = axios.create({
   baseURL: serverUrl,
   // withCredentials: true, // 跨域凭证

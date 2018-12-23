@@ -66,8 +66,8 @@ export default {
     }
     return {
       form: {
-        myName: 'admin',
-        myPassword: '1234rfv'
+        myName: '',
+        myPassword: ''
       },
       rules: {
         myName: [
@@ -77,6 +77,12 @@ export default {
           { validator: validatePass, trigger: 'blur' }
         ]
       }
+    }
+  },
+  created() {
+    if (this.$route.query.data) {
+      this.form.myName = this.$route.query.data.name || ''
+      this.form.myPassword = this.$route.query.data.pwd || ''
     }
   },
   methods: {

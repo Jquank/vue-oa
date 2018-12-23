@@ -8,7 +8,7 @@
       <p>
         <b>服务费：</b>{{moneyRecord.service | currency1}}
       </p>
-      <div v-if="pid==='BAITUI'" v-for="(o,index) in moneyInfo" :key="index">
+      <div v-if="pid==='BAITUI'" v-for="(o,index) in moneyInfo9" :key="index">
         <div v-if="o.type<100 && o.type!=8">
           <b>{{o.type | productType}}：</b>{{o.value | currency1}}
         </div>
@@ -201,6 +201,12 @@ export default {
       default: ''
     },
     moneyInfo: { // [12]
+      type: Array,
+      default: function () {
+        return []
+      }
+    },
+    moneyInfo9: { // [9]
       type: Array,
       default: function () {
         return []

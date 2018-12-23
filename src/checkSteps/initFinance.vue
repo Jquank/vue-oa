@@ -10,7 +10,7 @@
         <b>服务费：</b>
         {{moneyRecord.service | currency1}}
       </p>
-      <p v-for="(o,index) in moneyInfo" :key="index">
+      <p v-for="(o,index) in moneyInfo9" :key="index">
         <template v-if="o.type<100">
           <b>{{o.type | productType}}：</b>
           {{o.value | currency1}}
@@ -249,6 +249,13 @@ export default {
     },
     moneyInfo: {
       // [12]
+      type: Array,
+      default: function() {
+        return []
+      }
+    },
+    moneyInfo9: {
+      // [9]
       type: Array,
       default: function() {
         return []

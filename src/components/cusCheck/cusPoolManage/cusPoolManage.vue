@@ -32,8 +32,8 @@
       </div>
     </div>
 
-    <el-table @selection-change="handleSelectionChange" stripe border :data="poolList" style="width: 100%;margin-top:10px;">
-      <el-table-column fixed type="selection" width="40">
+    <el-table @selection-change="handleSelectionChange" stripe border :data="poolList" class="table-width">
+      <el-table-column fixed="left" type="selection" width="40">
         </el-table-column>
       <el-table-column prop="cname" label="客户名称" min-width="220">
       </el-table-column>

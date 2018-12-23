@@ -831,13 +831,15 @@
         </el-tab-pane>
         <!-- 审核记录 -->
         <el-tab-pane label="审核记录">
-          <el-steps :active="isChecked" space="14%" finish-status="success">
-            <el-step v-for="step in stepList.slice(0,8)" :key="step.id" :title="step.name" style="margin-top:15px">
-              <span v-if="step.status>0" slot="description">{{step.opt_time | timeFormat}}</span>
+          <el-steps :active="isChecked" space="14%" finish-status="finish" align-center>
+            <el-step v-for="step in stepList.slice(0,8)" :key="step.id" :title="step.name"
+              :status="step.status===100?'process':(step.status==300?'finish':'')" style="margin-top:15px">
+              <span v-if="step.opt_time" slot="description">{{step.opt_time | timeFormat}}</span>
             </el-step>
           </el-steps>
-          <el-steps :active="isNextChecked" space="12.5%" finish-status="success">
+          <el-steps :active="isNextChecked" space="12.5%" finish-status="finish" align-center>
             <el-step
+              :status="step.status===100?'process':(step.status==300?'finish':'')"
               v-for="(step,index) in stepList.slice(8)"
               :key="step.id"
               :title="step.name"
@@ -875,6 +877,7 @@
           <init-finance
             v-if="sn===100 && moneyInfo.length"
             :moneyInfo="moneyInfo"
+            :moneyInfo9="moneyInfo9"
             :moneyRecord="moneyRecord"
             :orderFlowDatas="orderFlowDatas"
             :orderInfo="orderInfo"
@@ -1159,6 +1162,7 @@
           <second-finance
             v-if="sn===305 && templateInfo.cpid"
             :moneyInfo="moneyInfo"
+            :moneyInfo9="moneyInfo9"
             :moneyRecord="moneyRecord"
             :orderFlowDatas="orderFlowDatas"
             :orderInfo="orderInfo"
@@ -1919,6 +1923,7 @@ export default {
         cpid: this.receiveData.cpid
       }).then(res => {
         this.handleClickCid = res.data[0].data.cid || ''
+        this.handleClickCompanylogid = res.data[0].data.logid || ''
       })
       this.addQulifyArr = []
       this.delQulifyArr = []
@@ -1970,6 +1975,7 @@ export default {
         }
       })
       let params = {
+        companylogid: this.handleClickCompanylogid,
         companyid: this.handleClickCid,
         delArr: this.delQulifyArr,
         addArr: this.addQulifyArr
@@ -2083,7 +2089,7 @@ export default {
     },
     // 获取审核记录信息
     _getRecord() {
-      let lastIndex = 0
+      let first100 = -1
       let progressUrl = '/wf/order.do?Schedule'
       let progressParam = {
         cpid: this.receiveData.cpid
@@ -2094,15 +2100,15 @@ export default {
           this.checkRecord = res.data[1].data
           this.stepList.forEach((val, index) => {
             if (val.status === 100) {
-              lastIndex = index
+              first100 = index
             }
           })
-          if (!lastIndex) { // 审核完成
+          if (first100 < 0) { // 审核完成
             this.isChecked = 8
             this.isNextChecked = this.stepList.length - 8
             return
           }
-          this.isChecked = lastIndex
+          this.isChecked = first100
           if (this.isChecked > 7) {
             this.isNextChecked = this.isChecked - 8
           }

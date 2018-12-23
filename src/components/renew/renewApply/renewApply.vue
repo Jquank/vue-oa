@@ -184,20 +184,22 @@
         </el-col>
       </el-row>
       <el-row v-for="(pro,index) in productMoneyList" :key="index" :gutter="20" class="maxwidth">
-        <el-col :md="12">
-          <el-form-item :label="pro.code_desc">
-            <el-input v-model="pro.value">
-              <span slot="prepend">¥</span>
-            </el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :md="12">
-          <el-form-item label="代金券/返款金额 :">
-            <el-input v-model="pro.truevalue">
-              <span slot="prepend">¥</span>
-            </el-input>
-          </el-form-item>
-        </el-col>
+        <template v-if="pro.type<500">
+          <el-col :md="12">
+            <el-form-item :label="pro.code_desc">
+              <el-input v-model="pro.value">
+                <span slot="prepend">¥</span>
+              </el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :md="12">
+            <el-form-item label="代金券/返款金额 :">
+              <el-input v-model="pro.truevalue">
+                <span slot="prepend">¥</span>
+              </el-input>
+            </el-form-item>
+          </el-col>
+        </template>
       </el-row>
       <el-row>
         <el-col :md="24" class="maxwidth">
@@ -369,15 +371,20 @@ export default {
     addTotal () {
       let sum = 0
       this.productMoneyList.forEach(val => {
-        sum += parseFloat(val.value || 0) + parseFloat(val.truevalue || 0)
+        if (val.type < 500) {
+          sum += parseFloat(val.value || 0) + parseFloat(val.truevalue || 0)
+        }
       })
       return sum
     },
     addTotal1 () {
       let sum = 0
       this.productMoneyList.forEach(val => {
-        sum += parseFloat(val.value || 0) + parseFloat(this.form.serviceMoney || 0)
+        if (val.type < 500) {
+          sum += parseFloat(val.value || 0)
+        }
       })
+      sum += parseFloat(this.form.serviceMoney || 0)
       return sum
     },
     truevalueTotal () {
@@ -562,7 +569,7 @@ export default {
       let hasValue = this.productMoneyList.every(val => {
         return val.value > 0
       })
-      if (!hasValue) {
+      if (!hasValue && this.form.addType !== '30') {
         this.$message.error('请填写所勾选产品的金额！')
         return
       }
@@ -653,6 +660,8 @@ export default {
     // 勾选流水
     handleSelectionChange (val) {
       this.handleSelFlow = val
+      this.flowIdArr = []
+      this.flowArr = []
       val.forEach(item => {
         this.flowIdArr.push(item.id)
         this.flowArr.push({

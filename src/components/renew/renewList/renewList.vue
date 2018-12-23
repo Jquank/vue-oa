@@ -36,7 +36,7 @@
         <span slot-scope="scope">{{scope.row.receiptmoney | currency1}}</span>
       </el-table-column>
       <el-table-column prop label="提单金额" width="110">
-        <span slot-scope="scope">{{scope.row.usemoney+scope.row.servicemoney+scope.row.usevoucher | currency1}}</span>
+        <span slot-scope="scope">{{scope.row.tgbonus+scope.row.ggbonus+scope.row.ysdltg+scope.row.servicemoney | currency1}}</span>
       </el-table-column>
       <el-table-column prop label="申请时间" width="100">
         <span slot-scope="scope">{{scope.row.inserttime | timeFormat}}</span>
@@ -125,6 +125,7 @@
         :echoData="echoData"
         :makeInvoiceStatus="makeInvoiceStatus"
         :offset="offset"
+        :rowData="rowData"
       >
         <el-button v-if="makeInvoiceStatus==20" slot="selBtn" @click.native="selCompanyDialog = true" type="primary">选择</el-button>
       </make-invoice-dialog>
@@ -378,6 +379,7 @@ export default {
     },
     // 申请发票
     applyInvoice(data) {
+      this.rowData = data
       this.key_dialog = new Date() + ''
       this._getInvoiceData(data, data.id)
       this.makeInvoiceTitle = '申请发票'

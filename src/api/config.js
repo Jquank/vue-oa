@@ -276,23 +276,23 @@ export const navList = [
     ]
   },
   {
-    id: '8m',
+    id: '8i',
     fontIcon: 'fa fa-file-word-o fa-fw fa-lg',
     text: '产品列表',
     cList: [
-      { cid: '111', to: '/indexPage/productManage', text: '产品管理' },
-      { cid: '113', to: '/indexPage/productShow', text: '产品展示' },
-      { cid: '112', to: '/indexPage/addClassify', text: '文章归类' }
+      { cid: '1000', to: '/indexPage/productManage', text: '产品管理' },
+      { cid: '1000', to: '/indexPage/productShow', text: '产品展示' },
+      { cid: '1000', to: '/indexPage/addClassify', text: '文章归类' }
     ]
   },
   {
-    id: '8n',
+    id: '8j',
     fontIcon: 'fa fa-comments fa-fw fa-lg',
     text: '反馈流程',
     cList: [
-      { cid: '121', to: '/indexPage/processManage', text: '流程管理' },
-      { cid: '121', to: '/indexPage/processShow', text: '流程展示' },
-      { cid: '121', to: '/indexPage/processClassify', text: '流程归类' }
+      { cid: '1000', to: '/indexPage/processManage', text: '流程管理' },
+      { cid: '1000', to: '/indexPage/processShow', text: '流程展示' },
+      { cid: '1000', to: '/indexPage/processClassify', text: '流程归类' }
     ]
   }
 ]

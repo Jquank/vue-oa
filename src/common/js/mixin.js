@@ -160,6 +160,8 @@ export const orderDeal = { // 订单处理
           val[0].count = sumCount.toFixed(2)
           val[0].value = sumValue.toFixed(2)
           val[0].profit = sumProfit.toFixed(2)
+          val[0].add_money = parseFloat(item.add_money || 0).toFixed(2)
+          val[0].true_value = parseFloat(item.true_value || 0).toFixed(2)
           this.$set(val[0], '_value', 0) // 触发vue的响应式（setter,getter）
         })
         this.payList.push(val[0])

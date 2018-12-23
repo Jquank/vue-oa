@@ -47,6 +47,10 @@ export default {
     defaultSearch: {
       type: Boolean,
       default: true
+    },
+    isRememberStatus: { // 是否记住分页状态，默认为true，为false时解决tab切换currentPage未置为1的问题
+      type: Boolean,
+      default: true
     }
   },
   watch: {
@@ -59,6 +63,9 @@ export default {
     // }
     sendParams() {
       this.key = new Date() + '' // 修复搜索时当前页未改变为1的bug
+      if (!this.isRememberStatus) {
+        this.currentPage = 1
+      }
       this._getFirstList()
     },
     otherParams() {

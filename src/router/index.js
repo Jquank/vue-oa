@@ -423,6 +423,7 @@ const ProcessClassify = (resolve) => {
     resolve(module)
   })
 }
+// import Test from 'components/login/test'
 
 // import store from '../store'
 import cookie from 'js-cookie'
@@ -430,6 +431,19 @@ Vue.use(Router)
 
 const router = new Router({
   routes: [
+    // {
+    //   path: '/',
+    //   redirect: '/test'
+    // },
+    // {
+    //   path: '*',
+    //   redirect: '/test'
+    // },
+    // {
+    //   path: '/test',
+    //   name: 'test',
+    //   component: Test
+    // },
     {
       path: '/',
       redirect: '/login'

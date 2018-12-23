@@ -213,11 +213,11 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column prop label="申请加款" min-width="150">
+        <el-table-column prop label="申请加款111" min-width="150">
           <template slot-scope="scope">
             <span v-if="!scope.row.mark" v-show="scope.row.type<500">
               <b>{{scope.row.type | productType}}</b>&nbsp;:&nbsp;
-              <span>{{scope.row.add_money > 0 ? scope.row.add_money : scope.row.truevalue+scope.row.value | currency}}</span>
+              <span>{{scope.row.addMoney | currency}}</span>
             </span>
             <span v-else>
               <b>{{scope.row._type}}</b>&nbsp;:&nbsp;
@@ -330,7 +330,8 @@
         <el-button class="title-btn mt10px" type="warning">操作</el-button>
         <div class="line"></div>
       </div>
-      <div v-if="(permissions.indexOf('7x') > -1 && toMark!=='chargeOffCheck') || toMark==='renewReceive'">
+      <template v-if="renewFlowList.length">
+        <div v-if="(permissions.indexOf('7x') > -1 && toMark!=='chargeOffCheck') || toMark==='renewReceive'">
         <el-table :data="productMoneyList" border>
           <el-table-column prop label="产品类型" min-width="200">
             <template slot-scope="scope">
@@ -399,6 +400,7 @@
           <span>{{productTotal | currency}}</span>
         </div>
       </div>
+      </template>
       <!-- 续费主管选择退款 -->
       <div v-for="(back,outIndex) in backList" :key="outIndex">
         <p>{{back.cname}}</p>
@@ -500,7 +502,7 @@
           <el-button @click.native="chargeOffCheck(-10)" v-if="chargeOffStep==300" type="warning">撤 回</el-button>
         </template>
         <el-button v-if="toMark==='renewAdd'" @click.native="checkAdd(300)" type="success">通过</el-button>
-        <el-button v-if="toMark==='renewList' && permissions.indexOf('86') > -1" @click.native="addCheckRemark" type="success">提交备注</el-button>
+        <el-button v-if="toMark==='renewList' && permissions.indexOf('86') > -1" @click.native="addsubRemark" type="success">提交备注</el-button>
       </div>
     </div>
     <!-- 销账发票 -->
@@ -615,9 +617,10 @@
 <script>
 import Page from 'base/page/page'
 import { getByCode } from 'api/getOptions'
-import { timeFormat1 } from 'common/js/filters' // eslint-disable-line
+import { timeFormat1, productType } from 'common/js/filters' // eslint-disable-line
 import cookie from 'js-cookie'
 import Viewer from 'viewerjs'
+import { groupBy } from 'common/js/utils'
 export default {
   props: {
     rowData: {
@@ -752,7 +755,7 @@ export default {
       let params = {
         checkresult: type,
         reid: this.rowData.reid,
-        remark: this.checkRemark
+        remark: this.subRemark
       }
       this.$post('/Renew.do?checkrenew', params).then(res => {
         if (res.data.success) {
@@ -765,7 +768,7 @@ export default {
         this.$message.warning('请填写驳回备注！')
         return
       }
-      if (this.permissions.indexOf('7x') > -1 && type === 300) {
+      if (this.permissions.indexOf('7x') > -1 && type === 300 && this.renewFlowList.length) {
         // 收单出纳校验
         let testProInfo = this.productMoneyList.every(val => {
           return (
@@ -878,9 +881,6 @@ export default {
             val.split.forEach(item => {
               if (item.reid === this.baseInfo.id) {
                 this.realReceive += parseFloat(item.split_amount || 0) // 实际总到款
-                item.bill_time
-                  ? (this.billTime = timeFormat1(item.bill_time))
-                  : (this.billTime = timeFormat1((new Date()).getTime()))
               }
             })
           })
@@ -899,25 +899,53 @@ export default {
         reid: this.rowData.id || this.rowData.reid
       }).then(res => {
         this.baseInfo = res.data[0].data || {}
+        if (this.baseInfo.bill_time) {
+          this.billTime = timeFormat1(this.baseInfo.bill_time)
+        } else {
+          this.billTime = timeFormat1((new Date()).getTime())
+        }
         if (
           this.toMark === 'renewReceive' ||
           this.toMark === 'chargeOffCheck'
         ) {
           this._getRenewMoney()
         }
-        this.moneyDetail = res.data[1].data
+        let _moneyDetail = res.data[1].data
+        let xxx = groupBy(_moneyDetail, function (item) {
+          return [item.type]
+        })
+        xxx.forEach(val => {
+          let sumValue = 0
+          let sumCount = 0
+          let sumProfit = 0
+          val.forEach(item => {
+            sumValue += parseFloat(item.value || 0)
+            sumCount += parseFloat(item.count || 0)
+            sumProfit += parseFloat(item.profit || 0)
+            val[0].count = sumCount.toFixed(2)
+            val[0].value = sumValue.toFixed(2)
+            val[0].profit = sumProfit.toFixed(2)
+            val[0].add_money = parseFloat(item.add_money || 0).toFixed(2)
+            val[0].true_value = parseFloat(item.true_value || 0).toFixed(2)
+          })
+          this.moneyDetail.push(val[0])
+        })
         let realTotal = 0
         let djqTotal = 0
         let applyTotal = 0
         this.moneyDetail.push({ mark: 'last' })
         this.moneyDetail.forEach((val, index) => {
-          realTotal += val.receive_money || 0
+          realTotal += parseFloat(val.receive_money || 0)
           if (val.type < 500) {
-            djqTotal += val.truevalue || 0
+            djqTotal += parseFloat(val.truevalue || 0)
             if (val.add_money > 0) {
-              applyTotal += val.add_money || 0
+              applyTotal += parseFloat(val.add_money || 0)
             } else {
-              applyTotal += (val.value || 0) + (val.truevalue || 0)
+              applyTotal += parseFloat(val.value || 0) + parseFloat(val.truevalue || 0)
+            }
+            val.addMoney = val.add_money > 0 ? val.add_money : (parseFloat(val.value || 0) + parseFloat(val.truevalue || 0))
+            if (this.baseInfo.step === 140) {
+              this.subRemark += productType(val.type) + '加款金额：' + val.addMoney.toFixed(2) + '，'
             }
           }
         })
@@ -933,7 +961,7 @@ export default {
       let params = {
         checkresult: type,
         reid: this.rowData.id,
-        remark: this.checkRemark,
+        remark: this.subRemark,
         addtype: this.baseInfo.addtype,
         usemoney: this.baseInfo.usemoney,
         accountid: this.baseInfo.accountid
@@ -944,10 +972,10 @@ export default {
         }
       })
     },
-    addCheckRemark() {
+    addsubRemark() {
       let params = {
         reid: this.baseInfo.id,
-        checkRemark: this.subRemark
+        subRemark: this.subRemark
       }
       this.$post('/Renew.do?checkrenew', params).then(res => {
         if (res.data.success) {

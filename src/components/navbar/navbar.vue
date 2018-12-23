@@ -25,6 +25,7 @@
 <script>
 import { navList } from '@/api/config'
 import cookie from 'js-cookie'
+// import { addClass, removeClass } from 'common/js/dom'
 export default {
   data () {
     return {
@@ -36,7 +37,11 @@ export default {
   watch: {
     $route (to, from) {
       if (this.$refs[to.path]) {
-        this.$refs[to.path][0].$el.style.backgroundColor = '#108cee !important' // 路由跳转时设置背景色
+        this.$nextTick(() => {
+          // let liActive = document.getElementsByClassName('is-active')[0]
+          // removeClass(liActive, 'is-active')
+          // addClass(this.$refs[to.path][0].$el, 'is-active') // 路由跳转时设置背景色
+        })
       }
     }
   }

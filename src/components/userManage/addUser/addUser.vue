@@ -136,6 +136,15 @@
       </el-row>
       <el-row :gutter="20" v-if="!quotaDisable">
         <el-col :md="12" class="maxwidth">
+          <el-form-item label="所属地区 :" prop="inArea">
+            <el-select v-model="form.inArea"  :disabled="repeatDisabled" placeholder="所属地区" style="width: 100%;">
+              <el-option v-for="item in form.inAreaList" :key="item.id" :value="item.id" :label="item.name"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20" v-if="!quotaDisable">
+        <el-col :md="12" class="maxwidth">
           <el-form-item label="招行卡号 :" >
             <el-input v-model="form.EX_ZHYHK" :disabled="repeatDisabled" placeholder="招行卡号"></el-input>
           </el-form-item>
@@ -205,7 +214,9 @@ export default {
         EX_ZHYHK: '',
         EX_ZGYHYHK: '',
         rank: '',
-        rankList: []
+        rankList: [],
+        inArea: 'HUB027',
+        inAreaList: []
       },
 
       rules: {
@@ -217,13 +228,14 @@ export default {
         role: [],
         job: [],
         dept: [],
-        entryDate: []
+        entryDate: [],
+        inArea: []
       }
     }
   },
   created () {
     for (let key in this.rules) {
-      if (key === 'sex' || key === 'role' || key === 'job' || key === 'dept') {
+      if (key === 'sex' || key === 'role' || key === 'job' || key === 'dept' || key === 'inArea') {
         this.rules[key].push({required: true, message: '请选择必选项', trigger: 'change'})
       } else {
         this.rules[key].push({required: true, message: '请输入必填项内容', trigger: 'blur'})
@@ -259,12 +271,23 @@ export default {
       entryDate: timeFormat1(this.echoUserInfo.hiredate),
       EX_ZHYHK: this.echoUserInfo.EX_ZHYHK,
       EX_ZGYHYHK: this.echoUserInfo.EX_ZGYHYHK,
-      rank: this.echoUserInfo.sequence
+      rank: this.echoUserInfo.sequence,
+      inArea: this.echoUserInfo.place_id
     }
     this.form = Object.assign({}, this.form, receiveData)
     this.getRank(this.form.dept) // 序列回显
   },
+  mounted() {
+    this._getInAreaList()
+  },
   methods: {
+    _getInAreaList() {
+      this.$get('/System/setQueryArea.do').then(res => {
+        if (res.data.success) {
+          this.form.inAreaList = res.data.data
+        }
+      })
+    },
     upDeptId (id) {
       this.form.dept = id
     },
@@ -325,7 +348,8 @@ export default {
         SFZ: this.form.idCardNum,
         EX_ZHYHK: this.form.EX_ZHYHK,
         EX_ZGYHYHK: this.form.EX_ZGYHYHK,
-        sequence: this.form.rank
+        sequence: this.form.rank,
+        place_id: this.form.inArea
       }
       // console.log(params)
       // return

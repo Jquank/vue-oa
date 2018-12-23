@@ -58,7 +58,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <page class="page" :url="myFollowUrl" :sendParams="sendParams" @updateList="updateMyFollowList"></page>
+    <page class="page" :url="myFollowUrl" :sendParams="sendParams" :isRememberStatus="false" @updateList="updateMyFollowList"></page>
 
     <!-- 查看弹窗-renew -->
     <el-dialog :key="key_renew_detail" :modal-append-to-body="false" title="续费详情" :visible.sync="renewDetailDialog" width="90%">
@@ -328,6 +328,8 @@ export default {
               val[0].count = sumCount.toFixed(2)
               val[0].value = sumValue.toFixed(2)
               val[0].profit = sumProfit.toFixed(2)
+              val[0].add_money = parseFloat(item.add_money || 0).toFixed(2)
+              val[0].true_value = parseFloat(item.true_value || 0).toFixed(2)
             })
             groupedArr.push(val[0])
           })
@@ -362,7 +364,6 @@ export default {
               this.subRemark += productType(val.type) + '加款金额：' + val.add_money + '，'
             }
           })
-          console.log(this.moneyDetail)
           this.key_order_detail = new Date() + '1'
           setTimeout(() => {
             this.orderDetailDialog = true
@@ -382,7 +383,7 @@ export default {
         companyname: this.comName,
         baiduAccount: this.bdAccount,
         starttime: this.addTime[0],
-        endtime: this.addTime[0],
+        endtime: this.addTime[1],
         check: this.stateRadio,
         pid: this.activeName,
         step: STEP

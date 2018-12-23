@@ -189,7 +189,7 @@
               <el-table-column prop="remark" label="备注">
               </el-table-column>
             </el-table>
-            <page class="page" :url="stopUrl" :sendParams="stopParams" @updateList="getStopBaoALogs"></page>
+            <page class="page" :url="stopUrl" :sendParams="stopParams" :defaultSearch="defaultSearch" @updateList="getStopBaoALogs"></page>
           </el-tab-pane>
         </el-tabs>
       </div>
@@ -235,6 +235,7 @@ export default {
       stopBaoALogs: [], // 放弃保A记录
       stopUrl: '/Company.do?userCompanylogRecord',
       stopParams: {},
+      defaultSearch: false,
 
       realDelcontact: [] // 储存真正被删除的联系人信息
     }
@@ -257,6 +258,7 @@ export default {
       cid: this.receiveData.cid,
       companylogid: this.receiveData.companylogid
     }
+    this.defaultSearch = true
     this.stopParams = {
       companyid: this.receiveData.cid,
       companylogid: this.receiveData.companylogid
