@@ -129,7 +129,7 @@
         <el-table-column prop="bsid" label="bsid" :fixed="fixed" width="50" show-overflow-tooltip>
         </el-table-column>
         <!-- 此处dom有合并，但数据并没有合并，故用不了table的selection -->
-        <el-table-column prop="id" label="选择" width="50" :fixed="fixed" align="center">
+        <el-table-column prop="id" label="选择" width="50"  :fixed="fixed" align="center">
           <template slot-scope="scope">
             <el-checkbox @change="((val,$event)=>singleCheck(val,$event,scope.row))" :true-label="scope.row.id"></el-checkbox>
           </template>
@@ -313,8 +313,7 @@ export default {
   directives: { elDragDialog },
   props: {
     fixed: {
-      type: Boolean,
-      default: true
+      default: 'left'
     },
     mark: {
       type: String,
@@ -729,7 +728,9 @@ export default {
           )
           fixedTable.setAttribute('id', 'fixedtb')
           rowSpan('tb', 0, [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], 7)
-          rowSpan('fixedtb', 0, [0, 1, 2, 3, 4, 5], 5)
+          setTimeout(() => {
+            rowSpan('fixedtb', 0, [0, 1, 2, 3, 4, 5], 5)
+          }, 500)
         } else {
           rowSpan('tb', 0, [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], 7)
           setTimeout(() => {

@@ -8,7 +8,7 @@
         <el-button type="primary" @click.native="$router.go(-1)" class="xsbtn">返回</el-button>
       </div>
     </div>
-    <div class="article">
+    <div class="article mt10px">
       <div v-html="v.vtext"></div>
     </div>
   </div>
@@ -78,7 +78,7 @@ export default {
       display: flex;
       justify-content: center;
       div{
-        max-width: 850px;
+        max-width: 100%;
         max-height: 600px;
         overflow: auto;
         // border: 1px solid #000;

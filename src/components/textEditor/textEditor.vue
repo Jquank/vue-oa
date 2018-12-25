@@ -13,6 +13,14 @@
             <div ref="editor" class="editor"></div>
           </el-col>
         </el-form-item>
+        <el-form-item label="分类" required v-if="mark==='addClassify'">
+          <el-col :md=24 class="maxwidth">
+            <el-select v-model="form.type" placeholder="请选择产品类型">
+              <el-option :value="21" label="产品资料"></el-option>
+              <el-option :value="22" label="产品Q&A"></el-option>
+            </el-select>
+          </el-col>
+        </el-form-item>
         <el-form-item>
           <el-button @click.native="sub" type="primary">发布</el-button>
         </el-form-item>
@@ -33,11 +41,13 @@ export default {
         title: '',
         type: undefined
       },
-      receiveData: {}
+      receiveData: {},
+      mark: ''
     }
   },
   created () {
     this.receiveData = this.$route.query.data
+    this.mark = this.receiveData._mark
     if (this.receiveData._status !== 'add' && !this.receiveData.id) {
       console.log('back')
       this.$router.go(-1)
@@ -62,6 +72,10 @@ export default {
         this.$message.error('请填写或选择带*项！')
         return
       }
+      if (this.mark === 'addClassify' && !params.type) {
+        this.$message.error('请填写或选择带*项！')
+        return
+      }
       this.$post(url, params).then(res => {
         if (res.data.success) {
           this.$message.success('发布成功！')
@@ -70,18 +84,27 @@ export default {
               path: '/indexPage/productManage',
               query: {data: 'fromDetail'}
             })
-          } else if (this.form.type === 20) {
+          } else if (this.form.type === 30) {
+            this.$router.push({
+              path: '/indexPage/processManage',
+              query: {data: 'fromDetail'}
+            })
+          } else if (this.form.type === 40) {
             let queryParams = {
               cat: this.form.cat
             }
             this.$router.push({
-              path: '/indexPage/addClassify',
+              path: '/indexPage/processClassify',
               query: {data: 'fromDetail', queryParams: queryParams}
             })
           } else {
+            let queryParams = {
+              cat: this.form.cat,
+              type: this.form.type
+            }
             this.$router.push({
-              path: '/indexPage/processManage',
-              query: {data: 'fromDetail'}
+              path: '/indexPage/addClassify',
+              query: {data: 'fromDetail', queryParams: queryParams}
             })
           }
         }

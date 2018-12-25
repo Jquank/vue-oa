@@ -143,31 +143,31 @@
         </div>
         <el-row :gutter="20">
           <el-col :md="12" class="maxwidth">
-            <el-form-item label="公司名称 :" prop="tcname">
+            <el-form-item label="公司名称 :" :prop="form.ttype!=11?'tcname':''">
               <el-input v-model="form.tcname"></el-input>
             </el-form-item>
           </el-col>
           <el-col :md="12" class="maxwidth">
-            <el-form-item label="收票地址 :" prop="taddr">
+            <el-form-item label="收票地址 :" :prop="form.ttype!=11?'taddr':''">
               <el-input v-model="form.taddr"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :md="12" class="maxwidth">
-            <el-form-item label="收票联系人 :" prop="tname">
+            <el-form-item label="收票联系人 :" :prop="form.ttype!=11?'tname':''">
               <el-input v-model="form.tname"></el-input>
             </el-form-item>
           </el-col>
           <el-col :md="12" class="maxwidth">
-            <el-form-item label="收票电话 :" prop="tphone">
+            <el-form-item label="收票电话 :" :prop="form.ttype!=11?'tphone':''">
               <el-input v-model="form.tphone"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col class="maxwidth">
-            <el-form-item label="收票手机号 :" prop="tmobile">
+            <el-form-item label="收票手机号 :" :prop="form.ttype!=11?'tmobile':''">
               <el-input v-model="form.tmobile"></el-input>
             </el-form-item>
           </el-col>

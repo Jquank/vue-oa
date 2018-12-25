@@ -52,7 +52,7 @@ import axios from 'axios'
 import { serverUrl } from 'api/http'
 import { getByCode } from 'api/getOptions'
 import storage from 'good-storage'
-const REG = /^[\w-_]{6,16}$/
+const REG = /^[\w-_,]{6,16}$/
 export default {
   data () {
     var validatePass = (rule, value, callback) => {

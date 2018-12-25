@@ -6,6 +6,8 @@ import App from '@/App'
 import router from '@/router'
 import store from './store'
 
+import elDragDialog from '@/directive/el-dragDialog/drag'
+
 // import VConsole from 'vconsole'
 
 import ElementUI from 'element-ui'
@@ -20,6 +22,8 @@ import 'viewerjs/dist/viewer.css'
 import * as filters from '@/common/js/filters'
 import { $post, $get, $export, uploadUrl } from 'api/http'
 import { callPhone } from 'api/call'
+
+Vue.directive('drag-dialog', elDragDialog)
 
 // const vConsole = new VConsole() // eslint-disable-line
 

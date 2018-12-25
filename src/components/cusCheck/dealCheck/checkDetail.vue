@@ -253,7 +253,7 @@
     </div>
 
     <!-- 电话查重弹窗 -->
-    <el-dialog v-el-drag-dialog :modal-append-to-body="false" title="电话查重" :visible.sync="phoneRepeatDialog" width="800px">
+    <el-dialog v-drag-dialog :modal-append-to-body="false" title="电话查重" :visible.sync="phoneRepeatDialog" width="800px">
       <el-table stripe border :data="repeatList" style="width: 100%;margin-top:10px;">
         <el-table-column prop="companyname" label="客户名称" min-width="150">
         </el-table-column>
@@ -351,9 +351,7 @@ import Page from 'base/page/page'
 import SelectArea from 'base/selectArea/selectArea'
 import SelectTrade from 'base/selectTrade/selectTrade'
 import { getByCode } from 'api/getOptions'
-import elDragDialog from '@/directive/el-dragDialog' // eslint-disable-line
 export default {
-  directives: { elDragDialog },
   data () {
     return {
       searchWords: '',

@@ -251,13 +251,7 @@
                     <i class="el-icon-arrow-down el-icon--right"></i>
                   </el-button>
                   <el-dropdown-menu id="my-dropdown-menu" slot="dropdown">
-                    <el-dropdown-item v-if="permissions.indexOf( '6s')>-1&&selStatus===0">
-                      <el-button @click.native.prevent="allot(cscope.row)" size="mini" type="primary">分配</el-button>
-                    </el-dropdown-item>
-                    <el-dropdown-item divided v-if="permissions.indexOf('6l')>-1&&selStatus===0">
-                      <el-button @click.native.prevent="split(cscope.row)" size="mini" type="warning">拆账</el-button>
-                    </el-dropdown-item>
-                    <el-dropdown-item divided>
+                    <el-dropdown-item>
                       <!-- 客服看到的认领(阳光快付不允许认) -->
                       <el-button
                         @click.native.prevent="claim(cscope.row)"
@@ -272,6 +266,12 @@
                         type="success"
                         v-if="((permissions.indexOf( '6k')>-1&&selStatus===0)&&rid!=='12' && rid!=='2y'|| rid==='0') && cscope.row.isClaim == '1'"
                       >认领</el-button>
+                    </el-dropdown-item>
+                    <el-dropdown-item divided v-if="permissions.indexOf('6l')>-1&&selStatus===0">
+                      <el-button @click.native.prevent="split(cscope.row)" size="mini" type="warning">拆账</el-button>
+                    </el-dropdown-item>
+                    <el-dropdown-item divided v-if="permissions.indexOf( '6s')>-1&&selStatus===0">
+                      <el-button @click.native.prevent="allot(cscope.row)" size="mini" type="primary">分配</el-button>
                     </el-dropdown-item>
                     <el-dropdown-item divided v-if="permissions.indexOf( '6m')>-1&&selStatus ===10">
                       <el-button @click.native.prevent="goBack(cscope.row)" size="mini" type="warning">退回</el-button>
@@ -363,6 +363,7 @@
       :title="'编辑流水信息----金额 : '+ flowMoney"
       :visible.sync="editDialog"
       width="800px"
+      v-drag-dialog
     >
       <el-form :model="editForm" label-width="140px">
         <el-form-item label required>

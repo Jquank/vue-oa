@@ -213,7 +213,7 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column prop label="申请加款111" min-width="150">
+        <el-table-column prop label="申请加款" min-width="150">
           <template slot-scope="scope">
             <span v-if="!scope.row.mark" v-show="scope.row.type<500">
               <b>{{scope.row.type | productType}}</b>&nbsp;:&nbsp;
@@ -333,7 +333,7 @@
       <template v-if="renewFlowList.length">
         <div v-if="(permissions.indexOf('7x') > -1 && toMark!=='chargeOffCheck') || toMark==='renewReceive'">
         <el-table :data="productMoneyList" border>
-          <el-table-column prop label="产品类型" min-width="200">
+          <el-table-column prop label="产品类型" min-width="150">
             <template slot-scope="scope">
               <el-select v-model="scope.row.type" style="width:100%">
                 <el-option
@@ -352,11 +352,11 @@
               </el-input>
             </template>
           </el-table-column>
-          <el-table-column prop label="银行类型" min-width="120">
+          <el-table-column prop label="银行类型" min-width="100">
             <template slot-scope="scope">
               <el-select v-model="scope.row.receivetype">
                 <el-option
-                  v-for="(item,index) in renewFlowList"
+                  v-for="(item,index) in renew_flowList"
                   :key="index"
                   :value="item.code_val"
                   :label="item.code_desc"
@@ -364,13 +364,13 @@
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column prop label="时间" min-width="150">
+          <el-table-column prop label="时间" min-width="160">
             <template slot-scope="scope">
               <el-select v-model="scope.row.receivetime">
                 <el-option
-                  v-for="(item,index) in renewFlowList"
+                  v-for="(item,index) in renew_flowList"
                   :key="index"
-                  :value="item.tm"
+                  :value="(new Date(item.tm)).getTime()"
                   :label="timeFormat1(item.tm)"
                 ></el-option>
               </el-select>
@@ -383,7 +383,7 @@
               </el-input>
             </template>
           </el-table-column>
-          <el-table-column prop label="操作" width="60">
+          <el-table-column prop label="操作" width="100">
             <template slot-scope="scope">
               <el-button
                 @click.native="add(scope.$index)"
@@ -405,7 +405,7 @@
       <div v-for="(back,outIndex) in backList" :key="outIndex">
         <p>{{back.cname}}</p>
         <el-table :data="back.attrs" border :show-header="false">
-          <el-table-column prop label="产品类型" min-width="200">
+          <el-table-column prop label="产品类型" min-width="150">
             <template slot-scope="scope">
               <el-select v-model="scope.row.type" style="width:100%">
                 <el-option
@@ -424,14 +424,20 @@
               </el-input>
             </template>
           </el-table-column>
-          <el-table-column prop label="时间" min-width="150">
+          <el-table-column prop label="银行类型" min-width="100">
             <template slot-scope="scope">
-              <el-date-picker disabled v-model="scope.row.receivetime" type="datetime"></el-date-picker>
+              <el-input v-model="scope.row.banktype" disabled>
+              </el-input>
+            </template>
+          </el-table-column>
+          <el-table-column prop label="时间" min-width="160">
+            <template slot-scope="scope">
+              <el-date-picker disabled v-model="scope.row.receivetime" type="date" style="width: 200px;"></el-date-picker>
             </template>
           </el-table-column>
           <el-table-column prop label="毛利" min-width="120">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.refprofitund">
+              <el-input v-model="scope.row.profit">
                 <span slot="prepend">¥</span>
               </el-input>
             </template>
@@ -591,12 +597,15 @@
           <span slot-scope="scope">{{scope.row.bill_time | timeFormat1}}</span>
         </el-table-column>
         <el-table-column prop="receiptmoney" label="申请时间" width="100">
-          <span slot-scope="scope">{{scope.row.inserttime | timeFormat1}}</span>
+          <span slot-scope="scope">{{scope.row.insert_time | timeFormat1}}</span>
         </el-table-column>
         <el-table-column prop="receiptmoney" label="商务|客服">
           <span
             slot-scope="scope"
-          >{{scope.row.username}}{{scope.row.username != scope.row.true_name ? (','+scope.row.true_name) : ''}}</span>
+          >{{scope.row.applyUname}}{{scope.row.ckBdName&&scope.row.ckBdName===scope.row.applyUname?(+'('+scope.row.ckBdName+')'):''}}</span>
+        </el-table-column>
+        <el-table-column prop="orderOrRenew" label="订单|续费">
+          <span slot-scope="scope">{{scope.orderOrRenew==='order'?'订单':'续费'}}</span>
         </el-table-column>
       </el-table>
       <page
@@ -664,6 +673,7 @@ export default {
       recordList: [],
       recordUrl: '/Renew.do?renewrecord',
       renewFlowList: [],
+      renew_flowList: [],
       realReceive: 0,
       productMoneyList: [],
       productList: [],
@@ -723,6 +733,19 @@ export default {
         if (res.data.success) {
           this.selCompanyDialog = false
           this.backList = res.data.data
+          console.dir(this.backList)
+          this.backList.forEach(item => {
+            item.attrs.forEach(val => {
+              if (!this.renew_flowList.some(rr => rr.code_val === val.receivetype)) {
+                this.renew_flowList.push({
+                  code_desc: val.banktype,
+                  code_val: val.receivetype,
+                  tm: timeFormat1(val.receivetime)
+                })
+              }
+            })
+          })
+          console.log(this.renewFlowList)
         }
       })
     },
@@ -792,6 +815,8 @@ export default {
           }
         })
       })
+      receiveIds = [...new Set(receiveIds)]
+      receiveIds = receiveIds.join(',')
       let inreids = []
       this.inreList.forEach(val => {
         inreids.push({ inreid: val.inreid, invoiceid: val.invoiceid })
@@ -808,17 +833,19 @@ export default {
               comName2: val.cname,
               baidu_account2: val.baidu_account,
               type: item.type,
-              reid2: item.id,
+              reid2: item.fkid,
               refund: item.receive_money,
-              receivetime: item.receivetime,
+              receive_money: item.receive_money,
+              receivetime: item.receivetime ? new Date(item.receivetime).getTime() : '',
+              receivetype: item.receivetype,
               refprofitund: item.refprofitund || 0
             })
           })
         })
       }
       let params = {
-        type: this.rowData.status == 10000 ? 0 : this.rowData.type, // eslint-disable-line
-        receiveids: receiveIds.join(','),
+        type: this.rowData.type, // eslint-disable-line
+        receiveids: receiveIds,
         reuid: this.rowData.uid,
         companylogid: this.baseInfo.companylogid,
         checkresult: type,
@@ -875,6 +902,13 @@ export default {
         reid: this.rowData.id || this.rowData.reid
       }).then(res => {
         this.renewFlowList = res.data.data.receiveList
+        this.renewFlowList.forEach(val => {
+          this.renew_flowList.push({
+            code_desc: val.code_desc,
+            code_val: val.code_val,
+            tm: timeFormat1(val.tm)
+          })
+        })
         this.productMoneyList = res.data.data.renewAttrList
         if (this.renewFlowList.length && this.toMark !== 'chargeOffCheck') {
           this.renewFlowList.forEach(val => {

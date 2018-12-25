@@ -689,6 +689,7 @@ export default {
       // return
       this.$post('/wf.do?WebSite', params).then(res => {
         if (res.data[0].success) {
+          this.$message.success('提交成功！')
           if (!this.showEditWJ) {
             this.$router.push({
               path: '/indexPage/orderPending',

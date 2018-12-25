@@ -51,7 +51,7 @@
       <page class="page" :url="myVisitUrl" :sendParams="params" @updateList="updateMyVisitList"></page>
 
     <!-- 填写出访结果弹窗 -->
-    <el-dialog v-el-drag-dialog title="填写出访结果" class="visit-result-dialog" :visible.sync="visitResultDialog">
+    <el-dialog v-drag-dialog title="填写出访结果" class="visit-result-dialog" :visible.sync="visitResultDialog">
       <el-form ref="form" :model="form" label-width="105px">
         <el-row :gutter="20">
           <el-col :md="12" class="maxwidth">
@@ -144,10 +144,8 @@
 
 <script>
 import AutoSelect from 'base/autoSelect/autoSelect'
-import elDragDialog from '@/directive/el-dragDialog' // eslint-disable-line
 import Page from 'base/page/page'
 export default {
-  directives: { elDragDialog },
   data () {
     return {
       key_visit_type: '',

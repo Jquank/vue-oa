@@ -5,9 +5,9 @@
         <el-tab-pane :label="item.title" :name="index===0?'first':item.id" :key="item.id">
           <div class="text-center author">
             <h3 class="title">{{item.title}}</h3>
-            <div class="back-btn">
+            <!-- <div class="back-btn">
               <el-button type="warning" @click.native="$router.go(-1)" class="xsbtn">返回</el-button>
-            </div>
+            </div> -->
           </div>
           <div class="article">
             <div v-html="item.vtext"></div>
@@ -48,8 +48,6 @@ export default {
   .author {
     .title {
       display: inline-block;
-      width: calc(~'(100% - 85px)');
-      max-width: 750px;
     }
     .back-btn {
       display: inline-block;
@@ -59,7 +57,7 @@ export default {
     display: flex;
     justify-content: center;
     div {
-      max-width: 850px;
+      max-width: 100%;
       max-height: 600px;
       overflow: auto;
     }

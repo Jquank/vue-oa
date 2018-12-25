@@ -536,6 +536,13 @@ export default {
         store_type: this.form.storeType, // 门店类型
         check_type: this.form.checkType // 验证类型
       }
+      if (this.finalSite.every(val => !val)) {
+        this.$message({
+          type: 'error',
+          message: '请勾选落地页！'
+        })
+        return
+      }
       if (
         !params.companyid ||
         !params.curId ||

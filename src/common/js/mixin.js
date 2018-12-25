@@ -343,15 +343,16 @@ export const orderDeal = { // 订单处理
           })
         })
         this.remark += '。 提单时间：' + timeFormat(this.billTime)
-        this.payList.forEach(item => {
-          if (!item.producttype || !item.count || !item.receivetype || !item.receivetime || !this.billTime) {
+        for (let i = 0; i < this.payList.length; i++) {
+          let item = this.payList[i]
+          if (!item.producttype || item.count === undefined || item.count === null || item.count === '' || !item.receivetype || !item.receivetime || !this.billTime) {
             this.$message({
               type: 'warning',
               message: '请完善到款信息'
             })
-            throw new Error('ignore')
+            return
           }
-        })
+        }
         if (this.allReceive && this.totalReceive != this.orderInfo.amount_real.toFixed(2)) { //eslint-disable-line
           this.$message({
             type: 'warning',

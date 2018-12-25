@@ -11,25 +11,28 @@
             :data="data"
             :highlight-current="true"
             node-key="id"
-            :default-expanded-keys="defaultExpanded"
+            default-expand-all
             :expand-on-click-node="false"
             @node-click="handleNodeClick"
           >
-            <span slot-scope="{ node, data }" class="custom-tree-node">
+            <span
+              slot-scope="{ node, data }"
+              class="custom-tree-node"
+              @mouseenter="handleClick(node)"
+              @mouseleave="flod(node)"
+            >
               <span>{{ node.label }}</span>
               <span class="add-del" :ref="'x'+node.id">
-                <span @click="handleClick(node)" :ref="'y'+node.id" class="fa fa-caret-right">...</span>
                 <template>
-                  <el-button type="text" size="mini" @click="() => append(data, node)" class="add">添加下级</el-button>
+                  <el-button type="text" size="mini" @click="() => append(data, node)" class="add">添加</el-button>
                   <el-button type="text" size="mini" @click="() => edit(node, data)" class="edit">编辑</el-button>
-                  <el-button v-if="node.key!=='0001'" type="text" size="mini" @click="() => remove(node, data)" class="del">删除</el-button>
                   <el-button
-                    class="fold-icon"
-                    @click="() => flod(node)"
-                    icon="fa fa-caret-left"
-                    size="mini"
+                    v-if="node.key!=='0001'"
                     type="text"
-                  ></el-button>
+                    size="mini"
+                    @click="() => remove(node, data)"
+                    class="del"
+                  >删除</el-button>
                 </template>
               </span>
             </span>
@@ -42,33 +45,64 @@
             <template slot="prepend">文章名称:</template>
           </el-input>
           <span>
-            <el-button @click.native="search" type="primary" icon="fa fa-search" size="mini"> 搜索</el-button>
+            <el-button @click.native="search" type="primary" icon="fa fa-search" size="mini">搜索</el-button>
           </span>
         </div>
         <div class="flex-table">
-          <el-table :data="articleList" max-height="550" border class="mt10px">
-            <el-table-column type="index" width="40"></el-table-column>
-            <el-table-column prop="title" label="文章名称" min-width="80"></el-table-column>
-            <el-table-column prop="id" label="链接" show-overflow-tooltip>
-              <template slot-scope="scope">
-                <el-input v-model="scope.row.alink">
-                  <el-button
-                    :ref="'copybtn'+scope.$index"
-                    slot="append"
-                    @click.native="copyUrl(scope.row.alink,$event)"
-                  >copy</el-button>
-                </el-input>
-                <!-- <a :href="scope.row.alink">123</a> -->
-              </template>
-            </el-table-column>
-            <el-table-column label="操作" width="140" align="center">
-              <template slot-scope="scope">
-                <el-button @click.native="viewArticle(scope.row)" icon="fa fa-eye" type="success" class="xsbtn"></el-button>
-                <el-button @click.native="editArticle(scope.row)" icon="fa fa-pencil" type="warning" class="xsbtn"></el-button>
-                <el-button @click.native="delArticle(scope.row)" icon="fa fa-trash-o" type="danger" class="xsbtn"></el-button>
-              </template>
-            </el-table-column>
-          </el-table>
+          <el-row :gutter="20">
+            <el-col :xl="12" class="mt10px">
+              <div class="pro-title">产品资料</div>
+              <el-table :data="articleList21" max-height="550" border class="mt10px">
+                <el-table-column type="index" width="40"></el-table-column>
+                <el-table-column prop="title" label="文章名称" min-width="80"></el-table-column>
+                <el-table-column prop="id" label="链接" show-overflow-tooltip>
+                  <template slot-scope="scope">
+                    <el-input v-model="scope.row.alink">
+                      <el-button
+                        :ref="'copybtn'+scope.$index"
+                        slot="append"
+                        @click.native="copyUrl(scope.row.alink,$event)"
+                      >copy</el-button>
+                    </el-input>
+                    <!-- <a :href="scope.row.alink">123</a> -->
+                  </template>
+                </el-table-column>
+                <el-table-column label="操作" width="140" align="center">
+                  <template slot-scope="scope">
+                    <el-button @click.native="viewArticle(scope.row)" icon="fa fa-eye" type="success" class="xsbtn"></el-button>
+                    <el-button @click.native="editArticle(scope.row)" icon="fa fa-pencil" type="warning" class="xsbtn"></el-button>
+                    <el-button @click.native="delArticle(scope.row)" icon="fa fa-trash-o" type="danger" class="xsbtn"></el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </el-col>
+            <el-col :xl="12" class="mt10px">
+              <div class="pro-title">产品Q&A</div>
+              <el-table :data="articleList22" max-height="550" border class="mt10px">
+                <el-table-column type="index" width="40"></el-table-column>
+                <el-table-column prop="title" label="文章名称" min-width="80"></el-table-column>
+                <el-table-column prop="id" label="链接" show-overflow-tooltip>
+                  <template slot-scope="scope">
+                    <el-input v-model="scope.row.alink">
+                      <el-button
+                        :ref="'copybtn'+scope.$index"
+                        slot="append"
+                        @click.native="copyUrl(scope.row.alink,$event)"
+                      >copy</el-button>
+                    </el-input>
+                    <!-- <a :href="scope.row.alink">123</a> -->
+                  </template>
+                </el-table-column>
+                <el-table-column label="操作" width="140" align="center">
+                  <template slot-scope="scope">
+                    <el-button @click.native="viewArticle(scope.row)" icon="fa fa-eye" type="success" class="xsbtn"></el-button>
+                    <el-button @click.native="editArticle(scope.row)" icon="fa fa-pencil" type="warning" class="xsbtn"></el-button>
+                    <el-button @click.native="delArticle(scope.row)" icon="fa fa-trash-o" type="danger" class="xsbtn"></el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </el-col>
+          </el-row>
         </div>
       </div>
     </div>
@@ -81,21 +115,24 @@ import { serverUrl } from 'api/http'
 import Clipboard from 'clipboard'
 const PAGE_ROUTER = 'addClassify'
 const TYPE = 20
+const TYPE_ZL = 21
+const TYPE_QA = 22
 export default {
   data() {
     return {
       serverUrl: serverUrl,
       data: [],
-      articleList: [],
+      articleList21: [],
+      articleList22: [],
       currentNode: {},
       articleName: '',
-      clipboard: null,
-      defaultExpanded: ['0001', '0002', '0003', '0004']
+      clipboard: null
+      // defaultExpanded: ['0001', '0002', '0003', '0004']
     }
   },
   beforeRouteUpdate(to, from, next) {
     if (to.query.data === 'fromDetail') {
-      this._getArticleList(to.query.queryParams.cat)
+      this._getArticleList(to.query.queryParams.cat, '', to.query.queryParams.type)
     }
     next()
   },
@@ -126,20 +163,22 @@ export default {
       this.clipboard.onClick(e)
     },
     search() {
-      this._getArticleList('', this.articleName.trim())
+      this._getArticleList('', this.articleName.trim(), TYPE_ZL)
+      this._getArticleList('', this.articleName.trim(), TYPE_QA)
     },
-    _getArticleList(nodeId, title) {
+    _getArticleList(nodeId, title, type) {
       let params = {
-        type: TYPE,
+        type: type,
         cat: nodeId,
         title: title
       }
       this.$post('/res.do?get', params).then(res => {
         if (res.data.success) {
-          this.articleList = res.data.data
-          this.articleList.forEach(val => {
-            val.alink =
-              `http://172.16.11.85:8080/#/indexPage/${PAGE_ROUTER}/view/${val.id}@20`
+          this['articleList' + type] = res.data.data
+          this['articleList' + type].forEach(val => {
+            val.alink = `http://172.16.11.85:8080/#/indexPage/${PAGE_ROUTER}/view/${
+              val.id
+            }@20`
           })
         }
       })
@@ -166,7 +205,7 @@ export default {
       let queryParams = {
         id: undefined,
         cat: this.currentNode.id,
-        type: TYPE,
+        _mark: 'addClassify',
         _status: 'add'
       }
       console.log(queryParams)
@@ -183,6 +222,7 @@ export default {
     },
     editArticle(data) {
       data._status = 'edit'
+      data._mark = 'addClassify'
       this.$router.push({
         path: `${PAGE_ROUTER}/edit`,
         query: { data: data }
@@ -195,11 +235,13 @@ export default {
         type: 'warning'
       })
         .then(() => {
-          this.$post('/res.do?delete', { id: data.id, status: -1 }).then(res => {
-            if (res.data.success) {
-              this._getArticleList(data.cat)
+          this.$post('/res.do?delete', { id: data.id, status: -1 }).then(
+            res => {
+              if (res.data.success) {
+                this._getArticleList(data.cat, '', TYPE_ZL)
+                this._getArticleList(data.cat, '', TYPE_QA)
+              }
             }
-          }
           )
         })
         .catch(() => {
@@ -270,18 +312,16 @@ export default {
     },
     flod(node) {
       let span = this.$refs['x' + node.id]
-      let replaceSpan = this.$refs['y' + node.id]
-      span.style.width = '20px'
-      replaceSpan.style.display = 'inline'
+      span.style.width = '0'
     },
     handleClick(node) {
       let span = this.$refs['x' + node.id]
-      let replaceSpan = this.$refs['y' + node.id]
-      span.style.width = '140px'
-      replaceSpan.style.display = 'none'
+      span.style.width = '130px'
+      span.style.zIndex = '1000'
     },
     handleNodeClick(data) {
-      this._getArticleList(data.id)
+      this._getArticleList(data.id, '', TYPE_ZL)
+      this._getArticleList(data.id, '', TYPE_QA)
       this.currentNode = data
     },
     _getMaxId(data) {
@@ -315,6 +355,11 @@ export default {
 .el-tree--highlight-current .el-tree-node.is-current > .el-tree-node__content {
   background-color: rgb(182, 206, 230);
 }
+
+.expanded.el-tree-node__expand-icon {
+  color: #67c23a;
+  font-size: 15px;
+}
 </style>
 
 <style lang="less" scoped>
@@ -326,7 +371,7 @@ export default {
     .title {
       margin: 3px 0;
       padding-left: 20px;
-      color: #409EFF;
+      color: #409eff;
       font-weight: 700;
     }
     .btn {
@@ -339,21 +384,22 @@ export default {
     .tree {
       flex: 0 0 360px;
       width: 360px;
-      // overflow: auto;
       .tree-content {
-        width: 99%;
+        display: -webkit-box;
         max-height: 550px;
         overflow: auto;
         .custom-tree-node {
           display: flex;
           flex: 1;
           align-items: center;
+          font-size: 14px;
           .add-del {
             display: inline-block;
-            width: 20px;
+            width: 0;
             overflow: hidden;
             font-size: 14px;
             padding-left: 8px;
+            z-index: 10000;
             .el-button + .el-button {
               margin-left: 3px;
             }
@@ -389,6 +435,12 @@ export default {
         // flex布局下el-table宽度不能自适应
         position: absolute;
         width: 100%;
+        .pro-title{
+          font-size: 15px;
+          font-weight: 600;
+          text-align: center;
+          color: #409eff;
+        }
       }
     }
   }

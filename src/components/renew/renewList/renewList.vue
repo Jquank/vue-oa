@@ -176,9 +176,9 @@
       <renew-detail :rowData="rowData" @closeRenewDetailDialog="renewDetailDialog=false" :toMark="'renewList'"></renew-detail>
     </el-dialog>
     <!-- 销账弹窗 -->
-    <el-dialog :modal-append-to-body="false" title="销账" :visible.sync="chargeOffDialog" width="550px">
+    <el-dialog :modal-append-to-body="false" title="销账" :visible.sync="chargeOffDialog" width="650px">
       <el-table :data="chargeOffList" class="table-width" @selection-change="handleSelFlow">
-        <el-table-column type="selection" width="40"></el-table-column>
+        <el-table-column type="selection" width="45"></el-table-column>
         <el-table-column prop="code_desc" label="银行类型" width="80"></el-table-column>
         <el-table-column prop="tm" label="时间" width="150">
           <span slot-scope="scope">{{scope.row.tm | timeFormat}}</span>
@@ -195,6 +195,14 @@
         :sendParams="chargeOffParams"
         @updateList="updateChargeOffList"
       ></page>
+      <el-form label-width="100px" class="mt10px">
+        <el-form-item label="返款|代金券：">
+          <el-input v-model="chargeVoucher"></el-input>
+        </el-form-item>
+        <el-form-item label="备注说明：">
+          <el-input v-model="chargeRemark" type="textarea"></el-input>
+        </el-form-item>
+      </el-form>
       <div class="text-center mt10px">
         <el-button @click.native="confirmFlow" type="success">确 定</el-button>
       </div>
@@ -267,6 +275,8 @@ export default {
       chargeOffList: [],
       chargeOffUrl: '/receipt.do?searchbankreceipt',
       chargeOffParams: {},
+      chargeVoucher: 0,
+      chargeRemark: '',
       selFlowArr: [],
       rowData: {},
       stopDialog: false,
@@ -307,7 +317,7 @@ export default {
       this.selFlowArr = val
     },
     confirmFlow() {
-      if (!this.selFlowArr.length) {
+      if (!this.selFlowArr.length && !this.chargeVoucher) {
         this.$message.error('请勾选流水')
         return
       }
@@ -315,6 +325,7 @@ export default {
       this.selFlowArr.forEach(val => {
         arr.push({
           id: val.id,
+          bkid: val.bkid,
           centerId: val.bsaid,
           money: val.split_amount
         })
@@ -323,9 +334,8 @@ export default {
         reId: this.rowData.id,
         companyid: this.rowData.companyid,
         bankReviceId: arr,
-        // todo
-        truevalue: '',
-        offsetRemark: ''
+        truevalue: this.chargeVoucher,
+        offsetRemark: this.chargeRemark
       }
       this.$post('/Renew.do?renewMoneyOffset', params).then(res => {
         if (res.data.success) {

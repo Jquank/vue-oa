@@ -3,7 +3,7 @@
     <div class="wrapper">
       <div class="tree">
         <div class="add-title mb10px">
-          <h3 class="title">流程树结构</h3>
+          <h3 class="title">产品树结构</h3>
           <el-button @click.native="addArticleByNode" class="btn" icon="fa fa-plus" type="primary" size="mini">添加文章</el-button>
         </div>
         <div class="tree-content">
@@ -11,25 +11,17 @@
             :data="data"
             :highlight-current="true"
             node-key="id"
-            :default-expanded-keys="defaultExpanded"
+            default-expand-all
             :expand-on-click-node="false"
             @node-click="handleNodeClick"
           >
-            <span slot-scope="{ node, data }" class="custom-tree-node">
+            <span slot-scope="{ node, data }" class="custom-tree-node" @mouseenter="handleClick(node)" @mouseleave="flod(node)">
               <span>{{ node.label }}</span>
               <span class="add-del" :ref="'x'+node.id">
-                <span @click="handleClick(node)" :ref="'y'+node.id" class="fa fa-caret-right">...</span>
                 <template>
                   <el-button type="text" size="mini" @click="() => append(data, node)" class="add">添加下级</el-button>
                   <el-button type="text" size="mini" @click="() => edit(node, data)" class="edit">编辑</el-button>
                   <el-button v-if="node.key!=='0001'" type="text" size="mini" @click="() => remove(node, data)" class="del">删除</el-button>
-                  <el-button
-                    class="fold-icon"
-                    @click="() => flod(node)"
-                    icon="fa fa-caret-left"
-                    size="mini"
-                    type="text"
-                  ></el-button>
                 </template>
               </span>
             </span>
@@ -89,8 +81,8 @@ export default {
       articleList: [],
       currentNode: {},
       articleName: '',
-      clipboard: null,
-      defaultExpanded: ['0001', '0002', '0003', '0004']
+      clipboard: null
+      // defaultExpanded: ['0001', '0002', '0003', '0004']
     }
   },
   beforeRouteUpdate(to, from, next) {
@@ -152,7 +144,7 @@ export default {
       this.$post('res.do?catSet', params).then(res => {})
     },
     _getTreeData() {
-      this.$post('res.do?catGet', {type: TYPE}).then(res => {
+      this.$post('res.do?catGet', { type: TYPE }).then(res => {
         if (res.data.success) {
           this.data = JSON.parse(res.data.data[0].data)
         }
@@ -270,15 +262,11 @@ export default {
     },
     flod(node) {
       let span = this.$refs['x' + node.id]
-      let replaceSpan = this.$refs['y' + node.id]
-      span.style.width = '20px'
-      replaceSpan.style.display = 'inline'
+      span.style.width = '0'
     },
     handleClick(node) {
       let span = this.$refs['x' + node.id]
-      let replaceSpan = this.$refs['y' + node.id]
-      span.style.width = '140px'
-      replaceSpan.style.display = 'none'
+      span.style.width = '130px'
     },
     handleNodeClick(data) {
       this._getArticleList(data.id)
@@ -315,6 +303,11 @@ export default {
 .el-tree--highlight-current .el-tree-node.is-current > .el-tree-node__content {
   background-color: rgb(182, 206, 230);
 }
+
+.expanded.el-tree-node__expand-icon{
+  color: #67c23a;
+  font-size: 15px;
+}
 </style>
 
 <style lang="less" scoped>
@@ -339,18 +332,18 @@ export default {
     .tree {
       flex: 0 0 360px;
       width: 360px;
-      // overflow: auto;
       .tree-content {
-        width: 99%;
+        display: -webkit-box;
         max-height: 550px;
         overflow: auto;
         .custom-tree-node {
           display: flex;
           flex: 1;
           align-items: center;
+          font-size: 14px;
           .add-del {
             display: inline-block;
-            width: 20px;
+            width: 0;
             overflow: hidden;
             font-size: 14px;
             padding-left: 8px;
