@@ -148,8 +148,9 @@
                   <el-card v-if="!showEditBD" shadow="always" class="card-tips">
                     [说明]：点击删除可移除不符合要求的资质，在下方重新添加并上传正确的资质。
                   </el-card>
-                  <!-- 编辑页回显企业资质照片 -->
-                  <slot name="echoQualify"></slot>
+
+                  <show-qualify v-if="showQualify_add.length" :showQualify="showQualify_add" @getQualifyList="getQualifyList"></show-qualify>
+
                   <el-row  v-if="showEditBD" class="mt10px" :gutter="10">
                     <el-col :md="16">
                       <el-input placeholder="对公账户" v-model="form.receiveAccount" style="width:100%">
@@ -271,6 +272,7 @@ import Page from 'base/page/page'
 import { getByCode } from 'api/getOptions' //eslint-disable-line
 import cookie from 'js-cookie'
 import { orderMixin, mobileFit } from 'common/js/mixin'
+import ShowQualify from 'base/showQualify/showQualify'
 const ORDER_TYPE = 'BAITUI'
 
 export default {
@@ -293,16 +295,13 @@ export default {
       default: function () {
         return []
       }
-    },
-    deledQualify: {
-      type: Array,
-      default: function () {
-        return []
-      }
     }
   },
   data () {
     return {
+      showQualify_add: [],
+      qualifyUploaded_add: [],
+      deledQualify: [],
       labelWidth: '110px',
       record_detail: [], // 回显到款记录
       ONLY_E: true,
@@ -341,7 +340,6 @@ export default {
         zizhiName: '',
         zizhiList: []
       },
-      // qualifyUploaded: [], // 上传的资质照
       isPlusIcon: 'fa fa-plus',
       isMinusIcon: 'fa fa-minus',
       comDialog: {
@@ -374,9 +372,6 @@ export default {
     }
   },
   computed: {
-    qualifyUploaded () { // 存放已上传的资质list
-      return this.showQualify // 默认资质list
-    },
     recordDetail () {
       if (this.showEditBD) {
         let x = this.form.record.slice(1)
@@ -393,6 +388,8 @@ export default {
     editData (newval) {
       if (!this.showEditBD) {
         console.log(newval)
+        this.showQualify_add = this.showQualify
+        this.qualifyUploaded_add = JSON.parse(JSON.stringify(this.showQualify_add))
         this.form.cName = newval.cusName
         this.form.pcWeb = newval.pcsite
         this.form.phoneWeb = newval.wapsite
@@ -453,13 +450,17 @@ export default {
   methods: {
     // 提交订单
     subOrder (subType) {
-      console.log(this.qualifyUploaded)
       if (!this.form.record) {
         this.$message({
           type: 'error',
           message: '请选择到款'
         })
         return
+      }
+      if (this.showEditBD) {
+        this.qualifyUploaded_add.forEach(val => {
+          val.id = null
+        })
       }
       this.form.contactList.forEach(val => {
         val.companylogid = this.showEditBD ? this.companyData.companylogid : this.editData.rowData.companylogid
@@ -501,7 +502,7 @@ export default {
         mobilewebsite: this.form.phoneWeb, // 手机站
         companyaddress: this.showEditBD ? this.form.cusAddress : this.editData.addr, // 公司地址
         remark_order: '', // 备注
-        company_attr: this.qualifyUploaded, // 公司属性(已上传资质)
+        company_attr: this.qualifyUploaded_add, // 公司属性(已上传资质)
         del_company_attr: this.deledQualify,
         remark: '',
         order_attr: [], // 订单属性
@@ -512,6 +513,7 @@ export default {
         receiveaccount: this.form.receiveAccount, // 对公账户,
         receivebank: this.form.receiveBank // 对公账户开户行
       }
+      console.log(params)
       if (!params.companyid || !params.curId || !params.companyaddress) {
         this.$message({
           type: 'error',
@@ -519,25 +521,16 @@ export default {
         })
         return
       }
-      this.form.contactList.forEach(val => {
-        if (!val.contactname || !val.contactnumber) {
+      for (let i = 0; i < this.form.contactList.length; i++) {
+        let p = this.form.contactList[i]
+        if (!p.contactname || !p.contactnumber) {
           this.$message({
             type: 'error',
             message: '请完善联系人信息'
           })
-          throw new Error('ignore')
-        }
-      })
-      if (subType === '10') {
-        if (!this.qualifyUploaded.length) {
-          this.$message({
-            type: 'error',
-            message: '请上传资质照'
-          })
           return
         }
       }
-      console.log(params)
       this.$post('/wf.do?go', params).then(res => {
         if (res.data[0].success) {
           this.$message.success('已提交！')
@@ -586,7 +579,15 @@ export default {
         // this.moneyRecord.recordDetail = _record.splice(1)
         // console.log(this.moneyRecord.recordDetail)
         this.form.cusAddress = res.data[1].data[0].address
+        if (this.showEditBD) {
+          this.showQualify_add = res.data[3].data
+          this.qualifyUploaded_add = JSON.parse(JSON.stringify(this.showQualify_add))
+        }
       })
+    },
+    getQualifyList (newArr, delArr) { // 获取删除的资质
+      this.deledQualify = this.deledQualify.concat(delArr)
+      this.qualifyUploaded_add = this.qualifyUploaded_add.filter(val => val.val !== delArr[0].val)
     },
     // 获取联系人信息
     _getContactName () {
@@ -643,7 +644,7 @@ export default {
     },
     uploadSuccess (res, file, fileList) {
       console.log(this.rowData)
-      this.qualifyUploaded.push({
+      this.qualifyUploaded_add.push({
         id: null,
         label: this.rowData.tb_field_name,
         val: res.url + '#' + this.rowData.code_desc
@@ -658,7 +659,7 @@ export default {
       })
     }
   },
-  components: { Page }
+  components: { Page, ShowQualify }
 }
 </script>
 

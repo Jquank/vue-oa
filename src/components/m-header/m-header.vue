@@ -55,7 +55,7 @@
                 <i class="el-icon-arrow-down el-icon--right"></i>
               </span>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item @click.native="dialogFormVisible = true">修改个人信息</el-dropdown-item>
+                <el-dropdown-item @click.native="openChangeInfoDialog">修改个人信息</el-dropdown-item>
                 <el-dropdown-item @click.native="exitLogin">退出登录</el-dropdown-item>
                 <!-- <el-dropdown-item @click.native="errorHistory">历史报错</el-dropdown-item> -->
               </el-dropdown-menu>
@@ -65,24 +65,23 @@
       </ul>
     </div>
     <!-- 修改个人信息弹窗 start-->
-    <el-dialog @open="open" :append-to-body="true" title="修改密码" :visible.sync="dialogFormVisible">
-      <el-form :model="form">
-        <el-form-item label="用户名" :label-width="formLabelWidth">
-          <el-input v-model="form.name" auto-complete="off" disabled></el-input>
+    <el-dialog :append-to-body="true" title="修改密码" :visible.sync="dialogFormVisible">
+      <el-form :model="form" label-width="85px">
+        <el-form-item label="用户名 :">
+          <el-input v-model="form.name" disabled></el-input>
         </el-form-item>
-        <el-form-item label="真实姓名" :label-width="formLabelWidth">
-          <el-input v-model="form.trueName" auto-complete="off"></el-input>
+        <el-form-item label="真实姓名 :">
+          <el-input v-model="form.trueName"></el-input>
         </el-form-item>
-        <el-form-item label="密码" :label-width="formLabelWidth">
-          <el-input @keyup.enter.native="editPwd" type="password" v-model="form.mima" auto-complete="off"></el-input>
+        <el-form-item label="密码 :">
+          <el-input @keyup.enter.native="editPwd" type="password" v-model="form.mima"></el-input>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
+      <div class="text-right">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <el-button type="primary" @click="editPwd">确 定</el-button>
       </div>
     </el-dialog>
-    <!-- 修改个人信息弹窗 end-->
 
     <el-dialog :modal-append-to-body="false" :append-to-body="true" title="错误收集" :visible.sync="errorDialog" width="900px">
       <error-collect></error-collect>
@@ -93,7 +92,6 @@
 
 <script>
 import { enterfullscreen, exitfullscreen } from 'api/myHeader'
-import { $post } from 'api/http'
 import cookie from 'js-cookie'
 import storage from 'good-storage'
 import { mapGetters, mapMutations } from 'vuex'
@@ -117,7 +115,6 @@ export default {
         trueName: '',
         mima: ''
       },
-      formLabelWidth: '75px',
       count: 0,
       firstTitle: '首页',
       secondTitle: '',
@@ -174,30 +171,39 @@ export default {
       this.count++
       this.count % 2 === 1 ? enterfullscreen() : exitfullscreen()
     },
-    open () {
-      this.form.name = this.uName
+    openChangeInfoDialog() {
+      this.dialogFormVisible = true
+      this.$get('/Oper.do?ListAll', { 'id': cookie.get('userId') }).then(res => {
+        let info = res.data[0].data[0]
+        this.form = {
+          name: info.uname,
+          trueName: info.true_name,
+          mima: ''
+        }
+      })
     },
     editPwd () {
-      let userUrl = '/Oper.do?EditPwd'
-      let reg = /^[0-9A-Za-z_]{4,10}$/
+      const userUrl = '/Oper.do?EditPwd'
+      const reg = /^[\w-_,]{6,16}$/
       let myPassword = '' + this.form.mima
       if (reg.test(myPassword)) {
-        $post(userUrl, { username: this.uName }).then(res => {
-          if (res.data.status === 1) {
+        let params = {
+          'id': cookie.get('userId'),
+          'pwd': this.form.mima,
+          'truename': this.form.trueName || undefined
+        }
+        this.$post(userUrl, params).then(res => {
+          if (res.data[0].success) {
             this.$message({
-              message: '修改成功,请重新登录',
+              message: '修改成功!',
               type: 'success'
             })
             this.dialogFormVisible = false
-            setTimeout(() => {
-              cookie.remove('userName')
-              this.$router.push('/login')
-            }, 100)
           }
         })
       } else {
         this.$message({
-          message: '密码请填写4到8位的数字、字母、下划线组合',
+          message: '密码请填写6到16位的数字、字母、下划线组合',
           type: 'error'
         })
       }
@@ -210,11 +216,6 @@ export default {
       cookie.remove('allowBar')
       storage.remove('x52')
       this.$router.push('/login')
-      // $post('/logout').then(res => {
-      //   if (res.data.status === -1) {
-
-      //   }
-      // })
     },
     refresh () {
       this.$router.go(0)

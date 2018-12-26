@@ -1,18 +1,10 @@
 <template>
   <div  class="edit-detail child-component-container media-padding">
     <div>
-      <add-baidu-order v-if="pid==='BAITUI'" :showQualify="showQualify" :deledQualify="deledQualify" :showEditBD="false" :editData="editData">
-        <show-qualify v-if="showQualify.length" slot="echoQualify" :showQualify="showQualify" @getQualifyList="getQualifyList"></show-qualify>
-      </add-baidu-order>
-      <add-wj-order v-if="pid==='WEBSITE'" :showQualify="showQualify" :deledQualify="deledQualify" :showEditWJ="false" :editData="editData">
-        <show-qualify v-if="showQualify.length" slot="echoQualify" :showQualify="showQualify" @getQualifyList="getQualifyList"></show-qualify>
-      </add-wj-order>
-      <add-ztc-order v-if="pid==='ZTC2'" :showQualify="showQualify" :deledQualify="deledQualify" :showEditZTC="false" :editData="editData">
-        <show-qualify v-if="showQualify.length" slot="echoQualify" :showQualify="showQualify" @getQualifyList="getQualifyList"></show-qualify>
-      </add-ztc-order>
-      <add-ka-order v-if="pid==='GD' || pid==='PZ' || pid==='KP'" :showQualify="showQualify" :deledQualify="deledQualify" :showEditKA="false" :editData="editData">
-        <show-qualify v-if="showQualify.length" slot="echoQualify" :showQualify="showQualify" @getQualifyList="getQualifyList"></show-qualify>
-      </add-ka-order>
+      <add-baidu-order v-if="pid==='BAITUI'" :showQualify="showQualify" :showEditBD="false" :editData="editData"></add-baidu-order>
+      <add-wj-order v-if="pid==='WEBSITE'" :showQualify="showQualify" :showEditWJ="false" :editData="editData"></add-wj-order>
+      <add-ztc-order v-if="pid==='ZTC2'" :showQualify="showQualify" :showEditZTC="false" :editData="editData"></add-ztc-order>
+      <add-ka-order v-if="pid==='GD' || pid==='PZ' || pid==='KP'" :showEditKA="false" :editData="editData"></add-ka-order>
     </div>
   </div>
 </template>

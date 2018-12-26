@@ -1,7 +1,8 @@
 <template>
   <div class="select-user">
-    <el-tree :data="departmentList" :props="depProps" @node-click="nodeClick" accordion node-key="code" ref="tree" id="select-user" :default-expanded-keys="defaultExpanded" style="width:250px;"></el-tree>
-    <el-row class="name">
+    <el-tree :data="departmentList" :props="depProps" @node-click="nodeClick" accordion node-key="code" ref="tree" id="select-user" :default-expanded-keys="defaultExpanded" style="width:250px;">
+    </el-tree>
+    <el-row class="name" v-if="!departManage">
       <el-input v-if="showSearch" placeholder="搜索姓名" v-model="name" @keydown.enter.native="searchName">
         <el-button @click.native="searchName" slot="append" icon="el-icon-search"></el-button>
       </el-input>
@@ -33,6 +34,10 @@ export default {
     showSearch: {
       type: Boolean,
       default: true
+    },
+    departManage: {
+      type: Boolean,
+      default: false
     }
   },
   data () {

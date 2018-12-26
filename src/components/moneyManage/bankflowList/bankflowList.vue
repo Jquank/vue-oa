@@ -376,7 +376,7 @@
           <template slot="label">
             <el-button @click.native.prevent="selCompanyDialog=true" type="primary">选择公司</el-button>
           </template>
-          <el-input disabled v-model="editForm.company"></el-input>
+          <el-input v-model="editForm.company"></el-input>
         </el-form-item>
         <el-form-item label="百度账号 :" required>
           <el-input v-model="editForm.bdAccount"></el-input>

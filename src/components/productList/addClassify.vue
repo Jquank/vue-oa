@@ -111,7 +111,6 @@
 </template>
 
 <script>
-import { serverUrl } from 'api/http'
 import Clipboard from 'clipboard'
 const PAGE_ROUTER = 'addClassify'
 const TYPE = 20
@@ -120,7 +119,7 @@ const TYPE_QA = 22
 export default {
   data() {
     return {
-      serverUrl: serverUrl,
+      jumpBaseUrl: '',
       data: [],
       articleList21: [],
       articleList22: [],
@@ -138,6 +137,7 @@ export default {
   },
   created() {
     this._getTreeData()
+    this.jumpBaseUrl = window.location.href
   },
   methods: {
     copyUrl(url, e) {
@@ -176,9 +176,7 @@ export default {
         if (res.data.success) {
           this['articleList' + type] = res.data.data
           this['articleList' + type].forEach(val => {
-            val.alink = `http://172.16.11.85:8080/#/indexPage/${PAGE_ROUTER}/view/${
-              val.id
-            }@20`
+            val.alink = `${this.jumpBaseUrl}/view/${val.id}@${type}`
           })
         }
       })
@@ -284,8 +282,6 @@ export default {
         })
     },
     edit(node, data) {
-      console.log(node)
-      console.log(data)
       this.$prompt('', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -401,7 +397,7 @@ export default {
             padding-left: 8px;
             z-index: 10000;
             .el-button + .el-button {
-              margin-left: 3px;
+              margin-left: 2px;
             }
             .add {
               color: #67c23a;

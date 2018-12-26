@@ -19,6 +19,11 @@ export const navList = [
       text: '时长设置'
     },
     {
+      cid: '74',
+      to: '/indexPage/departManage',
+      text: '部门管理'
+    },
+    {
       cid: '64',
       to: '/indexPage/departSetNum',
       text: '部门配额'
@@ -281,8 +286,8 @@ export const navList = [
     text: '产品列表',
     cList: [
       { cid: '1000', to: '/indexPage/productManage', text: '产品管理' },
-      { cid: '1000', to: '/indexPage/productShow', text: '产品展示' },
-      { cid: '1000', to: '/indexPage/addClassify', text: '文章归类' }
+      { cid: '1000', to: '/indexPage/productShow', text: '产品分类' },
+      { cid: '1000', to: '/indexPage/addClassify', text: '产品查询' }
     ]
   },
   {
@@ -291,7 +296,7 @@ export const navList = [
     text: '反馈流程',
     cList: [
       { cid: '1000', to: '/indexPage/processManage', text: '流程管理' },
-      { cid: '1000', to: '/indexPage/processShow', text: '流程展示' },
+      { cid: '1000', to: '/indexPage/processShow', text: '流程分类' },
       { cid: '1000', to: '/indexPage/processClassify', text: '流程归类' }
     ]
   }

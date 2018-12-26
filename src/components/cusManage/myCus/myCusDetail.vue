@@ -80,10 +80,37 @@
               </el-form-item>
             </el-col>
           </el-row>
+
+          <el-row>
+          <el-col :md="24" class="maxwidth">
+            <el-form-item label="产品类型 :">
+              <el-radio-group @change="changeProType" v-model="proType">
+                <el-radio  v-for="item in proTypeList" :key="item.id" :label="item.id">{{item.name}}</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :md="24" class="maxwidth">
+            <el-form-item label="客户类型 :">
+              <el-select v-model="cusType" style="width:100%;">
+                <el-option v-for="(item,index) in cusTypeList" :key="index" :value="item.producttype" :label="item.productname"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :md="24" style="max-width:1000px;">
+            <el-form-item label="备注 :">
+              <el-input v-model="viewRemark" type="textarea" :rows="3" placeholder="请填写详细修改备注;如新行业: 增加新联系人"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
           <div class="btns mt10px" style="max-width:1000px;text-align:center;">
-            <!-- <el-button type="success" @click.native="applyBaoADialog=true"
+            <el-button type="success" @click.native="applyBaoADialog=true"
             v-if="((cusDetail.cltype==20&&cusDetail.clstatus>20&&cusDetail.uid==userId)||(!(cusDetail.cltype==20&&cusDetail.clstatus>=20)&&(cusDetail.ctype>=10)))"
-            >申请保A</el-button> -->
+            >申请保A</el-button>
 
             <el-button type="primary" @click.native="applyEditDialog=true"
             v-if="((cusDetail.cltype==20&&cusDetail.clstatus>20&&cusDetail.uid==userId)||(cusDetail.cltype<20&&cusDetail.clstatus>20)||(cusDetail.cltype==20&&cusDetail.clstatus==0))"
@@ -323,7 +350,14 @@ export default {
       myKind: '',
 
       applyEditDialog: false, // 申请修改弹窗
-      applyEditRemark: ''
+      applyEditRemark: '',
+
+      rowData: {},
+      proType: 'DS',
+      proTypeList: [],
+      cusType: '',
+      cusTypeList: [],
+      viewRemark: ''
     }
   },
   created () {
@@ -345,6 +379,10 @@ export default {
       companylogtype: this.cusDetail.cltype,
       companylogstatus: this.cusDetail.clstatus
     }
+    // todo
+    this.cusType = ''
+    this.proType = this.receiveData.id
+    this._getProTypeList()
     this._getMyCusDetail()
   },
   mounted () {
@@ -353,6 +391,32 @@ export default {
     })
   },
   methods: {
+    changeProType (val) {
+      this.cusType = ''
+      this._getCusTypeList(val)
+    },
+    _getCusTypeList (pid) {
+      let params = {
+        cid: this.receiveData.companyid,
+        pid: pid,
+        producttype: this.cusDetail.producttype
+      }
+      this.$get('/Company.do?checkComProtectA', params).then(res => {
+        if (res.data.success) {
+          this.cusTypeList = res.data.data
+        } else {
+          this.cusTypeList = []
+          this.$message.error(res.data.msg + '')
+        }
+      })
+    },
+    _getProTypeList () {
+      this.$get('/Product.do?proget', {parentid: 0}).then(res => {
+        if (res.data.success) {
+          this.proTypeList = res.data.data
+        }
+      })
+    },
     // 放弃保A
     stopBaoA () {
       this.$confirm('请确认是否放弃保A?', '提示',

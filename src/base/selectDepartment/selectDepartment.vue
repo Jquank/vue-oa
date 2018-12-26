@@ -50,7 +50,7 @@ export default {
     },
     handleNodeClick (data) {
       this.department = data.fullname
-      this.$emit('upDeptId', data.id)
+      this.$emit('upDeptId', data.code)
       this.$refs.tree.$el.style.display = 'none'
     },
     showDepartment () {

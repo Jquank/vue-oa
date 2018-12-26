@@ -69,14 +69,13 @@
 </template>
 
 <script>
-import { serverUrl } from 'api/http'
 import Clipboard from 'clipboard'
 const PAGE_ROUTER = 'processClassify'
 const TYPE = 40
 export default {
   data() {
     return {
-      serverUrl: serverUrl,
+      jumpBaseUrl: '',
       data: [],
       articleList: [],
       currentNode: {},
@@ -93,6 +92,8 @@ export default {
   },
   created() {
     this._getTreeData()
+    this.jumpBaseUrl = window.location.href
+    console.log(this.jumpBaseUrl)
   },
   methods: {
     copyUrl(url, e) {
@@ -131,7 +132,7 @@ export default {
           this.articleList = res.data.data
           this.articleList.forEach(val => {
             val.alink =
-              `http://172.16.11.85:8080/#/indexPage/${PAGE_ROUTER}/view/${val.id}@20`
+              `${this.jumpBaseUrl}/view/${val.id}@${TYPE}`
           })
         }
       })
@@ -348,7 +349,7 @@ export default {
             font-size: 14px;
             padding-left: 8px;
             .el-button + .el-button {
-              margin-left: 3px;
+              margin-left: 2px;
             }
             .add {
               color: #67c23a;
