@@ -70,7 +70,7 @@ export default {
         url: '/Permission.do?set',
         editParams: {
           name: '',
-          permission: null
+          permission: this.lastPid
         },
         title: '新增权限名称',
         inputValue: ''

@@ -7,16 +7,16 @@
           <el-button @click.native="backRouter" class="back" type="warning">返回</el-button>
         </div>
         <div class="line" style="max-width:980px;"></div>
-        <el-form ref="form" :model="form" label-width="90px">
+        <el-form ref="form" :model="form" label-width="98px">
           <el-row :gutter="20">
             <el-col :md="12" class="maxwidth">
               <el-form-item label="客户名称 :">
-                <el-input v-model="cusDetail.name" :disabled="disabled"></el-input>
+                <el-input v-model="cusDetail.name" disabled></el-input>
               </el-form-item>
             </el-col>
             <el-col :md="12" class="maxwidth">
               <el-form-item label="所属行业 :" required>
-                <select-trade :echoTrade="form.trade" v-model="form.trade" :tradeDisabled="disabled" style="width:100%"></select-trade>
+                <select-trade :echoTrade="form.trade" v-model="form.trade" style="width:100%"></select-trade>
               </el-form-item>
             </el-col>
           </el-row>
@@ -48,7 +48,7 @@
           <el-row :gutter="20">
             <el-col :md="12" class="maxwidth">
               <el-form-item label="客户网址 :">
-                <el-input v-model="cusDetail.website" :disabled="disabled"></el-input>
+                <el-input v-model="cusDetail.website"></el-input>
               </el-form-item>
             </el-col>
             <el-col :md="12" class="maxwidth">
@@ -62,14 +62,17 @@
           <el-row v-for="(item,index) in form.contactList" :key="index" :gutter="20">
             <el-col :md="12" class="maxwidth">
               <el-form-item label="联系人 :" required>
-                <el-input v-model="item.name" :disabled="disabled"></el-input>
+                <el-input v-model="item.name"></el-input>
               </el-form-item>
             </el-col>
             <el-col :md="12" class="maxwidth">
-              <el-form-item label="联系电话 :" required>
-                <el-input v-model="item.contact" :disabled="disabled" class="input-btn"></el-input>
-                <el-button @click.native="callPhone(item.contact)" type="success" icon="fa fa-phone fa-lg" circle size="mini"></el-button>
-                <!-- <el-button @click.native="addContact(index)" class="circle-btn" :type="index===0?'success':'danger'" size="mini" :icon="index===0?'fa fa-plus':'fa fa-minus'" circle></el-button> -->
+              <el-form-item required>
+                <span slot="label">
+                  <el-button @click.native="callPhone(item.contact)" type="success" icon="fa fa-phone fa-lg" circle size="mini"></el-button>
+                  电话 :
+                </span>
+                <el-input v-model="item.contact" class="input-btn"></el-input>
+                <el-button @click.native="addContact(index)" class="circle-btn" :type="index===0?'success':'danger'" size="mini" :icon="index===0?'fa fa-plus':'fa fa-minus'" circle></el-button>
               </el-form-item>
             </el-col>
           </el-row>
@@ -108,9 +111,7 @@
         </el-row>
 
           <div class="btns mt10px" style="max-width:1000px;text-align:center;">
-            <el-button type="success" @click.native="applyBaoADialog=true"
-            v-if="((cusDetail.cltype==20&&cusDetail.clstatus>20&&cusDetail.uid==userId)||(!(cusDetail.cltype==20&&cusDetail.clstatus>=20)&&(cusDetail.ctype>=10)))"
-            >申请保A</el-button>
+            <el-button type="success" @click.native="subBaoA">申请保A</el-button>
 
             <el-button type="primary" @click.native="applyEditDialog=true"
             v-if="((cusDetail.cltype==20&&cusDetail.clstatus>20&&cusDetail.uid==userId)||(cusDetail.cltype<20&&cusDetail.clstatus>20)||(cusDetail.cltype==20&&cusDetail.clstatus==0))"
@@ -381,9 +382,9 @@ export default {
     }
     // todo
     this.cusType = ''
-    this.proType = this.receiveData.id
+    this.proType = this.receiveData.productid
     this._getProTypeList()
-    this._getMyCusDetail()
+    this._getMyCusDetail(this._getCusTypeList)
   },
   mounted () {
     getByCode(27).then(res => {
@@ -397,8 +398,8 @@ export default {
     },
     _getCusTypeList (pid) {
       let params = {
-        cid: this.receiveData.companyid,
-        pid: pid,
+        cid: this.cusDetail.id,
+        pid: this.proType,
         producttype: this.cusDetail.producttype
       }
       this.$get('/Company.do?checkComProtectA', params).then(res => {
@@ -536,38 +537,61 @@ export default {
     },
     // 申请保A提交
     subBaoA () {
-      if (!this.productType) {
-        this.$message({
-          type: 'warning',
-          message: '请选择客户类型！'
-        })
+      if (this.form.contactList.some(val => !val.name || !val.contact)) {
+        this.$message.error('请填写联系人或电话！')
+        return
+      }
+      if (!this.proTypeList.some(val => this.proType === val.id)) {
+        this.$message.error('请选择产品类型！')
+        return
+      }
+      if (this.cusType === undefined || this.cusType === null || this.cusType === '') {
+        this.$message.error('请选择客户类型！')
         return
       }
       let params = {
-        companylogid: this.receiveData.companylogid,
-        companyid: this.receiveData.id,
-        remark: this.remark,
-        type: 20,
-        producttype: this.productType
+        'pid': this.proType,
+        'companylogid': this.rowData.companylogid,
+        'companyid': this.cusDetail.id,
+        'remark': this.viewRemark,
+        'apply_A': '我的客户申请保A',
+        'type': 20,
+        'producttype': this.cusType,
+        'website': this.cusDetail.website,
+        'cat': this.cusDetail.bid || this.cusDetail.cid,
+        'contact': this.form.contactList,
+        'establishment': this.cusDetail.establishment_date,
+        'legal_person': this.cusDetail.legal_person,
+        'address': this.cusDetail.address,
+        'fm': this.cusDetail.fm,
+        'area': this.cusDetail.county || this.cusDetail.city || this.cusDetail.province,
+        'business_scope': this.cusDetail.business_scope
       }
       this.$post('/Company.do?compset', params).then(res => {
-        this.applyBaoADialog = false
-        this.$message({
-          type: 'success',
-          message: '申请保A成功'
-        })
-        this.$router.push({
-          path: '/indexPage/myCus',
-          query: { data: 'fromDetail' } // 标识myCus组件列表,带之前条件重新加载一次
-        })
+        if (res.data[0].success) {
+          this.$router.push({
+            path: '/indexPage/myCus',
+            query: {data: 'fromDetail'}
+          })
+          this.$message.success('已提交申请！')
+        } else {
+          this.$message({
+            type: 'danger',
+            message: res.data[0].msg
+          })
+        }
       })
     },
-    _getMyCusDetail () {
+    _getMyCusDetail (fn, fnParams) {
       this.$post('/CustomerCheck.do?customlist', {
         cid: this.receiveData.id,
         companylogid: this.receiveData.companylogid
       }).then(res => {
         this.cusDetail = res.data[0].data[0]
+        if (this.cusDetail.ctype === -10) {
+          this.disabled = false
+        }
+        fn(fnParams)
         console.log(this.cusDetail)
         this.form.trade = [this.cusDetail.cid, this.cusDetail.bid]
         this.form.area = [

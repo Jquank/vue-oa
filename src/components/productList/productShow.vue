@@ -12,6 +12,9 @@
           <div class="article">
             <div v-html="item.vtext"></div>
           </div>
+          <div v-show="item.img">
+            <download-enclosure :data="item"></download-enclosure>
+          </div>
         </el-tab-pane>
       </template>
     </el-tabs>
@@ -19,6 +22,7 @@
 </template>
 
 <script>
+import DownloadEnclosure from 'base/downloadEnclosure/downloadEnclosure'
 const TYPE = 10
 export default {
   data() {
@@ -35,11 +39,15 @@ export default {
       this.$post('/res.do?get', { type: TYPE }).then(res => {
         if (res.data.success) {
           this.newsList = res.data.data
+          console.log(this.newsList)
+          this.newsList.sort((a, b) => {
+            return a.insert_time - b.insert_time
+          })
         }
       })
     }
   },
-  components: {}
+  components: {DownloadEnclosure}
 }
 </script>
 

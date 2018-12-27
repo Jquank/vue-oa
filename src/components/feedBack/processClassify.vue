@@ -18,7 +18,7 @@
             <span slot-scope="{ node, data }" class="custom-tree-node" @mouseenter="handleClick(node)" @mouseleave="flod(node)">
               <span>{{ node.label }}</span>
               <span class="add-del" :ref="'x'+node.id">
-                <template>
+                <template v-if="permissions.indexOf('8m') > -1">
                   <el-button type="text" size="mini" @click="() => append(data, node)" class="add">添加下级</el-button>
                   <el-button type="text" size="mini" @click="() => edit(node, data)" class="edit">编辑</el-button>
                   <el-button v-if="node.key!=='0001'" type="text" size="mini" @click="() => remove(node, data)" class="del">删除</el-button>
@@ -56,8 +56,10 @@
             <el-table-column label="操作" width="140" align="center">
               <template slot-scope="scope">
                 <el-button @click.native="viewArticle(scope.row)" icon="fa fa-eye" type="success" class="xsbtn"></el-button>
-                <el-button @click.native="editArticle(scope.row)" icon="fa fa-pencil" type="warning" class="xsbtn"></el-button>
+                <template v-if="permissions.indexOf('8m') > -1">
+                  <el-button @click.native="editArticle(scope.row)" icon="fa fa-pencil" type="warning" class="xsbtn"></el-button>
                 <el-button @click.native="delArticle(scope.row)" icon="fa fa-trash-o" type="danger" class="xsbtn"></el-button>
+                </template>
               </template>
             </el-table-column>
           </el-table>
@@ -69,12 +71,14 @@
 </template>
 
 <script>
+import cookie from 'js-cookie'
 import Clipboard from 'clipboard'
 const PAGE_ROUTER = 'processClassify'
 const TYPE = 40
 export default {
   data() {
     return {
+      permissions: cookie.getJSON('permissions'),
       jumpBaseUrl: '',
       data: [],
       articleList: [],
@@ -337,6 +341,10 @@ export default {
         display: -webkit-box;
         max-height: 550px;
         overflow: auto;
+        background: #EBEEF5;
+        .el-tree{
+          background: #EBEEF5;
+        }
         .custom-tree-node {
           display: flex;
           flex: 1;

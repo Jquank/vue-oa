@@ -436,27 +436,27 @@ Vue.use(Router)
 
 const router = new Router({
   routes: [
-    {
-      path: '/',
-      redirect: '/test'
-    },
-    {
-      path: '*',
-      redirect: '/test'
-    },
-    {
-      path: '/test',
-      name: 'test',
-      component: Test
-    },
     // {
     //   path: '/',
-    //   redirect: '/login'
+    //   redirect: '/test'
     // },
     // {
     //   path: '*',
-    //   redirect: '/login'
+    //   redirect: '/test'
     // },
+    // {
+    //   path: '/test',
+    //   name: 'test',
+    //   component: Test
+    // },
+    {
+      path: '/',
+      redirect: '/login'
+    },
+    {
+      path: '*',
+      redirect: '/login'
+    },
     {
       path: '/login',
       name: 'login',
@@ -1154,34 +1154,34 @@ const router = new Router({
   }
 })
 
-// import Progress from 'nprogress' //进度条
-// Progress.configure({ showSpinner: false })
-// router.beforeEach((to, from, next) => {
-//   const isLogin = cookie.get('token')
-//   // todo
-//   // const isLogin = true
-//   if (to.name !== 'login') {
-//     if (!isLogin) {
-//       next({
-//         path: '/login'
-//       })
-//       Progress.done()
-//     } else {
-//       if (to.name === from.name) {
-//         // 防止刷新的时候加载两次组件
-//         next(false)
-//       } else {
-//         Progress.start()
-//         next()
-//       }
-//     }
-//   } else {
-//     next()
-//     Progress.done()
-//   }
-// })
-// router.afterEach((to, from) => {
-//   Progress.done()
-// })
+import Progress from 'nprogress' //进度条
+Progress.configure({ showSpinner: false })
+router.beforeEach((to, from, next) => {
+  const isLogin = cookie.get('token')
+  // todo
+  // const isLogin = true
+  if (to.name !== 'login') {
+    if (!isLogin) {
+      next({
+        path: '/login'
+      })
+      Progress.done()
+    } else {
+      if (to.name === from.name) {
+        // 防止刷新的时候加载两次组件
+        next(false)
+      } else {
+        Progress.start()
+        next()
+      }
+    }
+  } else {
+    next()
+    Progress.done()
+  }
+})
+router.afterEach((to, from) => {
+  Progress.done()
+})
 
 export default router

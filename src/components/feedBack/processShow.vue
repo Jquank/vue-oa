@@ -35,6 +35,9 @@ export default {
       this.$post('/res.do?get', { type: TYPE }).then(res => {
         if (res.data.success) {
           this.newsList = res.data.data
+          this.newsList.sort((a, b) => {
+            return a.insert_time - b.insert_time
+          })
         }
       })
     }

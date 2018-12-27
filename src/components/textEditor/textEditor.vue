@@ -8,6 +8,11 @@
             <el-button type="primary" @click="back">返回</el-button>
           </el-col>
         </el-form-item>
+        <el-form-item label="上传附件">
+          <el-col :md=24 class="maxwidth">
+            <up-file @fileUrl="getFileUrl"></up-file>
+          </el-col>
+        </el-form-item>
         <el-form-item label="正文" required>
           <el-col :md=24 class="maxwidth">
             <div ref="editor" class="editor"></div>
@@ -31,6 +36,7 @@
 
 <script>
 import E from 'wangeditor'
+import UpFile from 'base/upLoad/upFile'
 export default {
   data () {
     return {
@@ -39,7 +45,8 @@ export default {
         id: undefined,
         vtext: '',
         title: '',
-        type: undefined
+        type: undefined,
+        img: ''
       },
       receiveData: {},
       mark: ''
@@ -56,6 +63,10 @@ export default {
     this.form = Object.assign({}, this.form, this.receiveData)
   },
   methods: {
+    getFileUrl(file) {
+      console.log(file)
+      this.form.img = file.response.url
+    },
     back () {
       this.$router.go(-1)
     },
@@ -65,7 +76,8 @@ export default {
         'title': this.form.title,
         'vtext': this.form.vtext,
         'type': this.form.type,
-        'cat': this.form.cat
+        'cat': this.form.cat,
+        'img': this.form.img
       }
       let url = params.id ? '/res.do?set' : '/res.do?add'
       if (!params.title || !params.vtext) {
@@ -120,6 +132,7 @@ export default {
     this.editor.txt.html(this.form.vtext)
   },
   components: {
+    UpFile
   }
 }
 </script>

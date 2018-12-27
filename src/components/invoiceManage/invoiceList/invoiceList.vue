@@ -113,7 +113,7 @@
     </div>
     <!-- 公用列表 -->
     <div v-if="mark==='list' || mark==='pending' || (mark==='handled'&&permissions.indexOf('7c') < 0)">
-      <el-table :key="key_table" border :data="invoiceList" class="table-width" id="invoice-list-table" max-height="500">
+      <el-table :key="key_table" border :data="invoiceList" class="table-width" id="invoice-list-table" max-height="500" :row-class-name="setRowClassName">
         <el-table-column prop="banktype" :fixed="fixed" label="银行类型" width="80">
         </el-table-column>
         <el-table-column prop="tm" label="交易时间" :fixed="fixed" width="100">
@@ -130,7 +130,7 @@
         </el-table-column>
         <!-- 此处dom有合并，但数据并没有合并，故用不了table的selection -->
         <el-table-column prop="id" label="选择" width="50"  :fixed="fixed" align="center">
-          <template slot-scope="scope">
+          <template slot-scope="scope" v-if="scope.$index!==invoiceList.length-1">
             <el-checkbox @change="((val,$event)=>singleCheck(val,$event,scope.row))" :true-label="scope.row.id"></el-checkbox>
           </template>
         </el-table-column>
@@ -151,14 +151,17 @@
           <span slot-scope="scope">{{scope.row.tmoney | currency}}</span>
         </el-table-column>
         <el-table-column prop="ttype" label="发票类型" width="90">
-          <span slot-scope="scope">{{scope.row.ttype==11?'电子普票':
-            scope.row.ttype==10?'纸质普票':'专票'}}</span>
+          <template slot-scope="scope">
+            <span v-show="scope.row.ttype==11">电子普票</span>
+            <span v-show="scope.row.ttype==10">纸质普票</span>
+            <span v-show="scope.row.ttype==20">专票</span>
+          </template>
         </el-table-column>
         <el-table-column prop="is_advance" label="提前开票" width="80">
-          <span slot-scope="scope">{{scope.row.is_advance==20?'是':'否'}}</span>
+          <span slot-scope="scope" v-if="scope.$index!==invoiceList.length-1">{{scope.row.is_advance==20?'是':'否'}}</span>
         </el-table-column>
         <el-table-column prop="" label="状态" width="100">
-          <template slot-scope="scope">
+          <template slot-scope="scope" v-if="scope.$index!==invoiceList.length-1">
             <el-button plain :type="scope.row.step==300?'success':scope.row.step==0?'danger':scope.row.step<=40?'info':''" class="xsbtn">{{scope.row.step==300?'审核通过':scope.row.stepName}}</el-button>
             <el-button v-if="scope.row.step==300&&scope.row.invoice==0" plain type="warning" class="xsbtn">待开</el-button>
             <el-button v-if="scope.row.invoice==1" plain type="warning" class="xsbtn">正在开</el-button>
@@ -167,7 +170,7 @@
           </template>
         </el-table-column>
         <el-table-column label="操作" width="110" align="center">
-          <template slot-scope="scope">
+          <template slot-scope="scope" v-if="scope.$index!==invoiceList.length-1">
             <el-dropdown trigger="click">
               <el-button type="primary" size="mini">
                 操作<i class="el-icon-arrow-down el-icon--right"></i>
@@ -397,6 +400,11 @@ export default {
     }
   },
   methods: {
+    setRowClassName({ row, rowIndex }) {
+      if (row.mark === 'total') {
+        return 'red'
+      }
+    },
     search () {
       this.params[this.mark + 'Params'] = {
         expressType: this.tnumberState,
@@ -675,7 +683,33 @@ export default {
     updateInvoiceList (res) {
       this.key_table = new Date() + ''
       this.invoiceList = res.data[0].data
-      if (this.mark === 'list' || this.mark === 'pending') {
+      let initObj = this.invoiceList.unshift()
+      for (let key in initObj) {
+        initObj[key] = ''
+      }
+      let tempObj = {
+        banktype: '合计',
+        amount: 0,
+        tmoney: 0,
+        mark: 'total'
+      }
+      initObj = Object.assign({}, initObj, tempObj)
+      let bsidMark = ''
+      let tnumberMark = ''
+      let sumObj = this.invoiceList.reduce((pre, cur) => {
+        if (bsidMark !== cur.bsid) { // 根据bsid计算amount合计
+          bsidMark = cur.bsid
+          pre.amount += parseFloat(cur.amount || 0)
+        }
+        if (tnumberMark !== cur.tnumber) { // 根据tnuber计算tmoney合计
+          tnumberMark = cur.tnumber
+          pre.tmoney += parseFloat(cur.tmoney || 0)
+        }
+        return pre
+      }, initObj)
+      console.log(sumObj)
+      this.invoiceList.push(sumObj)
+      if (this.mark === 'list' || this.mark === 'pending' || this.mark === 'handled') {
         this._getRowSpan()
       }
     },
@@ -728,9 +762,11 @@ export default {
           )
           fixedTable.setAttribute('id', 'fixedtb')
           rowSpan('tb', 0, [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], 7)
+          rowSpan('fixedtb', 0, [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], 7)
           setTimeout(() => {
+            rowSpan('tb', 0, [0, 1, 2, 3, 4, 5], 5)
             rowSpan('fixedtb', 0, [0, 1, 2, 3, 4, 5], 5)
-          }, 500)
+          }, 800)
         } else {
           rowSpan('tb', 0, [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], 7)
           setTimeout(() => {

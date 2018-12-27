@@ -3,18 +3,18 @@
   <div id="app">
     <el-container>
       <!-- 头部 -->
-      <el-header id="my-header" height="50px">
+      <el-header id="my-header" height="50px" v-if="menushow">
         <m-header></m-header>
       </el-header>
       <!-- 左侧边栏和主体内容 -->
       <el-container class="con-bottom">
         <!-- 左侧边栏 -->
-        <el-aside @touchstart.native="touchStart" @touchmove.native="touchMove" @touchend.native="touchEnd" id="nav-aside" class="nav-aside" width="160px">
+        <el-aside @touchstart.native="touchStart" @touchmove.native="touchMove" @touchend.native="touchEnd" id="nav-aside" class="nav-aside" width="160px" v-if="menushow">
           <navbar></navbar>
         </el-aside>
         <!-- 主体内容 -->
         <el-main id="main" @click.native="hiddenDepartment">
-          <div id="call-center" v-if="isShow">
+          <div id="call-center" v-if="isShow&&menushow">
             <iframe ref="iframecall" id="iframe-call" src="http://gccp.baidu.com/gaiamgmt/fe-communication/communications/index.html#/" frameborder="0"></iframe>
           </div>
           <!-- <transition name="fade" mode="out-in"> -->
@@ -44,7 +44,8 @@ export default {
     return {
       nav: null,
       logo: null,
-      nested: null
+      nested: null,
+      menushow: true
     }
   },
   computed: {
@@ -52,10 +53,17 @@ export default {
       return cookie.get('allowBar') === '9999'
     }
   },
+  created() {
+    let href = window.location.href // 老系统iframe嵌入新页面
+    let str = href.split('menu=')[1]
+    if (str && str.substr(0, 2) === 'no') {
+      this.menushow = false
+    }
+  },
   mounted () {
     // autoHeight()
     let allowBar = cookie.getJSON('allowBar')
-    if (allowBar) {
+    if (allowBar && this.menushow) {
       window.agentbar.init('iframe-call')
       let iframe = document.getElementById('iframe-call')
       let urlParams = '/gaiaopt/rest/interface/agent/agentBarInit4H5'

@@ -202,6 +202,12 @@
             <el-date-picker v-model="form.offsetTime" value-format="yyyy-MM-dd" type="date" placeholder="选择日期"></el-date-picker>
           </el-form-item>
         </el-col>
+        <el-col :md="12" class="maxwidth">
+          <el-form-item label="垫款证明 :">
+            <up-file @fileUrl="getFileUrl" :listType="'picture'" style="display:inline-block;"></up-file>
+            <a @click="exportBankFlow" href="javascript:void(0)" class="a-search-number tipfont fa fa-download">点击下载模板</a>
+          </el-form-item>
+        </el-col>
       </el-row>
 
       <div class="title">
@@ -292,6 +298,7 @@ import { getByCode } from 'api/getOptions'
 import { appMark } from 'common/js/utils'
 import Viewer from 'viewerjs'
 import Page from 'base/page/page'
+import UpFile from 'base/upLoad/upFile'
 export default {
   props: {
     echoData: {
@@ -442,6 +449,17 @@ export default {
     })
   },
   methods: {
+    getFileUrl (res) {
+      this.fileUrl = res.url
+    },
+    // 下载垫款证明模板
+    exportBankFlow () {
+      let params = {
+        receiveIds: '',
+        invoiceIds: ''
+      }
+      this.$export('/Invoice.do?invoiceCushionProof', params)
+    },
     // 合并发票
     mixinInvoice() {
       this.mixinInvoiceDialog = true
@@ -501,7 +519,8 @@ export default {
         companyid: this.form.comId,
         chargearray: this.form.productMoneyList,
         invoiceremark: this.form.remark,
-        fkidArr: this.multipleSelection
+        fkidArr: this.multipleSelection,
+        prove_img: this.fileUrl
       }
       params = Object.assign({}, this.form, params)
       this.$refs[formName].validate(valid => {
@@ -554,7 +573,7 @@ export default {
       })
     }
   },
-  components: { Page }
+  components: { Page, UpFile }
 }
 </script>
 

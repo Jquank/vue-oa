@@ -11,10 +11,14 @@
     <div class="article mt10px">
       <div v-html="v.vtext"></div>
     </div>
+    <div v-show="v.img">
+      <download-enclosure :data="v"></download-enclosure>
+    </div>
   </div>
 </template>
 
 <script>
+import DownloadEnclosure from 'base/downloadEnclosure/downloadEnclosure'
 export default {
   data () {
     return {
@@ -54,7 +58,7 @@ export default {
     }
   },
   components: {
-
+    DownloadEnclosure
   }
 }
 </script>

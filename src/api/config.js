@@ -285,7 +285,7 @@ export const navList = [
     fontIcon: 'fa fa-file-word-o fa-fw fa-lg',
     text: '产品列表',
     cList: [
-      { cid: '1000', to: '/indexPage/productManage', text: '产品管理' },
+      { cid: '8m', to: '/indexPage/productManage', text: '产品管理' },
       { cid: '1000', to: '/indexPage/productShow', text: '产品分类' },
       { cid: '1000', to: '/indexPage/addClassify', text: '产品查询' }
     ]
@@ -295,7 +295,7 @@ export const navList = [
     fontIcon: 'fa fa-comments fa-fw fa-lg',
     text: '反馈流程',
     cList: [
-      { cid: '1000', to: '/indexPage/processManage', text: '流程管理' },
+      { cid: '8m', to: '/indexPage/processManage', text: '流程管理' },
       { cid: '1000', to: '/indexPage/processShow', text: '流程分类' },
       { cid: '1000', to: '/indexPage/processClassify', text: '流程归类' }
     ]

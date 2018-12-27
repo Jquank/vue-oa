@@ -12,12 +12,7 @@
           <div class="login">
             <el-form :model="form" :rules="rules" ref="ruleForm">
               <el-form-item prop="myName">
-                <el-input
-                  v-model="form.myName"
-                  size="medium"
-                  placeholder=" 请输入用户名"
-                  prefix-icon="fa fa-user">
-                </el-input>
+                <el-input v-model="form.myName" size="medium" placeholder=" 请输入用户名" prefix-icon="fa fa-user" @blur="myNameBlur"></el-input>
               </el-form-item>
               <el-form-item prop="myPassword">
                 <el-input
@@ -26,16 +21,27 @@
                   type="password"
                   size="medium"
                   placeholder=" 请输入密码"
-                  prefix-icon="fa fa-lock">
-                </el-input>
+                  prefix-icon="fa fa-lock"
+                ></el-input>
               </el-form-item>
+              <template v-if="showBindRealName">
+                <el-form-item prop="myName">
+                  <el-input v-model="form.realName" size="medium" placeholder=" 绑定真实账号" prefix-icon="fa fa-user"></el-input>
+                </el-form-item>
+                <el-form-item prop="myPassword">
+                  <el-input
+                    @keyup.native.enter="login"
+                    v-model="form.realPassword"
+                    type="password"
+                    size="medium"
+                    placeholder=" 绑定真实密码"
+                    prefix-icon="fa fa-lock"
+                  ></el-input>
+                </el-form-item>
+              </template>
               <el-form-item>
                 <div class="btn-login">
-                  <el-button
-                    @click.native="submitForm('ruleForm')"
-                    type="primary"
-                    style="width:100%;">登 录
-                  </el-button>
+                  <el-button @click.native="submitForm('ruleForm')" type="primary" style="width:100%;">登 录</el-button>
                 </div>
               </el-form-item>
             </el-form>
@@ -54,7 +60,7 @@ import { getByCode } from 'api/getOptions'
 import storage from 'good-storage'
 const REG = /^[\w-_,]{6,16}$/
 export default {
-  data () {
+  data() {
     var validatePass = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入密码'))
@@ -67,15 +73,15 @@ export default {
     return {
       form: {
         myName: '',
-        myPassword: ''
+        myPassword: '',
+        realName: '',
+        realPassword: ''
       },
+      showBindRealName: false,
+      regUserList: [],
       rules: {
-        myName: [
-          { required: true, message: '请输入登录名', trigger: 'blur' }
-        ],
-        myPassword: [
-          { validator: validatePass, trigger: 'blur' }
-        ]
+        myName: [{ required: true, message: '请输入登录名', trigger: 'blur' }],
+        myPassword: [{ validator: validatePass, trigger: 'blur' }]
       }
     }
   },
@@ -84,10 +90,16 @@ export default {
       this.form.myName = this.$route.query.data.name || ''
       this.form.myPassword = this.$route.query.data.pwd || ''
     }
+    this._getRegUserList()
   },
   methods: {
-    submitForm (formName) {
-      this.$refs[formName].validate((valid) => {
+    myNameBlur() {
+      if (this.regUserList.findIndex(val => val.name === this.form.myName) > 0) {
+        this.showBindRealName = true
+      }
+    },
+    submitForm(formName) {
+      this.$refs[formName].validate(valid => {
         if (valid) {
           this.login()
         } else {
@@ -95,10 +107,12 @@ export default {
         }
       })
     },
-    login () {
+    login() {
       let params = {
         username: this.form.myName,
-        password: this.form.myPassword
+        password: this.form.myPassword,
+        bind_name: this.form.realName,
+        bind_pwd: this.form.realPassword
       }
       axios
         .post(serverUrl + '/User.do?login', params)
@@ -131,6 +145,13 @@ export default {
           })
           console.error(err)
         })
+    },
+    _getRegUserList() {
+      axios.get(serverUrl + '/User.do?getVirtualList').then(res => {
+        if (res.data.success) {
+          this.regUserList = res.data.data
+        }
+      })
     }
   }
 }

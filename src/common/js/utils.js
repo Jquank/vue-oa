@@ -52,8 +52,7 @@ export function rowSpan (id, row, cols, standardCol) {
   var value = ''
   var pos = 1
   for (var i = row; i < tb.rows.length; i++) {
-    console.log(i)
-    value = tb.rows[i].cells[standardCol].innerHTML
+    value = tb.rows[i].cells[standardCol].children[0].innerHTML
     if (value !== '' && value !== '\t' && value !== '\n' && value !== '\r') {
       if (lastValue == value) { // eslint-disable-line
         var colsbak = cols.slice(0)

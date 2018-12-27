@@ -3,6 +3,7 @@
     <div class="wrapper">
       <div class="tree-content mr10px">
         <el-tree
+          highlight-current
           :data="departmentList"
           :props="depProps"
           @node-click="nodeClick"
@@ -227,6 +228,9 @@ export default {
       display: -webkit-box;
       max-height: 650px;
       overflow: auto;
+      .el-tree{
+        background: #EBEEF5;
+      }
       .custom-tree-node {
         display: flex;
         flex: 1;

@@ -38,7 +38,7 @@
       </div>
 
       <!-- 列表 -->
-      <el-table @selection-change="handleSelectionChange" stripe border :data="myCusList" max-height="600" style="width: 100%">
+      <el-table :key="myKind" @selection-change="handleSelectionChange" stripe border :data="myCusList" max-height="600" style="width: 100%">
         <el-table-column fixed type="selection" width="40">
         </el-table-column>
         <el-table-column prop="companyname" label="客户名称" min-width="220">
@@ -447,6 +447,7 @@ export default {
     },
     updateMyCusList (data) {
       this.myCusList = data.data[0].data
+      console.log(this.myCusList)
     }
   },
   components: {
