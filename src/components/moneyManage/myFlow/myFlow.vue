@@ -49,13 +49,44 @@
           <el-button :type="scope.row.bsaStatus===0?'success':'info'" plain class="xsbtn">{{scope.row.bsaStatus!== 0?'已使用':'未使用'}}</el-button>
         </template>
       </el-table-column>
-      <el-table-column label="操作" prop="" width="90" align="center">
+      <el-table-column label="操作" prop="" width="120" align="center">
         <template slot-scope="scope">
-          <el-button  v-if="permissions.indexOf('6r')>-1&&scope.row.bsaStatus===0" @click.native.prevent="goBack(scope.row)" type="warning" class="xsbtn">退回</el-button>
+          <el-button @click.native.prevent="split(scope.row)" type="warning" class="xsbtn">拆分</el-button>
+          <el-button v-if="permissions.indexOf('6r')>-1&&scope.row.bsaStatus===0" @click.native.prevent="goBack(scope.row)" type="danger" class="xsbtn">退回</el-button>
         </template>
       </el-table-column>
     </el-table>
     <page class="page" :url="url" :sendParams="sendParams" @updateList="updateFlowList"></page>
+
+    <!-- 拆账弹窗 -->
+    <el-dialog :modal-append-to-body="false" :visible.sync="splitDialog" title="拆账" width="500px">
+      <el-form :model="splitForm" label-position="left" label-width="140px" class="weight-label">
+        <el-form-item label="总金额 :">
+          <span>{{splitForm.totalMoney | currency1}}</span>
+        </el-form-item>
+        <el-form-item label="已拆账金额 :">
+          <span>{{splitedMoney | currency1}}</span>
+        </el-form-item>
+        <el-form-item label="剩余可拆账金额 :">
+          <span>{{restMoney | currency1}}</span>
+        </el-form-item>
+        <div :key="index" class="mt10px" v-for="(item,index) in splitForm.splitItem">
+          <el-input class="contact-phone" v-model="item.money"></el-input>
+          <el-button
+            :icon="index===0?'fa fa-plus':'fa fa-minus'"
+            :type="index===0?'success':'danger'"
+            @click.native.prevent="addContact(index)"
+            circle
+            class="circle-btn"
+            size="mini"
+          ></el-button>
+        </div>
+        <div class="text-center mt10px">
+          <el-button @click.native.prevent="clearSplit" type="warning">清除</el-button>
+          <el-button @click.native.prevent="confirmSplit" type="primary">确认</el-button>
+        </div>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
@@ -74,10 +105,86 @@ export default {
       key_dept: '',
       myFlowList: [],
       url: '/receipt.do?bankReceiveMine',
-      sendParams: {}
+      sendParams: {},
+
+      splitDialog: false,
+      splitForm: {
+        totalMoney: 0,
+        splitItem: [{ money: 0 }]
+      }
+    }
+  },
+  computed: {
+    // 已拆账金额
+    splitedMoney() {
+      let sum = 0
+      this.splitForm.splitItem.forEach(val => {
+        sum += parseFloat(val.money || 0)
+      })
+      return sum
+    },
+    // 剩余可拆账金额
+    restMoney() {
+      return (
+        parseFloat(this.splitForm.totalMoney) - parseFloat(this.splitedMoney)
+      )
     }
   },
   methods: {
+    split(data) {
+      this.rowData = data
+      this.splitForm.totalMoney = data.split_amount
+      this.splitDialog = true
+    },
+    addContact(index) {
+      if (index === 0) {
+        this.splitForm.splitItem.push({
+          money: 0
+        })
+      } else {
+        this.splitForm.splitItem.splice(index, 1)
+      }
+    },
+    confirmSplit() {
+      let hasZero = this.splitForm.splitItem.some(val => {
+        return val.money == 0 // eslint-disable-line
+      })
+      if (hasZero) {
+        this.$message({
+          type: 'warning',
+          message: '拆账金额不能为0！'
+        })
+        return
+      }
+      if (this.restMoney !== 0) {
+        this.$message({
+          type: 'warning',
+          message: '拆账金额不符，请重新拆账'
+        })
+        return
+      }
+      let arr = []
+      this.splitForm.splitItem.forEach(val => {
+        arr.push(val.money)
+      })
+      let params = {
+        brId: this.rowData.id,
+        moneyArr: arr
+      }
+      this.$post('/receipt.do?bankReceiveChai', params).then(res => {
+        if (res.data.data) {
+          this.$message({
+            type: 'success',
+            message: '拆账成功'
+          })
+        }
+        this.splitDialog = false
+        this.search()
+      })
+    },
+    clearSplit() {
+      this.splitForm.splitItem = [{ money: 0 }]
+    },
     exportFlow () {
       this.$export('/receipt.do?exportBankReceiveMine', this.sendParams)
     },

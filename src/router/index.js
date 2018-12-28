@@ -430,7 +430,7 @@ const ProcessClassify = (resolve) => {
 }
 import Test from 'components/login/test'
 
-// import store from '../store'
+import store from '../store'
 import cookie from 'js-cookie'
 Vue.use(Router)
 
@@ -1056,14 +1056,66 @@ const router = new Router({
           ]
         },
         {
+          path: 'productManage?menu=no',
+          name: 'productManage1',
+          meta: { text: '产品管理' },
+          component: ProductManage,
+          children: [
+            {
+              path: 'add',
+              meta: { text: '产品管理/新增' },
+              component: TextEditor
+            },
+            {
+              path: 'edit',
+              meta: { text: '产品管理/编辑' },
+              component: TextEditor
+            },
+            {
+              path: 'view',
+              meta: { text: '产品管理/详情' },
+              component: ViewProduct
+            }
+          ]
+        },
+        {
           path: 'productShow',
           name: 'productShow',
           meta: { text: '产品分类' },
           component: ProductShow
         },
         {
+          path: 'productShow?menu=no',
+          name: 'productShow1',
+          meta: { text: '产品分类' },
+          component: ProductShow
+        },
+        {
           path: 'addClassify',
           name: 'addClassify',
+          meta: { text: '产品查询' },
+          component: AddClassify,
+          children: [
+            {
+              path: 'add',
+              meta: { text: '产品查询/新增' },
+              component: TextEditor
+            },
+            {
+              path: 'edit',
+              meta: { text: '产品查询/编辑' },
+              component: TextEditor
+            },
+            {
+              path: 'view/:id',
+              meta: { text: '产品查询/详情' },
+              component: ViewProduct
+            }
+          ]
+        },
+        {
+          path: 'addClassify?menu=no',
+          name: 'addClassify1',
           meta: { text: '产品查询' },
           component: AddClassify,
           children: [
@@ -1109,14 +1161,66 @@ const router = new Router({
           ]
         },
         {
+          path: 'processManage?menu=no',
+          name: 'processManage1',
+          meta: { text: '流程管理' },
+          component: ProcessManage,
+          children: [
+            {
+              path: 'add',
+              meta: { text: '流程管理/新增' },
+              component: TextEditor
+            },
+            {
+              path: 'edit',
+              meta: { text: '流程管理/编辑' },
+              component: TextEditor
+            },
+            {
+              path: 'view',
+              meta: { text: '流程管理/详情' },
+              component: ViewProduct
+            }
+          ]
+        },
+        {
           path: 'processShow',
           name: 'processShow',
           meta: { text: '流程分类' },
           component: ProcessShow
         },
         {
+          path: 'processShow?menu=no',
+          name: 'processShow1',
+          meta: { text: '流程分类' },
+          component: ProcessShow
+        },
+        {
           path: 'processClassify',
           name: 'processClassify',
+          meta: { text: '流程归类' },
+          component: ProcessClassify,
+          children: [
+            {
+              path: 'add',
+              meta: { text: '流程归类/新增' },
+              component: TextEditor
+            },
+            {
+              path: 'edit',
+              meta: { text: '流程归类/编辑' },
+              component: TextEditor
+            },
+            {
+              path: 'view/:id',
+              meta: { text: '流程归类/详情' },
+              component: ViewProduct
+            }
+          ]
+        },
+        {
+          path: 'processClassify?menu=no',
+          name: 'processClassify1',
           meta: { text: '流程归类' },
           component: ProcessClassify,
           children: [
@@ -1157,9 +1261,8 @@ const router = new Router({
 import Progress from 'nprogress' //进度条
 Progress.configure({ showSpinner: false })
 router.beforeEach((to, from, next) => {
+  // const isLogin = cookie.get('token', { domain: 'bg.baijiegroup.com', path: '/BaiJieOA' })
   const isLogin = cookie.get('token')
-  // todo
-  // const isLogin = true
   if (to.name !== 'login') {
     if (!isLogin) {
       next({

@@ -25,10 +25,10 @@
                 ></el-input>
               </el-form-item>
               <template v-if="showBindRealName">
-                <el-form-item prop="myName">
+                <el-form-item prop="realName">
                   <el-input v-model="form.realName" size="medium" placeholder=" 绑定真实账号" prefix-icon="fa fa-user"></el-input>
                 </el-form-item>
-                <el-form-item prop="myPassword">
+                <el-form-item prop="realPassword">
                   <el-input
                     @keyup.native.enter="login"
                     v-model="form.realPassword"
@@ -81,7 +81,9 @@ export default {
       regUserList: [],
       rules: {
         myName: [{ required: true, message: '请输入登录名', trigger: 'blur' }],
-        myPassword: [{ validator: validatePass, trigger: 'blur' }]
+        myPassword: [{ validator: validatePass, trigger: 'blur' }],
+        realName: [{ required: true, message: '请输入登录名', trigger: 'blur' }],
+        realPassword: [{ validator: validatePass, trigger: 'blur' }]
       }
     }
   },
@@ -90,6 +92,9 @@ export default {
       this.form.myName = this.$route.query.data.name || ''
       this.form.myPassword = this.$route.query.data.pwd || ''
     }
+
+    console.log(cookie.get(), 159)
+
     this._getRegUserList()
   },
   methods: {
@@ -118,14 +123,12 @@ export default {
         .post(serverUrl + '/User.do?login', params)
         .then(res => {
           if (res.data.success) {
-            console.log(res.data.data)
             let permissions = res.data.data.permissions
             permissions = permissions.split(',')
             cookie.set('permissions', permissions)
             cookie.set('token', res.data.data.tk)
             cookie.set('rid', res.data.data.rid)
             cookie.set('userId', res.data.data.id)
-            cookie.set('userName', res.data.data.name)
             cookie.set('allowBar', res.data.data.dept)
             getByCode(52).then(res => {
               storage.set('x52', res)

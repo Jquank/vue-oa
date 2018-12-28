@@ -55,11 +55,16 @@ export default {
       this.$post('/wf.do?ndget', params).then(res => {
         if (res.data.success === true) {
           this.editData = JSON.parse(res.data.data[0][0].from_val)
-          console.log(this.editData)
           let orderInfo = res.data.data[1]
-          let productInfo = res.data.data[4][0]
+          console.log(this.editData)
+          let productInfo = {}
+          if (res.data.data[4]) {
+            productInfo = res.data.data[4][0]
+          }
           this.editData.productInfo = productInfo
           this.editData.pid = this.pid
+          this.editData.finalSite = orderInfo.final_site
+          this.editData.checkType = orderInfo.check_type
           this.editData.order_id = orderInfo.id
           this.editData.remark = orderInfo.remark
           this.editData.wjType = orderInfo.websitetype

@@ -8,7 +8,7 @@ import {
 } from 'element-ui'
 // 打包用地址
 export const uploadUrl = '/upload/c'
-export const serverUrl = '/BaiJieOA2'
+export const serverUrl = '/BaiJieOA'
 
 // export const uploadUrl = 'http://172.16.11.84:8080/upload/c'
 // export const serverUrl = 'http://172.16.11.84:8080/BaiJieOA'

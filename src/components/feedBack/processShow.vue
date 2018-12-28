@@ -61,7 +61,7 @@ export default {
     justify-content: center;
     div {
       max-width: 100%;
-      max-height: 600px;
+      // max-height: 600px;
       overflow: auto;
     }
   }

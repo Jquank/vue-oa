@@ -71,10 +71,7 @@
           <el-col :md="24" class="maxwidth">
             <el-form-item label="落地页:" required>
               <el-checkbox-group v-model="finalSite">
-                <el-checkbox label="10">团单</el-checkbox>
-                <el-checkbox label="20">旺铺</el-checkbox>
-                <el-checkbox label="30">官网</el-checkbox>
-                <el-checkbox label="40">本地FEED</el-checkbox>
+                <el-checkbox v-for="item in finalSiteList" :key="item.id" :label="item.code_val+''">{{item.code_desc}}</el-checkbox>
               </el-checkbox-group>
             </el-form-item>
           </el-col>
@@ -243,7 +240,7 @@
           <el-col :md="24" class="maxwidth">
             <el-form-item label="">
               <el-row style="text-align:right;">
-                <el-button type="warning" @click.native="subOrder('0')">仅降E</el-button>
+                <!-- <el-button type="warning" @click.native="subOrder('0')">仅降E</el-button> -->
                 <el-button type="primary" @click.native="subOrder('10')">降E并提单</el-button>
               </el-row>
             </el-form-item>
@@ -280,7 +277,7 @@
 // import { mapGetters } from 'vuex'
 import { uploadUrl } from 'api/http' //eslint-disable-line
 import Page from 'base/page/page'
-// import { getByCode } from 'api/getOptions'
+import { getByCode } from 'api/getOptions'
 import cookie from 'js-cookie'
 import { orderMixin, mobileFit } from 'common/js/mixin'
 import ShowQualify from 'base/showQualify/showQualify'
@@ -380,7 +377,8 @@ export default {
       rowData: {}, // 资质表格一行的数据
       selectedQualify: {},
       viewer: null,
-      finalSite: []
+      finalSite: [],
+      finalSiteList: []
     }
   },
   computed: {
@@ -403,6 +401,7 @@ export default {
         this.showQualify_add = this.showQualify
         this.qualifyUploaded_add = JSON.parse(JSON.stringify(this.showQualify_add))
         this.form.cName = newval.cusName
+        this.form.checkType = newval.checkType + ''
         this.form.pcWeb = newval.pcsite
         this.form.cusAddress = newval.addr
         this.form.cusType = newval.cusType + ''
@@ -419,7 +418,8 @@ export default {
         this.form.zizhiList = [] // 清空默认资质列表
         this.form.record = newval.record
         this.record_detail = newval.recordDetail
-        this.finalSite = newval.finalSite
+        this.finalSite = newval.finalSite ? newval.finalSite.toString().split(',') : []
+        console.log(this.finalSite)
         // 更改contactList中对象的key
         this.form.contactList = JSON.parse(JSON.stringify(newval.contacts))
         let keyMap = {
@@ -442,6 +442,8 @@ export default {
   },
   created () {
     this._labelWidth(50) // 移动端labelWidth 50px
+    this.finalSiteList = this._getFinalSiteList()
+    console.log(this.finalSiteList)
   },
   mounted () {
     this._getMyContract(
@@ -487,8 +489,7 @@ export default {
         addr: this.form.cusAddress,
         contacts: this.form.contactList,
         order_status: '',
-        user_name: this.companyData.username || this.editData.user_name, // 下单人
-        finalSite: this.finalSite
+        user_name: this.companyData.username || this.editData.user_name // 下单人
       }
       let params = {
         cpid: this.cpid || this.editData.rowData.cpid,
@@ -534,7 +535,8 @@ export default {
         collectBank: this.form.collectBank,
         collectName: this.form.collectName,
         store_type: this.form.storeType, // 门店类型
-        check_type: this.form.checkType // 验证类型
+        check_type: this.form.checkType, // 验证类型
+        finalSite: this.finalSite.toString()
       }
       console.log(params)
       if (this.finalSite.every(val => !val)) {
@@ -629,6 +631,13 @@ export default {
     getQualifyList (newArr, delArr) { // 获取删除的资质
       this.deledQualify = this.deledQualify.concat(delArr)
       this.qualifyUploaded_add = this.qualifyUploaded_add.filter(val => val.val !== delArr[0].val)
+    },
+    _getFinalSiteList() {
+      getByCode(87).then(res => {
+        if (res.data.success) {
+          this.finalSiteList = res.data.data
+        }
+      })
     },
     // 获取联系人信息
     _getContactName () {

@@ -179,16 +179,40 @@
                   </div>
                   <div class="mt10px row-container">
                     <div>
-                      <b>门店类型：</b>
-                      <span>{{orderInfo.store_type?'单门店':'多门店'}}</span>
+                      <b>落地页：</b>
+                      <span>{{orderInfo.final_site}}</span>
                     </div>
+                  </div>
+                  <div class="mt10px row-container">
+                    <div>
+                      <b>门店类型：</b>
+                      <span>{{orderInfo.store_type==10?'单门店':'多门店'}}</span>
+                    </div>
+                  </div>
+                  <div class="mt10px row-container" v-show="orderInfo.store_type==10">
+                    <b>对公信息 ：</b>
                     <div>
                       <b>收款账号：</b>
                       <span>{{orderInfo.receiveaccount}}</span>
                     </div>
                     <div>
-                      <b>收款账号开户行：</b>
+                      <b>开户行：</b>
                       <span>{{orderInfo.receivebank}}</span>
+                    </div>
+                  </div>
+                  <div class="mt10px row-container" v-show="orderInfo.store_type==20">
+                    <b>收款信息 ：</b>
+                    <div>
+                      <b>收款人：</b>
+                      <span>{{orderInfo.collect_name}}</span>
+                    </div>
+                    <div>
+                      <b>收款账号：</b>
+                      <span>{{orderInfo.collect_account}}</span>
+                    </div>
+                    <div>
+                      <b>开户行：</b>
+                      <span>{{orderInfo.collect_bank}}</span>
                     </div>
                   </div>
                 </div>
@@ -196,7 +220,7 @@
                   <div class="row-container">
                     <div>
                       <b>验证方式：</b>
-                      <span>{{orderInfo.check_type == 10? '对公账号':'人脸识别'}}</span>
+                      <span>{{orderInfo.check_type == 10?'对公验证':orderInfo.check_type == 20?'法人认证':'实地认证+法人认证'}}</span>
                     </div>
                   </div>
                 </div>
@@ -2069,6 +2093,21 @@ export default {
           this.contactInfoList = res.data.data[7]
           this.orderInfo = res.data.data[1]
           this.orderInfo.applytime = ''
+          if (this.orderInfo.final_site) {
+            getByCode(87).then(res => {
+              if (res.data.success) {
+                let data = res.data.data
+                let arr = this.orderInfo.final_site.split(',')
+                let str = ''
+                data.forEach(val => {
+                  if (arr.indexOf(val.code_val + '') > -1) {
+                    str += val.code_desc + ','
+                  }
+                })
+                this.orderInfo.final_site = str
+              }
+            })
+          }
           this.productInfo = res.data.data[4]
           if (this.productInfo[0] && this.productInfo[0].column) {
             this.productInfo[0].column = JSON.parse(this.productInfo[0].column)
