@@ -428,7 +428,7 @@ const ProcessClassify = (resolve) => {
     resolve(module)
   })
 }
-import Test from 'components/login/test'
+// import Test from 'components/login/test'
 
 import store from '../store'
 import cookie from 'js-cookie'
@@ -436,27 +436,27 @@ Vue.use(Router)
 
 const router = new Router({
   routes: [
-    {
-      path: '/',
-      redirect: '/test'
-    },
-    {
-      path: '*',
-      redirect: '/test'
-    },
-    {
-      path: '/test',
-      name: 'test',
-      component: Test
-    },
     // {
     //   path: '/',
-    //   redirect: '/login'
+    //   redirect: '/test'
     // },
     // {
     //   path: '*',
-    //   redirect: '/login'
+    //   redirect: '/test'
     // },
+    // {
+    //   path: '/test',
+    //   name: 'test',
+    //   component: Test
+    // },
+    {
+      path: '/',
+      redirect: '/login'
+    },
+    {
+      path: '*',
+      redirect: '/login'
+    },
     {
       path: '/login',
       name: 'login',
@@ -1280,14 +1280,14 @@ function routerIntercept(to, from, next, isLogin, progress) {
   }
 }
 
-// import Progress from 'nprogress' //进度条
-// Progress.configure({ showSpinner: false })
-// router.beforeEach((to, from, next) => {
-//   let isLogin = cookie.get('token')
-//   routerIntercept(to, from, next, isLogin, Progress)
-// })
-// router.afterEach((to, from) => {
-//   Progress.done()
-// })
+import Progress from 'nprogress' //进度条
+Progress.configure({ showSpinner: false })
+router.beforeEach((to, from, next) => {
+  let isLogin = cookie.get('token')
+  routerIntercept(to, from, next, isLogin, Progress)
+})
+router.afterEach((to, from) => {
+  Progress.done()
+})
 
 export default router
