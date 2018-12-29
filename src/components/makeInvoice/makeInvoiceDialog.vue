@@ -450,7 +450,7 @@ export default {
   },
   methods: {
     getFileUrl (res) {
-      this.fileUrl = res.url
+      this.fileUrl = res.response.url
     },
     // 下载垫款证明模板
     exportBankFlow () {

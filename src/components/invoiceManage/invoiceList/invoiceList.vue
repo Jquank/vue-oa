@@ -1,9 +1,9 @@
 <template>
   <div class="incoice-list-component component-container media-padding">
     <div class="visit-search mt-10px">
-      <up-file v-if="permissions.indexOf('53') > -1 && (mark==='list' || mark==='handled')" :title="'导入'" :upIcon="'fa fa-cloud-download'" :uploadUrl="serverUrl+'/Invoice.do?import'"  :isHiddenFileList="true" :otherParams="{'code': '50', 'tk': tk}" class="visit-item"></up-file>
+      <up-file v-if="(permissions.indexOf('53') > -1 && (mark==='list' || mark==='handled'))||(permissions.indexOf('7i')>-1&&mark==='send')" :title="'导入'" :upIcon="'fa fa-cloud-download'" :uploadUrl="'/Invoice.do?import'"  :isHiddenFileList="true" :otherParams="{'code': mark==='send'?'75' :'50', 'tk': tk}" class="visit-item"></up-file>
       <el-button @click.native="exportExcellHandled" v-if="mark==='handled'" icon="fa fa-cloud-upload" type="info" class="visit-item"> 导出Excell</el-button>
-      <el-button @click.native="exportExcellSend" v-if="permissions.indexOf('7c') > -1 && mark==='list'" type="warning" icon="fa fa-cloud-upload" class="visit-item"> 寄发票导出Excell</el-button>
+      <el-button @click.native="exportExcellSend" v-if="permissions.indexOf('7i') > -1 && mark==='send'" type="warning" icon="fa fa-cloud-upload" class="visit-item"> 寄发票导出Excell</el-button>
 
       <el-button @click.native="exportTxt" v-if="permissions.indexOf('50') > -1 && mark==='pending'" type="primary" class="visit-item" icon="fa fa-cloud-upload"> 导出txt</el-button>
       <el-button @click.native="exportExcell" v-if="permissions.indexOf('51') > -1 && mark==='pending'" type="warning"  icon="fa fa-cloud-upload" class="visit-item"> 导出Excell</el-button>
@@ -61,7 +61,7 @@
 
     <!-- 已处理和邮寄发票列表 -->
     <div v-if="mark==='send' || (mark==='handled'&&permissions.indexOf('7c') > -1)">
-      <el-table stripe border :data="invoiceList" max-height="550" class="table-width">
+      <el-table stripe border :data="invoiceList" max-height="550" class="table-width"  id="invoice-list-table1">
         <el-table-column prop="tnumber" label="销售单据编号" width="110">
         </el-table-column>
         <el-table-column prop="ttype" label="发票种类" width="80">
@@ -98,6 +98,17 @@
         </el-table-column>
         <el-table-column prop="tphone" label="收件人手机" width="110">
         </el-table-column>
+        <template v-if="mark==='send'">
+          <el-table-column prop="email" label="email" width="100">
+          </el-table-column>
+          <el-table-column prop="express_no" label="快递单号" width="100">
+          </el-table-column>
+          <el-table-column prop="express_tiem" label="快递时间" width="100">
+            <span slot-scope="scope">{{scope.row.express_time | timeFormat}}</span>
+          </el-table-column>
+          <el-table-column prop="express_remark" label="快递备注" width="110">
+          </el-table-column>
+        </template>
         <el-table-column prop="" label="操作" width="150" align="center">
           <template slot-scope="scope">
             <div v-if="mark==='handled'">
@@ -413,7 +424,7 @@ export default {
         applyuser: this.applyName,
         baiduAccount: this.bdAccount,
         advance: this.aheadInvoice,
-        hasinvoice: this.mark === 'send' ? '20' : this.invoiceState,
+        hasinvoice: this.mark === 'pending' ? '0' : this.mark === 'handled' ? '10' : this.mark === 'send' ? '20' : this.invoiceState,
         tnumber: this.num,
         invoicetype: this.invoiceType,
         starttime: this.applyDate[0],
@@ -709,7 +720,7 @@ export default {
       }, initObj)
       console.log(sumObj)
       this.invoiceList.push(sumObj)
-      if (this.mark === 'list' || this.mark === 'pending' || this.mark === 'handled') {
+      if (this.mark === 'list' || this.mark === 'pending' || this.mark === 'handled' || this.mark === 'send') {
         this._getRowSpan()
       }
     },
@@ -718,16 +729,19 @@ export default {
     },
     // 待开导出
     exportTxt () {
+      let ids = this.multipleSelection.map(val => val.invoiceid)
       let obj = {
-        invoiceIds: this.multipleSelection.toString()
+        invoiceIds: ids.toString()
       }
       this.$export('/Invoice.do?export', this.params[this.mark + 'Params'], obj)
     },
     exportExcell () {
+      let ids = this.multipleSelection.map(val => val.invoiceid)
       let obj = {
-        invoiceIds: this.multipleSelection.toString(),
+        invoiceIds: ids.toString(),
         hasinvoice: 0
       }
+      console.log(obj)
       this.$export('/Invoice.do?exportexcel', this.params[this.mark + 'Params'], obj)
     },
     // 已开导出
@@ -738,40 +752,55 @@ export default {
       }
       this.$export('/Invoice.do?exportexcel', this.params[this.mark + 'Params'], obj)
     },
+    // 邮寄导出
     exportExcellSend () {
       let obj = {
-        code: 72
+        code: 77
       }
       this.$export('/Invoice.do?exportexcel', this.params[this.mark + 'Params'], obj)
     },
     // 多对多，合并行
     _getRowSpan () {
       this.$nextTick(() => {
+        let table1 = document.querySelector(
+          '#invoice-list-table1 .el-table__body-wrapper table.el-table__body'
+        )
+        if (table1) {
+          table1.setAttribute('id', 'tb')
+          if (this.mark === 'send') {
+            rowSpan('tb', 0, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], 0)
+          } else {
+            rowSpan('tb', 0, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], 0)
+          }
+        }
+
         let table = document.querySelector(
           '#invoice-list-table .el-table__body-wrapper table.el-table__body'
         )
-        table.setAttribute('id', 'tb')
-        // let fixedRightTable = document.querySelector(
-        //   '#invoice-list-table .el-table__fixed-right .el-table__fixed-body-wrapper table.el-table__body'
-        // )
-        // fixedRightTable.setAttribute('id', 'fixedrighttb')
-        // rowSpan('fixedrighttb', 0, [17], 6)
-        if (this.fixed) {
-          let fixedTable = document.querySelector(
-            '#invoice-list-table .el-table__fixed .el-table__fixed-body-wrapper table.el-table__body'
-          )
-          fixedTable.setAttribute('id', 'fixedtb')
-          rowSpan('tb', 0, [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], 7)
-          rowSpan('fixedtb', 0, [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], 7)
-          setTimeout(() => {
-            rowSpan('tb', 0, [0, 1, 2, 3, 4, 5], 5)
-            rowSpan('fixedtb', 0, [0, 1, 2, 3, 4, 5], 5)
-          }, 800)
-        } else {
-          rowSpan('tb', 0, [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], 7)
-          setTimeout(() => {
-            rowSpan('tb', 0, [0, 1, 2, 3, 4, 5], 5)
-          }, 800)
+        if (table) {
+          table.setAttribute('id', 'tb')
+          // let fixedRightTable = document.querySelector(
+          //   '#invoice-list-table .el-table__fixed-right .el-table__fixed-body-wrapper table.el-table__body'
+          // )
+          // fixedRightTable.setAttribute('id', 'fixedrighttb')
+          // rowSpan('fixedrighttb', 0, [17], 6)
+          if (this.fixed) {
+            let fixedTable = document.querySelector(
+              '#invoice-list-table .el-table__fixed .el-table__fixed-body-wrapper table.el-table__body'
+            )
+            fixedTable.setAttribute('id', 'fixedtb')
+            rowSpan('tb', 0, [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], 7)
+            rowSpan('fixedtb', 0, [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], 7)
+            setTimeout(() => {
+              rowSpan('tb', 0, [0, 1, 2, 3, 4, 5], 5)
+              rowSpan('fixedtb', 0, [0, 1, 2, 3, 4, 5], 5)
+            }, 800)
+          } else {
+            rowSpan('tb', 0, [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], 7)
+            setTimeout(() => {
+              rowSpan('tb', 0, [0, 1, 2, 3, 4, 5], 5)
+            }, 800)
+          }
         }
       })
     }

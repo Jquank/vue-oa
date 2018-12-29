@@ -7,11 +7,11 @@ import {
   Message
 } from 'element-ui'
 // 打包用地址
-export const uploadUrl = '/upload/c'
-export const serverUrl = '/BaiJieOA'
+// export const uploadUrl = '/upload/c'
+// export const serverUrl = '/BaiJieOA'
 
-// export const uploadUrl = 'http://172.16.11.84:8080/upload/c'
-// export const serverUrl = 'http://172.16.11.84:8080/BaiJieOA'
+export const uploadUrl = 'http://172.16.11.84:8080/upload/c'
+export const serverUrl = 'http://172.16.11.84:8080/BaiJieOA'
 // export const serverUrl = 'http://bg.baijiegroup.com/BaiJieOA'
 const instance = axios.create({
   baseURL: serverUrl,
@@ -126,5 +126,6 @@ export function $export (url, params = {}, otherParams = {}) {
   let isQuestionMark = url.indexOf('?') > -1
   let mark = isQuestionMark ? '&' : '?'
   params = Object.assign({}, params, otherParams)
+  console.log(qs.stringify(params))
   window.location = serverUrl + url + mark + qs.stringify(params) + '&tk=' + tk
 }

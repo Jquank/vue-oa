@@ -51,7 +51,7 @@
       </el-table-column>
       <el-table-column label="操作" prop="" width="120" align="center">
         <template slot-scope="scope">
-          <el-button @click.native.prevent="split(scope.row)" type="warning" class="xsbtn">拆分</el-button>
+          <el-button v-if="permissions.indexOf('8q')>-1&&scope.row.bsaStatus<10"  @click.native.prevent="split(scope.row)" type="warning" class="xsbtn">拆分</el-button>
           <el-button v-if="permissions.indexOf('6r')>-1&&scope.row.bsaStatus===0" @click.native.prevent="goBack(scope.row)" type="danger" class="xsbtn">退回</el-button>
         </template>
       </el-table-column>

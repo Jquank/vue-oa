@@ -29,7 +29,7 @@ import cookie from 'js-cookie'
 export default {
   data () {
     return {
-      permissions: cookie.getJSON('permissions'),
+      permissions: cookie.getJSON('permissions') || [],
       navList: navList,
       myCollapse: false
     }
@@ -48,6 +48,18 @@ export default {
 }
 </script>
 
+<style lang="less">
+  .el-menu-item, .el-submenu__title{
+    height: 45px;
+    line-height: 45px;
+    padding-left: 20px;
+  }
+  .el-submenu .el-menu-item{
+    height: 40px;
+    line-height: 40px;
+  }
+</style>
+
 <style scoped lang="less">
 .control-scroll {
   height: calc(~'(100vh - 50px)');
@@ -64,11 +76,6 @@ export default {
     }
     .el-menu-item.is-active {
       background: #108cee !important;
-    }
-    .el-menu-item, .el-submenu__title{
-      height: 45px;
-      line-height: 45px;
-      padding-left: 20px;
     }
     .item-active {
       background: #121929 !important;

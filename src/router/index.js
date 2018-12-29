@@ -436,27 +436,27 @@ Vue.use(Router)
 
 const router = new Router({
   routes: [
-    // {
-    //   path: '/',
-    //   redirect: '/test'
-    // },
-    // {
-    //   path: '*',
-    //   redirect: '/test'
-    // },
-    // {
-    //   path: '/test',
-    //   name: 'test',
-    //   component: Test
-    // },
     {
       path: '/',
-      redirect: '/login'
+      redirect: '/test'
     },
     {
       path: '*',
-      redirect: '/login'
+      redirect: '/test'
     },
+    {
+      path: '/test',
+      name: 'test',
+      component: Test
+    },
+    // {
+    //   path: '/',
+    //   redirect: '/login'
+    // },
+    // {
+    //   path: '*',
+    //   redirect: '/login'
+    // },
     {
       path: '/login',
       name: 'login',
@@ -1258,18 +1258,9 @@ const router = new Router({
   }
 })
 
-import Progress from 'nprogress' //进度条
-Progress.configure({ showSpinner: false })
-router.beforeEach((to, from, next) => {
-  // const isLogin = cookie.get('token', { domain: 'bg.baijiegroup.com', path: '/BaiJieOA' })
-  const isLogin = cookie.get('token')
+function routerIntercept(to, from, next, isLogin, progress) {
   if (to.name !== 'login') {
-    if (!isLogin) {
-      next({
-        path: '/login'
-      })
-      Progress.done()
-    } else {
+    if (isLogin) {
       if (to.name === from.name) {
         // 防止刷新的时候加载两次组件
         next(false)
@@ -1277,14 +1268,26 @@ router.beforeEach((to, from, next) => {
         Progress.start()
         next()
       }
+    } else {
+      next({
+        path: '/login'
+      })
+      Progress.done()
     }
   } else {
     next()
     Progress.done()
   }
-})
-router.afterEach((to, from) => {
-  Progress.done()
-})
+}
+
+// import Progress from 'nprogress' //进度条
+// Progress.configure({ showSpinner: false })
+// router.beforeEach((to, from, next) => {
+//   let isLogin = cookie.get('token')
+//   routerIntercept(to, from, next, isLogin, Progress)
+// })
+// router.afterEach((to, from) => {
+//   Progress.done()
+// })
 
 export default router

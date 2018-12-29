@@ -293,7 +293,7 @@ export default {
     editData (newval) {
       if (!this.showEditKA) {
         console.log(newval)
-        this.form.contractRemark = newval.remark
+        this.form.contractRemark = newval.con_remark
         this.form.cName = newval.cusName
         this.form.pcWeb = newval.pcsite
         this.form.phoneWeb = newval.wapsite
@@ -364,6 +364,7 @@ export default {
         user_name: this.companyData.username || this.editData.user_name// 下单人
       }
       let params = {
+        edit: this.showEditKA ? '' : 'edit',
         cpid: this.cpid || this.editData.rowData.cpid,
         order_id: this.editData.order_id || '',
         companyid: this.companyData.id || this.editData.rowData.companyid,
@@ -393,7 +394,7 @@ export default {
         voucher: '0', // 代金券
         receiveaccount: '', // 对公账户,
         receivebank: '', // 对公账户开户行
-        remark_order: this.contractRemark
+        con_remark: this.form.contractRemark
       }
       if (!params.companyid || !params.curId || !params.companyaddress) {
         this.$message({

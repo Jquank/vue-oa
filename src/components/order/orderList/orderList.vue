@@ -86,7 +86,7 @@
         border
         :data="orderListData"
         class="table-width"
-        max-height="800"
+        max-height="550"
       >
         <el-table-column prop="ordernum" label="订单ID" min-width="180"></el-table-column>
         <el-table-column prop="cname" label="订单名称" min-width="150"></el-table-column>
@@ -190,7 +190,7 @@
       </el-table>
 
       <!-- 转户出纳列表 -->
-      <el-table v-if="permissions.indexOf('5q') > -1" :data="orderListData" class="table-width" max-height="800">
+      <el-table v-if="permissions.indexOf('5q') > -1" :data="orderListData" class="table-width" max-height="550">
         <el-table-column prop label="加款时间" min-width="100">
           <span slot-scope="scope">{{scope.row.addMoneyTime | timeFormat}}</span>
         </el-table-column>
@@ -221,7 +221,7 @@
       </el-table>
 
       <!-- 客服看到的列表 -->
-      <el-table v-if="permissions.indexOf('6n') > -1" :data="orderListData" class="table-width" max-height="800">
+      <el-table v-if="permissions.indexOf('6n') > -1" :data="orderListData" class="table-width" max-height="550">
         <el-table-column prop="ordernum" label="订单ID" min-width="150"></el-table-column>
         <el-table-column prop="cname" label="订单名称" min-width="150"></el-table-column>
         <el-table-column prop="baiducount" label="用户名" min-width="80"></el-table-column>
@@ -290,7 +290,7 @@
     </el-dialog>
 
     <!-- 选择公司弹窗 -->
-    <el-dialog title="选择公司" :visible.sync="selCompanyDialog" width="650px">
+    <el-dialog title="选择公司" :visible.sync="selCompanyDialog" width="750px">
       <el-input placeholder="请输入公司名进行搜索" v-model="handleCompanyName" @keyup.enter.native="searchCompany($event, 'enter')">
         <el-button @click.native="searchCompany($event)" slot="append" icon="el-icon-search"></el-button>
       </el-input>

@@ -54,10 +54,11 @@ export default {
     }
   },
   created() {
-    let href = window.location.href // 老系统iframe嵌入新页面
-    let str = href.split('menu=')[1]
-    if (str && str.substr(0, 2) === 'no') {
-      this.menushow = false
+    let mark = window.location.href.split('?menu=')[1]
+    let str = ''
+    if (mark) {
+      str = mark.substr(0, 2)
+      this.menushow = str !== 'no'
     }
   },
   mounted () {

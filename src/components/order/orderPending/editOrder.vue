@@ -67,6 +67,7 @@ export default {
           this.editData.checkType = orderInfo.check_type
           this.editData.order_id = orderInfo.id
           this.editData.remark = orderInfo.remark
+          this.editData.con_remark = orderInfo.con_remark
           this.editData.wjType = orderInfo.websitetype
           this.editData.rowData = this.rowData // cpid,orderid,pid,sn,uid 从列表页取，其它从接口取
           this.editData.cusType = orderInfo.custom_type

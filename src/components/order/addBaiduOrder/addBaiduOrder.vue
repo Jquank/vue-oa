@@ -481,6 +481,7 @@ export default {
         user_name: this.companyData.username || this.editData.user_name// 下单人
       }
       let params = {
+        edit: this.showEditBD ? '' : 'edit',
         cpid: this.cpid || this.editData.rowData.cpid,
         order_id: this.editData.order_id || '',
         companyid: this.companyData.id || this.editData.rowData.companyid,
@@ -514,6 +515,13 @@ export default {
         receivebank: this.form.receiveBank // 对公账户开户行
       }
       console.log(params)
+      if (this.qualifyUploaded_add.every(val => val.label !== 'business_license_origin')) {
+        this.$message({
+          type: 'error',
+          message: '请上传企业营业执照！'
+        })
+        return
+      }
       if (!params.companyid || !params.curId || !params.companyaddress) {
         this.$message({
           type: 'error',

@@ -32,7 +32,7 @@
       </div>
     </div>
 
-    <el-table @selection-change="handleSelectionChange" stripe border :data="poolList" class="table-width">
+    <el-table :key="statusRadio" @selection-change="handleSelectionChange" stripe border :data="poolList" class="table-width">
       <el-table-column fixed="left" type="selection" width="40">
         </el-table-column>
       <el-table-column prop="cname" label="客户名称" min-width="220">

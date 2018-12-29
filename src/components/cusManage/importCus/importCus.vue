@@ -22,7 +22,7 @@
       </el-table-column>
       <el-table-column prop="full_name" label="行业">
       </el-table-column>
-      <el-table-column prop="address" label="地址">
+      <el-table-column prop="address" label="地址" min-width="150">
       </el-table-column>
       <el-table-column prop="uploadusername" label="导入人" width="100">
       </el-table-column>

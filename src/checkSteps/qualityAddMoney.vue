@@ -77,7 +77,7 @@
         <template slot-scope="scope">
           <span>{{scope.row.type>100?'':scope.row.type | productType}}</span>
           <span>{{scope.row.type>100?'':':'}}</span>
-          <span>{{scope.row.type>100?'':scope.row.add_money | currency}}</span>
+          <span>{{scope.row.type>100?'':scope.row.add_money | currency1}}</span>
         </template>
       </el-table-column>
     </el-table>

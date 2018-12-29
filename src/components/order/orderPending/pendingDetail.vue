@@ -1014,7 +1014,7 @@
           ></out-quality>
           <!-- 质检外审 -->
           <out-quality
-            v-if="sn===200 && templateInfo.cpid && pid==='BAITUI'"
+            v-if="sn===200 && templateInfo.cpid && (pid==='BAITUI'||pid_ka==='KA')"
             :moneyInfo="moneyInfo"
             :moneyRecord="moneyRecord"
             :orderFlowDatas="orderFlowDatas"
@@ -1332,8 +1332,8 @@
           </el-card>
         </el-tab-pane>
         <!-- 记业绩 -->
-        <el-tab-pane label="记业绩" v-if="permissions.indexOf('4d') > -1">
-          <el-form ref="form" :model="pfForm" :label-width="pfLabelWidth">
+        <el-tab-pane label="记业绩" v-if="mark==='from_orderList'&&permissions.indexOf('4d') > -1">
+          <el-form ref="form" :model="pfForm" :label-width="pfLabelWidth" label-position="top">
             <el-row :gutter="20">
               <el-col :md="12" class="maxwidth">
                 <el-form-item label="新开业绩时间 :">
@@ -1341,7 +1341,6 @@
                     v-model="pfForm.newPFdate"
                     value-format="yyyy/MM/dd HH:mm"
                     type="date"
-                    placeholder="选择入职日期"
                     style="width:100%"
                   ></el-date-picker>
                 </el-form-item>
@@ -1381,8 +1380,50 @@
                 </el-form-item>
               </el-col>
             </el-row>
-            <div>
-              <el-button @click.native="addPFTime" type="primary">保存</el-button>
+            <template v-if="permissions.indexOf('78') > -1">
+            <el-row :gutter="20">
+              <el-col :md="12" class="maxwidth">
+                <el-form-item label="提成单量 :">
+                  <el-input v-model="pfForm.commision_num"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :md="12" class="maxwidth">
+                <el-form-item label="提成合计 :">
+                  <el-input v-model="pfForm.commision_count"></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="20">
+              <el-col :md="12" class="maxwidth">
+                <el-form-item label="发放日期 :">
+                  <el-date-picker
+                    v-model="pfForm.granttime"
+                    value-format="yyyy/MM/dd HH:mm"
+                    type="date"
+                    style="width:100%"
+                  ></el-date-picker>
+                </el-form-item>
+              </el-col>
+              <el-col :md="12" class="maxwidth">
+                <el-form-item label="审核状态 :">
+                  <el-radio-group v-model="pfForm.xinzi_check">
+                    <el-radio label="0">未审核</el-radio>
+                    <el-radio label="10">已审核</el-radio>
+                  </el-radio-group>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="20">
+              <el-col :md="24" class="maxwidth">
+                <el-form-item label="备注 :">
+                  <el-input v-model="pfForm.remark" type="textarea"></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            </template>
+            <div class="text-center">
+              <el-button v-if="permissions.indexOf('77') < 0" @click.native="addPFTime" type="primary">保存</el-button>
+              <el-button v-if="permissions.indexOf('77') > -1" @click.native="salaryCheck" type="primary">薪资审核</el-button>
             </div>
           </el-form>
         </el-tab-pane>
@@ -1605,7 +1646,7 @@
 </template>
 
 <script>
-import { cusStatus } from 'common/js/filters'
+import { cusStatus, timeFormat } from 'common/js/filters'
 import ShowQualify from 'base/showQualify/showQualify'
 import Page from 'base/page/page'
 import cookie from 'js-cookie'
@@ -1814,7 +1855,12 @@ export default {
         openAchievement: '',
         m_openAchievement: '',
         onlineAchievement: '',
-        m_onlineAchievement: ''
+        m_onlineAchievement: '',
+        commision_num: '',
+        commision_count: '',
+        xinzi_check: '0',
+        granttime: '',
+        remark: ''
       },
       pfLabelWidth: '130',
       editQualifyDialog: false,
@@ -2050,12 +2096,29 @@ export default {
         onlinetime: this.pfForm.onlinePFdate,
         onlineAchievement: this.pfForm.onlineAchievement,
         openAchievement: this.pfForm.openAchievement,
-        // m_opentime: this.pfForm.m_newPFdate,
-        // m_onlinetime: this.pfForm.m_onlinePFdate,
         m_onlineAchievement: this.pfForm.m_onlineAchievement,
         m_openAchievement: this.pfForm.m_openAchievement
       }
       this.$post('/wf.do?ordertime', params).then(res => {
+        if (res.data[0].success) {
+          this.$message({
+            type: 'success',
+            message: '修改成功'
+          })
+        }
+      })
+    },
+    salaryCheck() {
+      let params = {
+        orderid: this.receiveData.orderid,
+        cpid: this.orderInfo.cpid,
+        commision_num: this.pfForm.commision_num,
+        commision_count: this.pfForm.commision_count,
+        granttime: this.pfForm.granttime,
+        xinzi_check: this.pfForm.xinzi_check,
+        remark: this.pfForm.remark
+      }
+      this.$post('/wf.do?xinziCheck', params).then(res => {
         if (res.data[0].success) {
           this.$message({
             type: 'success',
@@ -2108,6 +2171,17 @@ export default {
               }
             })
           }
+          this.pfForm.newPFdate = timeFormat(this.orderInfo.opentime)
+          this.pfForm.onlinePFdate = timeFormat(this.orderInfo.onlinetime)
+          this.pfForm.onlineAchievement = this.orderInfo.onlineAchievement
+          this.pfForm.openAchievement = this.orderInfo.openAchievement
+          this.pfForm.m_onlineAchievement = this.orderInfo.m_onlineAchievement
+          this.pfForm.m_openAchievement = this.orderInfo.m_openachievement
+          this.pfForm.commision_num = this.orderInfo.commision_num
+          this.pfForm.commision_count = this.orderInfo.commision_count
+          this.pfForm.xinzi_check = this.orderInfo.xinzi_check + ''
+          this.pfForm.granttime = timeFormat(this.orderInfo.granttime)
+          this.pfForm.remark = this.orderInfo.remark
           this.productInfo = res.data.data[4]
           if (this.productInfo[0] && this.productInfo[0].column) {
             this.productInfo[0].column = JSON.parse(this.productInfo[0].column)
@@ -2198,6 +2272,9 @@ export default {
 }
 .contact-phone {
   width: calc(~'(100% - 30px)');
+}
+.el-form-item__label{
+  padding: 0 !important;
 }
 </style>
 

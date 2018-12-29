@@ -3,7 +3,7 @@
     <div class="wrapper">
       <div class="tree">
         <div class="add-title mb10px">
-          <h3 class="title">产品树结构</h3>
+          <h3 class="title">产品查询</h3>
           <el-button @click.native="addArticleByNode" class="btn" icon="fa fa-plus" type="primary" size="mini">添加文章</el-button>
         </div>
         <div class="tree-content">
@@ -144,6 +144,9 @@ export default {
   created() {
     this._getTreeData()
     this.jumpBaseUrl = window.location.href
+    if (this.jumpBaseUrl.indexOf('?menu=no') > -1) {
+      this.jumpBaseUrl = this.jumpBaseUrl.split('?menu=no')[0].toString()
+    }
   },
   methods: {
     copyUrl(url, e) {

@@ -92,9 +92,6 @@ export default {
       this.form.myName = this.$route.query.data.name || ''
       this.form.myPassword = this.$route.query.data.pwd || ''
     }
-
-    console.log(cookie.get(), 159)
-
     this._getRegUserList()
   },
   methods: {
@@ -129,6 +126,7 @@ export default {
             cookie.set('token', res.data.data.tk)
             cookie.set('rid', res.data.data.rid)
             cookie.set('userId', res.data.data.id)
+            cookie.set('userName', res.data.data.name)
             cookie.set('allowBar', res.data.data.dept)
             getByCode(52).then(res => {
               storage.set('x52', res)

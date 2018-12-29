@@ -61,7 +61,7 @@
       </el-table-column>
       <el-table-column v-if="permissions.indexOf('76') > -1" prop="" label="操作" width="60px" align="center">
         <template slot-scope="scope">
-          <el-button @click.native="edit(scope.row)" type="primary" class="xsbtn">编辑</el-button>
+          <el-button @click.native="edit(scope.row)" type="warning" class="xsbtn">编辑</el-button>
         </template>
       </el-table-column>
     </el-table>
