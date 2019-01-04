@@ -23,7 +23,7 @@
             :otherParams="otherParams"
             :title="'导入'"
             :upIcon="'fa fa-cloud-download'"
-            :uploadUrl="serverUrl + '/salary.do?import' + '&tk=' + tk"
+            :uploadUrl="'/salary.do?import'"
             @fileUrl="search()"
           ></up-file>
           <el-button @click.native="exportExcell" class="ml10px" type="warning" icon="fa fa-cloud-upload">导 出</el-button>

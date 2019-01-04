@@ -63,6 +63,7 @@ export default {
       max-width: 100%;
       // max-height: 600px;
       overflow: auto;
+      padding-bottom: 10px;
     }
   }
 }

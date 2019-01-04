@@ -1,7 +1,5 @@
 <template>
-  <div>
     <invoice-list :mark="'handled'"></invoice-list>
-  </div>
 </template>
 
 <script>
@@ -17,6 +15,3 @@ export default {
   }
 }
 </script>
-
-<style lang="less">
-</style>

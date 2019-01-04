@@ -98,6 +98,9 @@ a {
 div.el-table {
   font-size: 13px;
 }
+.el-table thead {
+  color: #5a5b5e;
+}
 /* 表头背景色 */
 .el-table thead th {
   background: #E2E5EC;
@@ -180,7 +183,7 @@ div.el-dialog__body {
   width: calc((100% - 65px));
 }
 .contact-phone {
-  width: calc((100% - 38px));
+  width: calc((100% - 41px));
 }
 .a-search-number {
   text-decoration: underline;

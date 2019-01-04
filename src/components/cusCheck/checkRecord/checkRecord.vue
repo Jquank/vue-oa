@@ -31,10 +31,14 @@
         </el-table-column>
         <el-table-column prop="productname" label="业务类型" min-width="80">
         </el-table-column>
-        <el-table-column prop="" label="审核状态" width="80px">
+        <el-table-column prop="" label="审核状态" width="80px" align="center">
           <template slot-scope="scope">
-            <el-button :type="scope.row.type ===0 ? 'danger': 'success'" plain class="xsbtn">
-              {{scope.row.type ===0 ?'不通过':scope.row.type ===10?'通过':'全部'}}</el-button>
+            <el-button v-if="scope.row.status ===10" type="danger" plain class="xsbtn">
+              未通过
+            </el-button>
+            <el-button v-if="scope.row.status ===30" type="success" plain class="xsbtn">
+              通过
+            </el-button>
           </template>
         </el-table-column>
       </el-table>

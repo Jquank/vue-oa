@@ -83,9 +83,9 @@ export default {
     }
   },
   mounted () {
-    this._getPayList()
+    // this._getPayList()
     this._getUrl()
-    this._getBackNode(this.sn, this.templateInfo.cpid)
+    // this._getBackNode(this.sn, this.templateInfo.cpid)
   },
   methods: {
   },

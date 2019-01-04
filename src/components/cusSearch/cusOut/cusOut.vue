@@ -1,7 +1,7 @@
 <template>
   <div class="cus-search component-container media-padding">
     <div class="multi-import">
-      <up-file :title="'批量导入'" :upIcon="'fa fa-cloud-download'" :isHiddenFileList="true" :uploadUrl="serverUrl+'/Renew.do?rollOutExcle' + '&tk=' + tk" style="display: inline-block"></up-file>
+      <up-file :title="'批量导入'" :upIcon="'fa fa-cloud-download'" :isHiddenFileList="true" :uploadUrl="'/Renew.do?rollOutExcle'" style="display: inline-block"></up-file>
       <span class="red">(ps:excell表头为“百度用户名”、“转入客服编号”、“SF系统”)</span>
     </div>
     <div class="search">

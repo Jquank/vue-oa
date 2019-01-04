@@ -3,12 +3,12 @@
     <div class="background">
       <div class="top">
         <div class="logo">
-          <img src="../../common/img/main_logo.png">
+          <img src="../../common/img/main_logo1.png">
         </div>
       </div>
       <div class="bottom">
         <div class="cloud">
-          <img src="../../common/img/cloud2.jpg">
+          <img src="../../common/img/cloud3.png">
           <div class="login">
             <el-form :model="form" :rules="rules" ref="ruleForm">
               <el-form-item prop="myName">
@@ -162,7 +162,8 @@ export default {
 .login-page {
   width: 100%;
   height: 100vh;
-  background: #63aeff;
+  // background: #63aeff;
+  background: #FF9791;
   position: fixed;
   top: 0;
   left: 0;

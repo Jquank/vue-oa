@@ -9,6 +9,7 @@
 
 <script>
 import { transTree } from 'common/js/utils'
+import storage from 'good-storage'
 export default {
   props: {
     defaultChecked: { // 默认勾选
@@ -28,7 +29,12 @@ export default {
     }
   },
   created () {
-    this._getDeptList()
+    let deptList = storage.get('deptList')
+    if (deptList) {
+      this.departmentList = deptList
+    } else {
+      this._getDeptList()
+    }
   },
   methods: {
     confirm () {

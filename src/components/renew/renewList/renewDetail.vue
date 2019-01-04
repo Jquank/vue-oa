@@ -925,7 +925,7 @@ export default {
     _getRenewBaseInfo() {
       this.inreParams = {
         reid: this.rowData.id || this.rowData.reid,
-        status: 100
+        status: 300
       }
       this.recordParams = {
         reid: this.rowData.id || this.rowData.reid

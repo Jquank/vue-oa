@@ -322,13 +322,13 @@
     </el-dialog>
 
     <!-- 选择提前发票弹窗 -->
-    <el-dialog :modal-append-to-body="false" title="选择发票" :visible.sync="selInvoiceDialog" width="700px">
+    <el-dialog :modal-append-to-body="false" title="选择发票" :visible.sync="selInvoiceDialog" width="850px">
       <el-table @selection-change="handleInvoiceChange" stripe border :data="invoiceList">
-        <el-table-column type="selection" width="55">
+        <el-table-column type="selection" width="50">
         </el-table-column>
         <el-table-column prop="tnumber" label="单据号码" width="100">
         </el-table-column>
-        <el-table-column prop="companyname" label="购方名称(发票公司名)" min-width="120">
+        <el-table-column prop="companyname" label="购方名称(发票公司名)" min-width="150">
         </el-table-column>
         <el-table-column prop="chargename" label="货物名称" min-width="140">
         </el-table-column>
@@ -630,11 +630,12 @@ export default {
       })
     },
     getFileUrl (res) {
-      this.fileUrl = res.url
+      this.fileUrl = res.response.url
     },
     // 下载垫款证明模板
-    exportBankFlow () {
+    exportBankFlow() {
       let params = {
+        reids: '',
         receiveIds: this.flowIdArr.join(','),
         invoiceIds: this.invoiceIdArr.join(',')
       }
@@ -695,6 +696,7 @@ export default {
     },
     selAheadInvoice () {
       this.selInvoiceDialog = true
+      this.invoiceIdArr = []
       this.selInvoiceParams = {
         comName: this.form.comName
       }

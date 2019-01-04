@@ -124,7 +124,7 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
   .auth{
     .el-dialog__body{
       padding:0 20px 20px;

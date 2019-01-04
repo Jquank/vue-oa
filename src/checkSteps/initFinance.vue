@@ -323,7 +323,8 @@ export default {
       remark: '',
       next_uid: '', // 下一步审核人
       form_val: null,
-      payList: []
+      payList: [],
+      pid_ka: ''
     }
   },
   computed: {
@@ -353,6 +354,9 @@ export default {
     }
   },
   created() {
+    if (this.pid === 'GD' || this.pid === 'PZ' || this.pid === 'KP') {
+      this.pid_ka = 'KA'
+    }
     getByCode(52).then(res => {
       this.productType = res.data.data
     })

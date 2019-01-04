@@ -83,7 +83,7 @@
         </el-table-column>
         <el-table-column label="操作" width="120" align="center">
           <template slot-scope="scope">
-            <el-dropdown trigger="click">
+            <el-dropdown trigger="hover">
               <el-button type="primary" size="mini">
                 操作<i class="el-icon-arrow-down el-icon--right"></i>
               </el-button>

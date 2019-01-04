@@ -43,6 +43,8 @@
       </el-table-column>
       <el-table-column prop="username" label="提交人">
       </el-table-column>
+      <el-table-column prop="auditorname" label="待处理人">
+      </el-table-column>
       <el-table-column prop="" label="操作" width="130px" align="center">
         <template slot-scope="scope">
           <el-button @click.native="check(scope.row)" type="primary" class="xsbtn">审核</el-button>

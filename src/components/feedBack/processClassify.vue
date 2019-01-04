@@ -4,7 +4,7 @@
       <div class="tree">
         <div class="add-title mb10px">
           <h3 class="title">流程归类</h3>
-          <el-button @click.native="addArticleByNode" class="btn" icon="fa fa-plus" type="primary" size="mini">添加文章</el-button>
+          <el-button v-if="permissions.indexOf('8m') > -1" @click.native="addArticleByNode" class="btn" icon="fa fa-plus" type="primary" size="mini">添加文章</el-button>
         </div>
         <div class="tree-content">
           <el-tree
@@ -19,7 +19,7 @@
               <span>{{ node.label }}</span>
               <span class="add-del" :ref="'x'+node.id">
                 <template v-if="permissions.indexOf('8m') > -1">
-                  <el-button type="text" size="mini" @click="() => append(data, node)" class="add">添加下级</el-button>
+                  <el-button type="text" size="mini" @click="() => append(data, node)" class="add">添加</el-button>
                   <el-button type="text" size="mini" @click="() => edit(node, data)" class="edit">编辑</el-button>
                   <el-button v-if="node.key!=='0001'" type="text" size="mini" @click="() => remove(node, data)" class="del">删除</el-button>
                 </template>
@@ -40,8 +40,11 @@
         <div class="flex-table">
           <el-table :data="articleList" max-height="550" border class="mt10px">
             <el-table-column type="index" width="40"></el-table-column>
-            <el-table-column prop="title" label="文章名称" min-width="80"></el-table-column>
-            <el-table-column prop="id" label="链接" show-overflow-tooltip>
+            <el-table-column prop="title" label="文章名称" min-width="80">
+              <span slot-scope="scope" @click="viewArticle(scope.row)" v-if="permissions.indexOf('8m') > -1" class="click-title">{{scope.row.title}}</span>
+            </el-table-column>
+            <template v-if="permissions.indexOf('8m') > -1">
+              <el-table-column prop="id" label="链接" show-overflow-tooltip>
               <template slot-scope="scope">
                 <el-input v-model="scope.row.alink">
                   <el-button
@@ -53,15 +56,13 @@
                 <!-- <a :href="scope.row.alink">123</a> -->
               </template>
             </el-table-column>
-            <el-table-column label="操作" width="140" align="center">
+            <el-table-column label="操作" width="110" align="center">
               <template slot-scope="scope">
-                <el-button @click.native="viewArticle(scope.row)" icon="fa fa-eye" type="success" class="xsbtn"></el-button>
-                <template v-if="permissions.indexOf('8m') > -1">
                   <el-button @click.native="editArticle(scope.row)" icon="fa fa-pencil" type="warning" class="xsbtn"></el-button>
                 <el-button @click.native="delArticle(scope.row)" icon="fa fa-trash-o" type="danger" class="xsbtn"></el-button>
-                </template>
               </template>
             </el-table-column>
+            </template>
           </el-table>
         </div>
       </div>
@@ -307,13 +308,15 @@ export default {
 </script>
 
 <style lang="less">
-.el-tree--highlight-current .el-tree-node.is-current > .el-tree-node__content {
+.add-classify {
+  .el-tree--highlight-current .el-tree-node.is-current > .el-tree-node__content {
   background-color: rgb(182, 206, 230);
 }
 
 .expanded.el-tree-node__expand-icon{
-  color: #67c23a;
+  // color: #67c23a;
   font-size: 15px;
+}
 }
 </style>
 
@@ -345,6 +348,7 @@ export default {
         overflow: auto;
         background: #EBEEF5;
         .el-tree{
+          width: 100%;
           background: #EBEEF5;
         }
         .custom-tree-node {
@@ -393,6 +397,9 @@ export default {
         // flex布局下el-table宽度不能自适应
         position: absolute;
         width: 100%;
+        .click-title{
+          cursor: pointer;
+        }
       }
     }
   }

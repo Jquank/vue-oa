@@ -126,19 +126,24 @@
             </el-col>
           </el-row>
           <el-row :gutter="20">
-            <el-col :md="24">
-              <el-form-item label="提交备注 :" style="max-width:1000px;">
+            <el-col :md="12" class="maxwidth">
+              <el-form-item label="提交备注 :">
                 <span>{{cusDetail.remark}}</span>
               </el-form-item>
             </el-col>
-          </el-row>
-          <el-row :gutter="20">
             <el-col :md="12" class="maxwidth">
               <el-form-item label="提交时间 :">
                 <span>{{cusDetail.insert_time | timeFormat}}</span>
               </el-form-item>
             </el-col>
           </el-row>
+          <!-- <el-row :gutter="20">
+            <el-col :md="12" class="maxwidth">
+              <el-form-item label="提交时间 :">
+                <span>{{cusDetail.insert_time | timeFormat}}</span>
+              </el-form-item>
+            </el-col>
+          </el-row> -->
           <el-row :gutter="20">
             <el-col :md="24" style="max-width:1000px;">
               <el-form-item label="审核被拒原因 :">
@@ -196,13 +201,13 @@
               </el-table-column>
               <el-table-column prop="reason" label="被拒原因" min-width="150">
               </el-table-column>
-              <el-table-column prop="clremark" label="处理备注">
+              <el-table-column prop="clremark" label="处理备注" min-width="180">
               </el-table-column>
             </el-table>
           </el-tab-pane>
           <el-tab-pane label="修改记录" name="2">
             <el-table :data="changeLogs" border stripe style="width: 100%;">
-              <el-table-column prop="name" label="操作人">
+              <el-table-column prop="name" label="操作人" width="120">
               </el-table-column>
               <el-table-column prop="" label="操作时间" width="150">
                 <span slot-scope="scope">{{scope.row.inserttime | timeFormat}}</span>

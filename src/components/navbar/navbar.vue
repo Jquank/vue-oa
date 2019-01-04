@@ -1,7 +1,7 @@
 <template>
   <div class="control-scroll">
     <div ref="navbar" class="nav-bar">
-      <el-menu :collapse="myCollapse" router background-color="#19233C" text-color="#bfcbd9" active-text-color="#fff" :unique-opened="false" :default-active="$router.currentRoute.fullPath">
+      <el-menu :collapse="myCollapse" router background-color="#19233C" text-color="#bfcbd9" active-text-color="#fff" :unique-opened="false" :default-active="$route.path">
         <el-menu-item index="/indexPage/indexContent" class="home-title">
           <i class="fa fa-home fa-fw fa-lg"></i>
           <span slot="title">&nbsp;首页</span>
@@ -25,7 +25,6 @@
 <script>
 import { navList } from '@/api/config'
 import cookie from 'js-cookie'
-// import { addClass, removeClass } from 'common/js/dom'
 export default {
   data () {
     return {
@@ -33,22 +32,15 @@ export default {
       navList: navList,
       myCollapse: false
     }
-  },
-  watch: {
-    $route (to, from) {
-      if (this.$refs[to.path]) {
-        this.$nextTick(() => {
-          // let liActive = document.getElementsByClassName('is-active')[0]
-          // removeClass(liActive, 'is-active')
-          // addClass(this.$refs[to.path][0].$el, 'is-active') // 路由跳转时设置背景色
-        })
-      }
-    }
   }
 }
 </script>
 
 <style lang="less">
+.nav-bar{
+  .el-submenu__title, .home-title{
+      background: @bg-nav !important;
+  }
   .el-menu-item, .el-submenu__title{
     height: 45px;
     line-height: 45px;
@@ -58,9 +50,11 @@ export default {
     height: 40px;
     line-height: 40px;
   }
+}
 </style>
 
 <style scoped lang="less">
+
 .control-scroll {
   height: calc(~'(100vh - 50px)');
   width: 177px;
@@ -73,15 +67,16 @@ export default {
       width: 100%;
       height: 100%;
       border: none;
+      background: @bg-nav !important;
     }
     .el-menu-item.is-active {
-      background: #108cee !important;
+      background: lighten(@bg-nav, 20%) !important;
     }
     .item-active {
-      background: #121929 !important;
+      background: lighten(@bg-nav, 40%) !important;
     }
     .item-active:hover {
-      background: darken(#121929, 20%) !important;
+      background: lighten(@bg-nav, 20%) !important;
     }
   }
 }

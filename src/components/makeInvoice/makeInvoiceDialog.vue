@@ -253,11 +253,12 @@
 
     <!-- 选择合并发票 -->
     <el-dialog
+      v-drag-dialog
       title="选择公司"
       :append-to-body="true"
       :modal-append-to-body="false"
       :visible.sync="mixinInvoiceDialog"
-      width="650px"
+      width="850px"
     >
       <el-table :data="mixinInvoiceList" border stripe class="table-width" @selection-change="handleSelectionChange" max-height="500">
         <el-table-column type="selection" width="45" fixed></el-table-column>
@@ -266,10 +267,10 @@
         <el-table-column prop="receiptmoney" label="金额" width="110">
           <span slot-scope="scope">{{scope.row.receiptmoney | currency}}</span>
         </el-table-column>
-        <el-table-column prop="bill_time" label="记账日期" width="90">
+        <el-table-column prop="bill_time" label="记账日期" width="100">
           <span slot-scope="scope">{{scope.row.bill_time | timeFormat}}</span>
         </el-table-column>
-        <el-table-column prop="insert_time" label="申请时间" width="90">
+        <el-table-column prop="insert_time" label="申请时间" width="100">
           <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
         </el-table-column>
         <el-table-column prop label="商务|客服" width="80">
@@ -277,7 +278,9 @@
             slot-scope="scope"
           >{{scope.row.applyUname+(scope.row.username !== scope.row.ckBdName ? (','+scope.row.ckBdName) : '')}}</span>
         </el-table-column>
-        <el-table-column prop="orderOrRenew" label="订单或续费" width="95"></el-table-column>
+        <el-table-column prop="orderOrRenew" label="订单或续费" width="95">
+          <span slot-scope="scope">{{scope.row.orderOrRenew==='renew'?'续费':'订单'}}</span>
+        </el-table-column>
       </el-table>
       <page
         :simpleLayout="'total, prev, next, jumper'"
@@ -454,9 +457,25 @@ export default {
     },
     // 下载垫款证明模板
     exportBankFlow () {
+      let reids = []
+      reids = this.selectedMixinInvoice.map(val => {
+        if (val.orderOrRenew === 'renew') {
+          return val.fkid
+        } else {
+          return val.curid
+        }
+      })
       let params = {
+        reids: reids.toString(),
         receiveIds: '',
-        invoiceIds: ''
+        invoiceIds: '',
+
+        companyname: this.form.companyname,
+        identinum: this.form.identinum,
+        companyaddr: this.form.companyaddr,
+        companyphone: this.form.companyphone,
+        bank: this.form.bank,
+        account: this.form.account
       }
       this.$export('/Invoice.do?invoiceCushionProof', params)
     },
@@ -464,7 +483,7 @@ export default {
     mixinInvoice() {
       this.mixinInvoiceDialog = true
       this.mixinInvoiceParams = {
-        companyname: this.form.comName
+        companyName: this.form.comName
       }
     },
     confirmSelMixinInvoice() {

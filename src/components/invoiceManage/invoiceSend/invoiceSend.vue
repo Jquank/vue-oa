@@ -1,7 +1,5 @@
 <template>
-  <div>
     <invoice-list :mark="'send'"></invoice-list>
-  </div>
 </template>
 
 <script>

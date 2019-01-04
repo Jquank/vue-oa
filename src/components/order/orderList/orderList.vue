@@ -144,15 +144,17 @@
           <span slot-scope="scope">{{scope.row.opt_time | timeFormat}}</span>
         </el-table-column>
         <el-table-column prop="deptname" label="商务大区部门" min-width="110"></el-table-column>
-        <el-table-column prop label="操作" width="150" align="center">
+        <el-table-column prop label="操作" width="100" align="center">
           <template slot-scope="scope">
-            <el-button type="success" @click.native="viewOrder(scope.row)" class="xsbtn">查看</el-button>
-            <el-dropdown trigger="click">
+            <el-dropdown trigger="hover">
               <el-button type="primary" class="xsbtn">
                 操作
                 <i class="el-icon-arrow-down el-icon--right"></i>
               </el-button>
               <el-dropdown-menu slot="dropdown" class="text-center">
+                <el-dropdown-item>
+                  <el-button type="success" @click.native="viewOrder(scope.row)" class="xsbtn">查看</el-button>
+                </el-dropdown-item>
                 <template v-if="orderKind==500">
                   <el-dropdown-item
                     divided
@@ -190,7 +192,7 @@
       </el-table>
 
       <!-- 转户出纳列表 -->
-      <el-table v-if="permissions.indexOf('5q') > -1" :data="orderListData" class="table-width" max-height="550">
+      <el-table v-if="permissions.indexOf('5q') > -1" :data="orderListData" border stripe class="table-width" max-height="550">
         <el-table-column prop label="加款时间" min-width="100">
           <span slot-scope="scope">{{scope.row.addMoneyTime | timeFormat}}</span>
         </el-table-column>
@@ -221,12 +223,12 @@
       </el-table>
 
       <!-- 客服看到的列表 -->
-      <el-table v-if="permissions.indexOf('6n') > -1" :data="orderListData" class="table-width" max-height="550">
+      <el-table v-if="permissions.indexOf('6n') > -1" :data="orderListData" border stripe class="table-width" max-height="550">
         <el-table-column prop="ordernum" label="订单ID" min-width="150"></el-table-column>
         <el-table-column prop="cname" label="订单名称" min-width="150"></el-table-column>
-        <el-table-column prop="baiducount" label="用户名" min-width="80"></el-table-column>
+        <el-table-column prop="baiducount" label="用户名" width="90"></el-table-column>
         <el-table-column prop="kefu" label="维护客服" min-width="80"></el-table-column>
-        <el-table-column prop="webName" label="网站维护人员" min-width="80"></el-table-column>
+        <el-table-column prop="webName" label="网站维护人员" width="105"></el-table-column>
         <el-table-column prop label="提交时间" min-width="100">
           <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
         </el-table-column>
@@ -243,13 +245,13 @@
             <el-button type="warning" plain class="xsbtn">{{scope.row.currentname?scope.row.currentname:'订单完成'}}</el-button>
           </template>
         </el-table-column>
-        <el-table-column prop label="订单状态" min-width="80">
+        <el-table-column prop label="订单状态" width="90">
           <span slot-scope="scope">{{scope.row.audittype == 0 ? "仅降E":"降E并提单"}}</span>
         </el-table-column>
         <el-table-column prop="username" label="最后操作时间" width="150">
           <span slot-scope="scope">{{scope.row.opt_time | timeFormat}}</span>
         </el-table-column>
-        <el-table-column prop="deptname" label="商务大区部门" min-width="80"></el-table-column>
+        <el-table-column prop="deptname" label="商务大区部门" width="105"></el-table-column>
         <el-table-column prop label="操作" min-width="148" align="center">
           <template slot-scope="scope">
             <el-button type="success" @click.native="viewOrder(scope.row)" class="xsbtn">查看</el-button>
@@ -627,26 +629,28 @@ export default {
 </script>
 
 <style lang="less">
-.el-button span {
-  display: inline-block;
-  width: 100%;
-  height: 100%;
-}
-.el-alert {
-  padding: 0;
+.order-list {
+  .el-button span {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+  }
+  .el-alert {
+    padding: 0;
+  }
 }
 .el-dropdown-menu .printbtn {
-      display: inline-block;
-      padding: 5px 8px;
-      font-size: 12px;
-      color: #fff;
-      background-color: #67c23a;
-      border-color: #67c23a;
-      line-height: 1;
-      border-radius: 3px;
-      border: 1px solid #dcdfe6;
-      margin: 0 5px;
-    }
+    display: inline-block;
+    padding: 5px 8px;
+    font-size: 12px;
+    color: #fff;
+    background-color: #67c23a;
+    border-color: #67c23a;
+    line-height: 1;
+    border-radius: 3px;
+    border: 1px solid #dcdfe6;
+    margin: 0 5px;
+  }
 </style>
 
 <style lang="less" scoped>

@@ -35,7 +35,7 @@
       </el-form>
     </div>
     <el-dialog :append-to-body="true" :visible.sync="selUserDialog" width="400px">
-      <select-dept @subParams="getDept"></select-dept>
+      <select-dept :key="dept_key" @subParams="getDept"></select-dept>
     </el-dialog>
   </div>
 </template>
@@ -47,6 +47,7 @@ export default {
   name: 'editor',
   data () {
     return {
+      dept_key: '',
       editor: null,
       selUserDialog: false,
       form: {
@@ -70,6 +71,7 @@ export default {
   methods: {
     sel () {
       this.selUserDialog = true
+      this.dept_key = new Date() + ''
     },
     back () {
       this.$router.go(-1)
@@ -115,7 +117,7 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .edit-news {
   .edit-content {
     .maxwidth{

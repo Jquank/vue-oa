@@ -64,9 +64,8 @@ export default {
   .article {
     display: flex;
     justify-content: center;
-    div {
+    >div {
       max-width: 100%;
-      // max-height: 600px;
       overflow: auto;
     }
   }

@@ -4,7 +4,7 @@
       <div class="tree">
         <div class="add-title mb10px">
           <h3 class="title">产品查询</h3>
-          <el-button @click.native="addArticleByNode" class="btn" icon="fa fa-plus" type="primary" size="mini">添加文章</el-button>
+          <el-button v-if="permissions.indexOf('8m') > -1" @click.native="addArticleByNode" class="btn" icon="fa fa-plus" type="primary" size="mini">添加文章</el-button>
         </div>
         <div class="tree-content">
           <el-tree
@@ -54,8 +54,14 @@
               <div class="pro-title">产品资料</div>
               <el-table :data="articleList21" max-height="550" border class="mt10px">
                 <el-table-column type="index" width="40"></el-table-column>
-                <el-table-column prop="title" label="文章名称" min-width="80"></el-table-column>
-                <el-table-column prop="id" label="链接" show-overflow-tooltip>
+                <el-table-column prop="insert_time" label="发布时间" width="150">
+                  <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
+                </el-table-column>
+                <el-table-column prop="title" label="文章名称" min-width="80">
+                  <span slot-scope="scope" @click="viewArticle(scope.row)" class="clikc-title">{{scope.row.title}}</span>
+                </el-table-column>
+                <template v-if="permissions.indexOf('8m') > -1">
+                  <el-table-column prop="id" label="链接" show-overflow-tooltip>
                   <template slot-scope="scope">
                     <el-input v-model="scope.row.alink">
                       <el-button
@@ -67,23 +73,27 @@
                     <!-- <a :href="scope.row.alink">123</a> -->
                   </template>
                 </el-table-column>
-                <el-table-column label="操作" width="140" align="center">
+                <el-table-column label="操作" width="110" align="center">
                   <template slot-scope="scope">
-                    <el-button @click.native="viewArticle(scope.row)" icon="fa fa-eye" type="success" class="xsbtn"></el-button>
-                    <template v-if="permissions.indexOf('8m') > -1">
                       <el-button @click.native="editArticle(scope.row)" icon="fa fa-pencil" type="warning" class="xsbtn"></el-button>
                     <el-button @click.native="delArticle(scope.row)" icon="fa fa-trash-o" type="danger" class="xsbtn"></el-button>
-                    </template>
                   </template>
                 </el-table-column>
+                </template>
               </el-table>
             </el-col>
             <el-col :xl="12" class="mt10px">
               <div class="pro-title">产品Q&A</div>
               <el-table :data="articleList22" max-height="550" border class="mt10px">
                 <el-table-column type="index" width="40"></el-table-column>
-                <el-table-column prop="title" label="文章名称" min-width="80"></el-table-column>
-                <el-table-column prop="id" label="链接" show-overflow-tooltip>
+                <el-table-column prop="insert_time" label="发布时间" width="150">
+                  <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
+                </el-table-column>
+                <el-table-column prop="title" label="文章名称" min-width="80">
+                  <span slot-scope="scope" @click="viewArticle(scope.row)" class="clikc-title">{{scope.row.title}}</span>
+                </el-table-column>
+                <template v-if="permissions.indexOf('8m') > -1">
+                 <el-table-column prop="id" label="链接" show-overflow-tooltip>
                   <template slot-scope="scope">
                     <el-input v-model="scope.row.alink">
                       <el-button
@@ -92,18 +102,15 @@
                         @click.native="copyUrl(scope.row.alink,$event)"
                       >copy</el-button>
                     </el-input>
-                    <!-- <a :href="scope.row.alink">123</a> -->
                   </template>
                 </el-table-column>
                 <el-table-column label="操作" width="140" align="center">
                   <template slot-scope="scope">
-                    <el-button @click.native="viewArticle(scope.row)" icon="fa fa-eye" type="success" class="xsbtn"></el-button>
-                    <template  v-if="permissions.indexOf('8m') > -1">
                       <el-button @click.native="editArticle(scope.row)" icon="fa fa-pencil" type="warning" class="xsbtn"></el-button>
                       <el-button @click.native="delArticle(scope.row)" icon="fa fa-trash-o" type="danger" class="xsbtn"></el-button>
-                    </template>
                   </template>
                 </el-table-column>
+                </template>
               </el-table>
             </el-col>
           </el-row>
@@ -357,13 +364,15 @@ export default {
 </script>
 
 <style lang="less">
-.el-tree--highlight-current .el-tree-node.is-current > .el-tree-node__content {
-  background-color: rgb(182, 206, 230);
-}
+.add-classify {
+  .el-tree--highlight-current .el-tree-node.is-current > .el-tree-node__content {
+    background-color: rgb(182, 206, 230);
+  }
 
-.expanded.el-tree-node__expand-icon {
-  color: #67c23a;
-  font-size: 15px;
+  .expanded.el-tree-node__expand-icon {
+    color: #67c23a;
+    font-size: 15px;
+  }
 }
 </style>
 
@@ -396,6 +405,7 @@ export default {
         background: #EBEEF5;
         .el-tree{
           background: #EBEEF5;
+          width: 100%;
         }
         .custom-tree-node {
           display: flex;
@@ -449,6 +459,9 @@ export default {
           font-weight: 600;
           text-align: center;
           color: #409eff;
+        }
+        .clikc-title{
+          cursor: pointer;
         }
       }
     }

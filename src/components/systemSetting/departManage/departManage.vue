@@ -228,6 +228,7 @@ export default {
       display: -webkit-box;
       max-height: 650px;
       overflow: auto;
+      background: #EBEEF5;
       .el-tree{
         background: #EBEEF5;
       }

@@ -2,7 +2,7 @@
   <div class="product-manage component-container media-padding">
     <div class="news-content">
       <div>
-        <el-button icon="el-icon-plus" type="primary" @click.native="addNews">新增</el-button>
+        <el-button icon="fa fa-plus" type="primary" @click.native="addNews"> 新增</el-button>
       </div>
       <el-table border stripe :data="newsList" class="table-width">
         <el-table-column type="index" width="45">

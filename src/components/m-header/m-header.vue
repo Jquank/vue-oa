@@ -5,8 +5,8 @@
     </div>
     <div class="m-header">
       <div class="header-left">
-        <div>
-          <img ref="logoimg" id="logo-img" class="logo-img" src="../../common/img/logo.jpg" alt="">
+        <div class="logo-wrapper">
+          <img ref="logoimg" id="logo-img" class="logo-img" src="../../common/img/logo_no.png" alt="">
         </div>
         <div class="m-bread" id="m-bread">
           <span>{{firstTitle}}</span>
@@ -269,6 +269,9 @@ export default {
       // top: 0;
       // left: -10px;
       transition: all 0.5s;
+    }
+    .logo-wrapper{
+      background: @bg-nav !important;
     }
   }
 

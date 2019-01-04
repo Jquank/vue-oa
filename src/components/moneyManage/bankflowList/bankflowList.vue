@@ -37,7 +37,7 @@
           :isHiddenFileList="true"
           :title="'导入流水'"
           :upIcon="'fa fa-cloud-download'"
-          :uploadUrl="serverUrl + '/receipt.do?importBS' + '&tk=' + tk"
+          :uploadUrl="'/receipt.do?importBS'"
           class="btns-item"
           v-if="permissions.indexOf('4u') > -1"
         ></up-file>
@@ -52,20 +52,29 @@
     </div>
     <!-- 搜索 -->
     <div class="search">
+      <el-input class="search-item" v-model="payCompany">
+        <template slot="prepend">付款公司:</template>
+      </el-input>
+      <el-input class="search-item" v-model="payAccount">
+        <template slot="prepend">付款名:</template>
+      </el-input>
       <el-input class="search-item" v-model="companyName">
-        <template slot="prepend">公司名称:</template>
+        <template slot="prepend">使用公司:</template>
+      </el-input>
+      <el-input class="search-item" v-model="useUser">
+        <template slot="prepend">使用用户:</template>
       </el-input>
       <el-input class="search-item" v-model="remarkSearch">
         <template slot="prepend">摘要|备注:</template>
       </el-input>
       <el-input class="search-item" v-model="bdAccount">
-        <template slot="prepend">百度账户:</template>
+        <template slot="prepend">百度币百度账户:</template>
       </el-input>
       <el-input class="search-item" v-model="reserveInfo">
         <template slot="prepend">预留信息:</template>
       </el-input>
-      <el-input class="search-item" v-model="payAccount">
-        <template slot="prepend">付款名:</template>
+      <el-input class="search-item" v-model="ckNum">
+        <template slot="prepend">参考号:</template>
       </el-input>
       <el-date-picker
         :unlink-panels="true"
@@ -245,7 +254,7 @@
           >
             <el-table-column class-name="split-item-col" label prop>
               <template slot-scope="cscope">
-                <el-dropdown trigger="click">
+                <el-dropdown trigger="hover">
                   <el-button type="primary">
                     操作
                     <i class="el-icon-arrow-down el-icon--right"></i>
@@ -535,6 +544,9 @@ export default {
       companyName: '',
       remarkSearch: '',
       bdAccount: '',
+      ckNum: '',
+      useUser: '',
+      payCompany: '',
       reserveInfo: '',
       payAccount: '',
       businessDate: [],
@@ -966,7 +978,11 @@ export default {
         companyname: this.companyName,
         alloc_remark: this.reserveInfo, // 预留信息
         invoice: this.invoiceStatus,
-        baidu_account2: this.bdAccount
+        baidu_account2: this.bdAccount,
+        no: this.ckNum, // 参考号
+        company_name: this.payCompany,
+        baidu_account: this.useUser
+
       }
     },
     reset() {
@@ -979,6 +995,9 @@ export default {
       this.bdAccount = ''
       this.reserveInfo = ''
       this.payAccount = ''
+      this.ckNum = ''
+      this.payCompany = ''
+      this.useUser = ''
       this.businessDate = []
       this.orderDate = []
     },

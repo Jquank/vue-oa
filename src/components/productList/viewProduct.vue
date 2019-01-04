@@ -83,9 +83,8 @@ export default {
       justify-content: center;
       div{
         max-width: 100%;
-        // max-height: 600px;
         overflow: auto;
-        // border: 1px solid #000;
+        padding-bottom: 10px;
       }
     }
   }

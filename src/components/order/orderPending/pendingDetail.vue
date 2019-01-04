@@ -855,15 +855,15 @@
         </el-tab-pane>
         <!-- 审核记录 -->
         <el-tab-pane label="审核记录">
-          <el-steps :active="isChecked" space="14%" finish-status="finish" align-center>
+          <el-steps :active="isChecked" space="14%" finish-status="success" align-center>
             <el-step v-for="step in stepList.slice(0,8)" :key="step.id" :title="step.name"
-              :status="step.status===100?'process':(step.status==300?'finish':'')" style="margin-top:15px">
+              :status="step.status===100?'process':(step.status==300?'success':'')" style="margin-top:15px">
               <span v-if="step.opt_time" slot="description">{{step.opt_time | timeFormat}}</span>
             </el-step>
           </el-steps>
-          <el-steps :active="isNextChecked" space="12.5%" finish-status="finish" align-center>
+          <el-steps :active="isNextChecked" space="12.5%" finish-status="success" align-center>
             <el-step
-              :status="step.status===100?'process':(step.status==300?'finish':'')"
+              :status="step.status===100?'process':(step.status==300?'success':'')"
               v-for="(step,index) in stepList.slice(8)"
               :key="step.id"
               :title="step.name"
@@ -1432,83 +1432,83 @@
 
     <!-- 修改订单信息弹窗 -->
     <el-dialog title="修改订单基本信息" width="800px" :visible.sync="changeInfoDialog" :modal-append-to-body="false">
-      <el-form :model="form">
+      <el-form :model="form" :label-width="formLabelWidth">
         <el-row :gutter="20">
           <el-col :sm="12">
-            <el-form-item label="公司名称" :label-width="formLabelWidth" disabled>
-              <el-input v-model="form.cName" disabled></el-input>
+            <el-form-item label="公司名称：" disabled>
+              <el-input v-model="form.cName" disabled type="textarea"></el-input>
             </el-form-item>
           </el-col>
           <el-col :sm="12">
-            <el-form-item label="公司地址" :label-width="formLabelWidth" required>
-              <el-input v-model="form.addr"></el-input>
+            <el-form-item label="公司地址：" required>
+              <el-input v-model="form.addr" type="textarea"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :sm="12">
-            <el-form-item label="对公账号" :label-width="formLabelWidth">
+            <el-form-item label="对公账号：">
               <el-input v-model="form.accountNum"></el-input>
             </el-form-item>
           </el-col>
           <el-col :sm="12">
-            <el-form-item label="开户行" :label-width="formLabelWidth">
+            <el-form-item label="开户行：">
               <el-input v-model="form.bType"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :sm="12">
-            <el-form-item label="PC网址" :label-width="formLabelWidth">
+            <el-form-item label="PC网址：">
               <el-input v-model="form.pcWeb"></el-input>
             </el-form-item>
           </el-col>
           <el-col :sm="12">
-            <el-form-item label="手机网址" :label-width="formLabelWidth">
+            <el-form-item label="手机网址：">
               <el-input v-model="form.phoneWeb"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20" v-for="(c,index) in form.contactList" :key="index">
           <el-col :sm="12">
-            <el-form-item :label-width="formLabelWidth" required>
+            <el-form-item required>
               <span slot="label">
                 <el-button
                   v-show="index===0"
                   @click="addContact(index)"
                   type="success"
                   circle
-                  size="mini"
+                  class="xsbtn"
                   :icon="addIcon"
                 ></el-button>
-                <span>联系人{{index?index:''}}</span>
+                <span>联系人{{index?index:''}}：</span>
               </span>
               <el-input v-model="c.contactname"></el-input>
             </el-form-item>
           </el-col>
           <el-col :sm="12">
-            <el-form-item :label-width="formLabelWidth" required>
-              <span slot="label">手机号{{index?index:''}}</span>
+            <el-form-item required>
+              <span slot="label">手机号{{index?index:''}}：</span>
               <el-input v-model="c.contactnumber" class="contact-phone"></el-input>
-              <el-button @click="addContact(index,'del')" type="danger" circle size="mini" :icon="minusIcon"></el-button>
+              <el-button @click="addContact(index,'del')" type="danger" circle class="xsbtn" :icon="minusIcon"></el-button>
             </el-form-item>
           </el-col>
           <el-col :sm="12">
-            <el-form-item :label-width="formLabelWidth">
-              <span slot="label">座机{{index?index:''}}</span>
+            <el-form-item>
+              <span slot="label">座机{{index?index:''}}：</span>
               <el-input v-model="c.telphone"></el-input>
             </el-form-item>
           </el-col>
           <el-col :sm="12">
-            <el-form-item :label-width="formLabelWidth" required>
-              <span slot="label">邮箱{{index?index:''}}</span>
+            <el-form-item required>
+              <span slot="label">邮箱{{index?index:''}}：</span>
               <el-input v-model="c.mailnumber"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :sm="12">
-            <el-form-item label="客户类型" :label-width="formLabelWidth">
+            <el-form-item label="客户类型：">
               <el-input v-model="form.cusType" disabled></el-input>
             </el-form-item>
           </el-col>
@@ -1826,7 +1826,7 @@ export default {
       },
       qualifyType: [],
       selectedQualify: {},
-      formLabelWidth: '120px',
+      formLabelWidth: '105px',
       addIcon: 'fa fa-plus',
       minusIcon: 'fa fa-minus',
       subParams: {},
@@ -1879,6 +1879,10 @@ export default {
       return
     }
     this.pid = this.receiveData.pid
+    this.sn = this.receiveData.sn
+    this.mark = this.receiveData._mark
+    this._getBasicInfo()
+
     if (this.pid === 'GD' || this.pid === 'PZ' || this.pid === 'KP') {
       this.pid_ka = 'KA'
     }
@@ -1886,9 +1890,6 @@ export default {
     if (viewWidth < 768) {
       this.tableFirstColumWidth = '50'
     }
-    this.sn = this.receiveData.sn
-    this.mark = this.receiveData._mark
-    this._getBasicInfo()
   },
   mounted() {
     this._getRecord()
@@ -2270,11 +2271,13 @@ export default {
     }
   }
 }
-.contact-phone {
-  width: calc(~'(100% - 30px)');
-}
-.el-form-item__label{
-  padding: 0 !important;
+.view-detail {
+  .contact-phone {
+    width: calc(~'(100% - 40px)');
+  }
+  .el-form-item__label{
+    padding: 0 !important;
+  }
 }
 </style>
 

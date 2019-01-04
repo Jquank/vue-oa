@@ -17,11 +17,7 @@
           <template slot="prepend">订单编号:</template>
         </el-input>
         <auto-select :key="key_pro" title="产品类型" v-model="productType" class="search-item item-width">
-          <el-option label="全部" value=""></el-option>
-          <el-option label="百度推广" value="BAITUI"></el-option>
-          <el-option label="网建" value="WEBSITE"></el-option>
-          <el-option label="直通车" value="ZTC"></el-option>
-          <el-option label="信息流" value="XXL"></el-option>
+          <el-option v-for="item in productList" :key="item.id" :label="item.name" :value="item.id"></el-option>
         </auto-select>
         <auto-select :key="key_order" title="订单状态" v-model="orderStatus" class="search-item item-width">
           <el-option label="全部" value=""></el-option>
@@ -84,7 +80,7 @@
       </el-table>
 
       <!-- 转户出纳列表 -->
-      <el-table v-if="permissions.indexOf('5q') > -1" :data="pendingList" class="table-width" max-height="550">
+      <el-table v-if="permissions.indexOf('5q') > -1" :data="pendingList" border stripe class="table-width" max-height="550">
         <el-table-column prop="" label="加款时间" width="150">
           <span slot-scope="scope">{{scope.row.addMoneyTime | timeFormat}}</span>
         </el-table-column>
@@ -119,16 +115,16 @@
       </el-table>
 
       <!-- 客服看到的列表 -->
-      <el-table v-if="permissions.indexOf('6n') > -1" :data="pendingList" class="table-width" max-height="550">
+      <el-table v-if="permissions.indexOf('6n') > -1" :data="pendingList" border stripe class="table-width" max-height="550">
         <el-table-column prop="ordernum" label="订单ID" min-width="150">
         </el-table-column>
         <el-table-column prop="cname" label="订单名称" min-width="150">
         </el-table-column>
-        <el-table-column prop="baiducount" label="用户名" min-width="80">
+        <el-table-column prop="baiducount" label="用户名" min-width="90">
         </el-table-column>
         <el-table-column prop="kefu" label="维护客服" min-width="80">
         </el-table-column>
-        <el-table-column prop="webName" label="网站维护人员" min-width="80">
+        <el-table-column prop="webName" label="网站维护人员" width="105">
         </el-table-column>
         <el-table-column prop="" label="提交时间" min-width="100">
           <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
@@ -147,15 +143,15 @@
             <el-button type="warning" plain class="xsbtn">{{scope.row.currentname?scope.row.currentname:'订单完成'}}</el-button>
           </template>
         </el-table-column>
-        <el-table-column prop="currentname" label="订单状态" min-width="80">
+        <el-table-column prop="currentname" label="订单状态" width="90">
           <span slot-scope="scope">{{scope.row.audittype == 0 ? "仅降E":"降E并提单"}}</span>
         </el-table-column>
         <el-table-column prop="username" label="最后操作时间" width="100">
           <span slot-scope="scope">{{scope.row.opt_time | timeFormat}}</span>
         </el-table-column>
-        <el-table-column prop="deptname" label="商务大区部门" min-width="80">
+        <el-table-column prop="deptname" label="商务大区部门" width="105">
         </el-table-column>
-        <el-table-column prop="" label="操作" width="150">
+        <el-table-column prop="" label="操作" width="150" align="center">
           <template slot-scope="scope">
             <el-button type="primary" @click.native="viewOrder(scope.row)" class="xsbtn">查看</el-button>
             <el-button v-if="permissions.indexOf('5a')>-1" type="warning" @click.native="updateOrder(scope.row)" class="xsbtn">修改订单</el-button>
@@ -229,8 +225,10 @@ export default {
         addmoney: '0'
       },
       pid: 'BAITUI',
+      pid_ka: '',
       sn: 308,
-      tmark: ''
+      tmark: '',
+      productList: []
     }
   },
   beforeRouteUpdate (to, from, next) {
@@ -238,6 +236,9 @@ export default {
       this.search()
     }
     next()
+  },
+  mounted() {
+    this._getProductTypeList()
   },
   methods: {
     accountOutPass (data) {
@@ -271,6 +272,13 @@ export default {
           this.orderFlowDatas = res.data.data[13]
           this.invoiceInfo = res.data.data[11]
           fn()
+        }
+      })
+    },
+    _getProductTypeList() {
+      this.$get('/Product.do?proget', { parentid: 1 }).then(res => {
+        if (res.data.success) {
+          this.productList = res.data.data
         }
       })
     },

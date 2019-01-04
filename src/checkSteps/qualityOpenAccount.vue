@@ -12,6 +12,7 @@
     </div>
     <div class="mt10px">
       <auto-select v-model="backValue" :defaultValue="backValue" :title="'驳回至'" style="width:200px;">
+        <!-- sn of null 报错，是驳回接口所返数据有问题 -->
         <el-option v-for="(item, index) in backNodeList" :key="index" :value="item.sn+'#'+item.name" :label="item.name"></el-option>
       </auto-select>
       <el-button @click.native="refuse" type="danger" style="margin-left:-6px;">驳回</el-button>
@@ -82,15 +83,14 @@ export default {
   },
   data () {
     return {
+      backNodeList: []
     }
   },
   mounted () {
-    this._getPayList()
+    // this._getPayList()
     this._getUrl()
-    this._getBackNode(this.sn, this.templateInfo.cpid)
     this._getDispatchRole(this.sn, this.pid)
-  },
-  methods: {
+    this._getBackNode(this.sn, this.templateInfo.cpid)
   },
   components: {
     AutoSelect

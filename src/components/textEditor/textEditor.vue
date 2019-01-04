@@ -137,7 +137,7 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .text-edit {
   .edit-content {
     .maxwidth{

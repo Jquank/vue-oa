@@ -1,5 +1,5 @@
 <template>
-  <div class="visit-record component-container media-padding">
+  <div class="money-chart component-container media-padding">
 
     <div class="visit-search mt-10px">
       <el-input v-model="cusName" class="visit-item item-width" placeholder="搜索客户名称">
@@ -184,7 +184,7 @@
           <span v-else>{{scope.row.sum_count | currency1}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="profit" label="毛利" width="100">
+      <el-table-column prop="profit" label="毛利" width="120">
         <template slot-scope="scope">
           <span v-if="!scope.row.mark">{{scope.row.profit | currency}}</span>
           <span v-else>{{scope.row.profit_count | currency1}}</span>
@@ -666,7 +666,7 @@ export default {
 }
 </style>
 <style lang="less" scoped>
-.visit-record {
+.money-chart {
   .visit-search {
     display: flex;
     flex-wrap: wrap;

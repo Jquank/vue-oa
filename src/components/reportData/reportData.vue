@@ -50,7 +50,7 @@
           <up-file
             v-if="act.label.indexOf('导入')>-1"
             :title="act.label"
-            :uploadUrl="serverUrl+'/'+act.url+'&tk='+tk"
+            :uploadUrl="'/'+act.url"
             :otherParams="upLoadOtherParams"
             :isHiddenFileList="true"
           ></up-file>

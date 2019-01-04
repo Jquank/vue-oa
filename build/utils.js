@@ -37,6 +37,7 @@ exports.cssLoaders = function (options) {
         options: {
           resources: [
             path.resolve(__dirname, '../src/common/less/mixin.less'), //定义全局变量的文件路径
+            path.resolve(__dirname, '../src/common/less/variables.less') //定义全局变量的文件路径
           ]
         }
       }

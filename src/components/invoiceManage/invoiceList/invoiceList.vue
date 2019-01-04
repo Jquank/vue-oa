@@ -21,6 +21,9 @@
       <el-input v-model="num" class="visit-item item-width" placeholder="搜索客户名称">
         <template slot="prepend">单据号码:</template>
       </el-input>
+      <el-input v-model="invoiceNum" class="visit-item item-width" placeholder="搜索发票号码">
+        <template slot="prepend">发票号码:</template>
+      </el-input>
       <el-input v-model="bdAccount" class="visit-item item-width" placeholder="搜索客户名称">
         <template slot="prepend">百度账号:</template>
       </el-input>
@@ -61,8 +64,12 @@
 
     <!-- 已处理和邮寄发票列表 -->
     <div v-if="mark==='send' || (mark==='handled'&&permissions.indexOf('7c') > -1)">
-      <el-table stripe border :data="invoiceList" max-height="550" class="table-width"  id="invoice-list-table1">
+      <el-table stripe border :data="invoiceList" max-height="550" class="table-width"  id="invoice-list-table1" :row-class-name="setRowClassName">
         <el-table-column prop="tnumber" label="销售单据编号" width="110">
+          <template slot-scope="scope">
+            <span v-if="scope.row.mark==='total'">合计</span>
+            <span v-else>{{scope.row.tnumber}}</span>
+          </template>
         </el-table-column>
         <el-table-column prop="ttype" label="发票种类" width="80">
           <span slot-scope="scope">{{scope.row.ttype | invoiceState('invoiceKind')}}</span>
@@ -77,7 +84,7 @@
           <span slot-scope="scope">{{scope.row.invoicetime | timeFormat1}}</span>
         </el-table-column>
         <el-table-column prop="tmoney" label="总金额" width="120">
-          <span slot-scope="scope">{{scope.row.tmoney | currency}}</span>
+          <span slot-scope="scope">{{scope.row.tmoney2 | currency}}</span>
         </el-table-column>
         <el-table-column prop="invoicecode" label="主要商品名称" width="100">
           <span slot-scope="scope">{{scope.row.chargetype+'' | invoiceState('invoiceMoneyType')}}</span>
@@ -110,7 +117,7 @@
           </el-table-column>
         </template>
         <el-table-column prop="" label="操作" width="150" align="center">
-          <template slot-scope="scope">
+          <template slot-scope="scope" v-if="scope.$index!==invoiceList.length-1">
             <div v-if="mark==='handled'">
               <el-button @click.native="view(scope.row)" type="success" class="xsbtn">查看</el-button>
               <el-button @click.native="moreCancle(scope.row)" type="warning" class="xsbtn">开多废除</el-button>
@@ -126,6 +133,10 @@
     <div v-if="mark==='list' || mark==='pending' || (mark==='handled'&&permissions.indexOf('7c') < 0)">
       <el-table :key="key_table" border :data="invoiceList" class="table-width" id="invoice-list-table" max-height="500" :row-class-name="setRowClassName">
         <el-table-column prop="banktype" :fixed="fixed" label="银行类型" width="80">
+          <template slot-scope="scope">
+            <span v-if="scope.row.mark==='total'">合计</span>
+            <span v-else>{{scope.row.banktype}}</span>
+          </template>
         </el-table-column>
         <el-table-column prop="tm" label="交易时间" :fixed="fixed" width="100">
           <span slot-scope="scope">{{scope.row.tm | timeFormat}}</span>
@@ -134,10 +145,10 @@
         </el-table-column>
         <el-table-column prop="bsremark" label="备注" :fixed="fixed" width="120">
         </el-table-column>
-        <el-table-column prop="amount" label="交易金额" :fixed="fixed" width="110">
+        <el-table-column prop="amount" label="交易金额" :fixed="fixed" width="120">
           <span slot-scope="scope">{{scope.row.amount | currency}}</span>
         </el-table-column>
-        <el-table-column prop="bsid" label="bsid" :fixed="fixed" width="50" show-overflow-tooltip>
+        <el-table-column prop="bsid" label="" :fixed="fixed" width="1" show-overflow-tooltip class-name="hidden-cell">
         </el-table-column>
         <!-- 此处dom有合并，但数据并没有合并，故用不了table的selection -->
         <el-table-column prop="id" label="选择" width="50"  :fixed="fixed" align="center">
@@ -145,21 +156,40 @@
             <el-checkbox @change="((val,$event)=>singleCheck(val,$event,scope.row))" :true-label="scope.row.id"></el-checkbox>
           </template>
         </el-table-column>
+        <el-table-column prop="invoiceid" label="" :fixed="fixed" width="1" show-overflow-tooltip class-name="hidden-cell">
+        </el-table-column>
         <el-table-column prop="tnumber" label="单据号码" width="110">
         </el-table-column>
         <el-table-column prop="applyusername" label="申请人" width="90">
         </el-table-column>
+        <template v-if="mark==='handled'&&permissions.indexOf('7c') < 0">
+          <el-table-column prop="invoicecode" label="发票代码" width="100">
+          </el-table-column>
+          <el-table-column prop="invoicenumber" label="发票号码" width="100">
+          </el-table-column>
+          <el-table-column prop="invoicetime" label="开票日期" width="100">
+            <span slot-scope="scope">{{scope.row.invoicetime | timeFormat1}}</span>
+          </el-table-column>
+          <el-table-column prop="" label="税率" width="60">
+            <span slot-scope="scope">{{scope.row.mark==='total'?'':'6%'}}</span>
+          </el-table-column>
+          <el-table-column prop="totaltax" label="合计税额" width="100">
+          </el-table-column>
+          <el-table-column prop="" label="合计金额" width="120">
+            <span slot-scope="scope">{{scope.row.totalmoney | currency}}</span>
+          </el-table-column>
+        </template>
         <el-table-column prop="baiducount" label="百度账户" width="100">
         </el-table-column>
-        <el-table-column prop="companyname" label="购方名称(发票公司名)" width="150">
+        <el-table-column prop="companyname" label="购方名称(发票公司名)" width="180">
         </el-table-column>
-        <el-table-column prop="cName" label="保A公司名" width="150">
+        <el-table-column prop="cName" label="保A公司名" width="180">
         </el-table-column>
         <el-table-column prop="chargetype" label="货物名称" width="100">
-          <span slot-scope="scope">{{scope.row.chargetype+'' | invoiceState('invoiceMoneyType')}}</span>
+          <span slot-scope="scope">{{scope.row.chargename}}</span>
         </el-table-column>
         <el-table-column prop="tmoney" label="总金额" width="120">
-          <span slot-scope="scope">{{scope.row.tmoney | currency}}</span>
+          <span slot-scope="scope">{{scope.row.tmoney2 | currency}}</span>
         </el-table-column>
         <el-table-column prop="ttype" label="发票类型" width="90">
           <template slot-scope="scope">
@@ -182,7 +212,7 @@
         </el-table-column>
         <el-table-column label="操作" width="110" align="center">
           <template slot-scope="scope" v-if="scope.$index!==invoiceList.length-1">
-            <el-dropdown trigger="click">
+            <el-dropdown trigger="hover">
               <el-button type="primary" size="mini">
                 操作<i class="el-icon-arrow-down el-icon--right"></i>
               </el-button>
@@ -200,7 +230,7 @@
                   <el-button @click.native="del(scope.row)" type="danger" class="xsbtn">删除</el-button>
                 </el-dropdown-item>
                 <el-dropdown-item divided v-if="scope.row.hasinvoice>=10" @click.native="moreCancle(scope.row)">
-                  <el-button type="warning" class="xsbtn">开多废除</el-button>
+                  <el-button type="danger" class="xsbtn">开多废除</el-button>
                 </el-dropdown-item>
                 <el-dropdown-item divided v-if="scope.row.is_advance == 20 && scope.row.receive_money < scope.row.tmoney && mark==='list'" >
                   <el-button @click.native="repayment(scope.row)" type="primary" class="xsbtn">还款</el-button>
@@ -235,30 +265,32 @@
     </el-dialog>
 
     <!-- 还款弹窗 -->
-    <el-dialog title="还款" :visible.sync="repaymentDialog" width="600px">
+    <el-dialog title="还款" :visible.sync="repaymentDialog" width="850px">
       <div class="prove-wrapper">
         <img :src="form.prove_img" width="50px" height="50px" alt="">
         <up-file @fileUrl="getFileUrl" :listType="'picture'" class="ml10px mr10px"></up-file>
-        <!-- <up-file @fileUrl="getFileUrl" :listType="'picture'" style="display:inline-block;"></up-file> -->
         <a @click="exportBankFlow" href="javascript:void(0)" class="a-search-number tipfont fa fa-download">点击下载模板</a>
       </div>
       <el-table @selection-change="handleFlowSelectionChange" stripe border :data="repaymentList" class="table-width">
         <el-table-column type="selection" width="45">
         </el-table-column>
-        <el-table-column prop="companyname" label="公司名" width="150">
+        <el-table-column prop="companyname" label="公司名" min-width="150">
         </el-table-column>
         <el-table-column prop="baidu_account" label="百度账户" width="80">
         </el-table-column>
-        <el-table-column prop="inserttime" label="申请时间" width="150">
-          <span slot-scope="scope">{{scope.row.inserttime | timeFormat}}</span>
+        <el-table-column prop="insert_time" label="申请时间" width="100">
+          <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
         </el-table-column>
         <el-table-column prop="receiptmoney" label="到账金额" width="100">
           <span slot-scope="scope">{{scope.row.receiptmoney | currency}}</span>
         </el-table-column>
         <el-table-column prop="" label="提单金额" width="100">
-          <span slot-scope="scope">{{scope.row.usemoney+scope.row.servicemoney+scope.row.usevoucher | currency}}</span>
+          <span slot-scope="scope">{{scope.row.tidanMoney | currency}}</span>
         </el-table-column>
-        <el-table-column prop="username" label="申请人" width="100">
+        <el-table-column prop="applyUname" label="申请人" width="100">
+        </el-table-column>
+        <el-table-column prop="orderOrRenew" label="订单或续费" width="95">
+          <span slot-scope="scope">{{scope.row.orderOrRenew==='renew'?'续费':'订单'}}</span>
         </el-table-column>
       </el-table>
       <page class="page" :url="repaymentUrl" :sendParams="repaymentParams" @updateList="updateRepaymentList"></page>
@@ -342,6 +374,7 @@ export default {
       baoAName: '',
       invoiceName: '',
       num: '',
+      invoiceNum: '',
       bdAccount: '',
       applyName: '',
       key_invoice_type: '1',
@@ -389,8 +422,10 @@ export default {
       key_invoice_dialog: '5',
 
       repaymentDialog: false,
-      repaymentUrl: '/Renew.do?renewapplylist',
-      repaymentParams: {},
+      repaymentUrl: '/Renew.do?renewRefundList',
+      repaymentParams: {
+        companyName: ''
+      },
       repaymentList: [],
       flowSelectArr: [],
       flowRowData: {},
@@ -426,6 +461,7 @@ export default {
         advance: this.aheadInvoice,
         hasinvoice: this.mark === 'pending' ? '0' : this.mark === 'handled' ? '10' : this.mark === 'send' ? '20' : this.invoiceState,
         tnumber: this.num,
+        invoiceNumber: this.invoiceNum,
         invoicetype: this.invoiceType,
         starttime: this.applyDate[0],
         endtime: this.applyDate[1]
@@ -435,6 +471,7 @@ export default {
       this.baoAName = ''
       this.invoiceName = ''
       this.num = ''
+      this.invoiceNum = ''
       this.applyName = ''
       this.bdAccount = ''
       this.aheadInvoice = '100'
@@ -585,7 +622,20 @@ export default {
       this.repaymentDialog = true
     },
     exportBankFlow() {
-      this.$export('/Invoice.do?invoiceCushionProof')
+      let reids = []
+      reids = this.flowSelectArr.map(val => {
+        if (val.orderOrRenew === 'renew') {
+          return val.fkid
+        } else {
+          return val.curid
+        }
+      })
+      let params = {
+        reids: reids.toString(),
+        receiveIds: '',
+        invoiceIds: this.flowRowData.invoiceid
+      }
+      this.$export('/Invoice.do?invoiceCushionProof', params)
     },
     getFileUrl (res) {
       this.prove_img = res.response.url
@@ -615,6 +665,7 @@ export default {
     },
     // 填写快递单号
     writeTnumber (data) {
+      this.rowData = data
       this.tnumberDialog = true
       this.tnumberForm = {
         express_no: data.express_no,
@@ -627,7 +678,14 @@ export default {
         this.$message.error('请填写快递单号！')
         return
       }
-      this.$post('/Invoice.do?edit', this.tnumberForm).then(res => {
+      let params = {
+        expressNo: this.tnumberForm.express_no,
+        expressRemark: this.tnumberForm.express_remark,
+        expressTime: this.tnumberForm.express_time,
+        invoiceid: this.rowData.invoiceid,
+        ttype: this.rowData.ttype
+      }
+      this.$post('/Invoice.do?edit', params).then(res => {
         if (res.data.success) {
           this.tnumberForm = {
             express_no: '',
@@ -694,14 +752,16 @@ export default {
     updateInvoiceList (res) {
       this.key_table = new Date() + ''
       this.invoiceList = res.data[0].data
+      // if (!this.invoiceList.length) {
+      //   return
+      // }
       let initObj = this.invoiceList.unshift()
       for (let key in initObj) {
         initObj[key] = ''
       }
       let tempObj = {
-        banktype: '合计',
         amount: 0,
-        tmoney: 0,
+        tmoney2: 0,
         mark: 'total'
       }
       initObj = Object.assign({}, initObj, tempObj)
@@ -710,15 +770,14 @@ export default {
       let sumObj = this.invoiceList.reduce((pre, cur) => {
         if (bsidMark !== cur.bsid) { // 根据bsid计算amount合计
           bsidMark = cur.bsid
-          pre.amount += parseFloat(cur.amount || 0)
+          pre.amount += parseFloat(cur.split_amount || 0)
         }
-        if (tnumberMark !== cur.tnumber) { // 根据tnuber计算tmoney合计
-          tnumberMark = cur.tnumber
-          pre.tmoney += parseFloat(cur.tmoney || 0)
+        if (tnumberMark !== cur.invoiceid) { // 根据tnumber计算tmoney合计
+          tnumberMark = cur.invoiceid
+          pre.tmoney2 += parseFloat(cur.tmoney2 || 0)
         }
         return pre
       }, initObj)
-      console.log(sumObj)
       this.invoiceList.push(sumObj)
       if (this.mark === 'list' || this.mark === 'pending' || this.mark === 'handled' || this.mark === 'send') {
         this._getRowSpan()
@@ -770,7 +829,9 @@ export default {
           if (this.mark === 'send') {
             rowSpan('tb', 0, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], 0)
           } else {
-            rowSpan('tb', 0, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], 0)
+            setTimeout(() => {
+              rowSpan('tb', 0, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], 0)
+            }, 500)
           }
         }
 
@@ -779,24 +840,28 @@ export default {
         )
         if (table) {
           table.setAttribute('id', 'tb')
-          // let fixedRightTable = document.querySelector(
-          //   '#invoice-list-table .el-table__fixed-right .el-table__fixed-body-wrapper table.el-table__body'
-          // )
-          // fixedRightTable.setAttribute('id', 'fixedrighttb')
-          // rowSpan('fixedrighttb', 0, [17], 6)
           if (this.fixed) {
             let fixedTable = document.querySelector(
               '#invoice-list-table .el-table__fixed .el-table__fixed-body-wrapper table.el-table__body'
             )
             fixedTable.setAttribute('id', 'fixedtb')
-            rowSpan('tb', 0, [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], 7)
-            rowSpan('fixedtb', 0, [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], 7)
-            setTimeout(() => {
-              rowSpan('tb', 0, [0, 1, 2, 3, 4, 5], 5)
-              rowSpan('fixedtb', 0, [0, 1, 2, 3, 4, 5], 5)
-            }, 800)
+            if (this.mark === 'handled' && this.permissions.indexOf('7c') < 0) {
+              rowSpan('tb', 0, [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24], 7)
+              rowSpan('fixedtb', 0, [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24], 7)
+              setTimeout(() => {
+                rowSpan('tb', 0, [0, 1, 2, 3, 4, 5], 5)
+                rowSpan('fixedtb', 0, [0, 1, 2, 3, 4, 5], 5)
+              }, 800)
+            } else {
+              rowSpan('tb', 0, [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], 7)
+              rowSpan('fixedtb', 0, [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], 7)
+              setTimeout(() => {
+                rowSpan('tb', 0, [0, 1, 2, 3, 4, 5], 5)
+                rowSpan('fixedtb', 0, [0, 1, 2, 3, 4, 5], 5)
+              }, 800)
+            }
           } else {
-            rowSpan('tb', 0, [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], 7)
+            rowSpan('tb', 0, [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], 7)
             setTimeout(() => {
               rowSpan('tb', 0, [0, 1, 2, 3, 4, 5], 5)
             }, 800)
@@ -815,6 +880,12 @@ export default {
   }
 }
 </script>
+<style lang="less">
+  .hidden-cell{
+    overflow: hidden;
+    border-right: none !important;
+  }
+</style>
 <style lang="less" scoped>
 .incoice-list-component {
   .visit-search {
@@ -845,7 +916,6 @@ export default {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-
   }
 }
 </style>

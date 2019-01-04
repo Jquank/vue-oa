@@ -2,7 +2,7 @@
   <div class="user-list component-container media-padding">
     <div class="import-file">
       <up-file v-if="permissions.indexOf('4o') > -1" :title="'导入人员'" :upIcon="'fa fa-cloud-download'" :uploadUrl="serverUrl+'/employee.do?importUser'+'&tk='+tk" :isHiddenFileList="true" class="import-item mr10px"></up-file>
-      <up-file v-if="permissions.indexOf('5v') > -1" :title="'导入组织结构'" :upIcon="'fa fa-cloud-download'" :uploadUrl="serverUrl+'/employee.do?importOrg'+'&tk='+tk" :isHiddenFileList="true" :type="'success'" class="import-item mr10px"></up-file>
+      <up-file v-if="permissions.indexOf('5v') > -1" :title="'导入组织结构'" :upIcon="'fa fa-cloud-download'" :uploadUrl="'/employee.do?importOrg'" :isHiddenFileList="true" :type="'success'" class="import-item mr10px"></up-file>
     </div>
     <!-- 搜索 -->
     <div class="search">
@@ -66,7 +66,7 @@
       </el-table-column>
       <el-table-column label="操作" width="100" align="center">
         <template slot-scope="scope">
-          <el-dropdown trigger="click">
+          <el-dropdown trigger="hover">
             <el-button type="primary" size="mini">
               操作<i class="el-icon-arrow-down el-icon--right"></i>
             </el-button>

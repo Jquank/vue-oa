@@ -506,7 +506,9 @@ const router = new Router({
           path: 'departSetNum',
           name: 'departSetNum',
           meta: { text: '部门配额' },
-          component: DepartSetNum
+          component: DepartSetNum,
+          // component: ()=> import(/* webpackChunkName: 'departSetNum' */'components/systemSetting/departSetNum/departSetNum')
+          // component: ()=> import(/* webpackChunkName: 'ImportFuncDemo' */'components/systemSetting/departSetNum/departSetNum')
         },
         {
           path: 'accountManage',

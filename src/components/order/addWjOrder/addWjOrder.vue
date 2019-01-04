@@ -591,11 +591,11 @@ export default {
         companycontact: this.form.contactList, // 联系人
         con_id: this.form.bdOrderNumber, // 合同
         amount: this.showEditWJ
-          ? this.form.record[0].service
+          ? 0
           : this.editData.record[0].service,
         amount_real: this.showEditWJ
-          ? this.form.record[0].sum
-          : this.editData.record[0].sum,
+          ? this.form.record[0].webmoney || 0
+          : this.editData.record[0].webmoney || 0,
         audittype: subType, // 0:仅降E 10：降E并提单
         pcwebsite: this.form.pcWeb, // PC站
         companyaddress: this.form.cusAddress || this.editData.addr, // 公司地址

@@ -308,11 +308,11 @@ export default {
       this.rejectData = res.data.data
     })
     this.applyChangeParams = {
-      companyId: this.receiveData.id,
+      cid: this.receiveData.companyid,
       companylogid: this.receiveData.companylogid
     }
     this.changeParams = {
-      companyId: this.receiveData.id,
+      companyId: this.receiveData.companyid,
       companylogid: this.receiveData.companylogid,
       companylogtype: this.cusDetail.cltype,
       companylogstatus: this.cusDetail.clstatus

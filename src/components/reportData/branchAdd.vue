@@ -1,5 +1,5 @@
 <template>
-  <div class="visit-record component-container media-padding">
+  <div class="branch-add component-container media-padding">
 
     <div class="visit-search">
       <el-input v-model="cusName" class="visit-item item-width" placeholder="搜索客户名称">
@@ -47,35 +47,35 @@
       </el-table-column>
       <el-table-column prop="addtype" label="加款类型" min-width="80">
       </el-table-column>
-      <el-table-column prop="tm" label="到款时间" width="100">
+      <el-table-column prop="tm" label="到款时间" width="150">
       </el-table-column>
-      <el-table-column prop="split_amount" label="到款金额" width="110">
+      <el-table-column prop="split_amount" label="到款金额" width="130">
         <template slot-scope="scope">
           <span v-if="scope.row.mark!=='lastRow'">{{scope.row.split_amount | currency}}</span>
           <span v-else>{{scope.row.sumSplitAmount | currency}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="addtime" label="加款时间" width="100">
+      <el-table-column prop="addtime" label="加款时间" width="150">
       </el-table-column>
-      <el-table-column prop="addmoney" label="加款金额" width="100">
+      <el-table-column prop="addmoney" label="加款金额" width="130">
         <template slot-scope="scope">
           <span v-if="scope.row.mark!=='lastRow'">{{scope.row.addmoney | currency}}</span>
           <span v-else>{{scope.row.sumAddmoney | currency}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="tgbonus" label="推广共享资金" width="100">
+      <el-table-column prop="tgbonus" label="推广共享资金" width="130">
         <template slot-scope="scope">
           <span v-if="scope.row.mark!=='lastRow'">{{scope.row.tgbonus | currency}}</span>
           <span v-else>{{scope.row.sumTgbonus | currency}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="ggbonus" label="广告共享资金" width="100">
+      <el-table-column prop="ggbonus" label="广告共享资金" width="130">
         <template slot-scope="scope">
           <span v-if="scope.row.mark!=='lastRow'">{{scope.row.ggbonus | currency}}</span>
           <span v-else>{{scope.row.sumGgbonus | currency}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="ysdltg" label="原生代理推广" width="100">
+      <el-table-column prop="ysdltg" label="原生代理推广" width="130">
         <template slot-scope="scope">
           <span v-if="scope.row.mark!=='lastRow'">{{scope.row.ysdltg | currency}}</span>
           <span v-else>{{scope.row.sumYsdltg | currency}}</span>
@@ -199,18 +199,20 @@ export default {
 }
 </script>
 <style lang="less">
-.el-table--border td,
-.el-table--border th,
-.el-table__body-wrapper .el-table--border.is-scrolling-left ~ .el-table__fixed {
-  border-right: 1px solid rgb(155, 152, 152);
-}
-.el-table td,
-.el-table th.is-leaf {
-  border-bottom: 1px solid rgb(155, 152, 152);
+.branch-add {
+  .el-table--border td,
+  .el-table--border th,
+  .el-table__body-wrapper .el-table--border.is-scrolling-left ~ .el-table__fixed {
+    border-right: 1px solid rgb(155, 152, 152);
+  }
+  .el-table td,
+  .el-table th.is-leaf {
+    border-bottom: 1px solid rgb(155, 152, 152);
+  }
 }
 </style>
 <style lang="less" scoped>
-.visit-record {
+.branch-add {
   .visit-search {
     display: flex;
     flex-wrap: wrap;

@@ -85,7 +85,7 @@
           </el-row>
 
           <el-row>
-          <el-col :md="24" class="maxwidth">
+          <el-col :md="24">
             <el-form-item label="产品类型 :">
               <el-radio-group @change="changeProType" v-model="proType">
                 <el-radio  v-for="item in proTypeList" :key="item.id" :label="item.id">{{item.name}}</el-radio>

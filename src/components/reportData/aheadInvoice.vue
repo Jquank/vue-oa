@@ -626,14 +626,16 @@ export default {
 }
 </script>
 <style lang="less">
-.el-table--border td,
-.el-table--border th,
-.el-table__body-wrapper .el-table--border.is-scrolling-left ~ .el-table__fixed {
-  border-right: 1px solid rgb(155, 152, 152);
-}
-.el-table td,
-.el-table th.is-leaf {
-  border-bottom: 1px solid rgb(155, 152, 152);
+.ahead-invoice {
+  .el-table--border td,
+  .el-table--border th,
+  .el-table__body-wrapper .el-table--border.is-scrolling-left ~ .el-table__fixed {
+    border-right: 1px solid rgb(155, 152, 152);
+  }
+  .el-table td,
+  .el-table th.is-leaf {
+    border-bottom: 1px solid rgb(155, 152, 152);
+  }
 }
 </style>
 <style lang="less" scoped>

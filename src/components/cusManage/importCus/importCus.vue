@@ -9,7 +9,7 @@
         <el-button @click.native="reset" type="warning" class="import-item">重 置</el-button>
       </div>
       <div class="import-item">
-        <up-file :title="'导入'" :upIcon="'fa fa-cloud-download'" :uploadUrl="serverUrl+'/Company.do?importcompanyinfo'+'&tk='+tk" :otherParams="{uid: userId}" :isHiddenFileList="true"></up-file>
+        <up-file :title="'导入'" :upIcon="'fa fa-cloud-download'" :uploadUrl="'/Company.do?importcompanyinfo'" :otherParams="{uid: userId}" :isHiddenFileList="true"></up-file>
       </div>
     </div>
 

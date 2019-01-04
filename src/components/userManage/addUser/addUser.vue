@@ -133,8 +133,6 @@
             <el-input v-model="form.baiduID" disabled></el-input>
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row :gutter="20" v-if="!quotaDisable">
         <el-col :md="12" class="maxwidth">
           <el-form-item label="所属地区 :" prop="inArea">
             <el-select v-model="form.inArea"  :disabled="repeatDisabled" placeholder="所属地区" style="width: 100%;">
