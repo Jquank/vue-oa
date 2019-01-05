@@ -150,7 +150,6 @@ export default {
     }
     .nav-aside {
       z-index: 1999;
-      background: #19233c;
       height: 100%;
       overflow: hidden;
       transition: all 0.5s;

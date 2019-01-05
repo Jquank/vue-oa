@@ -167,17 +167,39 @@
           <span slot-scope="scope">{{scope.row.GHTIME | timeFormat1}}</span>
         </el-table-column>
       </el-table-column>
-      <!-- <el-table-column label="百度币">
-        <el-table-column prop="BDBI" label="金额" width="120">
+      <el-table-column label="光大银行" align="center">
+        <el-table-column prop="GDYH" label="金额" width="120" align="center">
           <template slot-scope="scope">
-            <span v-if="!scope.row.mark">{{scope.row.BDBI | currency}}</span>
-            <span v-else>{{scope.row.BDBI_count | currency1}}</span>
+            <span v-if="!scope.row.mark">{{scope.row.GDYH | currency}}</span>
+            <span v-else>{{scope.row.GDYH_count | currency1}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="BDBITIME" label="时间" width="100">
-          <span slot-scope="scope">{{scope.row.BDBITIME | timeFormat1}}</span>
+        <el-table-column prop="BDBITIME" label="时间" width="100" align="center">
+          <span slot-scope="scope">{{scope.row.GDYHTIME | timeFormat1}}</span>
         </el-table-column>
-      </el-table-column> -->
+      </el-table-column>
+      <el-table-column label="农行" align="center">
+        <el-table-column prop="NH" label="金额" width="120" align="center">
+          <template slot-scope="scope">
+            <span v-if="!scope.row.mark">{{scope.row.NH | currency}}</span>
+            <span v-else>{{scope.row.NH_count | currency1}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="BDBITIME" label="时间" width="100" align="center">
+          <span slot-scope="scope">{{scope.row.NHTIME | timeFormat1}}</span>
+        </el-table-column>
+      </el-table-column>
+      <el-table-column label="建行" align="center">
+        <el-table-column prop="JH" label="金额" width="120" align="center">
+          <template slot-scope="scope">
+            <span v-if="!scope.row.mark">{{scope.row.JH | currency}}</span>
+            <span v-else>{{scope.row.JH_count | currency1}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="BDBITIME" label="时间" width="100" align="center">
+          <span slot-scope="scope">{{scope.row.JHTIME | timeFormat1}}</span>
+        </el-table-column>
+      </el-table-column>
       <el-table-column prop="sum" label="合计" width="120">
         <template slot-scope="scope">
           <span v-if="!scope.row.mark">{{scope.row.sum | currency}}</span>

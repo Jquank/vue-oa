@@ -40,7 +40,8 @@
                 </el-form-item>
               </template>
               <el-form-item>
-                <div class="btn-login">
+                <div class="btn-login text-right">
+                  <el-checkbox @change="handleClickRemember" v-model="form.rememberPwd">记住此账号</el-checkbox>
                   <el-button @click.native="submitForm('ruleForm')" type="primary" style="width:100%;">登 录</el-button>
                 </div>
               </el-form-item>
@@ -58,6 +59,7 @@ import axios from 'axios'
 import { serverUrl } from 'api/http'
 import { getByCode } from 'api/getOptions'
 import storage from 'good-storage'
+import { Base64 } from 'js-base64'
 const REG = /^[\w-_,]{6,16}$/
 export default {
   data() {
@@ -75,8 +77,10 @@ export default {
         myName: '',
         myPassword: '',
         realName: '',
-        realPassword: ''
+        realPassword: '',
+        rememberPwd: false
       },
+      handleRememberPwd: false,
       showBindRealName: false,
       regUserList: [],
       rules: {
@@ -92,13 +96,11 @@ export default {
       this.form.myName = this.$route.query.data.name || ''
       this.form.myPassword = this.$route.query.data.pwd || ''
     }
-    this._getRegUserList()
+    this._rememberPwd()
   },
   methods: {
     myNameBlur() {
-      if (this.regUserList.findIndex(val => val.name === this.form.myName) > 0) {
-        this.showBindRealName = true
-      }
+      this._isBindRealAccount(this.form.myName)
     },
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
@@ -120,6 +122,19 @@ export default {
         .post(serverUrl + '/User.do?login', params)
         .then(res => {
           if (res.data.success) {
+            let preName = (cookie.getJSON('rememberForm') || {}).remName
+            if (this.handleRememberPwd || (this.form.rememberPwd && this.form.myName !== preName)) {
+              let data = {
+                remName: this.form.myName,
+                remPwd: Base64.encode(this.form.myPassword),
+                remRealName: this.form.realName,
+                remRealPwd: Base64.encode(this.form.realPassword)
+              }
+              cookie.set('rememberForm', data, { expires: 10 })
+            }
+            if (!this.handleRememberPwd && !this.form.rememberPwd) {
+              cookie.remove('rememberForm')
+            }
             let permissions = res.data.data.permissions
             permissions = permissions.split(',')
             cookie.set('permissions', permissions)
@@ -147,10 +162,33 @@ export default {
           console.error(err)
         })
     },
-    _getRegUserList() {
+    handleClickRemember(val) {
+      this.handleRememberPwd = val
+    },
+    _rememberPwd() {
+      let data = cookie.getJSON('rememberForm') || {}
+      this._isBindRealAccount(data.remName)
+      if (data.remPwd) {
+        this.form.myName = data.remName
+        this.form.myPassword = Base64.decode(data.remPwd)
+        this.form.realName = data.remRealName
+        this.form.realPassword = Base64.decode(data.remRealPwd)
+        this.form.rememberPwd = true
+      } else {
+        this.form.myName = ''
+        this.form.myPassword = ''
+        this.form.realName = ''
+        this.form.realPassword = ''
+        this.form.rememberPwd = false
+      }
+    },
+    _isBindRealAccount(loginName) {
       axios.get(serverUrl + '/User.do?getVirtualList').then(res => {
         if (res.data.success) {
           this.regUserList = res.data.data
+          if (this.regUserList.findIndex(val => val.name === loginName) > 0) {
+            this.showBindRealName = true
+          }
         }
       })
     }

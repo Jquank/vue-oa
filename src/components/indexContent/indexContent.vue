@@ -23,7 +23,7 @@
         <el-table :data="news" border class="table-width" :height="listHeight" max-height="600">
           <el-table-column prop="title" label="消息通知">
             <template slot-scope="scope">
-              <span @click="jump(scope.row)" class="tojump">{{scope.row.title}}</span>
+              <span @click="jump(scope.row)" class="jump">{{scope.row.title}}</span>
             </template>
           </el-table-column>
         </el-table>

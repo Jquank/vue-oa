@@ -71,15 +71,18 @@
               操作<i class="el-icon-arrow-down el-icon--right"></i>
             </el-button>
             <el-dropdown-menu slot="dropdown" class="text-center">
-              <el-dropdown-item>
-                <el-button v-if="permissions.indexOf('4j') > -1" @click.native="editUserInfo(scope.row.uid)" class="xsbtn" type="success">编辑</el-button>
+              <el-dropdown-item v-if="permissions.indexOf('4j') > -1">
+                <el-button @click.native="editUserInfo(scope.row.uid)" class="xsbtn" type="success">编辑信息</el-button>
               </el-dropdown-item>
-              <el-dropdown-item divided>
-                <el-button v-if="permissions.indexOf('4k') > -1" @click.native="editQuota(scope.row.uid)" class="xsbtn" type="primary">编辑配额</el-button>
+              <el-dropdown-item divided v-if="permissions.indexOf('4k') > -1">
+                <el-button @click.native="editQuota(scope.row.uid)" class="xsbtn" type="primary">编辑配额</el-button>
               </el-dropdown-item>
-              <el-dropdown-item divided>
-                <el-button v-if="permissions.indexOf('66') > -1" @click.native="editDept(scope.row.uid)" class="xsbtn" type="warning">编辑管理部门</el-button>
+              <el-dropdown-item divided v-if="permissions.indexOf('66') > -1">
+                <el-button @click.native="editDept(scope.row.uid)" class="xsbtn" type="warning">编辑管理部门</el-button>
               </el-dropdown-item>
+              <!-- <el-dropdown-item divided v-if="permissions.indexOf('66') > -1">
+                <el-button @click.native="editSalary(scope.row.uid)" class="xsbtn" type="warning">工资管理</el-button>
+              </el-dropdown-item> -->
             </el-dropdown-menu>
           </el-dropdown>
         </template>
@@ -145,7 +148,6 @@ export default {
   },
   methods: {
     // 账号开关
-    // todo
     turnOff (val, uid) {
       this.$confirm(`确定${val === 1 ? '打开' : '关闭'}此账号？`, '', {
         confirmButtonText: '确定',
@@ -156,6 +158,7 @@ export default {
           this._turnOffRequest(val, uid)
         })
         .catch(() => {
+          this.search()
           this.$message({
             type: 'info',
             message: '已取消'
@@ -203,29 +206,39 @@ export default {
     },
     // 编辑部门
     editDept (uid) {
-      this.key_dept_manage = new Date() + ''
-      this.uid = uid
-      this.deptTreeDialog = true
-      this.$get('/User/findManagerDeptCode.do', { uid: this.uid }).then(res => {
-        if (res.data.success && res.data.data.length) {
-          let resArr = res.data.data
-          resArr.forEach(val => {
-            this.defaultChecked.push(val.deptcode)
-          })
-        }
-      })
+      this.defaultChecked = []
+      this.manageMark = ''
+      this._openManageDialog(uid, this.manageMark)
+    },
+    // 编辑工资管理
+    editSalary (uid) {
+      this.defaultChecked = []
+      this.manageMark = 0
+      this._openManageDialog(uid, this.manageMark)
     },
     // 提交部门设置
     subParams (data) {
       if (!data) {
         return
       }
-      let params = {codes: data, uid: this.uid}
-      console.log(params)
+      let params = {codes: data, uid: this.uid, type: this.manageMark}
       this.$post('/User/managerDeptCode.do', params).then(res => {
         if (res.data.success) {
           this.$message.success('修改成功！')
           this.deptTreeDialog = false
+        }
+      })
+    },
+    _openManageDialog(uid, type) {
+      this.uid = uid
+      this.$get('/User/findManagerDeptCode.do', { uid: this.uid, type: type }).then(res => {
+        if (res.data.success && res.data.data.length) {
+          let resArr = res.data.data
+          resArr.forEach(val => {
+            this.defaultChecked.push(val.deptcode)
+          })
+          this.key_dept_manage = new Date() + ''
+          this.deptTreeDialog = true
         }
       })
     },
@@ -260,22 +273,6 @@ export default {
       console.log(123)
       this.deptCodes = data
       console.log(data)
-    },
-    // 提交部门管理
-    subDeptManage () {
-      let params = {
-        deptCodes: this.deptCodes,
-        uid: this.uid
-      }
-      this.$post('/User/UserUpdateMgr', params).then(res => {
-        if (res.data.status === 1) {
-          this.deptTreeDialog = false
-          this.$message({
-            type: 'success',
-            message: res.data.msg
-          })
-        }
-      })
     }
   },
   components: { Page, SelectDept, SelectDepartment, AutoSelect, AddUser, UpFile }

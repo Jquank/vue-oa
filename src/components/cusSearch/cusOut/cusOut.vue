@@ -1,6 +1,6 @@
 <template>
   <div class="cus-search component-container media-padding">
-    <div class="multi-import">
+    <div class="multi-import" v-if="permissions.indexOf('8r')>-1">
       <up-file :title="'批量导入'" :upIcon="'fa fa-cloud-download'" :isHiddenFileList="true" :uploadUrl="'/Renew.do?rollOutExcle'" style="display: inline-block"></up-file>
       <span class="red">(ps:excell表头为“百度用户名”、“转入客服编号”、“SF系统”)</span>
     </div>
@@ -28,7 +28,7 @@
       </el-table-column>
       <el-table-column prop="uName" label="所属客服">
       </el-table-column>
-      <el-table-column prop="" label="操作" width="60px">
+      <el-table-column prop="" label="操作" width="60px" v-if="permissions.indexOf('8r')>-1">
         <template slot-scope="scope">
           <el-button @click.native="cusOut(scope.row)" type="success" class="xsbtn">转出</el-button>
         </template>
@@ -68,6 +68,7 @@ import { serverUrl } from 'api/http'
 export default {
   data () {
     return {
+      permissions: cookie.getJSON('permissions') || [],
       serverUrl: serverUrl,
       tk: cookie.get('token'),
       cusName: '',

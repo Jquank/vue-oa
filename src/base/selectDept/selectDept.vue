@@ -2,7 +2,7 @@
   <div>
     <el-tree :data="departmentList" :props="depProps" accordion node-key="code" ref="tree" id="department" :show-checkbox="true" :default-expanded-keys="defaultChecked" :default-checked-keys="defaultChecked"></el-tree>
     <div class="confirm-tree">
-      <el-button @click.native="confirm" type="primary" size="mini">确 定</el-button>
+      <el-button @click.native="confirm" type="primary" size="mini">{{btnName}}</el-button>
     </div>
   </div>
 </template>
@@ -17,6 +17,10 @@ export default {
       default: function () {
         return []
       }
+    },
+    btnName: {
+      type: String,
+      default: '确 定'
     }
   },
   data () {

@@ -215,6 +215,7 @@ export default {
       cookie.remove('permissions')
       cookie.remove('allowBar')
       storage.remove('x52')
+      storage.remove('deptList')
       this.$router.push('/login')
     },
     refresh () {
@@ -271,7 +272,12 @@ export default {
       transition: all 0.5s;
     }
     .logo-wrapper{
+      height: 50px;
+      overflow: hidden;
       background: @bg-nav !important;
+      border-bottom: 1px solid #babdc2;
+      margin-top: -1px;
+      box-shadow:2px 0px 30px 2px #b6cfe9 inset;
     }
   }
 
