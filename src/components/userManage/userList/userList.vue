@@ -1,7 +1,7 @@
 <template>
   <div class="user-list component-container media-padding">
     <div class="import-file">
-      <up-file v-if="permissions.indexOf('4o') > -1" :title="'导入人员'" :upIcon="'fa fa-cloud-download'" :uploadUrl="serverUrl+'/employee.do?importUser'+'&tk='+tk" :isHiddenFileList="true" class="import-item mr10px"></up-file>
+      <up-file v-if="permissions.indexOf('4o') > -1" :title="'导入人员'" :upIcon="'fa fa-cloud-download'" :uploadUrl="'/employee.do?importUser'" :isHiddenFileList="true" class="import-item mr10px"></up-file>
       <up-file v-if="permissions.indexOf('5v') > -1" :title="'导入组织结构'" :upIcon="'fa fa-cloud-download'" :uploadUrl="'/employee.do?importOrg'" :isHiddenFileList="true" :type="'success'" class="import-item mr10px"></up-file>
     </div>
     <!-- 搜索 -->
@@ -232,7 +232,7 @@ export default {
     _openManageDialog(uid, type) {
       this.uid = uid
       this.$get('/User/findManagerDeptCode.do', { uid: this.uid, type: type }).then(res => {
-        if (res.data.success && res.data.data.length) {
+        if (res.data.success) {
           let resArr = res.data.data
           resArr.forEach(val => {
             this.defaultChecked.push(val.deptcode)

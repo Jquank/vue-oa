@@ -20,6 +20,11 @@
         <el-option value label="全部"></el-option>
         <el-option v-for="(item,index) in renewStatusList" :key="index" :value="item.code_val" :label="item.code_desc"></el-option>
       </auto-select>
+      <auto-select :key="key_add_important" v-model="addImportant" :defaultValue="addImportant" title="值班加款" class="list-item item-width">
+        <el-option value="100" label="全部"></el-option>
+        <el-option value="10000" label="是"></el-option>
+        <el-option value="0" label="否"></el-option>
+      </auto-select>
       <el-button class="list-item" @click.native="search" type="primary">查 询</el-button>
       <el-button class="list-item" @click.native="reset" type="warning">重 置</el-button>
       <div class="list-item export">
@@ -38,7 +43,7 @@
       <el-table-column prop label="提单金额" width="110">
         <span slot-scope="scope">{{scope.row.tgbonus+scope.row.ggbonus+scope.row.ysdltg+scope.row.servicemoney | currency1}}</span>
       </el-table-column>
-      <el-table-column prop label="申请时间" width="100">
+      <el-table-column prop label="申请时间" width="90">
         <span slot-scope="scope">{{scope.row.inserttime | timeFormat}}</span>
       </el-table-column>
       <el-table-column prop label="提单人">
@@ -240,6 +245,8 @@ export default {
       key_add_type: '',
       key_renew_status: '1',
       renewStatusList: '',
+      addImportant: '100',
+      key_add_important: '2',
 
       list: [],
       url: '/Renew.do?renewapplylist',
@@ -502,7 +509,8 @@ export default {
         step: this.renewStatus,
         baiduAccount: this.bdAccount,
         userName: this.orderName,
-        companyName: this.cus_name
+        companyName: this.cus_name,
+        status: this.addImportant
       }
     },
     reset() {
@@ -513,6 +521,8 @@ export default {
       this.cus_name = ''
       this.key_add_type = new Date() + ''
       this.key_renew_status = new Date() + '1'
+      this.addImportant = '100'
+      this.key_add_important = new Date() + '2'
     },
     getList(res) {
       this.list = res.data[0].data
@@ -540,7 +550,7 @@ export default {
       margin-top: 10px;
     }
     .item-width {
-      width: 280px;
+      width: 260px;
     }
   }
   .btns {

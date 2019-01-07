@@ -2,17 +2,13 @@
   <div class="follow-record component-container media-padding">
     <div class="follow-search mt-10px">
       <div class="follow-item">
-        <!-- <el-button type="primary" @click.native="search">导入</el-button> -->
-        <el-upload
-          :action="'http://172.16.11.84:8080/BaiJieOA/ch.do?import&tk='+tk"
-          :limit="1"
-          :file-list="fileList"
-          :show-file-list = "false"
-          :on-success = "handleSuccess"
-          >
-          <el-button size="small" type="primary">导 入</el-button>
-          <!-- <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div> -->
-        </el-upload>
+        <up-file
+          :isHiddenFileList="true"
+          :title="'导入'"
+          :upIcon="'fa fa-cloud-download'"
+          :uploadUrl="'/ch.do?import'"
+          @fileUrl="search()"
+        ></up-file>
       </div>
       <div class="follow-item">
         <el-button type="warning" @click.native="exportExcell">导出excel</el-button>
@@ -60,8 +56,8 @@
       </el-table-column>
       <el-table-column prop="contactname" label="联系人">
       </el-table-column>
-      <el-table-column prop="" label="电话" width="120">
-        <span slot-scope="scope">{{scope.row.telnum}}&nbsp;<i class="el-icon-phone" @click="callPhone(scope.row.telnum)"></i></span>
+      <el-table-column prop="" label="电话" width="140">
+        <span slot-scope="scope">{{scope.row.telnum}}&nbsp;<i class="fa fa-phone fa-2x call-icon" @click="callPhone(scope.row.telnum)"></i></span>
       </el-table-column>
       <el-table-column prop="" label="最新状态" width="120">
         <template slot-scope="scope">
@@ -104,11 +100,11 @@
 import AutoSelect from 'base/autoSelect/autoSelect'
 import Page from 'base/page/page'
 import cookie from 'js-cookie'
+import UpFile from 'base/upLoad/upFile'
 export default {
   data () {
     return {
       tk: cookie.get('token'),
-      fileList: [],
       phone: '',
       cusName: '',
       shangWu: '',
@@ -209,27 +205,12 @@ export default {
         'latest_status': this.lastStatus
       }
       this.$export('/ch.do?exportexcel', params)
-    },
-    handleSuccess (res, file, fileList) {
-      if (res.success) {
-        this.$message({
-          type: 'success',
-          message: '导入成功！'
-        })
-        this.fileList = []
-      } else {
-        this.$message({
-          type: 'error',
-          message: '导入失败！'
-        })
-        this.fileList = []
-      }
     }
-
   },
   components: {
     Page,
-    AutoSelect
+    AutoSelect,
+    UpFile
   }
 }
 </script>
@@ -260,6 +241,10 @@ export default {
   .clicked{
     text-decoration: underline;
     text-decoration-color:dodgerblue;
+  }
+  .call-icon{
+    cursor: pointer;
+    color: green;
   }
 }
 </style>

@@ -8,10 +8,10 @@
             v-model="item.where.val[0]"
             :placeholder="item.as"
             class="item item-width"
-          >
-            <template slot="prepend">{{item.as}}:</template>
+          ><template slot="prepend">{{item.as}}:</template>
           </el-input>
-          <el-date-picker :key="item.as"
+          <el-date-picker
+            :key="item.as"
             v-if="item.where.type==='datetime'"
             v-model="item.where.val"
             value-format="yyyy/MM/dd HH:mm"
@@ -22,8 +22,8 @@
             :end-placeholder="item.as"
             class="item item-width"
           ></el-date-picker>
-          <select-trade v-if="item.where.type==='indu'" v-model="item.where.val" class="item item-width"></select-trade>
-          <select-area v-if="item.where.type==='area'" v-model="item.where.val" class="item item-width"></select-area>
+          <select-trade :key="key_trade" v-if="item.where.type==='indu'" v-model="item.where.val" class="item item-width"></select-trade>
+          <select-area :key="key_area" v-if="item.where.type==='area'" v-model="item.where.val" class="item item-width"></select-area>
           <auto-select
             v-if="item.where.type==='dropdown'"
             v-model="item.where.val[0]"
@@ -62,12 +62,7 @@
     <!-- 列表 -->
     <el-table stripe border :data="list" max-height="550" class="table-width">
       <template v-for="(item, index) in myList">
-        <el-table-column
-          :key="index"
-          prop
-          :label="item.as"
-          :width="getWidth(item)"
-        >
+        <el-table-column :key="index" prop :label="item.as" :width="getWidth(item)">
           <span slot-scope="scope">
             <span v-if="item.where && item.where.type==='datetime'">{{scope.row[item.as] | timeFormat}}</span>
             <span v-else>{{scope.row[item.as]}}</span>
@@ -102,7 +97,8 @@ export default {
     }
   },
   watch: {
-    $route(to, from) { // 切换路由，带上rpt_data参数会报500错，但这样会导致查询两次
+    $route(to, from) {
+      // 切换路由，带上rpt_data参数会报500错，但这样会导致查询两次
       if (to.name !== from.name) {
         this.otherParams = {}
       }
@@ -123,14 +119,16 @@ export default {
         // }
       },
       mapWidth: {
-        'datetime': '100',
-        'indu': '150',
-        'area': '150'
-      }
+        datetime: '90',
+        indu: '150',
+        area: '150'
+      },
+      key_area: '',
+      key_trade: ''
     }
   },
   methods: {
-    getWidth (item) {
+    getWidth(item) {
       if (!item.where) {
         return '100'
       }
@@ -169,6 +167,8 @@ export default {
       }
     },
     reset() {
+      this.key_area = new Date() + ''
+      this.key_trade = new Date() + '1'
       this.cols.forEach(item => {
         if (item.where) {
           item.where.val = []
@@ -188,6 +188,9 @@ export default {
         this.cols.forEach(val => {
           if (val.show === 1) {
             this.myList.push(val)
+          }
+          if (val.where && val.where.type === 'datetime') {
+            val.where.val = []
           }
         })
         exportBtns = res.data.data.act

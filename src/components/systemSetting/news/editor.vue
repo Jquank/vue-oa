@@ -3,13 +3,13 @@
     <div class="edit-content">
       <el-form :model="form" label-width="80px">
         <el-form-item label="标题" required>
-          <el-col :md=24 class="maxwidth">
+          <el-col :md="24">
             <el-input v-model="form.title" placeholder="填写标题" class="input-btn"></el-input>
-            <el-button type="primary" @click="back">返回</el-button>
+            <el-button type="warning" @click="back">返回</el-button>
           </el-col>
         </el-form-item>
         <el-form-item label="类型" required>
-          <el-col :md=24 class="maxwidth">
+          <el-col :md="24">
             <el-select v-model="form.type">
               <el-option label="消息通知" :value="0"></el-option>
               <el-option label="重要公告" :value="10"></el-option>
@@ -18,8 +18,8 @@
           </el-col>
         </el-form-item>
         <el-form-item label="正文" required>
-          <el-col :md=24 class="maxwidth">
-            <div ref="editor" class="text-left"></div>
+          <el-col :md="24">
+            <div ref="editor" class="editor"></div>
           </el-col>
         </el-form-item>
         <el-form-item label="权限" required>
@@ -45,7 +45,7 @@ import E from 'wangeditor'
 import SelectDept from 'base/selectDept/selectDept'
 export default {
   name: 'editor',
-  data () {
+  data() {
     return {
       dept_key: '',
       editor: null,
@@ -61,7 +61,7 @@ export default {
       echoData: {}
     }
   },
-  created () {
+  created() {
     this.echoData = this.$route.query.data
     if (!this.echoData) {
       return
@@ -69,25 +69,25 @@ export default {
     this.form = Object.assign({}, this.form, this.echoData)
   },
   methods: {
-    sel () {
+    sel() {
       this.selUserDialog = true
       this.dept_key = new Date() + ''
     },
-    back () {
+    back() {
       this.$router.go(-1)
     },
-    getDept (res) {
+    getDept(res) {
       this.dept = res
       this.selUserDialog = false
     },
-    sub () {
+    sub() {
       let params = {
-        'id': this.form.id,
-        'title': this.form.title,
-        'content': this.form.content,
-        'newsstatus': this.form.newsstatus,
-        'type': this.form.type,
-        'userid': this.dept
+        id: this.form.id,
+        title: this.form.title,
+        content: this.form.content,
+        newsstatus: this.form.newsstatus,
+        type: this.form.type,
+        userid: this.dept
       }
       if (!params.title || !params.content || !params.userid) {
         this.$message.error('请填写或选择带*项！')
@@ -97,13 +97,13 @@ export default {
         if (res.data.success) {
           this.$router.push({
             path: '/indexPage/news',
-            query: {data: 'fromDetail'}
+            query: { data: 'fromDetail' }
           })
         }
       })
     }
   },
-  mounted () {
+  mounted() {
     this.editor = new E(this.$refs.editor)
     this.editor.customConfig.onchange = html => {
       this.form.content = html
@@ -116,11 +116,17 @@ export default {
   }
 }
 </script>
-
+<style lang="less">
+.edit-news .editor {
+  > div:nth-child(2) {
+    height: 500px !important;
+  }
+}
+</style>
 <style lang="less" scoped>
 .edit-news {
   .edit-content {
-    .maxwidth{
+    .maxwidth {
       width: 900px;
     }
   }

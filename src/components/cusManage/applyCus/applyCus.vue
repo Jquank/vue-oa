@@ -144,6 +144,7 @@ export default {
           this.applyBtnLoading = false
         }
       }).catch(err => {
+        this.applyBtnLoading = false
         console.log(err)
       })
     },

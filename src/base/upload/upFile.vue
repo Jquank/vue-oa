@@ -69,10 +69,11 @@ export default {
   },
   methods: {
     upSuccess (response, file, fileList) {
+      console.log(file)
       this.$emit('fileUrl', file)
       if (this.isHiddenFileList) {
         setTimeout(() => {
-          this.showFileList = false
+          this.fileList = []
         }, 2000)
         if (response.success) {
           this.$message.success(response.msg || '导入成功！')

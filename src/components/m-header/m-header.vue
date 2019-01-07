@@ -95,7 +95,7 @@ import { enterfullscreen, exitfullscreen } from 'api/myHeader'
 import cookie from 'js-cookie'
 import storage from 'good-storage'
 import { mapGetters, mapMutations } from 'vuex'
-import { autoHeight } from 'common/js/utils'
+import { autoHeight, appMark } from 'common/js/utils'
 import ErrorCollect from 'base/errorCollect/errorCollect'
 export default {
   computed: {
@@ -141,6 +141,7 @@ export default {
   },
   mounted () {
     autoHeight()
+    this.handleClickCollapse()
   },
   methods: {
     errorHistory () {
@@ -151,7 +152,7 @@ export default {
       this.changeCollapseCount()
       let result = this.collapseCount % 2 === 0
       let width = document.documentElement.clientWidth
-      width < 768 ? this.phoneCollapse(width, result) : this.pcCollapse(width, result)
+      appMark() ? this.phoneCollapse(width, result) : this.pcCollapse(width, result)
     },
     phoneCollapse (width, result) {
       let aside = document.getElementById('nav-aside')
@@ -170,6 +171,18 @@ export default {
     fullScreen () {
       this.count++
       this.count % 2 === 1 ? enterfullscreen() : exitfullscreen()
+    },
+    handleClickCollapse() {
+      let main = document.getElementById('main')
+      main.addEventListener('click', () => {
+        if (!appMark()) {
+          return
+        }
+        if (this.collapseCount % 2 !== 0) {
+          this.phoneCollapse('', true)
+          this.changeCollapseCount()
+        }
+      })
     },
     openChangeInfoDialog() {
       this.dialogFormVisible = true
@@ -214,8 +227,7 @@ export default {
       cookie.remove('userId')
       cookie.remove('permissions')
       cookie.remove('allowBar')
-      storage.remove('x52')
-      storage.remove('deptList')
+      storage.clear()
       this.$router.push('/login')
     },
     refresh () {

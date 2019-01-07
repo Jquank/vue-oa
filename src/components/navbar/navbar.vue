@@ -11,10 +11,9 @@
             <i :class="item.fontIcon"></i>&nbsp;
             <span>{{item.text}}</span>
           </span>
-          <el-menu-item class="item-active" :ref="child.to" v-for="(child, index) in item.cList" :key="index" :index="child.to"  v-if="permissions.indexOf(child.cid)>-1 || child.cid === '1000' || child.cid === '1100'">
-          <!-- <el-menu-item class="item-active" :ref="child.to" v-for="(child, index) in item.cList" :key="index" :index="child.to"> -->
+          <el-menu-item class="item-active" :ref="child.to" v-for="(child, index) in item.cList" :key="index" :index="child.to"  v-if="permissions.indexOf(child.cid)>-1 || child.cid === '1000'">
             {{child.text}}
-            <!-- 1000: 客户搜索，1100：工资管理 -->
+            <!-- 默认权限1000: 客户搜索，工资管理 -->
           </el-menu-item>
         </el-submenu>
       </el-menu>
@@ -70,10 +69,10 @@ export default {
       background: @bg-nav !important;
     }
     .el-menu-item.is-active {
-      background: lighten(@bg-nav, 20%) !important;
+      background: lighten(@bg-nav, 10%) !important;
     }
     .item-active {
-      background: lighten(@bg-nav, 40%) !important;
+      background: lighten(@bg-nav, 30%) !important;
     }
     .item-active:hover {
       background: lighten(@bg-nav, 20%) !important;

@@ -14,7 +14,7 @@
       @current-change="handleCurrentChange"
       :current-page="currentPage"
       :page-sizes="[10,30,50,100,500]"
-      :page-size="10"
+      :page-size="pageval"
       :layout="layout"
       :total="pageCount"
     ></el-pagination>
@@ -99,7 +99,7 @@ export default {
       let params = Object.assign(
         {},
         {
-          pagesize: 10,
+          pagesize: this.pageval,
           currentpage: this.currentPage
         },
         this.sendParams,

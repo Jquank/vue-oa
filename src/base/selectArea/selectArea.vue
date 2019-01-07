@@ -112,6 +112,10 @@ export default {
     getFirstArea (id) {
       this.$post('/Area.do?comparea', {parentid: id}).then(res => {
         this.options = res.data.data
+        let index = this.options.findIndex(val => val.AREANAME === '湖北省')
+        let hubeiData = this.options[index]
+        this.options.splice(index, 1)
+        this.options.unshift(hubeiData)
         this.options.forEach((val, key) => {
           if (!val.children) {
             this.$set(val, 'children', [])

@@ -1,7 +1,7 @@
 <template>
   <div class="depart-manage component-container media-padding">
     <div class="wrapper">
-      <div class="tree-content mr10px">
+      <div class="tree-content mr10px mb10px">
         <el-tree
           highlight-current
           :data="departmentList"
@@ -224,6 +224,7 @@ export default {
 .depart-manage {
   .wrapper {
     display: flex;
+    flex-wrap: wrap;
     .tree-content {
       display: -webkit-box;
       max-height: 650px;

@@ -3,23 +3,23 @@
     <div class="edit-content">
       <el-form :model="form" label-width="80px">
         <el-form-item label="标题" required>
-          <el-col :md=24 class="maxwidth">
+          <el-col :md=24>
             <el-input v-model="form.title" placeholder="填写标题" class="input-btn"></el-input>
-            <el-button type="primary" @click="back">返回</el-button>
+            <el-button type="warning" @click="back">返回</el-button>
           </el-col>
         </el-form-item>
         <el-form-item label="上传附件">
-          <el-col :md=24 class="maxwidth">
+          <el-col :md=24>
             <up-file @fileUrl="getFileUrl"></up-file>
           </el-col>
         </el-form-item>
         <el-form-item label="正文" required>
-          <el-col :md=24 class="maxwidth">
+          <el-col :md=24>
             <div ref="editor" class="editor"></div>
           </el-col>
         </el-form-item>
         <el-form-item label="分类" required v-if="mark==='addClassify'">
-          <el-col :md=24 class="maxwidth">
+          <el-col :md=24>
             <el-select v-model="form.type" placeholder="请选择产品类型">
               <el-option :value="21" label="产品资料"></el-option>
               <el-option :value="22" label="产品Q&A"></el-option>
@@ -137,11 +137,18 @@ export default {
 }
 </script>
 
+<style lang="less">
+  .text-edit .editor{
+      >div:nth-child(2){
+        height: 500px !important;
+      }
+    }
+</style>
 <style lang="less" scoped>
 .text-edit {
   .edit-content {
     .maxwidth{
-      width: 900px;
+      width: 1000px;
     }
   }
 }

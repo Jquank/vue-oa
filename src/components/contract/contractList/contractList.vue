@@ -140,7 +140,7 @@
         </div>
       </el-form>
       <el-table stripe border :data="checkLogs" style="width: 100%;margin-top:10px;">
-        <el-table-column prop="insert_time" label="日期" width="100">
+        <el-table-column prop="insert_time" label="日期" width="90">
           <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
         </el-table-column>
         <el-table-column prop="name" label="发表者" width="100">

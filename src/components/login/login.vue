@@ -60,7 +60,7 @@ import { serverUrl } from 'api/http'
 import { getByCode } from 'api/getOptions'
 import storage from 'good-storage'
 import { Base64 } from 'js-base64'
-const REG = /^[\w-_,]{6,16}$/
+const REG = /^[\w-_,]{5,16}$/
 export default {
   data() {
     var validatePass = (rule, value, callback) => {
@@ -123,7 +123,8 @@ export default {
         .then(res => {
           if (res.data.success) {
             let preName = (cookie.getJSON('rememberForm') || {}).remName
-            if (this.handleRememberPwd || (this.form.rememberPwd && this.form.myName !== preName)) {
+            let prePwd = (cookie.getJSON('rememberForm') || {}).remPwd
+            if (this.handleRememberPwd || (this.form.rememberPwd !== prePwd || this.form.myName !== preName)) {
               let data = {
                 remName: this.form.myName,
                 remPwd: Base64.encode(this.form.myPassword),
@@ -188,6 +189,8 @@ export default {
           this.regUserList = res.data.data
           if (this.regUserList.findIndex(val => val.name === loginName) > 0) {
             this.showBindRealName = true
+          } else {
+            this.showBindRealName = false
           }
         }
       })

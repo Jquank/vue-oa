@@ -44,7 +44,7 @@
         </el-table-column>
         <el-table-column prop="cname" label="订单名称" min-width="180">
         </el-table-column>
-        <el-table-column prop="" label="提交时间" width="100">
+        <el-table-column prop="" label="提交时间" width="90">
           <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
         </el-table-column>
         <el-table-column prop="username" label="下单人" min-width="80">
@@ -66,7 +66,7 @@
             {{scope.row.audittype === 0 ? "仅降E":"降E并提单"}}
           </span>
         </el-table-column>
-        <el-table-column prop="" label="最后操作时间" width="100">
+        <el-table-column prop="" label="最后操作时间" width="90">
           <span slot-scope="scope">{{scope.row.opt_time | timeFormat}}</span>
         </el-table-column>
         <el-table-column prop="deptname" label="商务大区部门" min-width="110">
@@ -146,7 +146,7 @@
         <el-table-column prop="currentname" label="订单状态" width="90">
           <span slot-scope="scope">{{scope.row.audittype == 0 ? "仅降E":"降E并提单"}}</span>
         </el-table-column>
-        <el-table-column prop="username" label="最后操作时间" width="100">
+        <el-table-column prop="username" label="最后操作时间" width="90">
           <span slot-scope="scope">{{scope.row.opt_time | timeFormat}}</span>
         </el-table-column>
         <el-table-column prop="deptname" label="商务大区部门" width="105">

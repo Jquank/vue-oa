@@ -182,7 +182,7 @@
       </el-row>
       <el-row v-for="item in form.productMoneyList" :key="item.code_val">
         <el-col :md="12" class="maxwidth">
-          <el-form-item :label="item.code_desc+' :'">
+          <el-form-item :label="item.code_desc+' :'" label-width="120px">
             <el-input v-model="item.value" :placeholder="item.code_desc">
               <span slot="prepend">¥</span>
             </el-input>
@@ -267,10 +267,10 @@
         <el-table-column prop="receiptmoney" label="金额" width="110">
           <span slot-scope="scope">{{scope.row.receiptmoney | currency}}</span>
         </el-table-column>
-        <el-table-column prop="bill_time" label="记账日期" width="100">
+        <el-table-column prop="bill_time" label="记账日期" width="90">
           <span slot-scope="scope">{{scope.row.bill_time | timeFormat}}</span>
         </el-table-column>
-        <el-table-column prop="insert_time" label="申请时间" width="100">
+        <el-table-column prop="insert_time" label="申请时间" width="90">
           <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
         </el-table-column>
         <el-table-column prop label="商务|客服" width="80">

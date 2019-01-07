@@ -593,10 +593,10 @@
         <el-table-column prop="receiptmoney" label="金额">
           <span slot-scope="scope">{{scope.row.receiptmoney | currency}}</span>
         </el-table-column>
-        <el-table-column prop="receiptmoney" label="记账日期" width="100">
+        <el-table-column prop="receiptmoney" label="记账日期" width="90">
           <span slot-scope="scope">{{scope.row.bill_time | timeFormat1}}</span>
         </el-table-column>
-        <el-table-column prop="receiptmoney" label="申请时间" width="100">
+        <el-table-column prop="receiptmoney" label="申请时间" width="90">
           <span slot-scope="scope">{{scope.row.insert_time | timeFormat1}}</span>
         </el-table-column>
         <el-table-column prop="receiptmoney" label="商务|客服">

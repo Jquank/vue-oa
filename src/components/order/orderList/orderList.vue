@@ -22,24 +22,6 @@
         <auto-select :key="key_pro_type" title="产品类型" v-model="productType" class="search-item item-width">
           <el-option v-for="item in productList" :key="item.id" :label="item.name" :value="item.id"></el-option>
         </auto-select>
-        <el-input placeholder="搜索百度账号" v-model="bdAccount" class="search-item item-width">
-          <template slot="prepend">百度账号:</template>
-        </el-input>
-        <el-input placeholder="搜索百度ID" v-model="bd_id" class="search-item item-width">
-          <template slot="prepend">百度 ID:&nbsp;&nbsp;</template>
-        </el-input>
-        <auto-select :key="key_check_state" title="审核状态" v-model="checkState" class="search-item item-width">
-          <el-option v-for="item in checkStateList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-        </auto-select>
-        <el-input v-model="dept" class="search-item item-width">
-          <template slot="prepend">提交部门:</template>
-        </el-input>
-        <el-input v-model="web" class="search-item item-width">
-          <template slot="prepend">网址:</template>
-        </el-input>
-        <el-input v-model="phone" class="search-item item-width">
-          <template slot="prepend">客户电话:</template>
-        </el-input>
         <auto-select
           v-if="permissions.indexOf('4d')>-1"
           :key="key_achievement"
@@ -49,6 +31,25 @@
         >
           <el-option v-for="item in achievements" :key="item.value" :label="item.label" :value="item.opentime"></el-option>
         </auto-select>
+        <el-input placeholder="搜索百度账号" v-model="bdAccount" class="search-item item-width">
+          <template slot="prepend">百度账号:</template>
+        </el-input>
+        <el-input placeholder="搜索百度ID" v-model="bd_id" class="search-item item-width">
+          <template slot="prepend">百度 ID:&nbsp;&nbsp;</template>
+        </el-input>
+        <auto-select :key="key_check_state" title="审核状态" v-model="checkState" class="search-item item-width">
+          <el-option v-for="item in checkStateList" :key="item.sn" :label="item.name" :value="item.sn"></el-option>
+        </auto-select>
+        <select-department @upDeptId="upDeptId" :title="'提交部门'" :key="key_dept" class="search-item item-width"></select-department>
+        <el-input v-model="web" class="search-item item-width">
+          <template slot="prepend">网址:</template>
+        </el-input>
+        <el-input v-model="phone" class="search-item item-width">
+          <template slot="prepend">客户电话:</template>
+        </el-input>
+        <el-input v-model="orderMan" class="search-item item-width">
+          <template slot="prepend">提单人:</template>
+        </el-input>
         <el-date-picker
           v-model="orderSubDate"
           value-format="yyyy-MM-dd"
@@ -90,7 +91,7 @@
       >
         <el-table-column prop="ordernum" label="订单ID" min-width="180"></el-table-column>
         <el-table-column prop="cname" label="订单名称" min-width="150"></el-table-column>
-        <el-table-column prop label="提交时间" width="100">
+        <el-table-column prop label="提交时间" width="90">
           <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
         </el-table-column>
         <el-table-column prop="username" label="下单人" min-width="80"></el-table-column>
@@ -105,13 +106,13 @@
           <el-table-column prop label="订单金额" width="110">
             <span slot-scope="scope">{{scope.row.amount_real | currency}}</span>
           </el-table-column>
-          <el-table-column prop label="提单时间" width="100">
+          <el-table-column prop label="提单时间" width="90">
             <span slot-scope="scope">{{scope.row.bill_time | timeFormat}}</span>
           </el-table-column>
-          <el-table-column prop label="业绩新开时间" width="100">
+          <el-table-column prop label="业绩新开时间" width="90">
             <span slot-scope="scope">{{scope.row.opentime | timeFormat1}}</span>
           </el-table-column>
-          <el-table-column prop label="业绩上线时间" width="100">
+          <el-table-column prop label="业绩上线时间" width="90">
             <span slot-scope="scope">{{scope.row.onlinetime | timeFormat1}}</span>
           </el-table-column>
           <el-table-column prop="commision_num" label="提成单量" width="110"></el-table-column>
@@ -140,7 +141,7 @@
         <el-table-column prop label="订单状态" width="120">
           <span slot-scope="scope">{{scope.row.audittype === 0 ? "仅降E":"降E并提单"}}</span>
         </el-table-column>
-        <el-table-column prop label="最后操作时间" width="100">
+        <el-table-column prop label="最后操作时间" width="90">
           <span slot-scope="scope">{{scope.row.opt_time | timeFormat}}</span>
         </el-table-column>
         <el-table-column prop="deptname" label="商务大区部门" min-width="110"></el-table-column>
@@ -343,6 +344,7 @@ import Page from 'base/page/page'
 import AutoSelect from 'base/autoSelect/autoSelect'
 import cookie from 'js-cookie'
 import SelectUser from 'base/selectUser/selectUser'
+import SelectDepartment from 'base/selectDepartment/selectDepartment'
 export default {
   data() {
     return {
@@ -366,8 +368,10 @@ export default {
       addDate: [],
       phone: '',
       orderStatus: '',
+      orderMan: '',
       achievement: '',
       key_achievement: '3',
+      key_dept: '4',
       // todo
       achievements: [
         {
@@ -582,6 +586,9 @@ export default {
         }
       })
     },
+    upDeptId(code) {
+      this.dept = code
+    },
     search() {
       this.sendParams = {
         opttype: this.tabStatus,
@@ -597,7 +604,8 @@ export default {
         addStart: this.addDate[0],
         addEnd: this.addDate[1],
         orderStart: this.orderSubDate[0],
-        orderEnd: this.orderSubDate[1]
+        orderEnd: this.orderSubDate[1],
+        orderuname: this.orderMan
       }
     },
     reset() {
@@ -609,11 +617,13 @@ export default {
       this.bd_id = ''
       this.dept = ''
       this.checkState = ''
+      this.orderMan = ''
       this.key_check_state = new Date() + '2'
       this.phone = ''
       this.addDate = []
       this.orderSubDate = []
       this.key_achievement = new Date() + '3'
+      this.key_dept = new Date() + '4'
     },
     updateOrderListData(res) {
       this.orderListData = res.data[0].data
@@ -623,7 +633,8 @@ export default {
     Page,
     AutoSelect,
     MakeInvoiceDialog,
-    SelectUser
+    SelectUser,
+    SelectDepartment
   }
 }
 </script>

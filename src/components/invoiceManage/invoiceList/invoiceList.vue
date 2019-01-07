@@ -80,7 +80,7 @@
         </el-table-column>
         <el-table-column prop="companyname" label="购方名称" min-width="150">
         </el-table-column>
-        <el-table-column prop="invoicetime" label="开票日期" width="100">
+        <el-table-column prop="invoicetime" label="开票日期" width="90">
           <span slot-scope="scope">{{scope.row.invoicetime | timeFormat1}}</span>
         </el-table-column>
         <el-table-column prop="tmoney" label="总金额" width="120">
@@ -110,7 +110,7 @@
           </el-table-column>
           <el-table-column prop="express_no" label="快递单号" width="100">
           </el-table-column>
-          <el-table-column prop="express_tiem" label="快递时间" width="100">
+          <el-table-column prop="express_tiem" label="快递时间" width="90">
             <span slot-scope="scope">{{scope.row.express_time | timeFormat}}</span>
           </el-table-column>
           <el-table-column prop="express_remark" label="快递备注" width="110">
@@ -167,7 +167,7 @@
           </el-table-column>
           <el-table-column prop="invoicenumber" label="发票号码" width="100">
           </el-table-column>
-          <el-table-column prop="invoicetime" label="开票日期" width="100">
+          <el-table-column prop="invoicetime" label="开票日期" width="90">
             <span slot-scope="scope">{{scope.row.invoicetime | timeFormat1}}</span>
           </el-table-column>
           <el-table-column prop="" label="税率" width="60">
@@ -278,7 +278,7 @@
         </el-table-column>
         <el-table-column prop="baidu_account" label="百度账户" width="80">
         </el-table-column>
-        <el-table-column prop="insert_time" label="申请时间" width="100">
+        <el-table-column prop="insert_time" label="申请时间" width="90">
           <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
         </el-table-column>
         <el-table-column prop="receiptmoney" label="到账金额" width="100">
@@ -755,7 +755,7 @@ export default {
       // if (!this.invoiceList.length) {
       //   return
       // }
-      let initObj = this.invoiceList.unshift()
+      let initObj = this.invoiceList.slice(0, 1)
       for (let key in initObj) {
         initObj[key] = ''
       }

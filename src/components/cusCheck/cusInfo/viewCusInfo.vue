@@ -144,14 +144,14 @@
               </el-table-column>
               <el-table-column prop="username" label="提交人" width="100">
               </el-table-column>
-              <el-table-column prop="insert_time" label="提交时间" width="100">
+              <el-table-column prop="insert_time" label="提交时间" width="90">
                 <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
               </el-table-column>
               <el-table-column prop="cremark" label="提交备注" min-width="180">
               </el-table-column>
               <el-table-column prop="auditor" label="处理人" width="100">
               </el-table-column>
-              <el-table-column prop="" label="处理时间" width="100">
+              <el-table-column prop="" label="处理时间" width="90">
                 <span slot-scope="scope">{{scope.row.auditor_time | timeFormat}}</span>
               </el-table-column>
               <el-table-column prop="reason" label="被拒原因">

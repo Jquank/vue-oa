@@ -304,7 +304,7 @@
         </el-table-column>
         <el-table-column prop="code_desc" label="银行类型" width="80">
         </el-table-column>
-        <el-table-column prop="" label="交易时间" width="100">
+        <el-table-column prop="" label="交易时间" width="90">
           <span slot-scope="scope">{{scope.row.tm | timeFormat}}</span>
         </el-table-column>
         <el-table-column prop="fm_name" label="付款名" min-width="140">
@@ -358,7 +358,7 @@ import Page from 'base/page/page'
 import { getByCode, getMyContract } from 'api/getOptions'
 import cookie from 'js-cookie'
 import UpFile from 'base/upLoad/upFile'
-import { productType } from 'common/js/filters' //eslint-disable-line
+import { productType, timeFormat } from 'common/js/filters' //eslint-disable-line
 export default {
   computed: {
     receiveTotal () {
@@ -533,7 +533,7 @@ export default {
         productList: [],
         selProList: [],
         receiveTime: this.detail.receive_time,
-        expectTime: this.detail.offset_time
+        expectTime: timeFormat(this.detail.offset_time)
       }
       if (this.detail.con_id3) {
         this.contractTab = 'old'

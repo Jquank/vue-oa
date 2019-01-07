@@ -131,7 +131,6 @@ export const navList = [
     text: '客户搜索',
     cList: [
       {
-        // todo
         cid: '1000',
         to: '/indexPage/cusSearch',
         text: '搜索客户'
@@ -236,8 +235,7 @@ export const navList = [
     fontIcon: 'fa fa-money fa-fw fa-lg',
     text: '工资管理',
     cList: [
-      // todo
-      { cid: '1100', to: '/indexPage/salaryList', text: '工资列表' },
+      { cid: '1000', to: '/indexPage/salaryList', text: '工资列表' },
       { cid: '4q', to: '/indexPage/salaryError', text: '工资异常' }
     ]
   },

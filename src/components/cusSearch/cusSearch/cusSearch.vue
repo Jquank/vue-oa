@@ -426,7 +426,7 @@ export default {
       this.cusDetailDialog = true
     },
     search () {
-      if (!this.cusName || this.cusName.length <= 4) {
+      if (!this.bdAccount && (!this.cusName || this.cusName.length <= 4)) {
         this.$message.error('搜索关键字需大于4个字符')
         return
       }
