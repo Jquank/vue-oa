@@ -986,7 +986,7 @@
           ></out-quality>
           <!-- 业支外审（直通车） -->
           <out-quality
-            v-if="sn===200 && templateInfo.cpid && pid==='ZTC_WEBSITE'"
+            v-if="sn===200 && templateInfo.cpid && (pid==='ZTC_WEBSITE'||pid==='WEBSITE')"
             :moneyInfo="moneyInfo"
             :moneyRecord="moneyRecord"
             :orderFlowDatas="orderFlowDatas"

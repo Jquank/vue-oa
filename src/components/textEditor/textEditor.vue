@@ -37,6 +37,7 @@
 <script>
 import E from 'wangeditor'
 import UpFile from 'base/upLoad/upFile'
+import {uploadUrl} from 'api/http'
 export default {
   data () {
     return {
@@ -125,8 +126,17 @@ export default {
   },
   mounted () {
     this.editor = new E(this.$refs.editor)
+    this.editor.customConfig.debug = true
     this.editor.customConfig.onchange = html => {
       this.form.vtext = html
+    }
+    this.editor.customConfig.uploadImgServer = uploadUrl
+    this.editor.customConfig.uploadImgMaxSize = 5 * 1024 * 1024
+    this.editor.customConfig.uploadImgHooks = {
+      customInsert: function (insertImg, result, editor) {
+        var url = result.url
+        insertImg(url)
+      }
     }
     this.editor.create()
     this.editor.txt.html(this.form.vtext)

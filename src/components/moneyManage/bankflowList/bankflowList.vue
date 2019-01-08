@@ -107,7 +107,7 @@
     <el-table :data="bankFlowList" border class="table-width" max-height="550" stripe>
       <!-- <el-table-column type="selection" width="35"></el-table-column> -->
       <el-table-column :fixed="isFixed" label="银行类型" prop="code_desc" width="80"></el-table-column>
-      <el-table-column :fixed="isFixed" label="交易时间" prop="B_JYSJ" width="100">
+      <el-table-column :fixed="isFixed" label="交易时间" prop="B_JYSJ" width="95">
         <span slot-scope="scope">{{scope.row.tm | timeFormat}}</span>
       </el-table-column>
       <el-table-column :fixed="isFixed" label="参考号" prop="no" width="100"></el-table-column>
@@ -211,7 +211,7 @@
             </el-table>
           </template>
         </el-table-column>
-        <el-table-column class-name="splited-col" label="提单时间" prop width="120">
+        <el-table-column class-name="splited-col" label="提单时间" prop width="95">
           <template slot-scope="scope">
             <el-table
               :data="scope.row.split"

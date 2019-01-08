@@ -43,6 +43,7 @@
 <script>
 import E from 'wangeditor'
 import SelectDept from 'base/selectDept/selectDept'
+import {uploadUrl} from 'api/http'
 export default {
   name: 'editor',
   data() {
@@ -107,6 +108,14 @@ export default {
     this.editor = new E(this.$refs.editor)
     this.editor.customConfig.onchange = html => {
       this.form.content = html
+    }
+    this.editor.customConfig.uploadImgServer = uploadUrl
+    this.editor.customConfig.uploadImgMaxSize = 5 * 1024 * 1024
+    this.editor.customConfig.uploadImgHooks = {
+      customInsert: function (insertImg, result, editor) {
+        var url = result.url
+        insertImg(url)
+      }
     }
     this.editor.create()
     this.editor.txt.html(this.form.content)

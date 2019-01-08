@@ -1,7 +1,7 @@
 <template>
   <div class="add-classify component-container media-padding">
     <div class="wrapper">
-      <div class="tree">
+      <div class="tree" ref="tree">
         <div class="add-title mb10px">
           <h3 class="title">流程归类</h3>
           <el-button v-if="permissions.indexOf('8m') > -1" @click.native="addArticleByNode" class="btn" icon="fa fa-plus" type="primary" size="mini">添加文章</el-button>
@@ -28,6 +28,7 @@
           </el-tree>
         </div>
       </div>
+      <div class="drag-tree" draggable="true" @dragstart="dragstart" @drag="drag"></div>
       <div class="article-list">
         <div class="search-article">
           <el-input placeholder="搜索文章名称" v-model="articleName">
@@ -38,13 +39,13 @@
           </span>
         </div>
         <div class="flex-table">
-          <el-table :data="articleList" max-height="550" border class="mt10px">
-            <el-table-column type="index" width="40"></el-table-column>
-            <el-table-column prop="title" label="文章名称" min-width="80">
+          <el-table :data="articleList" max-height="600" border class="mt10px">
+            <el-table-column type="index" width="50"></el-table-column>
+            <el-table-column prop="title" label="文章名称" min-width="80" show-overflow-tooltip>
               <span slot-scope="scope" @click="viewArticle(scope.row)" v-if="permissions.indexOf('8m') > -1" class="click-title">{{scope.row.title}}</span>
             </el-table-column>
             <template v-if="permissions.indexOf('8m') > -1">
-              <el-table-column prop="id" label="链接" show-overflow-tooltip>
+              <el-table-column prop="id" label="链接">
               <template slot-scope="scope">
                 <el-input v-model="scope.row.alink">
                   <el-button
@@ -301,6 +302,16 @@ export default {
         default:
           return '' + str
       }
+    },
+    dragstart(e) {
+      this.startClientX = e.clientX
+      this.startTreeWidth = this.$refs.tree.clientWidth
+    },
+    drag(e) {
+      this.endClientX = e.clientX
+      this.dragX = this.endClientX - this.startClientX
+      let width = this.startTreeWidth + this.dragX + 'px'
+      this.$refs.tree.style.flex = `0 0 ${width}`
     }
   },
   components: {}
@@ -321,11 +332,13 @@ export default {
 </style>
 
 <style lang="less" scoped>
+@max-height: 600px;
 .add-classify {
   position: relative;
   .add-title {
     display: flex;
     justify-content: space-between;
+    height: 32px;
     .title {
       margin: 3px 0;
       padding-left: 20px;
@@ -344,7 +357,7 @@ export default {
       width: 360px;
       .tree-content {
         display: -webkit-box;
-        max-height: 550px;
+        max-height: @max-height;
         overflow: auto;
         background: #EBEEF5;
         .el-tree{
@@ -362,6 +375,7 @@ export default {
             overflow: hidden;
             font-size: 14px;
             padding-left: 8px;
+            z-index: 100000;
             .el-button + .el-button {
               margin-left: 2px;
             }
@@ -381,6 +395,12 @@ export default {
           }
         }
       }
+    }
+    .drag-tree{
+      max-height: @max-height;
+      margin-top: 42px;
+      border: 3px solid #EBEEF5;
+      cursor: e-resize;
     }
     .article-list {
       flex: 1;

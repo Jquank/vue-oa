@@ -189,14 +189,14 @@
               </el-table-column>
               <el-table-column prop="username" label="提交人" width="80">
               </el-table-column>
-              <el-table-column prop="insert_time" label="提交时间" width="90">
+              <el-table-column prop="insert_time" label="提交时间" width="95">
                 <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
               </el-table-column>
               <el-table-column prop="cremark" label="提交备注" min-width="250">
               </el-table-column>
               <el-table-column prop="auditor" label="处理人" width="100">
               </el-table-column>
-              <el-table-column prop="" label="处理时间" width="90">
+              <el-table-column prop="" label="处理时间" width="95">
                 <span slot-scope="scope">{{scope.row.auditor_time | timeFormat}}</span>
               </el-table-column>
               <el-table-column prop="reason" label="被拒原因" min-width="150">
@@ -606,8 +606,6 @@ export default {
         companylogid: this.receiveData.check_id,
         pid: this.receiveData.pid
       }
-      console.log(params)
-      return
       this.$post('/CheckOut.do?EditCustomer', params).then(res => {
         if (res.data[0].success) {
           this.$message({

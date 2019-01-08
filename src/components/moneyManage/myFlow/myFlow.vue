@@ -24,10 +24,10 @@
       </div>
     </div>
     <!-- 列表 -->
-    <el-table :data="myFlowList" max-height="550" class="table-width" border stripe>
+    <el-table :data="myFlowList" max-height="550" class="table-width" border stripe size="mini">
       <!-- <el-table-column type="selection" width="35"></el-table-column> -->
       <el-table-column label="银行类型" prop="code_desc" width="80"></el-table-column>
-      <el-table-column label="交易时间" prop="B_JYSJ" width="100">
+      <el-table-column label="交易时间" prop="B_JYSJ" width="95">
         <span slot-scope="scope">{{scope.row.tm | timeFormat}}</span>
       </el-table-column>
       <el-table-column label="参考号" prop="no" width="120"></el-table-column>
@@ -39,7 +39,7 @@
       <el-table-column label="总金额" prop="" min-width="120">
         <span slot-scope="scope">{{scope.row.split_amount | currency1}}</span>
       </el-table-column>
-      <el-table-column label="认领时间" prop="" width="100">
+      <el-table-column label="认领时间" prop="" width="95">
         <span slot-scope="scope">{{scope.row.allocTime | timeFormat}}</span>
       </el-table-column>
       <el-table-column label="分配(认领)备注" prop="allocRemark" min-width="150"></el-table-column>

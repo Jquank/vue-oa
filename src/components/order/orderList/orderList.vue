@@ -89,9 +89,12 @@
         class="table-width"
         max-height="550"
       >
+        <el-table-column prop="place_id" label="地区" width="60">
+          <span slot-scope="scope">{{scope.row.place_id | areaType}}</span>
+        </el-table-column>
         <el-table-column prop="ordernum" label="订单ID" min-width="180"></el-table-column>
         <el-table-column prop="cname" label="订单名称" min-width="150"></el-table-column>
-        <el-table-column prop label="提交时间" width="90">
+        <el-table-column prop label="提交时间" width="95">
           <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
         </el-table-column>
         <el-table-column prop="username" label="下单人" min-width="80"></el-table-column>
@@ -106,20 +109,20 @@
           <el-table-column prop label="订单金额" width="110">
             <span slot-scope="scope">{{scope.row.amount_real | currency}}</span>
           </el-table-column>
-          <el-table-column prop label="提单时间" width="90">
+          <el-table-column prop label="提单时间" width="95">
             <span slot-scope="scope">{{scope.row.bill_time | timeFormat}}</span>
           </el-table-column>
-          <el-table-column prop label="业绩新开时间" width="90">
+          <el-table-column prop label="业绩新开时间" width="95">
             <span slot-scope="scope">{{scope.row.opentime | timeFormat1}}</span>
           </el-table-column>
-          <el-table-column prop label="业绩上线时间" width="90">
+          <el-table-column prop label="业绩上线时间" width="95">
             <span slot-scope="scope">{{scope.row.onlinetime | timeFormat1}}</span>
           </el-table-column>
           <el-table-column prop="commision_num" label="提成单量" width="110"></el-table-column>
           <el-table-column prop label="提成合计" width="110">
             <span slot-scope="scope">{{scope.row.commision_count | currency}}</span>
           </el-table-column>
-          <el-table-column prop label="发放日期" width="90">
+          <el-table-column prop label="发放日期" width="95">
             <span slot-scope="scope">{{scope.row.granttime | timeFormat1}}</span>
           </el-table-column>
         </template>
@@ -141,7 +144,7 @@
         <el-table-column prop label="订单状态" width="120">
           <span slot-scope="scope">{{scope.row.audittype === 0 ? "仅降E":"降E并提单"}}</span>
         </el-table-column>
-        <el-table-column prop label="最后操作时间" width="90">
+        <el-table-column prop label="最后操作时间" width="95">
           <span slot-scope="scope">{{scope.row.opt_time | timeFormat}}</span>
         </el-table-column>
         <el-table-column prop="deptname" label="商务大区部门" min-width="110"></el-table-column>
@@ -194,6 +197,9 @@
 
       <!-- 转户出纳列表 -->
       <el-table v-if="permissions.indexOf('5q') > -1" :data="orderListData" border stripe class="table-width" max-height="550">
+        <el-table-column prop="place_id" label="地区" width="60">
+          <span slot-scope="scope">{{scope.row.place_id | areaType}}</span>
+        </el-table-column>
         <el-table-column prop label="加款时间" min-width="100">
           <span slot-scope="scope">{{scope.row.addMoneyTime | timeFormat}}</span>
         </el-table-column>
@@ -225,6 +231,9 @@
 
       <!-- 客服看到的列表 -->
       <el-table v-if="permissions.indexOf('6n') > -1" :data="orderListData" border stripe class="table-width" max-height="550">
+        <el-table-column prop="place_id" label="地区" width="60">
+          <span slot-scope="scope">{{scope.row.place_id | areaType}}</span>
+        </el-table-column>
         <el-table-column prop="ordernum" label="订单ID" min-width="150"></el-table-column>
         <el-table-column prop="cname" label="订单名称" min-width="150"></el-table-column>
         <el-table-column prop="baiducount" label="用户名" width="90"></el-table-column>

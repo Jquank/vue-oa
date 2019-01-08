@@ -194,7 +194,7 @@
         <el-table-column prop="receiptmoney" label="到账金额" width="110">
           <span slot-scope="scope">{{scope.row.receiptmoney | currency}}</span>
         </el-table-column>
-        <el-table-column prop="billtime" label="提单时间" width="90">
+        <el-table-column prop="billtime" label="提单时间" width="95">
           <span slot-scope="scope">{{scope.row.billtime | timeFormat1}}</span>
         </el-table-column>
         <el-table-column prop="usemoney" label="提单金额" width="110">

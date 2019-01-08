@@ -1,7 +1,7 @@
 <template>
   <div class="add-classify component-container media-padding">
     <div class="wrapper">
-      <div class="tree">
+      <div class="tree" ref="tree">
         <div class="add-title mb10px">
           <h3 class="title">产品查询</h3>
           <el-button v-if="permissions.indexOf('8m') > -1" @click.native="addArticleByNode" class="btn" icon="fa fa-plus" type="primary" size="mini">添加文章</el-button>
@@ -39,6 +39,7 @@
           </el-tree>
         </div>
       </div>
+      <div class="drag-tree" draggable="true" @dragstart="dragstart" @drag="drag"></div>
       <div class="article-list">
         <div class="search-article">
           <el-input placeholder="搜索文章名称" v-model="articleName">
@@ -357,6 +358,16 @@ export default {
         default:
           return '' + str
       }
+    },
+    dragstart(e) {
+      this.startClientX = e.clientX
+      this.startTreeWidth = this.$refs.tree.clientWidth
+    },
+    drag(e) {
+      this.endClientX = e.clientX
+      this.dragX = this.endClientX - this.startClientX
+      let width = this.startTreeWidth + this.dragX + 'px'
+      this.$refs.tree.style.flex = `0 0 ${width}`
     }
   },
   components: {}
@@ -370,18 +381,20 @@ export default {
   }
 
   .expanded.el-tree-node__expand-icon {
-    color: #67c23a;
+    // color: #67c23a;
     font-size: 15px;
   }
 }
 </style>
 
 <style lang="less" scoped>
+@max-height: 600px;
 .add-classify {
   position: relative;
   .add-title {
     display: flex;
     justify-content: space-between;
+    height: 32px;
     .title {
       margin: 3px 0;
       padding-left: 20px;
@@ -400,7 +413,7 @@ export default {
       width: 360px;
       .tree-content {
         display: -webkit-box;
-        max-height: 550px;
+        max-height: @max-height;
         overflow: auto;
         background: #EBEEF5;
         .el-tree{
@@ -438,6 +451,12 @@ export default {
           }
         }
       }
+    }
+    .drag-tree{
+      max-height: @max-height;
+      margin-top: 42px;
+      border: 3px solid #EBEEF5;
+      cursor: e-resize;
     }
     .article-list {
       flex: 1;

@@ -67,7 +67,12 @@ export const orderMixin = { // 新增订单
     _getQualifyType (code) {
       getByCode(code).then(res => {
         this.qualifyType = res.data.data
-        this.form.zizhiList.push(this.qualifyType[11]) // 11--默认企业营业执照原件
+        this.qualifyType.forEach(val => {
+          if (val.code_desc === '企业营业执照原件') {
+            this.form.zizhiList.push(val)
+          }
+        })
+        // this.form.zizhiList.push(this.qualifyType[11]) // 11--默认企业营业执照原件
       })
     },
     // 获取网建产品类型

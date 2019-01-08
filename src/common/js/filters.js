@@ -33,6 +33,16 @@ export function productType(num, str) {
   // return b
 }
 
+export function areaType(num) {
+  switch (num) {
+    case 'HUB027':
+      return '武汉'
+    case 'HUB710':
+      return '襄阳'
+    case 'HUB717':
+      return '宜昌'
+  }
+}
 export function comType(num) {
   switch (num) {
     case -10:

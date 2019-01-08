@@ -3,12 +3,12 @@
     <h3 class="check-title">{{title}}</h3>
     <el-col :md="24" class="mt10px">
       <div class="">
-        <auto-select :key="key_a1" v-model="documenter" :title="'资料员'" :placeholder="'请选择资料员'">
+        <auto-select :key="key_a1" v-model="documenter" :valueKey="'id'" :title="'资料员'" :placeholder="'请选择资料员'">
           <el-option v-for="item in dispatchRoleList" :key="item.id" :value="item" :label="item.name"></el-option>
         </auto-select>
       </div>
       <div class="mt10px">
-        <auto-select :key="key_a2" v-model="designer" :title="'设计师'" :placeholder="'请选择设计师'">
+        <auto-select :key="key_a2" v-model="designer" :valueKey="'id'" :title="'设计师'" :placeholder="'请选择设计师'">
           <el-option v-for="item in userList1" :key="item.id" :value="item" :label="item.name"></el-option>
         </auto-select>
       </div>

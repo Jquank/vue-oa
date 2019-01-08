@@ -529,7 +529,7 @@
         </el-table-column>
         <el-table-column prop="invoicecode" label="发票代码" width="100"></el-table-column>
         <el-table-column prop="invoicenumber" label="发票号码" width="100"></el-table-column>
-        <el-table-column prop="invoicetime" label="开票日期" width="90">
+        <el-table-column prop="invoicetime" label="开票日期" width="95">
           <span slot-scope="scope">{{scope.row.invoicetime | timeFormat}}</span>
         </el-table-column>
         <el-table-column prop="prove_img" label="发票垫款证明" width="110">
@@ -593,10 +593,10 @@
         <el-table-column prop="receiptmoney" label="金额">
           <span slot-scope="scope">{{scope.row.receiptmoney | currency}}</span>
         </el-table-column>
-        <el-table-column prop="receiptmoney" label="记账日期" width="90">
+        <el-table-column prop="receiptmoney" label="记账日期" width="95">
           <span slot-scope="scope">{{scope.row.bill_time | timeFormat1}}</span>
         </el-table-column>
-        <el-table-column prop="receiptmoney" label="申请时间" width="90">
+        <el-table-column prop="receiptmoney" label="申请时间" width="95">
           <span slot-scope="scope">{{scope.row.insert_time | timeFormat1}}</span>
         </el-table-column>
         <el-table-column prop="receiptmoney" label="商务|客服">

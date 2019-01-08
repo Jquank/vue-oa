@@ -30,8 +30,8 @@
         <el-input placeholder="搜索百度ID" v-model="bd_id" class="search-item item-width">
           <template slot="prepend">百度 ID:&nbsp;&nbsp;</template>
         </el-input>
-        <auto-select v-if="permissions.indexOf('4d') > -1" :key="key_achievement" title="选择业绩" v-model="achievement" class="search-item item-width">
-          <el-option v-for="item in achievements" :key="item.value" :label="item.label" :value="item.opentime"></el-option>
+        <auto-select v-if="permissions.indexOf('4d') > -1" :key="key_achievement" :valueKey="'label'" title="选择业绩" v-model="achievement" class="search-item item-width">
+          <el-option v-for="item in achievements" :key="item.value" :label="item.label" :value="item"></el-option>
         </auto-select>
         <div class="search-item">
           <el-button type="primary" @click.native="search">查询</el-button>
@@ -44,7 +44,7 @@
         </el-table-column>
         <el-table-column prop="cname" label="订单名称" min-width="180">
         </el-table-column>
-        <el-table-column prop="" label="提交时间" width="90">
+        <el-table-column prop="" label="提交时间" width="95">
           <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
         </el-table-column>
         <el-table-column prop="username" label="下单人" min-width="80">
@@ -66,7 +66,7 @@
             {{scope.row.audittype === 0 ? "仅降E":"降E并提单"}}
           </span>
         </el-table-column>
-        <el-table-column prop="" label="最后操作时间" width="90">
+        <el-table-column prop="" label="最后操作时间" width="95">
           <span slot-scope="scope">{{scope.row.opt_time | timeFormat}}</span>
         </el-table-column>
         <el-table-column prop="deptname" label="商务大区部门" min-width="110">
@@ -146,7 +146,7 @@
         <el-table-column prop="currentname" label="订单状态" width="90">
           <span slot-scope="scope">{{scope.row.audittype == 0 ? "仅降E":"降E并提单"}}</span>
         </el-table-column>
-        <el-table-column prop="username" label="最后操作时间" width="90">
+        <el-table-column prop="username" label="最后操作时间" width="95">
           <span slot-scope="scope">{{scope.row.opt_time | timeFormat}}</span>
         </el-table-column>
         <el-table-column prop="deptname" label="商务大区部门" width="105">
@@ -190,31 +190,47 @@ export default {
       bd_id: '',
       achievements: [
         {
-          opentime: '',
+          params: {
+            id: 1
+          },
           label: '全部'
         },
         {
-          opentime: 'yes',
+          params: {
+            opentime: 'yes'
+          },
           label: '已记新开业绩'
         },
         {
-          opentime: 'yes',
+          params: {
+            onlinetime: 'yes'
+          },
           label: '已记上线业绩'
         },
         {
-          opentime: 'no',
+          params: {
+            opentime: 'no'
+          },
           label: '未记新开业绩'
         },
         {
-          opentime: 'no',
+          params: {
+            onlinetime: 'no'
+          },
           label: '未记上线业绩'
         },
         {
-          opentime: 'yes',
+          params: {
+            opentime: 'yes',
+            onlinetime: 'yes'
+          },
           label: '已记业绩'
         },
         {
-          opentime: 'no',
+          params: {
+            opentime: 'no',
+            onlinetime: 'no'
+          },
           label: '未记业绩'
         }
       ],
@@ -287,16 +303,15 @@ export default {
       this.sendParams = Object.assign({}, this.sendParams, {addmoney: this.tabStatus})
     },
     search () {
-      this.sendParams = {
+      this.sendParams = Object.assign({}, {
         status: 100,
         companyname: this.cusName || undefined, // 公司名称
         orderid: this.orderNumber || undefined, // 订单编号
         pid: this.productType || undefined, // 产品类型
         baiducount: this.bd_account || undefined, // 百度账号
         baiduid: this.bd_id || undefined, // 百度id
-        opentime: this.achievement || undefined, // 业绩
         audittype: this.orderStatus || undefined // 订单类型
-      }
+      }, this.achievement.params)
     },
     reset () {
       this.cusName = ''

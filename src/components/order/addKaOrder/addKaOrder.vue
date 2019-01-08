@@ -145,7 +145,7 @@
             <el-form-item label="">
               <el-row style="text-align:right;">
                 <!-- <el-button type="warning" @click.native="subOrder('0')">仅降E</el-button> -->
-                <el-button type="primary" @click.native="subOrder('10')">降E并提单</el-button>
+                <el-button type="primary" @click.native="subOrder('10')" :disabled="subDisabled">降E并提单</el-button>
               </el-row>
             </el-form-item>
           </el-col>
@@ -217,6 +217,7 @@ export default {
   },
   data () {
     return {
+      subDisabled: false,
       labelWidth: '110px',
       record_detail: [], // 回显到款记录
       ONLY_E: true,
@@ -413,6 +414,10 @@ export default {
         }
       })
       console.log(params)
+      this.subDisabled = true
+      setTimeout(() => {
+        this.subDisabled = false
+      }, 2000)
       this.$post('/wf.do?go', params).then(res => {
         if (res.data[0].success) {
           this.$router.push({

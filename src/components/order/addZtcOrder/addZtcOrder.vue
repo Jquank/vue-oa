@@ -241,7 +241,7 @@
             <el-form-item label="">
               <el-row style="text-align:right;">
                 <!-- <el-button type="warning" @click.native="subOrder('0')">仅降E</el-button> -->
-                <el-button type="primary" @click.native="subOrder('10')">降E并提单</el-button>
+                <el-button type="primary" @click.native="subOrder('10')" :disabled="subDisabled">降E并提单</el-button>
               </el-row>
             </el-form-item>
           </el-col>
@@ -308,6 +308,7 @@ export default {
   },
   data () {
     return {
+      subDisabled: false,
       showQualify_add: [],
       qualifyUploaded_add: [],
       deledQualify: [],
@@ -452,7 +453,7 @@ export default {
       'CONTRACT_ZTCCPC',
       'CONTRACT_ZTCSQS'
     ) // 合同
-    this._getQualifyType(32) // 获取资质
+    this._getQualifyType(100) // 获取资质
     // this._getReceiveBanks()
 
     // console.log(this.productType)
@@ -585,6 +586,10 @@ export default {
           throw new Error('ignore')
         }
       })
+      this.subDisabled = true
+      setTimeout(() => {
+        this.subDisabled = false
+      }, 2000)
       this.$post('/wf.do?go', params).then(res => {
         if (res.data[0].success) {
           this.$message.success('新增订单成功！')

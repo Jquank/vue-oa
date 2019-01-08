@@ -232,8 +232,8 @@
           <el-col :md="24" class="maxwidth">
             <el-form-item label="">
               <el-row style="text-align:right;">
-                <el-button type="warning" @click.native="subOrder('0')">仅降E</el-button>
-                <el-button type="primary" @click.native="subOrder('10')">降E并提单</el-button>
+                <el-button type="warning" @click.native="subOrder('0')" :disabled="subDisabled">仅降E</el-button>
+                <el-button type="primary" @click.native="subOrder('10')" :disabled="subDisabled">降E并提单</el-button>
               </el-row>
             </el-form-item>
           </el-col>
@@ -299,6 +299,7 @@ export default {
   },
   data () {
     return {
+      subDisabled: false,
       showQualify_add: [],
       qualifyUploaded_add: [],
       deledQualify: [],
@@ -539,6 +540,10 @@ export default {
           return
         }
       }
+      this.subDisabled = true
+      setTimeout(() => {
+        this.subDisabled = false
+      }, 2000)
       this.$post('/wf.do?go', params).then(res => {
         if (res.data[0].success) {
           this.$message.success('已提交！')

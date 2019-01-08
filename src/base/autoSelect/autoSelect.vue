@@ -4,7 +4,7 @@
 //         <el-option label="6个月以上" value="6"></el-option>
 //       </auto-select>
 <template>
-  <el-select @change="$emit('input',sel)" v-model="sel" :filterable="isSearch" :self-class="classMark" class="auto-sel" :placeholder="placeholder">
+  <el-select @change="$emit('input',sel)" v-model="sel" :value-key="valueKey" :filterable="isSearch" :self-class="classMark" class="auto-sel" :placeholder="placeholder">
     <span slot="prefix" class="prefix">{{title}}:</span>
     <slot></slot>
   </el-select>
@@ -32,6 +32,10 @@ export default {
     isSearch: {
       type: Boolean,
       default: false
+    },
+    valueKey: {
+      type: String,
+      default: ''
     }
   },
   data () {

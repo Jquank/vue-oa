@@ -289,7 +289,7 @@ export default {
       background: @bg-nav !important;
       border-bottom: 1px solid #babdc2;
       margin-top: -1px;
-      box-shadow:2px 0px 30px 2px #b6cfe9 inset;
+      // box-shadow:2px 0px 30px 2px #b6cfe9 inset;
     }
   }
 

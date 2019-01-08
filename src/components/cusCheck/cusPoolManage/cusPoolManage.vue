@@ -58,7 +58,7 @@
       </el-table-column>
       <el-table-column prop="center" label="录入人" min-width="80">
       </el-table-column>
-      <el-table-column prop="" label="降E时间" width="90">
+      <el-table-column prop="" label="降E时间" width="95">
         <span slot-scope="scope">{{scope.row.opt_time | timeFormat}}</span>
       </el-table-column>
       <el-table-column prop="" label="操作" width="120px" align="center">

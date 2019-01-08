@@ -25,7 +25,7 @@
     <el-table stripe border :data="myFollowList" class="table-width" max-height="500">
       <el-table-column prop="odre" label="ID" width="70">
       </el-table-column>
-      <el-table-column prop="inserttime" label="日期" width="90">
+      <el-table-column prop="inserttime" label="日期" width="95">
         <span slot-scope="scope">{{scope.row.inserttime | timeFormat}}</span>
       </el-table-column>
       <el-table-column prop="companyname" label="公司名称" min-width="160">
@@ -49,7 +49,7 @@
       <el-table-column prop="ysdltg" label="代理原生推广" width="110">
         <span slot-scope="scope">{{scope.row.ysdltg | currency}}</span>
       </el-table-column>
-      <el-table-column prop="checktime" label="加款时间" width="90">
+      <el-table-column prop="checktime" label="加款时间" width="95">
         <span slot-scope="scope">{{scope.row.checktime | timeFormat}}</span>
       </el-table-column>
       <el-table-column prop="" label="操作" width="75" align="center">

@@ -62,7 +62,7 @@
         <el-table-column prop="offset_money" label="销账金额" width="110">
           <span slot-scope="scope">{{scope.row.offset_money | currency}}</span>
         </el-table-column>
-        <el-table-column prop="billtime" label="提单时间" width="90">
+        <el-table-column prop="billtime" label="提单时间" width="95">
           <span slot-scope="scope">{{scope.row.billtime | timeFormat}}</span>
         </el-table-column>
         <el-table-column label="操作" width="65">

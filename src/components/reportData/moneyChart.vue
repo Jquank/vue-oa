@@ -53,7 +53,7 @@
             <span v-else>{{scope.row.XJ_count | currency1}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="XJTIME" label="时间" width="90" align="center">
+        <el-table-column prop="XJTIME" label="时间" width="95" align="center">
           <span slot-scope="scope">{{scope.row.XJTIME | timeFormat1}}</span>
         </el-table-column>
       </el-table-column>
@@ -64,7 +64,7 @@
             <span v-else>{{scope.row.NMXJ_count | currency1}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="NMXJTIME" label="时间" width="90" align="center">
+        <el-table-column prop="NMXJTIME" label="时间" width="95" align="center">
           <span slot-scope="scope">{{scope.row.NMXJTIME | timeFormat1}}</span>
         </el-table-column>
       </el-table-column>
@@ -75,7 +75,7 @@
             <span v-else>{{scope.row.ZH_count | currency1}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="ZHTIME" label="时间" width="90" align="center">
+        <el-table-column prop="ZHTIME" label="时间" width="95" align="center">
           <span slot-scope="scope">{{scope.row.ZHTIME | timeFormat1}}</span>
         </el-table-column>
       </el-table-column>
@@ -86,7 +86,7 @@
             <span v-else>{{scope.row.NMZH_count | currency1}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="NMZHTIME" label="时间" width="90" align="center">
+        <el-table-column prop="NMZHTIME" label="时间" width="95" align="center">
           <span slot-scope="scope">{{scope.row.NMZHTIME | timeFormat1}}</span>
         </el-table-column>
       </el-table-column>
@@ -97,7 +97,7 @@
             <span v-else>{{scope.row.YL_count | currency1}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="YLTIME" label="时间" width="90" align="center">
+        <el-table-column prop="YLTIME" label="时间" width="95" align="center">
           <span slot-scope="scope">{{scope.row.YLTIME | timeFormat1}}</span>
         </el-table-column>
       </el-table-column>
@@ -108,7 +108,7 @@
             <span v-else>{{scope.row.NMYL_count | currency1}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="NMYLTIME" label="时间" width="90" align="center">
+        <el-table-column prop="NMYLTIME" label="时间" width="95" align="center">
           <span slot-scope="scope">{{scope.row.NMYLTIME | timeFormat1}}</span>
         </el-table-column>
       </el-table-column>
@@ -119,7 +119,7 @@
             <span v-else>{{scope.row.HHZH_count | currency1}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="HHZHTIME" label="时间" width="90" align="center">
+        <el-table-column prop="HHZHTIME" label="时间" width="95" align="center">
           <span slot-scope="scope">{{scope.row.HHZHTIME | timeFormat1}}</span>
         </el-table-column>
       </el-table-column>
@@ -130,7 +130,7 @@
             <span v-else>{{scope.row.ZH1_count | currency1}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="ZH1TIME" label="时间" width="90" align="center">
+        <el-table-column prop="ZH1TIME" label="时间" width="95" align="center">
           <span slot-scope="scope">{{scope.row.ZH1TIME | timeFormat1}}</span>
         </el-table-column>
       </el-table-column>
@@ -141,7 +141,7 @@
             <span v-else>{{scope.row.YGKF_count | currency1}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="YGKFTIME" label="时间" width="90" align="center">
+        <el-table-column prop="YGKFTIME" label="时间" width="95" align="center">
           <span slot-scope="scope">{{scope.row.YGKFTIME | timeFormat1}}</span>
         </el-table-column>
       </el-table-column>
@@ -152,7 +152,7 @@
             <span v-else>{{scope.row.NMKF_count | currency1}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="NMKFTIME" label="时间" width="90" align="center">
+        <el-table-column prop="NMKFTIME" label="时间" width="95" align="center">
           <span slot-scope="scope">{{scope.row.NMKFTIME | timeFormat1}}</span>
         </el-table-column>
       </el-table-column>
@@ -163,7 +163,7 @@
             <span v-else>{{scope.row.GH_count | currency1}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="GHTIME" label="时间" width="90" align="center">
+        <el-table-column prop="GHTIME" label="时间" width="95" align="center">
           <span slot-scope="scope">{{scope.row.GHTIME | timeFormat1}}</span>
         </el-table-column>
       </el-table-column>
@@ -174,7 +174,7 @@
             <span v-else>{{scope.row.GDYH_count | currency1}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="BDBITIME" label="时间" width="90" align="center">
+        <el-table-column prop="BDBITIME" label="时间" width="95" align="center">
           <span slot-scope="scope">{{scope.row.GDYHTIME | timeFormat1}}</span>
         </el-table-column>
       </el-table-column>
@@ -185,7 +185,7 @@
             <span v-else>{{scope.row.NH_count | currency1}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="BDBITIME" label="时间" width="90" align="center">
+        <el-table-column prop="BDBITIME" label="时间" width="95" align="center">
           <span slot-scope="scope">{{scope.row.NHTIME | timeFormat1}}</span>
         </el-table-column>
       </el-table-column>
@@ -196,7 +196,7 @@
             <span v-else>{{scope.row.JH_count | currency1}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="BDBITIME" label="时间" width="90" align="center">
+        <el-table-column prop="BDBITIME" label="时间" width="95" align="center">
           <span slot-scope="scope">{{scope.row.JHTIME | timeFormat1}}</span>
         </el-table-column>
       </el-table-column>
@@ -218,7 +218,7 @@
           <span v-else>{{scope.row.addmoney_count | currency1}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="addTime" label="加款时间" width="90">
+      <el-table-column prop="addTime" label="加款时间" width="95">
         <span slot-scope="scope">{{scope.row.addTime | timeFormat1}}</span>
       </el-table-column>
       <el-table-column prop="serviceyear" label="服务费年限" width="85">

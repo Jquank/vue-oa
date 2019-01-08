@@ -43,7 +43,7 @@
       <el-table-column prop label="提单金额" width="110">
         <span slot-scope="scope">{{scope.row.tgbonus+scope.row.ggbonus+scope.row.ysdltg+scope.row.servicemoney | currency1}}</span>
       </el-table-column>
-      <el-table-column prop label="申请时间" width="90">
+      <el-table-column prop label="申请时间" width="95">
         <span slot-scope="scope">{{scope.row.inserttime | timeFormat}}</span>
       </el-table-column>
       <el-table-column prop label="提单人">

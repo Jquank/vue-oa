@@ -304,7 +304,7 @@
         </el-table-column>
         <el-table-column prop="code_desc" label="银行类型" width="80">
         </el-table-column>
-        <el-table-column prop="" label="交易时间" width="90">
+        <el-table-column prop="" label="交易时间" width="95">
           <span slot-scope="scope">{{scope.row.tm | timeFormat}}</span>
         </el-table-column>
         <el-table-column prop="fm_name" label="付款名" min-width="140">

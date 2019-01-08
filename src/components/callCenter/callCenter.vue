@@ -72,10 +72,10 @@
           </el-select>
         </template>
       </el-table-column>
-      <el-table-column prop="" label="创建时间" width="90">
+      <el-table-column prop="" label="创建时间" width="95">
         <span slot-scope="scope">{{scope.row.createdtime | timeFormat}}</span>
       </el-table-column>
-      <el-table-column prop="" label="修改时间" width="90">
+      <el-table-column prop="" label="修改时间" width="95">
         <span slot-scope="scope">{{scope.row.last_opt_time | timeFormat}}</span>
       </el-table-column>
       <el-table-column prop="" label="网站">

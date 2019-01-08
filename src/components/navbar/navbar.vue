@@ -1,7 +1,7 @@
 <template>
   <div class="control-scroll">
     <div ref="navbar" class="nav-bar">
-      <el-menu :collapse="myCollapse" router background-color="#19233C" text-color="#bfcbd9" active-text-color="#fff" :unique-opened="false" :default-active="$route.path">
+      <el-menu :collapse="myCollapse" router background-color="#19233C" text-color="#bfcbd9" active-text-color="#fff" :unique-opened="true" :default-active="$route.path">
         <el-menu-item index="/indexPage/indexContent" class="home-title">
           <i class="fa fa-home fa-fw fa-lg"></i>
           <span slot="title">&nbsp;首页</span>
@@ -41,8 +41,8 @@ export default {
       background: @bg-nav !important;
   }
   .el-menu-item, .el-submenu__title{
-    height: 45px;
-    line-height: 45px;
+    height: 42px;
+    line-height: 42px;
     padding-left: 20px;
   }
   .el-submenu .el-menu-item{

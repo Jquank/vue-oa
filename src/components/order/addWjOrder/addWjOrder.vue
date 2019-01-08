@@ -246,8 +246,7 @@
                   </el-row>
                   <el-row>
                     <el-table id="uploadImgs" border :data="form.zizhiList" :key="form.zizhiList.id" class="table-width">
-                      <el-table-column prop="code_desc" label="资质类型" width="130">
-                      </el-table-column>
+                      <el-table-column prop="code_desc" label="资质类型" width="130"></el-table-column>
                       <el-table-column label="操作">
                         <template slot-scope="scope">
                           <el-upload :on-change="(()=>{upChange('uploadImgs')})"
@@ -291,7 +290,7 @@
           <el-col :md="24" class="maxwidth">
             <el-form-item label="">
               <el-row style="text-align:right;">
-                <el-button type="primary" @click.native="subOrder('10')">降E并提单</el-button>
+                <el-button type="primary" @click.native="subOrder('10')" :disabled="subDisabled">降E并提单</el-button>
               </el-row>
             </el-form-item>
           </el-col>
@@ -360,6 +359,7 @@ export default {
   },
   data () {
     return {
+      subDisabled: false,
       showQualify_add: [],
       qualifyUploaded_add: [],
       deledQualify: [],
@@ -538,7 +538,7 @@ export default {
     this._getwjType(88)
   },
   mounted () {
-    this._getQualifyType(32)
+    this._getQualifyType(61)
     this._getServiceType() // 空间服务商类型
   },
   methods: {
@@ -686,6 +686,10 @@ export default {
           throw new Error('ignore')
         }
       })
+      this.subDisabled = true
+      setTimeout(() => {
+        this.subDisabled = false
+      }, 2000)
       this.$post('/wf.do?WebSite', params).then(res => {
         if (res.data[0].success) {
           this.$message.success('提交成功！')

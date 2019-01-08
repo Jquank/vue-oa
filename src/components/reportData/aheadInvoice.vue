@@ -103,7 +103,7 @@
           max-height="500"
           :row-class-name="setLastRowStyle"
         >
-          <el-table-column prop="applytime" label="申请时间" width="90">
+          <el-table-column prop="applytime" label="申请时间" width="95">
             <template slot-scope="scope">
               <span v-if="scope.row.mark!=='lastRow'">{{scope.row.applytime | timeFormat1}}</span>
               <span v-else>合计</span>
@@ -122,7 +122,7 @@
           <el-table-column prop="invoicecname" label="发票公司名" min-width="200">
             <span slot-scope="scope" v-if="scope.row.mark!=='lastRow'">{{scope.row.invoicecname}}</span>
           </el-table-column>
-          <el-table-column prop="invoicetime" label="开票时间" width="90">
+          <el-table-column prop="invoicetime" label="开票时间" width="95">
             <span slot-scope="scope" v-if="scope.row.mark!=='lastRow'">{{scope.row.invoicetime | timeFormat1}}</span>
           </el-table-column>
           <el-table-column prop="tmoney" label="开票金额" width="120">
@@ -137,7 +137,7 @@
           <el-table-column prop label="开票类型" width="80">
             <span slot-scope="scope" v-if="scope.row.mark!=='lastRow'">{{scope.row.ttype | invoiceState('invoiceType')}}</span>
           </el-table-column>
-          <el-table-column prop label="预计销账时间" width="90">
+          <el-table-column prop label="预计销账时间" width="95">
             <span slot-scope="scope" v-if="scope.row.mark!=='lastRow'">{{scope.row.offset_time | timeFormat1}}</span>
           </el-table-column>
           <el-table-column prop="receive_money" label="已销金额" width="110">
@@ -152,7 +152,7 @@
               <span v-else>{{scope.row.sumUnsoldmoney | currency}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop label="实际销账时间" width="90">
+          <el-table-column prop label="实际销账时间" width="95">
             <span slot-scope="scope" v-if="scope.row.mark!=='lastRow'">{{scope.row.maxcktime | timeFormat1}}</span>
           </el-table-column>
           <el-table-column label="操作" width="80">
@@ -172,7 +172,7 @@
           class="table-width"
           max-height="500"
         >
-          <el-table-column prop="applytime" label="申请时间" width="90">
+          <el-table-column prop="applytime" label="申请时间" width="95">
             <template slot-scope="scope">
               <span v-if="scope.row.mark!=='lastRow'">{{scope.row.applytime | timeFormat1}}</span>
               <span v-else>合计</span>
@@ -187,7 +187,7 @@
           </el-table-column>
           <el-table-column prop="comName" label="保A公司名" min-width="210"></el-table-column>
           <el-table-column prop="baidu_account" label="百度账号" min-width="159"></el-table-column>
-          <el-table-column prop="jiakuanTime" label="加款时间" width="90">
+          <el-table-column prop="jiakuanTime" label="加款时间" width="95">
             <span slot-scope="scope">{{scope.row.jiakuanTime | timeFormat1}}</span>
           </el-table-column>
           <el-table-column prop="usemoney" label="加款金额" width="110">
@@ -196,7 +196,7 @@
               <span v-else>{{scope.row.sumUsemoney | currency}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop label="预计销账时间" width="90">
+          <el-table-column prop label="预计销账时间" width="95">
             <span slot-scope="scope">{{scope.row.offset_time | timeFormat1}}</span>
           </el-table-column>
           <el-table-column prop="receiptmoney" label="已销金额" width="110">
@@ -211,7 +211,7 @@
               <span v-else>{{scope.row.sumUnsoldmoney | currency}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop label="实际销账时间" width="90">
+          <el-table-column prop label="实际销账时间" width="95">
             <span slot-scope="scope">{{scope.row.maxcktime | timeFormat1}}</span>
           </el-table-column>
           <el-table-column label="操作" width="80">
