@@ -1,8 +1,8 @@
-export function hasClass (el, className) {
+export function hasClass(el, className) {
   let reg = new RegExp('(^|\\s)' + className + '(\\s|$)')
   return reg.test(el.className)
 }
-export function addClass (el, className) {
+export function addClass(el, className) {
   if (hasClass(el, className)) {
     return
   }
@@ -10,7 +10,7 @@ export function addClass (el, className) {
   newClass.push(className)
   el.className = newClass.join(' ')
 }
-export function removeClass (el, className) {
+export function removeClass(el, className) {
   if (!hasClass(el, className)) {
     return
   }
@@ -19,7 +19,8 @@ export function removeClass (el, className) {
   newClass.splice(index, 1)
   el.className = newClass.join(' ')
 }
-function siblings (el) {
+
+function siblings(el) {
   let a = []
   let p = el.parentNode.children
   for (let i = 0, pl = p.length; i < pl; i++) {
@@ -28,7 +29,7 @@ function siblings (el) {
   return a
 }
 
-export function toggleClass (el, className) {
+export function toggleClass(el, className) {
   addClass(el, className)
   let s = siblings(el)
   for (let i = 0, sl = s.length; i < sl; i++) {

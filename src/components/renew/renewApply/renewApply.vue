@@ -403,6 +403,7 @@ export default {
   data () {
     return {
       USER_ID: cookie.get('userId'),
+      rid: cookie.get('rid'),
       leftLabelWidth: '130px',
       form: {
         comName: '',
@@ -495,14 +496,19 @@ export default {
     if (viewWidth && viewWidth < 768) {
       this.leftLabelWidth = '50px'
     }
-    getByCode(38).then(res => {
-      this.form.productList = res.data.data
-    })
+    this._getProducList()
   },
   mounted () {
     this._getMyContract()
   },
   methods: {
+    _getProducList() {
+      let ridArr = ['3x', '40', '3z', '3y']
+      let code = ridArr.includes(this.rid) ? 18 : 38
+      getByCode(code).then(res => {
+        this.form.productList = res.data.data
+      })
+    },
     // 编辑
     _getEditData (bool) {
       if (!bool) {

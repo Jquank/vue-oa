@@ -25,6 +25,10 @@ export default {
     echoDept: { // 回显部门树
       type: String,
       default: ''
+    },
+    resetDept: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -36,6 +40,13 @@ export default {
         label: 'fullname'
       },
       defaultExpanded: ['KD01'] // 默认展开
+    }
+  },
+  watch: {
+    resetDept() {
+      if (this.resetDept) {
+        this.department = ''
+      }
     }
   },
   methods: {

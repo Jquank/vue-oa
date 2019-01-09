@@ -2,11 +2,15 @@
   <div class="incoice-list-component component-container media-padding">
     <div class="visit-search mt-10px">
       <up-file v-if="(permissions.indexOf('53') > -1 && (mark==='list' || mark==='handled'))||(permissions.indexOf('7i')>-1&&mark==='send')" :title="'导入'" :upIcon="'fa fa-cloud-download'" :uploadUrl="'/Invoice.do?import'"  :isHiddenFileList="true" :otherParams="{'code': mark==='send'?'75' :'50', 'tk': tk}" class="visit-item"></up-file>
+
       <el-button @click.native="exportExcellHandled" v-if="mark==='handled'" icon="fa fa-cloud-upload" type="info" class="visit-item"> 导出Excell</el-button>
+
       <el-button @click.native="exportExcellSend" v-if="permissions.indexOf('7i') > -1 && mark==='send'" type="warning" icon="fa fa-cloud-upload" class="visit-item"> 寄发票导出Excell</el-button>
 
       <el-button @click.native="exportTxt" v-if="permissions.indexOf('50') > -1 && mark==='pending'" type="primary" class="visit-item" icon="fa fa-cloud-upload"> 导出txt</el-button>
+
       <el-button @click.native="exportExcell" v-if="permissions.indexOf('51') > -1 && mark==='pending'" type="warning"  icon="fa fa-cloud-upload" class="visit-item"> 导出Excell</el-button>
+
       <span v-if="mark==='list'" class="visit-item tipfont fa fa-search" style="line-height:34px;color:#06c;">
         <a href="http://www.kuaidi100.com/?from=openv" target="_blank" class="a-search-number"> 查询快递单号</a>
       </span>
@@ -161,6 +165,10 @@
         <el-table-column prop="tnumber" label="单据号码" width="110">
         </el-table-column>
         <el-table-column prop="applyusername" label="申请人" width="90">
+          <template slot-scope="scope">
+            <span>{{scope.row.applyusername}}</span>
+            <span v-if="scope.row.true_name != scope.row.applyusername">{{'('+scope.row.true_name+')'}}</span>
+          </template>
         </el-table-column>
         <template v-if="mark==='handled'&&permissions.indexOf('7c') < 0">
           <el-table-column prop="invoicecode" label="发票代码" width="100">
@@ -201,6 +209,8 @@
         <el-table-column prop="is_advance" label="提前开票" width="80">
           <span slot-scope="scope" v-if="scope.$index!==invoiceList.length-1">{{scope.row.is_advance==20?'是':'否'}}</span>
         </el-table-column>
+        <el-table-column prop="auditor_10" label="与上次一致" width="100">
+        </el-table-column>
         <el-table-column prop="" label="状态" width="100">
           <template slot-scope="scope" v-if="scope.$index!==invoiceList.length-1">
             <el-button plain :type="scope.row.step==300?'success':scope.row.step==0?'danger':scope.row.step<=40?'info':''" class="xsbtn">{{scope.row.step==300?'审核通过':scope.row.stepName}}</el-button>
@@ -238,6 +248,14 @@
                 <el-dropdown-item divided v-if="scope.row.hasinvoice >= 10 && permissions.indexOf('7d')>-1">
                   <el-button @click.native="errorRed(scope.row)" type="warning" class="xsbtn">发票开错冲红</el-button>
                 </el-dropdown-item>
+                <template v-if="mark==='pending'&&permissions.indexOf('51') > -1">
+                  <el-dropdown-item divided>
+                  <el-button @click.native="changeTnumber(scope.row, 'tnumber_1')" type="success" class="xsbtn">加_1</el-button>
+                </el-dropdown-item>
+                <el-dropdown-item divided>
+                  <el-button @click.native="changeTnumber(scope.row, 'tnumber')" type="warning" class="xsbtn">减_1</el-button>
+                </el-dropdown-item>
+                </template>
               </el-dropdown-menu>
             </el-dropdown>
           </template>
@@ -498,6 +516,19 @@ export default {
           }
         }
       )
+    },
+    changeTnumber(data, type) {
+      let params = {
+        invoiceid: data.invoiceid,
+        tnumber: data.tnumber,
+        key: type
+      }
+      this.$post('/Invoice.do?edit', params).then(res => {
+        if (res.data.success) {
+          this.$message.success('修改成功！')
+          this.search()
+        }
+      })
     },
     // 编辑
     editInvoice(data) {
@@ -846,22 +877,22 @@ export default {
             )
             fixedTable.setAttribute('id', 'fixedtb')
             if (this.mark === 'handled' && this.permissions.indexOf('7c') < 0) {
-              rowSpan('tb', 0, [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24], 7)
-              rowSpan('fixedtb', 0, [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24], 7)
+              rowSpan('tb', 0, [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25], 7)
+              rowSpan('fixedtb', 0, [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25], 7)
               setTimeout(() => {
                 rowSpan('tb', 0, [0, 1, 2, 3, 4, 5], 5)
                 rowSpan('fixedtb', 0, [0, 1, 2, 3, 4, 5], 5)
               }, 800)
             } else {
-              rowSpan('tb', 0, [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], 7)
-              rowSpan('fixedtb', 0, [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], 7)
+              rowSpan('tb', 0, [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], 7)
+              rowSpan('fixedtb', 0, [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], 7)
               setTimeout(() => {
                 rowSpan('tb', 0, [0, 1, 2, 3, 4, 5], 5)
                 rowSpan('fixedtb', 0, [0, 1, 2, 3, 4, 5], 5)
               }, 800)
             }
           } else {
-            rowSpan('tb', 0, [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], 7)
+            rowSpan('tb', 0, [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], 7)
             setTimeout(() => {
               rowSpan('tb', 0, [0, 1, 2, 3, 4, 5], 5)
             }, 800)

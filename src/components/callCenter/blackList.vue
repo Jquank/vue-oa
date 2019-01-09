@@ -42,6 +42,7 @@
         </el-form-item>
         <el-form-item label="产品类型:">
           <el-select v-model="productType" style="width: 100%;">
+            <el-option label="全部" value=""></el-option>
             <el-option v-for="item in products" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>

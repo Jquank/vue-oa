@@ -9,7 +9,7 @@
       <el-table-column prop="name" label="权限名称" align="center"></el-table-column>
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
-          <el-button class="xsbtn" type="success" @click="handleCheckNext(scope.row.id)">查看下级权限</el-button>
+          <el-button class="xsbtn" type="success" icon="fa fa-eye" @click="handleCheckNext(scope.row.id)"> 查看下级</el-button>
           <el-button class="xsbtn" type="warning" icon="fa fa-pencil" @click="handleEdit(scope.row.id,scope.row.name,scope.row.pid)"> 编辑</el-button>
         </template>
       </el-table-column>

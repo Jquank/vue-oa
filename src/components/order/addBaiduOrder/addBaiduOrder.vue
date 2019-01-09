@@ -515,14 +515,13 @@ export default {
         receiveaccount: this.form.receiveAccount, // 对公账户,
         receivebank: this.form.receiveBank // 对公账户开户行
       }
-      console.log(params)
-      if (this.qualifyUploaded_add.every(val => val.label !== 'business_license_origin')) {
-        this.$message({
-          type: 'error',
-          message: '请上传企业营业执照！'
-        })
-        return
-      }
+      // if (this.qualifyUploaded_add.every(val => val.label !== 'business_license_origin')) {
+      //   this.$message({
+      //     type: 'error',
+      //     message: '请上传企业营业执照！'
+      //   })
+      //   return
+      // }
       if (!params.companyid || !params.curId || !params.companyaddress) {
         this.$message({
           type: 'error',

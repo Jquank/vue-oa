@@ -56,6 +56,8 @@
       </el-table-column>
       <el-table-column prop="submiter" label="所属商务" min-width="80">
       </el-table-column>
+      <el-table-column prop="subDept" label="所属部门" min-width="120">
+      </el-table-column>
       <el-table-column prop="center" label="录入人" min-width="80">
       </el-table-column>
       <el-table-column prop="" label="降E时间" width="95">

@@ -270,6 +270,8 @@ export function businessStatus(num) {
       return '公共库客户' // 放弃保A
     case '100':
       return '公共库客户' // 放弃跟踪
+    case '4030':
+      return '签约终止' // 放弃跟踪
   }
 }
 

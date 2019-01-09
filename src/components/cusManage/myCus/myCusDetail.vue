@@ -558,13 +558,13 @@ export default {
         'type': 20,
         'producttype': this.cusType,
         'website': this.cusDetail.website,
-        'cat': this.cusDetail.bid || this.cusDetail.cid,
+        'cat': this.form.trade[1] || this.form.trade[0] || this.cusDetail.bid || this.cusDetail.cid,
         'contact': this.form.contactList,
         'establishment': this.cusDetail.establishment_date,
         'legal_person': this.cusDetail.legal_person,
         'address': this.cusDetail.address,
         'fm': this.cusDetail.fm,
-        'area': this.cusDetail.county || this.cusDetail.city || this.cusDetail.province,
+        'area': this.form.area[2] || this.form.area[1] || this.form.area[0] || this.cusDetail.county || this.cusDetail.city || this.cusDetail.province,
         'business_scope': this.cusDetail.business_scope
       }
       this.$post('/Company.do?compset', params).then(res => {

@@ -157,6 +157,29 @@ export default {
     }
   },
   methods: {
+    // 节点拖拽
+    // handleDrop(draggingNode, dropNode, dropType, ev) {
+    //   console.log(draggingNode)
+    //   console.log(dropNode)
+    //   console.log(dropType)
+    //   let dragingId = draggingNode.key
+    //   let dropId = dropNode.key
+    //   // let newId = dragingId + this._addZero(+this._getMaxId(draggingNode.data) + 1)
+    //   let newId = ''
+    //   if (dropType === 'inner') {
+    //     newId = dropId + this._addZero(+this._getMaxId(dropNode.data) + 1)
+    //     console.log(newId)
+    //   }
+    //   let params = {
+    //     type: TYPE,
+    //     data: this.data,
+    //     newId: newId,
+    //     oldId: dragingId
+    //   }
+    //   console.log(params)
+    //   return
+    //   this.$post('res.do?catSet', params).then(res => {})
+    // },
     copyUrl(url, e) {
       let that = this
       if (this.clipboard) {
@@ -267,8 +290,7 @@ export default {
         })
     },
     append(data, node) {
-      console.log(data)
-      console.log(node.key)
+      console.log(node)
       let currentId = node.key
       let newId = currentId + this._addZero(+this._getMaxId(data) + 2) // 获取递增新id
       const newChild = { id: newId, label: '新增的节点', children: [] }
@@ -462,6 +484,10 @@ export default {
       flex: 1;
       position: relative;
       margin-left: 20px;
+      overflow: hidden;
+      &::after{
+        display: block;
+      }
       .search-article {
         width: 100%;
         text-align: center;
@@ -471,7 +497,7 @@ export default {
       }
       .flex-table {
         // flex布局下el-table宽度不能自适应
-        position: absolute;
+        position: relative;
         width: 100%;
         .pro-title{
           font-size: 15px;

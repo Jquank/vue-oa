@@ -1010,7 +1010,7 @@ export default {
     addsubRemark() {
       let params = {
         reid: this.baseInfo.id,
-        subRemark: this.subRemark
+        checkRemark: this.subRemark
       }
       this.$post('/Renew.do?checkrenew', params).then(res => {
         if (res.data.success) {

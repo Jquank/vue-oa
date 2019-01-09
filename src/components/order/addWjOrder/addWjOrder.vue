@@ -644,14 +644,13 @@ export default {
       params = Object.assign({}, params, webBasicParams, defaultWebManagerInfo)
       params.websiteinfo = [webInfo]
 
-      console.log(params)
-      if (this.qualifyUploaded_add.every(val => val.label !== 'business_license_origin')) {
-        this.$message({
-          type: 'error',
-          message: '请上传企业营业执照！'
-        })
-        return
-      }
+      // if (this.qualifyUploaded_add.every(val => val.label !== 'business_license_origin')) {
+      //   this.$message({
+      //     type: 'error',
+      //     message: '请上传企业营业执照！'
+      //   })
+      //   return
+      // }
       if (
         !params.companyid ||
         !params.curId ||

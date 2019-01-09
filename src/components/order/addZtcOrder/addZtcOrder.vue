@@ -540,14 +540,13 @@ export default {
         check_type: this.form.checkType, // 验证类型
         finalSite: this.finalSite.toString()
       }
-      console.log(params)
-      if (this.qualifyUploaded_add.every(val => val.label !== 'business_license_origin')) {
-        this.$message({
-          type: 'error',
-          message: '请上传企业营业执照！'
-        })
-        return
-      }
+      // if (this.qualifyUploaded_add.every(val => val.label !== 'business_license_origin')) {
+      //   this.$message({
+      //     type: 'error',
+      //     message: '请上传企业营业执照！'
+      //   })
+      //   return
+      // }
       if (this.finalSite.every(val => !val)) {
         this.$message({
           type: 'error',

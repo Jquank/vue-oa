@@ -25,7 +25,10 @@
       <el-table-column prop="companyname" label="客户名称" min-width="150">
       </el-table-column>
       <el-table-column prop="" label="客户类型" width="100">
-        <span slot-scope="scope">{{scope.row.producttype | cusState('cusType')}}</span>
+        <template slot-scope="scope">
+          <span>{{scope.row.producttype | cusState('cusType')}}</span>
+          <span v-if="scope.row.producttype!==0">{{scope.row.productnumber}}</span>
+        </template>
       </el-table-column>
       <el-table-column prop="productname" label="产品类型" width="100">
       </el-table-column>
@@ -351,13 +354,13 @@ export default {
         'type': 20,
         'producttype': this.cusType,
         'website': this.cusDetail.website,
-        'cat': this.cusDetail.bid || this.cusDetail.cid,
+        'cat': this.form.trade[1] || this.form.trade[0] || this.cusDetail.bid || this.cusDetail.cid,
         'contact': this.contactList,
         'establishment': this.cusDetail.establishment_date,
         'legal_person': this.cusDetail.legal_person,
         'address': this.cusDetail.address,
         'fm': this.cusDetail.fm,
-        'area': this.cusDetail.county || this.cusDetail.city || this.cusDetail.province,
+        'area': this.form.area[2] || this.form.area[1] || this.form.area[0] || this.cusDetail.county || this.cusDetail.city || this.cusDetail.province,
         'business_scope': this.cusDetail.business_scope
       }
       this.$post('/Company.do?compset', params).then(res => {

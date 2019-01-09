@@ -34,6 +34,7 @@
             <el-option v-for="(op,index) in item.where.options" :key="index" :label="op.text" :value="op.type"></el-option>
           </auto-select>
           <select-department
+            :resetDept="resetDept"
             @upDeptId="(id)=>{item.where.val[0]=id}"
             v-if="item.where.type==='depart'"
             :title="item.as"
@@ -70,7 +71,7 @@
         </el-table-column>
       </template>
     </el-table>
-    <page class="page" :url="url" :sendParams="sendParams" :otherParams="otherParams" @updateList="getList"></page>
+    <page class="page" :url="url" :sendParams="sendParams" :otherParams="otherParams" :cols="cols" @updateList="getList"></page>
   </div>
 </template>
 
@@ -98,7 +99,6 @@ export default {
   },
   watch: {
     $route(to, from) {
-      // 切换路由，带上rpt_data参数会报500错，但这样会导致查询两次
       if (to.name !== from.name) {
         this.otherParams = {}
       }
@@ -106,6 +106,7 @@ export default {
   },
   data() {
     return {
+      resetDept: false,
       serverUrl: serverUrl,
       tk: cookie.get('token'),
       cols: [],
@@ -119,7 +120,7 @@ export default {
         // }
       },
       mapWidth: {
-        datetime: '90',
+        datetime: '95',
         indu: '150',
         area: '150'
       },
@@ -169,6 +170,7 @@ export default {
     reset() {
       this.key_area = new Date() + ''
       this.key_trade = new Date() + '1'
+      this.resetDept = true
       this.cols.forEach(item => {
         if (item.where) {
           item.where.val = []

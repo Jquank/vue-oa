@@ -40,6 +40,12 @@ export default {
         return {}
       }
     },
+    cols: {
+      type: Array,
+      default: function() {
+        return []
+      }
+    },
     simpleLayout: {
       type: String,
       default: 'total, sizes, prev, pager, next, jumper'
@@ -133,8 +139,12 @@ export default {
 
       if (this.url === '/rpt.do?get') {
         // 万能报表
+        if (!this.otherParams.rpt_data) {
+          this.otherParams.rpt_data = {}
+        }
         this.otherParams.rpt_data.pageno = this.currentPage
         this.otherParams.rpt_data.pagenum = this.pageval
+        this.otherParams.rpt_data.columns = this.cols
       }
       let params = Object.assign(
         {},
@@ -166,14 +176,18 @@ export default {
 
       if (this.url === '/rpt.do?get') {
         // 万能报表
+        if (!this.otherParams.rpt_data) {
+          this.otherParams.rpt_data = {}
+        }
         this.otherParams.rpt_data.pageno = page
         this.otherParams.rpt_data.pagenum = this.pageval
+        this.otherParams.rpt_data.columns = this.cols
       }
       let params = Object.assign(
         {},
         {
           pagesize: this.pageval,
-          currentpage: page
+          currentpage: this.currentPage
         },
         this.sendParams,
         this.otherParams
