@@ -1,18 +1,18 @@
 <template>
   <div class="view-product child-component-container media-padding">
-    <h2 class="text-center">{{v.title}}</h2>
-    <div class="text-center author">
+    <h2 class="text-center title">{{v.title}}</h2>
+    <div v-show="v.img">
+      <download-enclosure :data="v"></download-enclosure>
+    </div>
+    <div class="text-center author mt10px">
       <span><b>发布时间：</b>{{v.insert_time | timeFormat}}</span>
       <span><b>浏览次数：</b>{{count}}</span>
       <div>
         <el-button type="primary" @click.native="$router.go(-1)" class="xsbtn">返回</el-button>
       </div>
     </div>
-    <div class="article mt10px">
+    <div class="article">
       <div v-html="v.vtext"></div>
-    </div>
-    <div v-show="v.img">
-      <download-enclosure :data="v"></download-enclosure>
     </div>
   </div>
 </template>
@@ -65,6 +65,9 @@ export default {
 
 <style lang="less" scoped>
   .view-product{
+    .title{
+      margin: 10px 0;
+    }
     .author{
       display: flex;
       justify-content: center;

@@ -172,6 +172,7 @@ export default {
       this.count++
       this.count % 2 === 1 ? enterfullscreen() : exitfullscreen()
     },
+    // 手机上点击导航栏以外的地方收起导航栏
     handleClickCollapse() {
       let main = document.getElementById('main')
       main.addEventListener('click', () => {

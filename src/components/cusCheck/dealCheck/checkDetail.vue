@@ -3,7 +3,7 @@
     <div class="detail-main">
       <div class="cus-info">
         <div class="check-search">
-          <el-input placeholder="请输入电话或公司名进行搜索" v-model="searchWords" style="max-width:400px;"></el-input>
+          <el-input placeholder="请输入电话或公司名进行搜索" v-model="searchWords" class="search-phone"></el-input>
           <el-button type="primary" @click.native="checkSearch" size="mini">查 重</el-button>
         </div>
         <div class="title">
@@ -11,7 +11,7 @@
           <el-button @click.native="backRouter" class="back" type="warning">返回</el-button>
         </div>
         <div class="line" style="max-width:980px;"></div>
-        <el-form ref="form" :model="form" label-width="90px">
+        <el-form ref="form" :model="form" :label-position="labelPosition" label-width="90px">
           <el-row :gutter="20">
             <el-col :md="12" class="maxwidth">
               <el-form-item label="客户名称 :">
@@ -112,7 +112,7 @@
           <el-button class="title-btn" type="primary">待审信息</el-button>
         </div>
         <div class="line" style="max-width:980px;"></div>
-        <el-form ref="form" :model="form" label-width="115px">
+        <el-form ref="form" :model="form" :label-position="labelPosition" label-width="115px">
           <el-row :gutter="20">
             <el-col :md="12" class="maxwidth">
               <el-form-item label="处理类型 :">
@@ -160,7 +160,7 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <div class="btns mt10px" style="max-width:1000px;text-align:center;">
+          <div class="btns mt10px">
             <el-button v-if="receiveData.cltype!=20" type="success" @click.native="checkPass">审核通过</el-button>
             <el-button v-if="receiveData.cltype!=20" type="danger" @click.native="checkFail">审核不通过</el-button>
             <el-button v-if="receiveData.cltype==20&&cusDetail.ctype<=0" type="primary" @click.native="basicCheckPass">仅基本信息通过</el-button>
@@ -212,13 +212,13 @@
               <el-table-column prop="" label="操作时间" width="150">
                 <span slot-scope="scope">{{scope.row.inserttime | timeFormat}}</span>
               </el-table-column>
-              <el-table-column prop="remark" label="操作内容">
+              <el-table-column prop="remark" label="操作内容" min-width="220">
               </el-table-column>
             </el-table>
             <page :defaultSearch="defaultSearch" class="page" :url="changeUrl" :sendParams="changeParams" @updateList="getChangeLogs"></page>
           </el-tab-pane>
           <el-tab-pane label="申请修改记录" name="3">
-            <el-table :data="applyChangeLogs" border stripe style="width: 100%;">
+            <el-table :data="applyChangeLogs" border stripe class="table-width">
               <el-table-column prop="applyName" label="提交人">
               </el-table-column>
               <el-table-column prop="" label="提交时间" width="150">
@@ -356,9 +356,11 @@ import Page from 'base/page/page'
 import SelectArea from 'base/selectArea/selectArea'
 import SelectTrade from 'base/selectTrade/selectTrade'
 import { getByCode } from 'api/getOptions'
+import { appMark } from 'common/js/utils'
 export default {
   data () {
     return {
+      labelPosition: 'right',
       searchWords: '',
       userId: cookie.get('userId'),
       form: {
@@ -407,6 +409,9 @@ export default {
     }
   },
   created () {
+    if (appMark()) {
+      this.labelPosition = 'top'
+    }
     this.realDelcontact = []
     console.log(this.$route.query.data)
     this.receiveData = this.$route.query.data
@@ -694,6 +699,9 @@ export default {
   }
   .check-search {
     margin-bottom: 10px;
+    .search-phone{
+      max-width: 400px;
+    }
   }
   .contact-phone {
     width: calc(~'(100% - 35px)');
@@ -712,6 +720,14 @@ export default {
   }
   .el-form-item{
     margin-bottom: 5px;
+  }
+  .btns{
+    margin-top: -10px;
+    text-align: center;
+    .el-button{
+      margin-top: 10px;
+      margin-left: 5px;
+    }
   }
 }
 </style>

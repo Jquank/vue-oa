@@ -1,7 +1,7 @@
 <template>
   <div class="money-detail child-component-container media-padding">
     <div class="maxwidth">
-      <el-form ref="form" :model="receipt" :label-width="labelWidth" size="small">
+      <el-form ref="form" :model="receipt" :label-width="labelWidth" :label-position="labelPosition" size="small">
         <el-row>
           <el-col :md="24">
             <el-form-item label="公司名称/法人 :" required>
@@ -187,10 +187,12 @@
 import Page from 'base/page/page'
 import { getByCode } from 'api/getOptions'
 import SelectTrade from 'base/selectTrade/selectTrade'
+import {appMark} from 'common/js/utils'
 export default {
   data () {
     return {
       labelWidth: '160px',
+      labelPosition: 'right',
       selFlowDialog: false,
       selFlowList: [],
       checkedFlowIds: [],
@@ -226,11 +228,9 @@ export default {
     }
   },
   created () {
-    let viewWidth = document.documentElement.clientWidth
-    if (viewWidth < 768) {
-      this.labelWidth = '90px'
+    if (appMark()) {
+      this.labelPosition = 'top'
     }
-
     this.businessType = this.$route.query.data.pid
     this.receiveData = this.$route.query.data
     if (!this.receiveData.id) {

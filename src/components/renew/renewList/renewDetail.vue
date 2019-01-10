@@ -84,17 +84,17 @@
               <div>{{baseInfo.companyname}}</div>
             </el-form-item>
           </el-col>
-          <el-col :md="6" class="maxwidth">
+          <el-col :md="5" class="maxwidth">
             <el-form-item label="续费类型 :">
               <div>{{baseInfo.addtype+'' | renewState('addType')}}</div>
             </el-form-item>
           </el-col>
-          <el-col :md="5" class="maxwidth">
+          <el-col :md="4" class="maxwidth">
             <el-form-item label="续费次数 :">
               <div>{{baseInfo.addcount}}</div>
             </el-form-item>
           </el-col>
-          <el-col :md="5" class="maxwidth">
+          <el-col :md="7" class="maxwidth">
             <el-form-item label="特殊情况 :">
               <div>{{baseInfo.special==20?'渠道加款':(baseInfo.special==30?'分公司加款':'')}}</div>
             </el-form-item>
@@ -106,17 +106,17 @@
               <div>{{baseInfo.proxy_id}}</div>
             </el-form-item>
           </el-col>
-          <el-col :md="6" class="maxwidth">
+          <el-col :md="5" class="maxwidth">
             <el-form-item label="用户ID :">
               <div>{{baseInfo.baidu_id}}</div>
             </el-form-item>
           </el-col>
-          <el-col :md="5" class="maxwidth">
+          <el-col :md="4" class="maxwidth">
             <el-form-item label="服务费年限 :">
               <div>{{baseInfo.serviceyear}}</div>
             </el-form-item>
           </el-col>
-          <el-col :md="5" class="maxwidth">
+          <el-col :md="7" class="maxwidth">
             <el-form-item label="值班加款 :">
               <div>{{baseInfo.holiday==0?'无':(baseInfo.holiday==10?'值班加款':'')}}</div>
             </el-form-item>
@@ -128,14 +128,19 @@
               <div>{{baseInfo.baidu_account}}</div>
             </el-form-item>
           </el-col>
-          <el-col :md="6">
+          <el-col :md="5">
             <el-form-item label="是否需要发票 :" label-width="120px">
               <div>{{baseInfo.invoice+'' | invoiceState('needInvoice')}}</div>
             </el-form-item>
           </el-col>
-          <el-col :md="5" class="maxwidth">
+          <el-col :md="4" class="maxwidth">
             <el-form-item label="已开发票金额 :">
               <div>{{baseInfo.invoice_money | currency}}</div>
+            </el-form-item>
+          </el-col>
+          <el-col :md="7" class="maxwidth">
+            <el-form-item label="预计还款时间 :">
+              <div>{{baseInfo.offset_time | timeFormat}}</div>
             </el-form-item>
           </el-col>
         </el-row>
@@ -169,12 +174,12 @@
               <span>{{baseInfo.inserttime | timeFormat}}</span>
             </el-form-item>
           </el-col>
-          <el-col :md="6" class="maxwidth">
+          <el-col :md="5" class="maxwidth">
             <el-form-item label="提交人 :">
               <span>{{baseInfo.username}}</span>
             </el-form-item>
           </el-col>
-          <el-col :md="10" class="maxwidth">
+          <el-col :md="11" class="maxwidth">
             <el-form-item label="提交备注 :">
               <span>{{baseInfo.remark}}</span>
             </el-form-item>
@@ -793,10 +798,9 @@ export default {
       }
       if (this.permissions.indexOf('7x') > -1 && type === 300 && this.renewFlowList.length) {
         // 收单出纳校验
+        console.log(this.productMoneyList)
         let testProInfo = this.productMoneyList.every(val => {
-          return (
-            val.type && val.receive_money && val.receivetype && val.receivetime
-          )
+          return val.type && val.receive_money && (val.receivetype || val.receivetype === 0) && val.receivetime
         })
         if (!testProInfo) {
           this.$message.warning('请完善产品信息！')

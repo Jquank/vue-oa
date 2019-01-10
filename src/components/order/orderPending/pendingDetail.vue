@@ -1,6 +1,9 @@
 <template>
   <div class="view-detail child-component-container media-padding">
     <div class="detail-content">
+      <div class="mb10px text-right">
+        <el-button type="primary" @click.native="goBack" class="xsbtn">返回列表</el-button>
+      </div>
       <el-tabs type="border-card" @tab-click="tab">
         <!-- 订单基本信息 -->
         <el-tab-pane v-if="pid==='BAITUI'" label="百度订单基本信息">
@@ -189,7 +192,7 @@
                       <span>{{orderInfo.store_type==10?'单门店':'多门店'}}</span>
                     </div>
                   </div>
-                  <div class="mt10px row-container" v-show="orderInfo.store_type==10">
+                  <div class="mt10px row-container">
                     <b>对公信息 ：</b>
                     <div>
                       <b>收款账号：</b>
@@ -200,7 +203,7 @@
                       <span>{{orderInfo.receivebank}}</span>
                     </div>
                   </div>
-                  <div class="mt10px row-container" v-show="orderInfo.store_type==20">
+                  <div class="mt10px row-container">
                     <b>收款信息 ：</b>
                     <div>
                       <b>收款人：</b>
@@ -213,6 +216,20 @@
                     <div>
                       <b>开户行：</b>
                       <span>{{orderInfo.collect_bank}}</span>
+                    </div>
+                  </div>
+                  <div class="mt10px row-container">
+                    <div>
+                      <b>百度ID：</b>
+                      <span>{{orderInfo.baiduid}}</span>
+                    </div>
+                    <div>
+                      <b>百度账户：</b>
+                      <span>{{orderInfo.baiducount}}</span>
+                    </div>
+                    <div>
+                      <b>SF账户：</b>
+                      <span>{{orderInfo.proxyid}}</span>
                     </div>
                   </div>
                 </div>
@@ -545,7 +562,7 @@
         <el-tab-pane v-if="pid_ka!=='KA'" label="企业资质">
           <div class="qualify">
             <show-qualify v-if="showQualify.length" :showDel="false" :showQualify="showQualify" class="qualify-left"></show-qualify>
-            <div class="qualify-right" v-if="showQualify.length&&permissions.indexOf('5c') > -1">
+            <div class="qualify-right" v-if="permissions.indexOf('5c') > -1">
               <el-button @click.native="editQualify" type="warning" class="xsbtn">修改资质</el-button>
             </div>
           </div>
@@ -2228,6 +2245,9 @@ export default {
           }
         }
       })
+    },
+    goBack() {
+      this.$router.go(-1)
     }
   },
   components: {

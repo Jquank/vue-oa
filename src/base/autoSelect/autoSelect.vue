@@ -4,7 +4,7 @@
 //         <el-option label="6个月以上" value="6"></el-option>
 //       </auto-select>
 <template>
-  <el-select @change="$emit('input',sel)" v-model="sel" :value-key="valueKey" :filterable="isSearch" :self-class="classMark" class="auto-sel" :placeholder="placeholder">
+  <el-select @change="change" v-model="sel" :value-key="valueKey" :filterable="isSearch" :self-class="classMark" class="auto-sel" :placeholder="placeholder">
     <span slot="prefix" class="prefix">{{title}}:</span>
     <slot></slot>
   </el-select>
@@ -49,6 +49,10 @@ export default {
     }
   },
   methods: {
+    change() {
+      this.$emit('input', this.sel)
+      this.$emit('change', this.sel)
+    },
     _setInputPadding () {
       let sels = document.getElementsByClassName('auto-sel')
       for (let i = 0, len = sels.length; i < len; i++) {

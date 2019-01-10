@@ -124,5 +124,10 @@ export function $export(url, params = {}, otherParams = {}) {
   let isQuestionMark = url.indexOf('?') > -1
   let mark = isQuestionMark ? '&' : '?'
   params = Object.assign({}, params, otherParams)
-  window.location = serverUrl + url + mark + qs.stringify(params) + '&tk=' + tk
+  if (Object.keys(params).length) {
+    let appendParams = mark + qs.stringify(params)
+    window.location = serverUrl + url + appendParams + '&tk=' + tk
+  } else {
+    window.location = serverUrl + url + '&tk=' + tk
+  }
 }

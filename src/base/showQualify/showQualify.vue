@@ -40,13 +40,20 @@ export default {
   watch: {
     showQualify: {
       handler () {
-        this.initViewer()
+        setTimeout(() => {
+          this.initViewer()
+        }, 1000)
       },
       deep: true
     }
   },
   mounted () {
-    this.initViewer()
+    setTimeout(() => {
+      this.initViewer()
+    }, 20)
+  },
+  destroyed() {
+    this.viewer.destroy()
   },
   methods: {
     initViewer () {

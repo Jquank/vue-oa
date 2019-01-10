@@ -242,7 +242,7 @@
       <el-row v-if="form.special == 30">
         <el-col :md="24" class="maxwidth">
           <el-form-item label="分公司到款时间 :" prop="receiveTime">
-            <el-date-picker v-model="form.receiveTime" value-format="yyyy/MM/dd" type="date" placeholder="选择日期">
+            <el-date-picker v-model="form.receiveTime" value-format="yyyy/MM/dd HH:mm:ss" type="datetime" placeholder="选择日期">
             </el-date-picker>
           </el-form-item>
         </el-col>
@@ -538,7 +538,7 @@ export default {
         holiday: this.detail.holiday + '',
         productList: [],
         selProList: [],
-        receiveTime: this.detail.receive_time,
+        receiveTime: timeFormat(this.detail.receive_time),
         expectTime: timeFormat(this.detail.offset_time)
       }
       if (this.detail.con_id3) {
@@ -587,10 +587,10 @@ export default {
         this.$message.error('请填写备注！')
         return
       }
-      if (this.form.addType === '10' && this.receiveTotal < 1000) {
-        this.$message.error('到款总金额需大于等于1000元！')
-        return
-      }
+      // if (this.form.addType === '10' && this.receiveTotal < 1000) {
+      //   this.$message.error('到款总金额需大于等于1000元！')
+      //   return
+      // }
       let params = {
         reid: this.detail.id,
         cpid: this.rowData.cpid || this.detail.cpid,
@@ -622,8 +622,6 @@ export default {
       }
       this.$refs[formName].validate(valid => {
         if (valid) {
-          console.log(params)
-          // return
           this.$post('/Renew.do?apply', params).then(res => {
             if (res.data.success) {
               this.$message.success('提交成功！')

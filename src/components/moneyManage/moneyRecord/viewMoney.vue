@@ -1,7 +1,7 @@
 <template>
   <div class="money-detail child-component-container media-padding">
     <div class="maxwidth">
-      <el-form ref="form" :model="receipt" :label-width="labelWidth" size="small">
+      <el-form ref="form" :model="receipt" :label-width="labelWidth" :label-position="labelPosition" size="small">
         <el-row>
           <el-col :md="24">
             <el-form-item label="公司名称/法人 :">
@@ -96,26 +96,33 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <el-row>
+          <el-col :md="24">
+            <el-form-item label="操作记录 :">
+              <el-table stripe border :data="logs" class="table-width">
+                <el-table-column prop="" label="操作日期">
+                  <span slot-scope="scope">{{scope.row.inserttime | timeFormat}}</span>
+                </el-table-column>
+                <el-table-column prop="remark" label="操作记录" min-width="120">
+                </el-table-column>
+                <el-table-column prop="name" label="操作人">
+                </el-table-column>
+              </el-table>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
     </div>
-
-    <el-table stripe border :data="logs" class="maxwidth table-width">
-      <el-table-column prop="" label="操作日期" width="150">
-        <span slot-scope="scope">{{scope.row.inserttime | timeFormat}}</span>
-      </el-table-column>
-      <el-table-column prop="remark" label="操作记录">
-      </el-table-column>
-      <el-table-column prop="name" label="操作人" width="100">
-      </el-table-column>
-    </el-table>
   </div>
 </template>
 
 <script>
+import { appMark } from 'common/js/utils'
 export default {
   data () {
     return {
       labelWidth: '160px',
+      labelPosition: 'right',
 
       businessType: '',
       productMoneyList: [],
@@ -126,9 +133,8 @@ export default {
     }
   },
   created () {
-    let viewWidth = document.documentElement.clientWidth
-    if (viewWidth < 768) {
-      this.labelWidth = '90px'
+    if (appMark()) {
+      this.labelPosition = 'top'
     }
     this.businessType = this.$route.query.data.pid
     this.receiveData = this.$route.query.data

@@ -8,9 +8,6 @@
           <el-radio-button :label="20">跟踪客户</el-radio-button>
           <el-radio-button :label="40">签约客户</el-radio-button>
         </el-radio-group>
-        <div class="throw-order">
-          <el-button v-if="permissions.indexOf('5x') > -1&&myKind==30" @click.native="throwOrder" type="warning">保A甩单</el-button>
-        </div>
       </div>
       <div class="search-cus">
         <el-input placeholder="搜索客户名称" v-model="cusName" class="cus-item item-width">
@@ -34,6 +31,9 @@
         <div class="cus-item">
           <el-button @click.native="search" type="primary">查 询</el-button>
           <el-button @click.native="reset" type="warning">重 置</el-button>
+        </div>
+        <div class="cus-item export">
+          <el-button v-if="permissions.indexOf('5x') > -1&&myKind==30" @click.native="throwOrder" type="warning">保A甩单</el-button>
         </div>
       </div>
 
@@ -83,7 +83,7 @@
         </el-table-column>
         <el-table-column label="操作" width="120" align="center">
           <template slot-scope="scope">
-            <el-dropdown trigger="hover">
+            <el-dropdown :trigger="trigger">
               <el-button type="primary" size="mini">
                 操作<i class="el-icon-arrow-down el-icon--right"></i>
               </el-button>
@@ -197,10 +197,12 @@ import SelectArea from 'base/selectArea/selectArea'
 import SelectTrade from 'base/selectTrade/selectTrade'
 import AutoSelect from 'base/autoSelect/autoSelect'
 import SelectUser from 'base/selectUser/selectUser'
+import { appMark } from 'common/js/utils'
 const USER_ID = cookie.get('userId')
 export default {
   data () {
     return {
+      trigger: 'hover',
       permissions: cookie.getJSON('permissions'),
       USER_ID: USER_ID,
       refresh: true,
@@ -242,11 +244,15 @@ export default {
     }
   },
   beforeRouteUpdate (to, from, next) {
-    console.log(to)
     if (from.meta.text.indexOf('详情') > -1 && to.query.data === 'fromDetail') {
       this.search()
     }
     next()
+  },
+  created() {
+    if (appMark()) {
+      this.trigger = 'click'
+    }
   },
   methods: {
     // 甩单按钮
@@ -472,14 +478,9 @@ export default {
   position: relative;
   .cus-status {
     display: flex;
-    justify-content: space-between;
     flex-wrap: wrap;
-    max-width: 980px;
     margin-top: -10px;
     .cus-status-radio {
-      margin-top: 10px;
-    }
-    .throw-order {
       margin-top: 10px;
     }
   }

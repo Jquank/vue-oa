@@ -106,7 +106,7 @@ export default {
       endY = e.changedTouches[0].pageY
       const X = endX - startX
       const Y = endY - startY
-      if (Math.abs(X) > Math.abs(Y) && X < 0) { // 导航栏向左划入
+      if (Math.abs(X) > Math.abs(Y) && X < -20) { // 导航栏向左划入
         this.nav.setAttribute('style', 'width:0 !important')
         this.logo.setAttribute('style', 'width:0 !important')
         this.nested.setAttribute('style', 'left:10px')
@@ -143,6 +143,7 @@ export default {
     height: calc(~'(100vh - 50px)');
     #call-center {
       width: 100%;
+      overflow: hidden;
       #iframe-call {
         width: 100%;
         max-height: 95px;

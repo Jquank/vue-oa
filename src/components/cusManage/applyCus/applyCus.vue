@@ -48,6 +48,8 @@
           <span>{{scope.row.producttype!==0?scope.row.productnumber:''}}</span>
         </template>
       </el-table-column>
+      <el-table-column prop="fm" label="客户来源" width="100">
+      </el-table-column>
       <el-table-column prop="username" label="申领商务" width="80">
       </el-table-column>
       <el-table-column prop="fullname" label="所属部门">

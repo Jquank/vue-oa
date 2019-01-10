@@ -2,27 +2,23 @@
   <div class="my-flow component-container media-padding">
     <!-- 搜索 -->
     <div class="search">
-      <el-date-picker v-model="businessDate" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" type="datetimerange" range-separator="至" start-placeholder="交易开始日期" end-placeholder="交易结束日期" class="search-item" :unlink-panels="true"></el-date-picker>
-      <el-input v-model="receiveMan" class="search-item">
+      <el-date-picker v-model="businessDate" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH" type="datetimerange" range-separator="至" start-placeholder="交易日期" end-placeholder="交易日期" class="search-item item-width" :unlink-panels="true"></el-date-picker>
+      <el-input v-model="receiveMan" class="search-item item-width">
         <template slot="prepend">领用人:</template>
       </el-input>
-      <el-input v-model="remark" class="search-item">
+      <el-input v-model="remark" class="search-item item-width">
         <template slot="prepend">认领(分配)备注:</template>
       </el-input>
-    </div>
-
-    <div class="export">
-      <div class="search">
-        <select-department @upDeptId="upDeptId" :key="key_dept" class="search-item"></select-department>
-        <div class="search-item">
-          <el-button @click.native.prevent="search" type="primary">查 询</el-button>
-          <el-button @click.native.prevent="reset" type="warning">重 置</el-button>
-        </div>
+      <select-department @upDeptId="upDeptId" :key="key_dept" class="search-item item-width"></select-department>
+      <div class="search-item">
+        <el-button @click.native.prevent="search" type="primary">查 询</el-button>
+        <el-button @click.native.prevent="reset" type="warning">重 置</el-button>
       </div>
-      <div v-if="permissions.indexOf('75') > -1" class="search-item text-right">
+      <div v-if="permissions.indexOf('75') > -1" class="export search-item">
         <el-button @click.native="exportFlow" type="warning" icon="fa fa-cloud-upload"> 导出</el-button>
       </div>
     </div>
+
     <!-- 列表 -->
     <el-table :data="myFlowList" max-height="550" class="table-width" border stripe size="mini">
       <!-- <el-table-column type="selection" width="35"></el-table-column> -->
@@ -264,19 +260,9 @@ export default {
     .search-item {
       margin-top: 10px;
       margin-left: 10px;
-      width: 310px;
     }
-  }
-
-  .export {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    margin-top: 10px;
-    > .list-item {
-      margin-left: 10px;
-      margin-right: 20px;
-      margin-top: 10px;
+    .item-width{
+      width: 280px;
     }
   }
   .contact-phone {

@@ -8,7 +8,7 @@
       </el-input>
       <div class="name-container">
         <div @click="clickName(index,item.id,item.name)" class="name-item" :class="'x'+index" v-for="(item,index) in nameList" :key="index">
-          {{item.true_name}}
+          {{item.name}}
         </div>
       </div>
       <div v-if="showSaveBtn" class="btn-save">

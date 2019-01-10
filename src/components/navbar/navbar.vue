@@ -69,10 +69,10 @@ export default {
       background: @bg-nav !important;
     }
     .el-menu-item.is-active {
-      background: lighten(@bg-nav, 10%) !important;
+      background: lighten(@bg-nav, 30%) !important;
     }
     .item-active {
-      background: lighten(@bg-nav, 30%) !important;
+      background: rgb(192, 60, 53) !important;
     }
     .item-active:hover {
       background: lighten(@bg-nav, 20%) !important;

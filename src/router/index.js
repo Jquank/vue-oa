@@ -430,6 +430,11 @@ const router = new Router({
           component: OrderList,
           children: [
             {
+              path: 'view/:id',
+              meta: { text: '订单列表/订单详情' },
+              component: PendingDetail
+            },
+            {
               path: 'print/:id',
               meta: { text: '打印' },
               component: Print

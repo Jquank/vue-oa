@@ -40,9 +40,10 @@
       </div>
       <!-- 列表 -->
       <el-table :key="tabStatus" size="mini" v-if="permissions.indexOf('5q')<0&&permissions.indexOf('6n')<0" :data="pendingList" class="table-width" stripe border max-height="550">
-        <el-table-column prop="ordernum" label="订单ID" min-width="180">
+        <el-table-column prop="ordernum" label="订单ID" min-width="155">
+          <span slot-scope="scope" @click="viewOrder(scope.row)" class="click-cell">{{scope.row.ordernum}}</span>
         </el-table-column>
-        <el-table-column prop="cname" label="订单名称" min-width="180">
+        <el-table-column prop="cname" label="订单名称" min-width="150">
         </el-table-column>
         <el-table-column prop="" label="提交时间" width="95">
           <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
@@ -71,7 +72,7 @@
         </el-table-column>
         <el-table-column prop="deptname" label="商务大区部门" min-width="110">
         </el-table-column>
-        <el-table-column prop="" label="操作" width="150" align="center">
+        <el-table-column prop="" label="操作" width="130" align="center">
           <template slot-scope="scope">
             <el-button type="success" @click.native="viewOrder(scope.row)" class="xsbtn">查看</el-button>
             <el-button v-if="permissions.indexOf('5a')>-1" type="warning" @click.native="updateOrder(scope.row)" class="xsbtn">编辑</el-button>
@@ -370,6 +371,10 @@ export default {
       display: flex;
       justify-content: flex-end;
     }
+    .click-cell{
+    cursor: pointer;
+    color: #559eff;
+  }
   }
 }
 </style>

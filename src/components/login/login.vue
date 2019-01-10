@@ -200,11 +200,12 @@ export default {
 </script>
 
 <style scoped lang="less">
+@login-bg: #FF9791;
 .login-page {
   width: 100%;
   height: 100vh;
   // background: #63aeff;
-  background: #FF9791;
+  background: @login-bg;
   position: fixed;
   top: 0;
   left: 0;
@@ -232,9 +233,17 @@ export default {
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        .el-input,
+        .el-input{
+          font-size: 14px;
+        }
         .el-button {
           font-size: 15px;
+          // background: @login-bg;
+          background-color: @login-bg;
+          border-color: @login-bg;
+          &:hover{
+            background-color: lighten(@login-bg,3%);
+          }
         }
       }
       img {

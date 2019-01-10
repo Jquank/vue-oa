@@ -1,9 +1,9 @@
 <template>
   <div class="apply-contract component-container media-padding">
     <div class="apply-btn">
-      <el-button v-if="permissions.indexOf('4t') > -1" @click.native="addMoneyRecord({'type':'BT'})" type="primary" icon="fa fa-plus"> 添加大搜到款</el-button>
-      <el-button v-if="permissions.indexOf('80') > -1" @click.native="addMoneyRecord({'type':'ZTC'})" type="warning" icon="fa fa-plus"> 添加直通车到款</el-button>
-      <el-button v-if="permissions.indexOf('89') > -1" @click.native="addMoneyRecord({'type':'KA'})" type="success" icon="fa fa-plus"> 添加KA到款</el-button>
+      <el-button v-if="permissions.indexOf('4t') > -1" @click.native="addMoneyRecord({'type':'BT'})" type="primary" icon="fa fa-plus" class="apply-btn-item"> 添加大搜到款</el-button>
+      <el-button v-if="permissions.indexOf('80') > -1" @click.native="addMoneyRecord({'type':'ZTC'})" type="warning" icon="fa fa-plus" class="apply-btn-item"> 添加直通车到款</el-button>
+      <el-button v-if="permissions.indexOf('89') > -1" @click.native="addMoneyRecord({'type':'KA'})" type="success" icon="fa fa-plus" class="apply-btn-item"> 添加KA到款</el-button>
     </div>
     <span class="red ml10px">(同一订单，若前后多笔到款，请在编辑页修改。网建有钱，请单独建一笔到款，没有的话，请在原到款上编辑！！！)</span>
     <div class="apply-search">
@@ -119,7 +119,11 @@ export default {
 .apply-contract {
   position: relative;
   .apply-btn {
-    margin-left: 10px;
+    margin-top: -10px;
+    .apply-btn-item{
+      margin-top: 10px;
+      margin-left: 10px;
+    }
   }
   .apply-search {
     display: flex;

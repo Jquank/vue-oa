@@ -66,8 +66,8 @@
       </el-table-column>
       <el-table-column label="操作" width="100" align="center">
         <template slot-scope="scope">
-          <el-dropdown trigger="hover">
-            <el-button type="primary" size="mini">
+          <el-dropdown :trigger="trigger">
+            <el-button type="primary" class="xsbtn">
               操作<i class="el-icon-arrow-down el-icon--right"></i>
             </el-button>
             <el-dropdown-menu slot="dropdown" class="text-center">
@@ -113,9 +113,11 @@ import AddUser from 'components/userManage/addUser/addUser'
 import UpFile from 'base/upLoad/upFile'
 import cookie from 'js-cookie'
 import { serverUrl } from 'api/http'
+import { appMark } from 'common/js/utils'
 export default {
   data () {
     return {
+      trigger: 'hover',
       permissions: cookie.getJSON('permissions'),
       serverUrl: serverUrl,
       tk: cookie.get('token'),
@@ -145,6 +147,9 @@ export default {
     }
   },
   created () {
+    if (appMark()) {
+      this.trigger = 'click'
+    }
   },
   methods: {
     // 账号开关

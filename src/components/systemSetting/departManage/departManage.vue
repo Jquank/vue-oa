@@ -40,10 +40,10 @@
       </div>
       <div class="transfer">
         <div class="name-container">
-          <div class="check-all">
-            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
-            <el-button @click.native="transfer" type="primary" size="mini" class="ml10px">转移至 <span class="fa fa-random"></span></el-button>
-            <select-department @upDeptId="getDeptId" style="display:inline-block;" class="ml10px"></select-department>
+          <div class="check-all mt-10px">
+            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange" class="mt10px">全选</el-checkbox>
+            <el-button @click.native="transfer" type="primary" size="mini" class="ml10px mt10px">转移至 <span class="fa fa-random"></span></el-button>
+            <select-department @upDeptId="getDeptId" style="display:inline-block;" class="ml10px mt10px"></select-department>
           </div>
           <div class="check-name mt10px">
             <div class="line"></div>

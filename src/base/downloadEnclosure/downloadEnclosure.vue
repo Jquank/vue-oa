@@ -39,7 +39,7 @@ export default {
 
 <style lang="less" scoped>
 .download-enclosure{
-  margin-top: 10px;
+  // margin-top: 10px;
   text-align: right;
   padding-right: 30px;
   a{

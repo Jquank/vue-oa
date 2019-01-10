@@ -367,7 +367,8 @@ export const orderDeal = { // 订单处理
           return
         }
       }
-      if (this.sn === 160 || this.sn === 210 || this.sn === 220 || this.sn === 230 || this.sn === 320 || this.sn === 400) {
+      const snArr = [160, 210, 220, 230, 320, 400, 410]
+      if (snArr.includes(this.sn)) {
         if (!this.dispatchValue) {
           this.$message({
             type: 'warning',
@@ -375,9 +376,9 @@ export const orderDeal = { // 订单处理
           })
           return
         }
-        this.next_uid = (this.dispatchValue || '').split('#')[0]
-        this.next_name = (this.dispatchValue || '').split('#')[1]
       }
+      this.next_uid = (this.dispatchValue || '').split('#')[0]
+      this.next_name = (this.dispatchValue || '').split('#')[1]
       if (this.pid === 'WEBSITE' || this.pid === 'ZTC_WEBSITE') {
         // 网开空域
         if (this.sn === 240) {
@@ -387,10 +388,10 @@ export const orderDeal = { // 订单处理
           }
         }
         if (this.sn === 260) {
-          if (!this.documenter || !this.designer) {
-            this.$message.warning('请选择资料员和设计师！')
-            return
-          }
+          // if (!this.documenter || !this.designer) {
+          //   this.$message.warning('请选择资料员和设计师！')
+          //   return
+          // }
           this.next_uid = [this.documenter.id, this.designer.id].toString()
           this.webOrderRemark = `网建经理派单至:资料员-${this.documenter.name},设计师-${this.designer.name}；`
         }

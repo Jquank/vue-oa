@@ -56,7 +56,8 @@
         <el-option label="未填写快递单号" value="0"></el-option>
         <el-option label="已填写快递单号" value="10"></el-option>
       </auto-select>
-      <el-date-picker v-model="applyDate" format="yyyy/MM/dd HH:mm" value-format="yyyy/MM/dd HH:mm" :unlink-panels="true" type="datetimerange" range-separator="至" start-placeholder="申请时间" end-placeholder="申请时间" class="visit-item" style="width:310px;"></el-date-picker>
+      <el-date-picker v-model="applyDate" format="yyyy/MM/dd" value-format="yyyy/MM/dd" :unlink-panels="true" type="datetimerange" range-separator="至" start-placeholder="申请时间" end-placeholder="申请时间" class="visit-item item-width"></el-date-picker>
+      <el-date-picker v-model="invoiceDate" format="yyyy/MM/dd" value-format="yyyy/MM/dd" :unlink-panels="true" type="datetimerange" range-separator="至" start-placeholder="开票时间" end-placeholder="开票时间" class="visit-item item-width"></el-date-picker>
       <div class="visit-item">
         <el-button @click.native="search" type="primary">查 询</el-button>
         <el-button @click.native="reset" type="warning">重 置</el-button>
@@ -152,7 +153,7 @@
         <el-table-column prop="amount" label="交易金额" :fixed="fixed" width="120">
           <span slot-scope="scope">{{scope.row.amount | currency}}</span>
         </el-table-column>
-        <el-table-column prop="bsid" label="" :fixed="fixed" width="1" show-overflow-tooltip class-name="hidden-cell">
+        <el-table-column prop="pid" label="" :fixed="fixed" width="1" show-overflow-tooltip class-name="hidden-cell">
         </el-table-column>
         <!-- 此处dom有合并，但数据并没有合并，故用不了table的selection -->
         <el-table-column prop="id" label="选择" width="50"  :fixed="fixed" align="center">
@@ -404,6 +405,7 @@ export default {
       invoiceState: '100',
       tnumberState: '100',
       applyDate: [],
+      invoiceDate: [],
 
       key_table: '',
       invoiceList: [],
@@ -482,7 +484,9 @@ export default {
         invoiceNumber: this.invoiceNum,
         invoicetype: this.invoiceType,
         starttime: this.applyDate[0],
-        endtime: this.applyDate[1]
+        endtime: this.applyDate[1],
+        invoice_starttime: this.invoiceDate[0],
+        invoice_endtime: this.invoiceDate[1]
       }
     },
     reset () {
@@ -796,11 +800,11 @@ export default {
         mark: 'total'
       }
       initObj = Object.assign({}, initObj, tempObj)
-      let bsidMark = ''
+      let pidMark = ''
       let tnumberMark = ''
       let sumObj = this.invoiceList.reduce((pre, cur) => {
-        if (bsidMark !== cur.bsid) { // 根据bsid计算amount合计
-          bsidMark = cur.bsid
+        if (pidMark !== cur.pid) { // 根据pid计算amount合计
+          pidMark = cur.pid
           pre.amount += parseFloat(cur.amount || 0)
         }
         if (tnumberMark !== cur.invoiceid) { // 根据tnumber计算tmoney合计

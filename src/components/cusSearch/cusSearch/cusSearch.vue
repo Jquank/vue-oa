@@ -47,13 +47,15 @@
         </el-table-column>
         <el-table-column prop="website" label="推广网址">
         </el-table-column>
-        <el-table-column prop="kefa" label="商务姓名">
-        </el-table-column>
-        <el-table-column prop="kefaDept" label="商务部门" min-width="110">
-        </el-table-column>
         <el-table-column prop="kefu" label="客服虚拟账号" min-width="100">
         </el-table-column>
         <el-table-column prop="kefuDept" label="客服部门">
+        </el-table-column>
+      </template>
+      <template v-if="permissions.indexOf('8g')>-1">
+        <el-table-column prop="kefa" label="商务姓名">
+        </el-table-column>
+        <el-table-column prop="kefaDept" label="商务部门" min-width="110">
         </el-table-column>
       </template>
       <el-table-column prop="" label="操作" min-width="150px" v-if="permissions.indexOf('84')>-1" align="center">

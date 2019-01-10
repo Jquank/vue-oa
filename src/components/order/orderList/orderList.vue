@@ -92,7 +92,9 @@
         <el-table-column prop="place_id" label="地区" width="60">
           <span slot-scope="scope">{{scope.row.place_id | areaType}}</span>
         </el-table-column>
-        <el-table-column prop="ordernum" label="订单ID" min-width="180"></el-table-column>
+        <el-table-column prop="ordernum" label="订单ID" min-width="155">
+          <span slot-scope="scope" @click="viewOrder(scope.row)" class="click-cell">{{scope.row.ordernum}}</span>
+        </el-table-column>
         <el-table-column prop="cname" label="订单名称" min-width="150"></el-table-column>
         <el-table-column prop label="提交时间" width="95">
           <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
@@ -144,27 +146,25 @@
         <el-table-column prop label="订单状态" width="120">
           <span slot-scope="scope">{{scope.row.audittype === 0 ? "仅降E":"降E并提单"}}</span>
         </el-table-column>
-        <el-table-column prop label="最后操作时间" width="95">
+        <el-table-column prop label="最后操作时间" width="100">
           <span slot-scope="scope">{{scope.row.opt_time | timeFormat}}</span>
         </el-table-column>
         <el-table-column prop="deptname" label="商务大区部门" min-width="110"></el-table-column>
-        <el-table-column prop label="操作" width="100" align="center">
+        <el-table-column prop label="操作" width="210" align="center">
           <template slot-scope="scope">
-            <el-dropdown trigger="hover">
+            <el-button type="success" @click.native="viewOrder(scope.row)" class="xsbtn">查看</el-button>
+            <el-button v-if="(scope.row.invoice_type==0 ||scope.row.invoiceTmoney<scope.row.amount_real)&&permissions.indexOf('6g') > -1 && scope.row.amount_real > 0" @click.native="applyInvoice(scope.row)" type="warning" class="xsbtn">申请发票</el-button>
+            <el-dropdown trigger="hover"  v-if="orderKind==500">
               <el-button type="primary" class="xsbtn">
-                操作
+                更多
                 <i class="el-icon-arrow-down el-icon--right"></i>
               </el-button>
               <el-dropdown-menu slot="dropdown" class="text-center">
-                <el-dropdown-item>
-                  <el-button type="success" @click.native="viewOrder(scope.row)" class="xsbtn">查看</el-button>
-                </el-dropdown-item>
                 <template v-if="orderKind==500">
                   <el-dropdown-item
                     divided
                     v-if="(scope.row.invoice_type===0 ||scope.row.invoiceTmoney<scope.row.amount_real)&&permissions.indexOf('6g') > -1"
                   >
-                    <el-button @click.native="applyInvoice(scope.row)" type="primary" class="xsbtn">申请发票</el-button>
                   </el-dropdown-item>
                   <el-dropdown-item divided v-if="permissions.indexOf('6o') > -1">
                     <el-button @click.native="onlineStop(scope.row)" type="danger" class="xsbtn">线上终止</el-button>
@@ -381,7 +381,6 @@ export default {
       achievement: '',
       key_achievement: '3',
       key_dept: '4',
-      // todo
       achievements: [
         {
           opentime: '-1',
@@ -577,7 +576,7 @@ export default {
     viewOrder(data) {
       data._mark = 'from_orderList'
       this.$router.push({
-        path: `orderPending/view/${data.cpid}`,
+        path: `orderList/view/${data.cpid}`,
         query: { data: data }
       })
     },
@@ -650,6 +649,7 @@ export default {
 
 <style lang="less">
 .order-list {
+  position: relative;
   .el-button span {
     display: inline-block;
     width: 100%;
@@ -695,6 +695,10 @@ export default {
     .check-status {
       color: #e6a23c;
     }
+  }
+  .click-cell{
+    cursor: pointer;
+    color: #559eff;
   }
 }
 </style>

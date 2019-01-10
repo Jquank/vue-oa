@@ -36,7 +36,7 @@
       </el-row>
       <el-row :gutter="20">
         <el-col :md="12" class="maxwidth">
-          <el-form-item label="客户网址 :" prop="cusWeb">
+          <el-form-item label="客户网址 :">
             <el-input v-model="form.cusWeb" :disabled="disabled" placeholder="客户网址"></el-input>
           </el-form-item>
         </el-col>

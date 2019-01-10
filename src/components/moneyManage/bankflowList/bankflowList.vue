@@ -13,7 +13,7 @@
           </template>
         </el-radio-group>
         <!-- 银行类型 -->
-        <auto-select :key="key_bank" :title="'银行类型'" class="status-item" v-model="selBank">
+        <auto-select :key="key_bank" :title="'银行类型'" class="status-item" v-model="selBank" @change="search()">
           <el-option label="全部" value></el-option>
           <el-option :key="index" :label="item.code_desc" :value="item.id" v-for="(item,index) in bankList"></el-option>
         </auto-select>
@@ -254,7 +254,7 @@
           >
             <el-table-column class-name="split-item-col" label prop>
               <template slot-scope="cscope">
-                <el-dropdown trigger="hover">
+                <el-dropdown :trigger="trigger" :hide-on-click="true">
                   <el-button type="primary">
                     操作
                     <i class="el-icon-arrow-down el-icon--right"></i>
@@ -513,9 +513,11 @@ import AutoSelect from 'base/autoSelect/autoSelect'
 import SelectUser from 'base/selectUser/selectUser'
 import UpFile from 'base/upLoad/upFile'
 import { serverUrl } from 'api/http'
+import { appMark } from 'common/js/utils'
 export default {
   data() {
     return {
+      trigger: 'hover',
       serverUrl: serverUrl,
       rid: cookie.get('rid'),
       permissions: cookie.getJSON('permissions'),
@@ -619,8 +621,12 @@ export default {
     }
   },
   created() {
-    let width = document.documentElement.clientWidth
-    width < 768 ? (this.isFixed = false) : (this.isFixed = true)
+    if (appMark()) {
+      this.isFixed = false
+      this.trigger = 'click'
+    } else {
+      this.isFixed = true
+    }
     this.params = {
       alloctype: -10,
       bank: '0',

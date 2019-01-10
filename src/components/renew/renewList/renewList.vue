@@ -63,25 +63,25 @@
           >{{scope.row.step >= 100 && scope.row.checkName ? (scope.row.checkBindName?(scope.row.checkBindName): ((scope.row.checkTrueName && scope.row.checkTrueName!=scope.row.checkName)?(scope.row.checkTrueName):scope.row.checkName)) : scope.row.code_desc}}</el-button>
         </template>
       </el-table-column>
-      <el-table-column prop label="操作" width="110" align="center">
+      <el-table-column prop label="导入" width="50">
+        <span slot-scope="scope">{{scope.row.status==10000?'是':''}}</span>
+      </el-table-column>
+      <el-table-column prop label="操作" width="210" align="center">
         <template slot-scope="scope">
+          <el-button @click.native="view(scope.row)" type="success" class="xsbtn">查看</el-button>
+          <el-button
+          v-if="( (scope.row.invoice=='0' || scope.row.invoice=='10' || (scope.row.invoice=='-1' && scope.row.invoiceCha =='1') ) && scope.row.receiptmoney > 0 && scope.row.invoiceTmoney < scope.row.receiptmoney)"
+            @click.native="applyInvoice(scope.row)"
+            type="warning"
+            class="xsbtn"
+          >申请发票</el-button>
           <el-dropdown trigger="hover">
             <el-button type="primary" size="mini">
-              操作<i class="el-icon-arrow-down el-icon--right"></i>
+              更多<i class="el-icon-arrow-down el-icon--right"></i>
             </el-button>
             <el-dropdown-menu slot="dropdown" class="text-center">
-              <el-dropdown-item>
-                <el-button @click.native="view(scope.row)" type="success" class="xsbtn">查看</el-button>
-              </el-dropdown-item>
               <el-dropdown-item divided v-if="scope.row.step<100">
                 <el-button @click.native="editRenew(scope.row)" type="warning" class="xsbtn">编辑</el-button>
-              </el-dropdown-item>
-              <el-dropdown-item divided v-if="( (scope.row.invoice=='0' || scope.row.invoice=='10' || (scope.row.invoice=='-1' && scope.row.invoiceCha =='1') ) && scope.row.receiptmoney > 0 && scope.row.invoiceTmoney < scope.row.receiptmoney)">
-                <el-button
-                  @click.native="applyInvoice(scope.row)"
-                  type="primary"
-                  class="xsbtn"
-                >申请发票</el-button>
               </el-dropdown-item>
               <el-dropdown-item divided v-if="scope.row.receiptmoney<scope.row.usemoney&&permissions.indexOf('6u')>-1">
                 <el-button
@@ -560,6 +560,9 @@ export default {
     .el-button {
       margin: 1px 0 0 2px;
     }
+  }
+  .el-dropdown .el-button{
+    padding: 5px 10px;
   }
 }
 </style>

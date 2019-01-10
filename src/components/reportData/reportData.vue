@@ -146,7 +146,15 @@ export default {
       }
     },
     exportExcell(data) {
-      this.$export('/' + data.url, this.sendParams)
+      let params = {
+        pageno: 1,
+        pagenum: 10,
+        columns: this.cols
+      }
+      let isQuestionMark = data.url.indexOf('?') > -1
+      let mark = isQuestionMark ? '&' : '?'
+      let url = '/' + data.url + mark + 'rpt_id=' + this.$route.name + '&rpt_data=' + JSON.stringify(params)
+      this.$export(url)
     },
     search() {
       this.cols.forEach(item => {

@@ -152,7 +152,7 @@ export default {
       }
       this.$post('/ch.do?updateColums', params).then(res => {
         if (res.data.success) {
-          this.search()
+          // this.search()
         }
       })
     },

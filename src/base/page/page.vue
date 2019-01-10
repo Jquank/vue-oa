@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import { appMark } from 'common/js/utils'
 export default {
   props: {
     url: {
@@ -90,8 +91,7 @@ export default {
     }
   },
   created() {
-    let width = document.documentElement.clientWidth
-    if (width < 768) {
+    if (appMark()) {
       this.layout = 'total, prev, next, jumper'
     }
     this._getFirstList()
