@@ -192,11 +192,10 @@ import SelectDepartment from 'base/selectDepartment/selectDepartment'
 import SelectArea from 'base/selectArea/selectArea'
 import SelectTrade from 'base/selectTrade/selectTrade'
 import { getByCode } from 'api/getOptions'
-const userId = cookie.get('userId')
 export default {
   data () {
     return {
-      userId: userId,
+      userId: cookie.get('userId'),
       permissions: cookie.getJSON('permissions'),
       cusName: '',
       bdAccount: '',
@@ -503,7 +502,7 @@ export default {
     },
     _getNum () {
       let params = {
-        'id': userId
+        'id': this.userId
       }
       this.$get('/Product.do?GetNumberById', params).then(res => {
         try {

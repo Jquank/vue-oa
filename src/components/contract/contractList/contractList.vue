@@ -37,6 +37,10 @@
       <el-table-column prop="number" label="合同号" width="140">
       </el-table-column>
       <el-table-column prop="username" label="领用人">
+        <template slot-scope="scope">
+          <span>{{scope.row.username}}</span>
+          <span v-if="scope.row.bindName&&scope.row.bindName!==scope.row.username">{{'('+scope.row.bindName+')'}}</span>
+        </template>
       </el-table-column>
       <el-table-column prop="catname" label="合同类型" width="160">
       </el-table-column>
@@ -59,7 +63,7 @@
           <el-button @click.native="receiveContract(scope.row)" v-if="scope.row.status==20 && scope.row.switchuid ==userId" type="success" class="xsbtn">接收合同</el-button>
         </template>
       </el-table-column>
-      <el-table-column v-if="permissions.indexOf('76') > -1" prop="" label="操作" width="60px" align="center">
+      <el-table-column v-if="permissions.indexOf('76') > -1" prop="" label="操作" width="60px" align="center" fixed="right">
         <template slot-scope="scope">
           <el-button @click.native="edit(scope.row)" type="warning" class="xsbtn">编辑</el-button>
         </template>

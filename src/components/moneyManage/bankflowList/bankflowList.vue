@@ -104,27 +104,36 @@
       </div>
     </div>
     <!-- 列表 -->
-    <el-table :data="bankFlowList" border class="table-width" max-height="550" stripe>
+    <el-table :data="bankFlowList" border class="table-width" max-height="550" stripe :row-class-name="setRowClassName">
       <!-- <el-table-column type="selection" width="35"></el-table-column> -->
-      <el-table-column :fixed="isFixed" label="银行类型" prop="code_desc" width="80"></el-table-column>
+      <el-table-column :fixed="isFixed" label="银行类型" prop="code_desc" width="75">
+        <template slot-scope="scope">
+          <span v-if="scope.row._mark==='total'">合计</span>
+          <span v-else>{{scope.row.code_desc}}</span>
+        </template>
+      </el-table-column>
       <el-table-column :fixed="isFixed" label="交易时间" prop="B_JYSJ" width="95">
         <span slot-scope="scope">{{scope.row.tm | timeFormat}}</span>
       </el-table-column>
       <el-table-column :fixed="isFixed" label="参考号" prop="no" width="100"></el-table-column>
-      <el-table-column :fixed="isFixed" label="付款名" prop="fm_name" width="130"></el-table-column>
-      <el-table-column :fixed="isFixed" label="付款账号" prop="fm_account" width="120"></el-table-column>
+      <el-table-column :fixed="isFixed" label="付款名" prop="fm_name" width="110"></el-table-column>
+      <el-table-column :fixed="isFixed" label="付款账号" prop="fm_account" width="100"></el-table-column>
       <el-table-column :fixed="isFixed" label="现金收款人" prop="fm_uid" width="90"></el-table-column>
       <el-table-column label="付款公司名" min-width="90" prop="company_name"></el-table-column>
-      <el-table-column label="摘要|备注" min-width="120" prop="remark"></el-table-column>
-      <el-table-column label="百度账户" prop="baidu_account2"></el-table-column>
+      <el-table-column label="摘要|备注" min-width="100" prop="remark"></el-table-column>
+      <el-table-column label="百度账户" min-width="100" prop="baidu_account2"></el-table-column>
       <el-table-column label="账户类型" prop="account_type"></el-table-column>
-      <el-table-column label="交易金额" min-width="110" prop>
-        <span slot-scope="scope">{{scope.row.amount | currency1}}</span>
+      <el-table-column label="交易金额" min-width="120" prop>
+        <template slot-scope="scope">
+          <span v-if="scope.row._mark!=='total'">{{scope.row.amount | currency1}}</span>
+          <div v-else>{{totalData.sumAmount | currency}}</div>
+        </template>
       </el-table-column>
       <!-- 拆 -->
       <el-table-column class-name="splited-col" label="拆分后金额" prop width="110">
         <template slot-scope="scope">
           <el-table
+          v-if="scope.row._mark!=='total'"
             :data="scope.row.split"
             :row-class-name="scope.row.split.length>1?'add-border':''"
             :show-header="false"
@@ -134,12 +143,14 @@
               <span slot-scope="scope">{{scope.row.split_amount | currency1}}</span>
             </el-table-column>
           </el-table>
+          <div v-else class="pl2px">{{totalData.billAmount | currency}}</div>
         </template>
       </el-table-column>
       <template v-if="selStatus!=0">
         <el-table-column class-name="splited-col" label="预留信息" prop width="120">
           <template slot-scope="scope">
             <el-table
+             v-if="scope.row._mark!=='total'"
               :data="scope.row.split"
               :row-class-name="scope.row.split.length>1?'add-border':''"
               :show-header="false"
@@ -154,6 +165,7 @@
         <el-table-column class-name="splited-col" label="使用人" prop width="100">
           <template slot-scope="scope">
             <el-table
+             v-if="scope.row._mark!=='total'"
               :data="scope.row.split"
               :row-class-name="scope.row.split.length>1?'add-border':''"
               :show-header="false"
@@ -168,6 +180,7 @@
         <el-table-column class-name="splited-col" label="公司名称" prop width="200">
           <template slot-scope="scope">
             <el-table
+             v-if="scope.row._mark!=='total'"
               :data="scope.row.split"
               :row-class-name="scope.row.split.length>1?'add-border':''"
               :show-header="false"
@@ -184,6 +197,7 @@
         <el-table-column class-name="splited-col" label="用户名" prop width="160">
           <template slot-scope="scope">
             <el-table
+             v-if="scope.row._mark!=='total'"
               :data="scope.row.split"
               :row-class-name="scope.row.split.length>1?'add-border':''"
               :show-header="false"
@@ -198,6 +212,7 @@
         <el-table-column class-name="splited-col" label="提单金额" prop width="120">
           <template slot-scope="scope">
             <el-table
+            v-if="scope.row._mark!=='total'"
               :data="scope.row.split"
               :row-class-name="scope.row.split.length>1?'add-border':''"
               :show-header="false"
@@ -206,14 +221,16 @@
               <el-table-column class-name="split-item-col" label prop show-overflow-tooltip>
                 <span
                   slot-scope="scope"
-                >{{(scope.row.wfndStatus===300||scope.row.reckStatus===300)?scope.row.split_amount:'' |currency1}}</span>
+                >{{(scope.row.wfndStatus===300||scope.row.reckStatus===300)?scope.row.split_amount:'' | currency1}}</span>
               </el-table-column>
             </el-table>
+            <div v-else class="pl2px">{{totalData.sumSplitAmount | currency}}</div>
           </template>
         </el-table-column>
         <el-table-column class-name="splited-col" label="提单时间" prop width="95">
           <template slot-scope="scope">
             <el-table
+             v-if="scope.row._mark!=='total'"
               :data="scope.row.split"
               :row-class-name="scope.row.split.length>1?'add-border':''"
               :show-header="false"
@@ -231,6 +248,7 @@
       <el-table-column class-name="splited-col" label="余额" prop v-if="selStatus==100" width="120">
         <template slot-scope="scope">
           <el-table
+           v-if="scope.row._mark!=='total'"
             :data="scope.row.split"
             :row-class-name="scope.row.split.length>1?'add-border':''"
             :show-header="false"
@@ -238,14 +256,15 @@
           >
             <el-table-column class-name="split-item-col" label prop show-overflow-tooltip>
               <span
-                slot-scope="scope"
-              >{{(scope.row.wfndStatus!==300||scope.row.reckStatus!==300)?scope.row.split_amount:'' |currency1}}</span>
+                slot-scope="inscope"
+              >{{(scope.row.amount-((inscope.row.wfndStatus===300||inscope.row.reckStatus===300)?inscope.row.split_amount:0)) |currency1}}</span>
             </el-table-column>
           </el-table>
+          <div v-else class="pl2px">{{totalData.yueAmount | currency}}</div>
         </template>
       </el-table-column>
-      <el-table-column class-name="splited-col" label="操作" prop v-if="selStatus!=20" width="90">
-        <template slot-scope="scope">
+      <el-table-column class-name="splited-col" label="操作" prop v-if="selStatus!=20" width="90" fixed="right" align="center">
+        <template slot-scope="scope" v-if="scope.row._mark!=='total'">
           <el-table
             :data="scope.row.split"
             :row-class-name="scope.row.split.length>1?'add-border':''"
@@ -601,7 +620,8 @@ export default {
       comInfo: {},
       flowMoney: 0,
       key_seluser: '',
-      key_selkeepuser: '1'
+      key_selkeepuser: '1',
+      totalData: {}
     }
   },
   computed: {
@@ -611,7 +631,7 @@ export default {
       this.splitForm.splitItem.forEach(val => {
         sum += parseFloat(val.money || 0)
       })
-      return sum
+      return sum.toFixed(2)
     },
     // 剩余可拆账金额
     restMoney() {
@@ -635,6 +655,11 @@ export default {
     this._getBankType()
   },
   methods: {
+    setRowClassName({ row, rowIndex }) {
+      if (row._mark === 'total') {
+        return 'red'
+      }
+    },
     exportFlow() {
       this.$export('/receipt.do?bankReceiptExport', this.sendParams)
     },
@@ -719,7 +744,7 @@ export default {
         })
         return
       }
-      if (this.restMoney !== 0) {
+      if (+this.restMoney !== 0) {
         this.$message({
           type: 'warning',
           message: '拆账金额不符，请重新拆账'
@@ -1018,6 +1043,14 @@ export default {
     },
     updateBankList(res) {
       this.bankFlowList = res.data[0].data
+      if (this.selStatus === 100) {
+        this.totalData = res.data[2].data
+        let tempObj = {
+          split: [],
+          _mark: 'total'
+        }
+        this.bankFlowList.push(tempObj)
+      }
     }
   },
   components: {
@@ -1102,6 +1135,9 @@ export default {
   }
   .contact-phone {
     width: calc(~'(100% - 35px)');
+  }
+  .pl2px{
+    padding-left: 4px;
   }
 }
 </style>

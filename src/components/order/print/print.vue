@@ -1,5 +1,4 @@
 <template>
-  <div>
     <div id="print">
 
       <div align=center x:publishsource="Excel">
@@ -333,7 +332,6 @@
 
       </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -357,6 +355,8 @@ export default {
   },
   mounted () {
     this.$nextTick(() => {
+      let orderList = document.getElementsByClassName('order-list')[0]
+      orderList.style.position = 'static'
       setTimeout(() => {
         if (this.printData.producttype === 0) {
           this.$refs.newCus.checked = true

@@ -212,6 +212,12 @@
           <span v-else>{{scope.row.profit_count | currency1}}</span>
         </template>
       </el-table-column>
+      <el-table-column prop="arrears" label="应收账款" width="120">
+        <template slot-scope="scope">
+          <span v-if="!scope.row.mark">{{scope.row.arrears | currency}}</span>
+          <span v-else>{{scope.row.arrears_count | currency1}}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="addmoney" label="实际加款" width="120">
         <template slot-scope="scope">
           <span v-if="!scope.row.mark">{{(scope.row.addTime && 500>scope.row.type) ? scope.row.addmoney : '' | currency}}</span>

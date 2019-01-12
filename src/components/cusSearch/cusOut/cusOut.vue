@@ -1,8 +1,15 @@
 <template>
   <div class="cus-search component-container media-padding">
-    <div class="multi-import" v-if="permissions.indexOf('8r')>-1">
-      <up-file :title="'批量导入'" :upIcon="'fa fa-cloud-download'" :isHiddenFileList="true" :uploadUrl="'/Renew.do?rollOutExcle'" style="display: inline-block"></up-file>
-      <span class="red">(ps:excell表头为“百度用户名”、“转入客服编号”、“SF系统”)</span>
+    <!-- <div class="multi-import" v-if="permissions.indexOf('8r')>-1"> -->
+    <div class="multi-import">
+      <template v-if="permissions.indexOf('8r')>-1">
+        <up-file :title="'转户批量导入'" :upIcon="'fa fa-cloud-download'" :isHiddenFileList="true" :uploadUrl="'/Renew.do?rollOutExcle'" style="display: inline-block"></up-file>
+        <span class="red">(ps:excell表头为“百度用户名”、“转入客服编号”、“SF系统”)</span>
+      </template>
+      <template>
+        <up-file v-if="permissions.indexOf('7z')>-1" :title="'新增百度账户导入'" :upIcon="'fa fa-cloud-download'"  :type="'warning'" :isHiddenFileList="true" :uploadUrl="'/cpy.do?icrmXls'" style="display: inline-block"></up-file>
+      <!-- <span class="red">(ps:excell表头为“百度用户名”、“转入客服编号”、“SF系统”)</span> -->
+      </template>
     </div>
     <div class="search">
       <el-input placeholder="搜索客户名称" v-model="cusName" class="search-item item-width">
@@ -179,7 +186,8 @@ export default {
 }
 .cus-search {
   .multi-import{
-    .marginleft10px
+    .marginleft10px;
+    margin-top: -10px;
   }
   .search {
     display: flex;

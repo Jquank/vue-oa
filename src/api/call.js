@@ -12,7 +12,20 @@ export function loadCallIframe (id) {
     console.log(err)
   })
 }
-
-export function callPhone (phone) {
+function makeSelfRecord(phone, type, cpid, cat) {
+  let params = {
+    type: type,
+    cpid: cpid,
+    cat: cat,
+    phone: phone
+  }
+  $get(serverUrl + '/wf.do?tellog', params).then(res => {})
+}
+export function callPhone (phone, type, cpid, cat = 10000) {
+  if (!phone) {
+    this.$message.error('无电话号码！')
+    return
+  }
   window.agentbar.makecall('', '', phone, '', '', '', '', '', 1)
+  makeSelfRecord(phone, type, cpid, cat)
 }

@@ -34,13 +34,12 @@ import cookie from 'js-cookie'
 import Page from 'base/page/page'
 import UpFile from 'base/upLoad/upFile'
 import { serverUrl } from 'api/http'
-const userId = cookie.get('userId')
 export default {
   data () {
     return {
       serverUrl: serverUrl,
       tk: cookie.get('token'),
-      userId: userId,
+      userId: cookie.get('userId'),
       cusName: '',
       myFollowList: [],
       myFollowUrl: '/Company.do?finduploadcompanyinfo',

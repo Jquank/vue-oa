@@ -95,9 +95,6 @@ a {
   background: #f7f7f7;
   padding: 0;
 }
-div.el-table {
-  font-size: 13px;
-}
 .el-table thead {
   color: #5a5b5e;
 }
@@ -205,4 +202,18 @@ div.el-dialog__body {
 }
 .weight-label .el-form-item {
   margin-bottom: 0 !important;
+}
+.call-phone-icon {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  text-align: center;
+  line-height: 16px;
+  cursor: pointer;
+  color: white;
+  font-size: 15px;
+  background: green;
+  padding: 3px;
+  border-radius: 50%;
+  margin-left: 2px;
 }

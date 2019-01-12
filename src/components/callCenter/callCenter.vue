@@ -14,7 +14,7 @@
         <el-button type="warning" @click.native="exportExcell">导出excel</el-button>
       </div>
       <div class="follow-item">
-        <span class="tipfont" style="display:inline-block;padding-top:6px;">( 提示：1.初次使用请点击导出按钮，导出excel作为模板。2.填充客户信息时请务必按照表头正确填充。)</span>
+        <span class="tipfont red" style="display:inline-block;padding-top:6px;">( 提示：1.初次使用请点击导出按钮，导出excel作为模板。2.填充客户信息时请务必按照表头正确填充。)</span>
       </div>
     </div>
     <div class="follow-search">
@@ -47,21 +47,24 @@
       </div>
     </div>
 
-    <el-table @selection-change="handleSelectionChange" stripe border :data="balckList" class="table-width" max-height="600">
+    <el-table @selection-change="handleSelectionChange" stripe border :data="balckList" class="table-width"
+    max-height="600"
+    custom
+    @sort-change="sortChange">
       <el-table-column type="selection" width="40">
       </el-table-column>
-      <el-table-column prop="bname" label="商务姓名">
+      <el-table-column prop="bname" label="商务姓名" width="80">
       </el-table-column>
       <el-table-column prop="companyname" label="公司名称" min-width="110">
       </el-table-column>
-      <el-table-column prop="contactname" label="联系人">
+      <el-table-column prop="contactname" label="联系人" width="80">
       </el-table-column>
       <el-table-column prop="" label="电话" width="140">
-        <span slot-scope="scope">{{scope.row.telnum}}&nbsp;<i class="fa fa-phone fa-2x call-icon" @click="callPhone(scope.row.telnum)"></i></span>
+        <span slot-scope="scope">{{scope.row.telnum}}&nbsp;<i class="fa fa-phone fa-2x call-icon" @click="call_phone(scope.row)"></i></span>
       </el-table-column>
       <el-table-column prop="" label="最新状态" width="120">
         <template slot-scope="scope">
-          <el-select v-model="scope.row.latest_status" @change="changeStatus(scope.row, 'latest_status')">
+          <el-select v-model="scope.row.latest_status" @change="changeStatus(scope.row, 'latest_status')" :class="'se'+scope.row.latest_status">
             <el-option label="未标注" value="0"></el-option>
             <el-option label="未接通" value="10"></el-option>
             <el-option label="空错号" value="20"></el-option>
@@ -72,10 +75,10 @@
           </el-select>
         </template>
       </el-table-column>
-      <el-table-column prop="" label="创建时间" width="95">
+      <el-table-column prop="createdtime" label="创建时间" width="98" sortable>
         <span slot-scope="scope">{{scope.row.createdtime | timeFormat}}</span>
       </el-table-column>
-      <el-table-column prop="" label="修改时间" width="95">
+      <el-table-column prop="last_opt_time" label="修改时间" width="98" sortable>
         <span slot-scope="scope">{{scope.row.last_opt_time | timeFormat}}</span>
       </el-table-column>
       <el-table-column prop="" label="网站">
@@ -120,14 +123,24 @@ export default {
     }
   },
   methods: {
-    search () {
+    call_phone(data) {
+      this.callPhone(data.telnum, 40, data.id)
+    },
+    sortChange({ column, prop, order }) {
+      this.prop = prop
+      this.order = order
+      this.search(prop, order === 'descending' ? 'DESC' : 'ASC')
+    },
+    search (prop = 'createdtime ', odby = 'DESC') {
       this.sendParams = {
         'companyname': this.cusName,
         'bname': this.shangWu,
         'dateEnd': this.subDate[1],
         'dateStart': this.subDate[0],
         'telNum': this.phone,
-        'latest_status': this.lastStatus
+        'latest_status': this.lastStatus,
+        'odbycl ': prop,
+        'odby': odby
       }
     },
     reset () {
@@ -152,7 +165,7 @@ export default {
       }
       this.$post('/ch.do?updateColums', params).then(res => {
         if (res.data.success) {
-          // this.search()
+          this.search(this.prop, this.order === 'descending' ? 'DESC' : 'ASC')
         }
       })
     },
@@ -214,6 +227,20 @@ export default {
   }
 }
 </script>
+<style lang="less">
+ .follow-record  .el-table{
+     .el-select.se10 input,.el-select.se20 input{
+       color: rgb(230, 109, 109) !important;
+     }
+     .el-select.se30 input,.el-select.se40 input{
+       color: #E6A23C !important;
+     }
+     .el-select.se50 input,.el-select.se60 input{
+       color: #67C23A !important;
+     }
+  }
+
+</style>
 
 <style lang="less" scoped>
 .follow-record {

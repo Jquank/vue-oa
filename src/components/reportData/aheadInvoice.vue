@@ -12,6 +12,7 @@
             :title="'值班加款导入'"
             :upIcon="'fa fa-cloud-download'"
             :isHiddenFileList="true"
+            @fileUrl="getFileUrl"
           ></up-file>
           <el-button @click.native="exportExcell" type="warning" icon="fa fa-cloud-upload" class="ml10px">导出Excell</el-button>
         </div>
@@ -436,6 +437,7 @@ import Page from 'base/page/page'
 import UpFile from 'base/upLoad/upFile'
 import InvoiceInfoDialog from 'components/invoiceManage/invoiceList/invoiceInfoDialog'
 import { productType } from 'common/js/filters'
+import { uploadUrl } from 'api/http'
 export default {
   directives: { elDragDialog },
   data() {
@@ -481,6 +483,10 @@ export default {
     }
   },
   methods: {
+    getFileUrl(res) {
+      let str = uploadUrl.substr(0, uploadUrl.length - 2)
+      window.location = str + res.response.data
+    },
     // 查看
     viewInvoice (data) {
       this.key_invoice_dialog = new Date() + '5'

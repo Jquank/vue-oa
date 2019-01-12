@@ -7,6 +7,7 @@
           <el-radio-button :label="10">录入客户</el-radio-button>
           <el-radio-button :label="20">跟踪客户</el-radio-button>
           <el-radio-button :label="40">签约客户</el-radio-button>
+          <el-radio-button :label="50">废弃客户</el-radio-button>
         </el-radio-group>
       </div>
       <div class="search-cus">
@@ -41,9 +42,9 @@
       <el-table :key="myKind" @selection-change="handleSelectionChange" stripe border :data="myCusList" max-height="600" style="width: 100%">
         <el-table-column fixed type="selection" width="40">
         </el-table-column>
-        <el-table-column prop="companyname" label="客户名称" min-width="220">
+        <el-table-column prop="companyname" label="客户名称" min-width="180">
         </el-table-column>
-        <el-table-column prop="companytype" label="公司状态" min-width="80">
+        <el-table-column prop="companytype" label="公司状态" width="75">
           <span :class="scope.row.companytype===-10?'red':''" slot-scope="scope">
             {{scope.row.companytype | comType}}
           </span>
@@ -53,16 +54,21 @@
             {{scope.row.producttype | cusStatus}} {{scope.row.producttype===0?scope.row.productnumber+1:''}}
           </span>
         </el-table-column>
-        <el-table-column prop="areaname" label="地区" min-width="150">
-        </el-table-column>
-        <el-table-column prop="catname" label="行业" min-width="150">
-        </el-table-column>
         <el-table-column prop="productname" label="业务类型" min-width="80">
         </el-table-column>
-        <el-table-column prop="" label="业务状态" min-width="120">
+        <el-table-column prop="" label="业务状态" width="75">
           <span :class="scope.row.companylogstatus===10?'red':''" slot-scope="scope">
             {{scope.row.companylogtype+""+scope.row.companylogstatus | businessStatus}}
           </span>
+        </el-table-column>
+        <el-table-column prop="ccname" label="联系人" min-width="80">
+        </el-table-column>
+        <el-table-column prop="cccontact" label="电话" min-width="150">
+          <span slot-scope="scope">{{scope.row.cccontact}}&nbsp;<i class="fa fa-phone fa-2x call-icon" @click="call_phone(scope.row)"></i></span>
+        </el-table-column>
+        <el-table-column prop="areaname" label="地区" min-width="150">
+        </el-table-column>
+        <el-table-column prop="catname" label="行业" min-width="150">
         </el-table-column>
         <el-table-column prop="entername" label="录入人" width="80">
         </el-table-column>
@@ -70,10 +76,10 @@
         </el-table-column>
         <el-table-column v-if="myKind==20" prop="traceName" label="跟踪人" width="80">
         </el-table-column>
-        <el-table-column v-if="myKind==30" prop="auditor_time" label="最后审核时间" width="150">
+        <el-table-column v-if="myKind==30" prop="auditor_time" label="最后审核时间" width="100">
           <span slot-scope="scope">{{scope.row.auditor_time | timeFormat}}</span>
         </el-table-column>
-        <el-table-column prop="" label="最后跟进时间" width="150">
+        <el-table-column prop="" label="最后跟进时间" width="100">
           <span :class="scope.row.tip?'red':''" slot-scope="scope">
             {{scope.row.visittime | timeFormat}}
           </span>
@@ -81,10 +87,10 @@
         <el-table-column v-if="myKind==40" prop="auditor_time" label="最后降E时间" width="140">
           <span slot-scope="scope">{{scope.row.jiangE | timeFormat}}</span>
         </el-table-column>
-        <el-table-column label="操作" width="120" align="center">
+        <el-table-column label="操作" width="100" align="center" fixed="right">
           <template slot-scope="scope">
             <el-dropdown :trigger="trigger">
-              <el-button type="primary" size="mini">
+              <el-button type="primary" class="xsbtn">
                 操作<i class="el-icon-arrow-down el-icon--right"></i>
               </el-button>
               <el-dropdown-menu slot="dropdown" class="text-center">
@@ -198,13 +204,12 @@ import SelectTrade from 'base/selectTrade/selectTrade'
 import AutoSelect from 'base/autoSelect/autoSelect'
 import SelectUser from 'base/selectUser/selectUser'
 import { appMark } from 'common/js/utils'
-const USER_ID = cookie.get('userId')
 export default {
   data () {
     return {
       trigger: 'hover',
       permissions: cookie.getJSON('permissions'),
-      USER_ID: USER_ID,
+      USER_ID: cookie.get('userId'),
       refresh: true,
       myKind: 30,
       cusName: '',
@@ -255,6 +260,9 @@ export default {
     }
   },
   methods: {
+    call_phone(data) {
+      this.callPhone(data.cccontact, 10, data.companylogid)
+    },
     // 甩单按钮
     throwOrder () {
       if (this.multipleSelection.length === 0) {
@@ -354,7 +362,7 @@ export default {
         'companylogid': this.rowData.companylogid,
         'cat': 200,
         'cid': this.rowData.id,
-        'uid': USER_ID,
+        'uid': this.USER_ID,
         'pid': this.rowData.productid,
         'remark': this.followRecord
       }
@@ -397,7 +405,7 @@ export default {
       let params = {
         'cat': this.form.visitType,
         'cid': this.rowData.id,
-        'uid': USER_ID,
+        'uid': this.USER_ID,
         'accompany': this.rowData.accompanyUserId,
         'pid': this.rowData.pid,
         'ccid': this.form.visitMan,
@@ -508,6 +516,10 @@ export default {
   .follow-btns {
     margin-top: 10px;
     text-align: right;
+  }
+  .call-icon{
+    cursor: pointer;
+    color: green;
   }
 }
 </style>

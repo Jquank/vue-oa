@@ -1,6 +1,6 @@
 <template>
   <div class="add-user component-container media-padding">
-    <el-form ref="form" :model="form" :rules="rules" label-width="90px">
+    <el-form ref="form" :model="form" :label-position="labelPosition" :rules="rules" label-width="90px">
       <el-row>
         <el-col :md="24">
           <el-form-item label="产品类型 :">
@@ -101,10 +101,11 @@
 import cookie from 'js-cookie'
 import SelectArea from 'base/selectArea/selectArea'
 import SelectTrade from 'base/selectTrade/selectTrade'
-const userId = cookie.get('userId')
+import {appMark} from 'common/js/utils'
 export default {
   data () {
     return {
+      labelPosition: 'right',
       form: {
         cusName: '',
         buildDate: '',
@@ -143,6 +144,9 @@ export default {
     }
   },
   created () {
+    if (appMark()) {
+      this.labelPosition = 'top'
+    }
     for (let key in this.rules) {
       if (key === 'cusFrom' || key === 'trade' || key === 'area') {
         this.rules[key].push({required: true, message: '请选择必选项', trigger: 'change'})
@@ -165,7 +169,7 @@ export default {
     },
     // 获取当前人的保a和跟踪可用数量
     _getNum () {
-      this.$get('/Product.do?GetNumberById', { id: userId }).then(res => {
+      this.$get('/Product.do?GetNumberById', { id: cookie.get('userId') }).then(res => {
         this.availableBaoA = res.data[0].data || 0
         this.availableFollow = res.data[1].data || 0
       })
@@ -275,7 +279,7 @@ export default {
 </script>
 
 <style lang="less">
-.btns .el-form-item__content {
+.add-user .btns .el-form-item__content {
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;
@@ -283,6 +287,9 @@ export default {
   margin-top: -10px;
   & > .btns-child {
     margin-top: 10px;
+  }
+  .el-button+.el-button{
+    margin-left: 0;
   }
 }
 </style>

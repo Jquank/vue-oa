@@ -40,11 +40,11 @@
                       <b>联系人{{index?index:''}}：姓名{{index?index:''}}：</b>
                       <span>{{c.contactname}}</span>
                     </div>
-                    <div>
+                    <div class="append-phone" :data-cpid="moneyRecord.companylogid">
                       <b>手机{{index?index:''}}：</b>
                       <span>{{c.contactnumber}}</span>
                     </div>
-                    <div>
+                    <div class="append-phone" :data-cpid="moneyRecord.companylogid">
                       <b>座机{{index?index:''}}：</b>
                       <span>{{c.telphone}}</span>
                     </div>
@@ -78,7 +78,7 @@
                   <div class="row-container">
                     <div>
                       <b>网建类型：</b>
-                      <span>{{productInfo[0].websitetype | wjStyle}}</span>
+                      <span>{{productInfo[0].websitetype+"" | wjStyle}}</span>
                     </div>
                   </div>
                 </div>
@@ -169,7 +169,7 @@
                       <b>联系人{{index?index:''}}：姓名{{index?index:''}}：</b>
                       <span>{{c.contactname}}</span>
                     </div>
-                    <div>
+                    <div class="append-phone" :data-cpid="moneyRecord.companylogid">
                       <b>电话{{index?index:''}}：</b>
                       <span>{{c.contactnumber}}</span>
                     </div>
@@ -322,11 +322,11 @@
                       <b>联系人{{index?index:''}}：姓名{{index?index:''}}：</b>
                       <span>{{c.contactname}}</span>
                     </div>
-                    <div>
+                    <div class="append-phone" :data-cpid="moneyRecord.companylogid">
                       <b>手机{{index?index:''}}：</b>
                       <span>{{c.contactnumber}}</span>
                     </div>
-                    <div>
+                    <div class="append-phone" :data-cpid="moneyRecord.companylogid">
                       <b>座机{{index?index:''}}：</b>
                       <span>{{c.telphone}}</span>
                     </div>
@@ -429,11 +429,11 @@
                       <b>联系人{{index?index:''}}：姓名{{index?index:''}}：</b>
                       <span>{{c.contactname}}</span>
                     </div>
-                    <div>
+                    <div class="append-phone" :data-cpid="moneyRecord.companylogid">
                       <b>手机{{index?index:''}}：</b>
                       <span>{{c.contactnumber}}</span>
                     </div>
-                    <div>
+                    <div class="append-phone" :data-cpid="moneyRecord.companylogid">
                       <b>座机{{index?index:''}}：</b>
                       <span>{{c.telphone}}</span>
                     </div>

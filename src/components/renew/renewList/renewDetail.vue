@@ -842,7 +842,7 @@ export default {
               receive_money: item.receive_money,
               receivetime: item.receivetime ? new Date(item.receivetime).getTime() : '',
               receivetype: item.receivetype,
-              refprofitund: item.refprofitund || 0
+              profit: item.profit || 0
             })
           })
         })

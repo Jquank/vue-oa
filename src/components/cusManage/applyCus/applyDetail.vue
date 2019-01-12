@@ -69,7 +69,7 @@
               <el-form-item required>
                 <template slot="label">
                   电话
-                  <el-button @click.native="callPhone(item.contact)" type="success" icon="fa fa-phone fa-lg" circle size="mini"></el-button>
+                  <el-button @click.native="call_phone(item.contact)" type="success" icon="fa fa-phone fa-lg" circle size="mini"></el-button>
                 </template>
                 <el-input v-model="item.contact" placeholder="联系电话" class="contact-phone"></el-input>
                 <el-button @click.native="addContact(index)" class="circle-btn" :type="index===0?'success':'danger'" size="mini" :icon="index===0?'fa fa-plus':'fa fa-minus'" circle></el-button>
@@ -136,7 +136,6 @@ import cookie from 'js-cookie'
 import SelectArea from 'base/selectArea/selectArea'
 import SelectTrade from 'base/selectTrade/selectTrade'
 import { getByCode } from 'api/getOptions'
-const userId = cookie.get('userId')
 export default {
   data () {
     return {
@@ -178,6 +177,9 @@ export default {
     })
   },
   methods: {
+    call_phone(phone) {
+      this.callPhone(phone, 20, this.receiveData.companylogid)
+    },
     applyResult (applytype, cat) {
       let params = {
         cid: this.receiveData.companyid,
@@ -257,7 +259,7 @@ export default {
     // 判断是否达到跟踪上限(跟踪上限已取消)
     _isMaxFollow () {
       return new Promise(resolve => {
-        this.$get('/Product.do?GetNumberById', { id: userId }).then(res => {
+        this.$get('/Product.do?GetNumberById', { id: cookie.get('userId') }).then(res => {
           try {
             this.maxFollow = res.data[1].data
           } catch (error) {

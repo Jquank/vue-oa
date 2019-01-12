@@ -101,7 +101,6 @@ import InvoiceInfoDialog from 'components/invoiceManage/invoiceList/invoiceInfoD
 import Page from '@/base/page/page'
 import AutoSelect from 'base/autoSelect/autoSelect'
 import SelectUser from 'base/selectUser/selectUser'
-// const userId = cookie.get('userId')
 export default {
   data () {
     return {

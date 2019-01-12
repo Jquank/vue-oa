@@ -92,11 +92,11 @@ export default {
     }
   },
   created() {
+    this._rememberPwd()
     if (this.$route.query.data) {
       this.form.myName = this.$route.query.data.name || ''
       this.form.myPassword = this.$route.query.data.pwd || ''
     }
-    this._rememberPwd()
   },
   methods: {
     myNameBlur() {

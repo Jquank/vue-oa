@@ -50,7 +50,7 @@
         <span slot-scope="scope">{{scope.row.ysdltg | currency}}</span>
       </el-table-column>
       <el-table-column prop="checktime" label="加款时间" width="95">
-        <span slot-scope="scope">{{scope.row.checktime | timeFormat}}</span>
+        <span slot-scope="scope">{{scope.row.addTime | timeFormat}}</span>
       </el-table-column>
       <el-table-column prop="" label="操作" width="75" align="center">
         <template slot-scope="scope">

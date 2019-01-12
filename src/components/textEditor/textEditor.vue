@@ -57,7 +57,6 @@ export default {
     this.receiveData = this.$route.query.data
     this.mark = this.receiveData._mark
     if (this.receiveData._status !== 'add' && !this.receiveData.id) {
-      console.log('back')
       this.$router.go(-1)
       return
     }

@@ -89,6 +89,11 @@
                 </el-select>
               </el-form-item>
             </el-col>
+            <el-col :md="12" class="maxwidth">
+              <el-form-item label="业务类型 :">
+                <el-input v-model="cusDetail.pname" disabled></el-input>
+              </el-form-item>
+            </el-col>
           </el-row>
           <el-row :gutter="20">
             <el-col :md="24" style="max-width:1000px;">

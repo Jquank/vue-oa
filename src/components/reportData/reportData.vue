@@ -1,7 +1,7 @@
 <template>
   <div class="report-data component-container media-padding">
     <div class="search">
-      <div v-for="(item,index) in cols" :key="index">
+      <div v-for="(item,index) in searchCols" :key="index">
         <template v-if="item.where">
           <el-input
             v-if="item.where.type==='text'"
@@ -11,6 +11,7 @@
           ><template slot="prepend">{{item.as}}:</template>
           </el-input>
           <el-date-picker
+            :unlink-panels="true"
             :key="item.as"
             v-if="item.where.type==='datetime'"
             v-model="item.where.val"
@@ -72,6 +73,10 @@
       </template>
     </el-table>
     <page class="page" :url="url" :sendParams="sendParams" :otherParams="otherParams" :cols="cols" @updateList="getList"></page>
+    <form style="display: none" action="" id="exportExl" method="post" ref="subform">
+      <input id="rpt_id" type="text" name="rpt_id" ref="formId">
+      <input id="rpt_data" type="text" name="rpt_data" ref="formData">
+    </form>
   </div>
 </template>
 
@@ -110,6 +115,7 @@ export default {
       serverUrl: serverUrl,
       tk: cookie.get('token'),
       cols: [],
+      searchCols: [],
       acts: [],
       myList: [],
       list: [],
@@ -147,17 +153,23 @@ export default {
     },
     exportExcell(data) {
       let params = {
-        pageno: 1,
-        pagenum: 10,
-        columns: this.cols
+        rpt_id: this.$route.name,
+        rpt_data: {
+          pageno: 1,
+          pagenum: 10,
+          columns: this.searchCols
+        }
       }
       let isQuestionMark = data.url.indexOf('?') > -1
       let mark = isQuestionMark ? '&' : '?'
-      let url = '/' + data.url + mark + 'rpt_id=' + this.$route.name + '&rpt_data=' + JSON.stringify(params)
-      this.$export(url)
+      let url = this.serverUrl + '/' + data.url + mark + 'tk=' + this.tk
+      this.$refs.formId.setAttribute('value', params.rpt_id)
+      this.$refs.formData.setAttribute('value', JSON.stringify(params.rpt_data))
+      this.$refs.subform.setAttribute('action', url)
+      this.$refs.subform.submit()
     },
     search() {
-      this.cols.forEach(item => {
+      this.searchCols.forEach(item => {
         if (item.as === '客户区域' || item.as === '所属行业') {
           item.where.val = item.where.val.map(li => {
             return {
@@ -171,7 +183,7 @@ export default {
         rpt_data: {
           pageno: 1,
           pagenum: 10,
-          columns: this.cols
+          columns: this.searchCols
         }
       }
     },
@@ -179,7 +191,7 @@ export default {
       this.key_area = new Date() + ''
       this.key_trade = new Date() + '1'
       this.resetDept = true
-      this.cols.forEach(item => {
+      this.searchCols.forEach(item => {
         if (item.where) {
           item.where.val = []
         }
@@ -193,14 +205,19 @@ export default {
         this.list = []
         let exportBtns = {}
         this.cols = res.data.data.columns
-        // this.otherParams.rpt_data.columns = res.data.data.columns
+        if (!this.firstRequest) { // 存一份搜索数据
+          this.searchCols = JSON.parse(JSON.stringify(this.cols))
+          this.searchCols.forEach(val => {
+            if (val.where && val.where.type === 'datetime') {
+              val.where.val = []
+            }
+          })
+          this.firstRequest = true
+        }
         this.list = res.data.data.records
         this.cols.forEach(val => {
           if (val.show === 1) {
             this.myList.push(val)
-          }
-          if (val.where && val.where.type === 'datetime') {
-            val.where.val = []
           }
         })
         exportBtns = res.data.data.act

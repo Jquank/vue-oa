@@ -58,6 +58,12 @@
       </auto-select>
       <el-date-picker v-model="applyDate" format="yyyy/MM/dd" value-format="yyyy/MM/dd" :unlink-panels="true" type="datetimerange" range-separator="至" start-placeholder="申请时间" end-placeholder="申请时间" class="visit-item item-width"></el-date-picker>
       <el-date-picker v-model="invoiceDate" format="yyyy/MM/dd" value-format="yyyy/MM/dd" :unlink-panels="true" type="datetimerange" range-separator="至" start-placeholder="开票时间" end-placeholder="开票时间" class="visit-item item-width"></el-date-picker>
+      <el-select v-model="invoiceSame" class="visit-item item-width">
+        <el-option value="" label="保A公司名和发票抬头"></el-option>
+        <el-option :value="100" label="全部"></el-option>
+        <el-option :value="10" label="不一致"></el-option>
+        <el-option :value="20" label="一致"></el-option>
+      </el-select>
       <div class="visit-item">
         <el-button @click.native="search" type="primary">查 询</el-button>
         <el-button @click.native="reset" type="warning">重 置</el-button>
@@ -462,7 +468,8 @@ export default {
       makeInvoiceTitle: '',
       makeInvoiceStatus: '',
       offset: '',
-      isShowBtn: false
+      isShowBtn: false,
+      invoiceSame: ''
     }
   },
   methods: {
@@ -486,7 +493,8 @@ export default {
         starttime: this.applyDate[0],
         endtime: this.applyDate[1],
         invoice_starttime: this.invoiceDate[0],
-        invoice_endtime: this.invoiceDate[1]
+        invoice_endtime: this.invoiceDate[1],
+        identical: this.invoiceSame
       }
     },
     reset () {
@@ -787,19 +795,11 @@ export default {
     updateInvoiceList (res) {
       this.key_table = new Date() + ''
       this.invoiceList = res.data[0].data
-      // if (!this.invoiceList.length) {
-      //   return
-      // }
-      let initObj = this.invoiceList.slice(0, 1)
-      for (let key in initObj) {
-        initObj[key] = ''
-      }
       let tempObj = {
         amount: 0,
         tmoney2: 0,
         mark: 'total'
       }
-      initObj = Object.assign({}, initObj, tempObj)
       let pidMark = ''
       let tnumberMark = ''
       let sumObj = this.invoiceList.reduce((pre, cur) => {
@@ -812,7 +812,7 @@ export default {
           pre.tmoney2 += parseFloat(cur.tmoney2 || 0)
         }
         return pre
-      }, initObj)
+      }, tempObj)
       this.invoiceList.push(sumObj)
       if (this.mark === 'list' || this.mark === 'pending' || this.mark === 'handled' || this.mark === 'send') {
         this._getRowSpan()

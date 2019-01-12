@@ -68,7 +68,7 @@
             <el-col :md="12" class="maxwidth">
               <el-form-item required>
                 <span slot="label">
-                  <el-button @click.native="callPhone(item.contact)" type="success" icon="fa fa-phone fa-lg" circle size="mini"></el-button>
+                  <el-button @click.native="call_phone(item.contact)" type="success" icon="fa fa-phone fa-lg" circle size="mini"></el-button>
                   电话 :
                 </span>
                 <el-input v-model="item.contact" class="input-btn"></el-input>
@@ -397,6 +397,9 @@ export default {
     })
   },
   methods: {
+    call_phone(phone) {
+      this.callPhone(phone, 10, this.receiveData.companylogid)
+    },
     changeProType (val) {
       this.cusType = ''
       this._getCusTypeList(val)

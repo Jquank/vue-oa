@@ -675,7 +675,6 @@ export default {
 
 <style lang="less" scoped>
 .order-list {
-  // position: relative;
   .processed-content {
     .tab {
       margin-left: 10px;

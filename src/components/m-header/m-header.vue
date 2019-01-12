@@ -17,6 +17,11 @@
         </div>
       </div>
       <ul class="head-ul">
+        <!-- <li id="header-phone">
+          <el-input v-model="phoneNum" size="mini" class="contact-phone" @keyup.enter.native="call_phone"></el-input>
+          <el-button class="xsbtn" circle type="success" icon="fa fa-phone" @click.native="call_phone"></el-button>
+          <el-button class="xsbtn" circle type="primary" icon="fa fa-envelope-o" @click.native="send_message"></el-button>
+        </li> -->
         <!-- <li id="down-client">
           <a href="http://bg.baijiegroup.com/BaiJieOA/bj_crm_oa.zip" title="下载客户端">
             <span class="fa fa-download"></span>
@@ -99,7 +104,7 @@ import { autoHeight, appMark } from 'common/js/utils'
 import ErrorCollect from 'base/errorCollect/errorCollect'
 export default {
   computed: {
-    uName () {
+    uName() {
       return cookie.get('userName')
     },
     ...mapGetters([
@@ -120,11 +125,14 @@ export default {
       secondTitle: '',
       thirdTitle: '',
       lastRoutePath: '',
-      errorDialog: false
+      errorDialog: false,
+
+      phoneNum: '',
+      phone_num: ''
     }
   },
   watch: {
-    $route (to, from) {
+    $route(to, from) {
       this._findBread()
       this.lastRoutePath = from.path
       // todo 此处transition会移除掉此样式(暂未使用动画，如用，请使用定时器)
@@ -134,6 +142,23 @@ export default {
       // setTimeout(() => {
       //   autoHeight()
       // }, 500)
+
+      // 自动添加电话图标，打电话
+      setTimeout(() => {
+        let appendPhones = document.getElementsByClassName('append-phone')
+        if (!appendPhones) {
+          return
+        }
+        for (let i = 0, len = appendPhones.length; i < len; i++) {
+          let appendPhone = appendPhones[i]
+          let el = document.createElement('i')
+          el.className = 'fa fa-phone call-phone-icon'
+          appendPhone.appendChild(el)
+          el.addEventListener('click', (e) => {
+            this.callPhone(e.target.previousElementSibling.innerText, 30, appendPhone.getAttribute('data-cpid'))
+          })
+        }
+      }, 50)
     }
   },
   created () {
@@ -144,6 +169,17 @@ export default {
     this.handleClickCollapse()
   },
   methods: {
+    call_phone() {
+      if (this.phoneNum) {
+        this.phone_num = this.phoneNum.match(/[-\d]/g).join('')
+      }
+      this.phoneNum = this.phone_num
+      // let reg = /^((13[0-9])|(14([0-3]|[5-9]))|(15([0-3]|[5-9]))|(16[0-9])|(17[0-9])|(18[0-9])|(19[0-9]))\d{8}$/
+      this.callPhone(this.phone_num, 100)
+    },
+    send_message() {
+
+    },
     errorHistory () {
       this.errorDialog = true
     },
@@ -229,6 +265,7 @@ export default {
       cookie.remove('permissions')
       cookie.remove('allowBar')
       storage.clear()
+      storage.session.clear()
       this.$router.push('/login')
     },
     refresh () {
@@ -324,6 +361,15 @@ export default {
         align-items: center;
       }
     }
+  }
+  #header-phone{
+    .el-button+.el-button{
+      margin-left: 2px;
+    }
+    .contact-phone{
+      width: 120px;
+    // width: calc(~"(100% - 80px)");
+  }
   }
 }
 </style>
