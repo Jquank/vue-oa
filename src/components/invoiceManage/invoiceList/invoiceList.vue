@@ -691,7 +691,11 @@ export default {
       }
       let flowList = []
       this.flowSelectArr.forEach(val => {
-        flowList.push(val.id)
+        if (val.orderOrRenew === 'renew') {
+          flowList.push(val.fkid)
+        } else if (val.orderOrRenew === 'order') {
+          flowList.push(val.curid)
+        }
       })
       let params = {
         invoiceId: this.flowRowData.invoiceid,

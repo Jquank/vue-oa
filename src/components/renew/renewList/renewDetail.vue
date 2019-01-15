@@ -176,7 +176,8 @@
           </el-col>
           <el-col :md="5" class="maxwidth">
             <el-form-item label="提交人 :">
-              <span>{{baseInfo.username}}</span>
+              <span>{{rowData.username}}</span>
+              <span v-if="rowData.bindName">{{'('+rowData.bindName+')'}}</span>
             </el-form-item>
           </el-col>
           <el-col :md="11" class="maxwidth">
@@ -938,11 +939,12 @@ export default {
         reid: this.rowData.id || this.rowData.reid
       }).then(res => {
         this.baseInfo = res.data[0].data || {}
-        if (this.baseInfo.bill_time) {
-          this.billTime = timeFormat1(this.baseInfo.bill_time)
-        } else {
-          this.billTime = timeFormat1((new Date()).getTime())
-        }
+        // if (this.baseInfo.bill_time) {
+        //   this.billTime = timeFormat1(this.baseInfo.bill_time)
+        // } else {
+        //   this.billTime = timeFormat1((new Date()).getTime())
+        // }
+        this.billTime = timeFormat1((new Date()).getTime())
         if (
           this.toMark === 'renewReceive' ||
           this.toMark === 'chargeOffCheck'

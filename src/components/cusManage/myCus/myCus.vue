@@ -39,55 +39,57 @@
       </div>
 
       <!-- 列表 -->
-      <el-table :key="myKind" @selection-change="handleSelectionChange" stripe border :data="myCusList" max-height="600" style="width: 100%">
+      <el-table :key="myKind" @selection-change="handleSelectionChange" stripe border :data="myCusList" max-height="550" style="width: 100%" size="mini">
         <el-table-column fixed type="selection" width="40">
         </el-table-column>
-        <el-table-column prop="companyname" label="客户名称" min-width="180">
+        <el-table-column prop="companyname" label="客户名称" min-width="130">
         </el-table-column>
         <el-table-column prop="companytype" label="公司状态" width="75">
           <span :class="scope.row.companytype===-10?'red':''" slot-scope="scope">
             {{scope.row.companytype | comType}}
           </span>
         </el-table-column>
-        <el-table-column prop="producttype" label="客户类型" min-width="80">
-          <span slot-scope="scope">
-            {{scope.row.producttype | cusStatus}} {{scope.row.producttype===0?scope.row.productnumber+1:''}}
-          </span>
+        <el-table-column prop="producttype" label="业务/客户类型" min-width="110">
+          <template slot-scope="scope">
+            <div>{{scope.row.productname}}</div>
+            <span>{{scope.row.producttype | cusStatus}} {{scope.row.producttype===0?scope.row.productnumber+1:''}}</span>
+          </template>
         </el-table-column>
-        <el-table-column prop="productname" label="业务类型" min-width="80">
+        <!-- <el-table-column prop="productname" label="业务类型" min-width="80">
+        </el-table-column> -->
+        <el-table-column prop="username" label="所属商务" width="75">
         </el-table-column>
         <el-table-column prop="" label="业务状态" width="75">
           <span :class="scope.row.companylogstatus===10?'red':''" slot-scope="scope">
             {{scope.row.companylogtype+""+scope.row.companylogstatus | businessStatus}}
           </span>
         </el-table-column>
-        <el-table-column prop="ccname" label="联系人" min-width="80">
+        <el-table-column prop="cccontact" label="联系人/电话" min-width="140">
+          <template slot-scope="scope">
+            <div>{{scope.row.ccname}}</div>
+            <div>{{scope.row.cccontact}}&nbsp;<i class="fa fa-phone fa-2x call-icon" @click="call_phone(scope.row)"></i></div>
+          </template>
         </el-table-column>
-        <el-table-column prop="cccontact" label="电话" min-width="150">
-          <span slot-scope="scope">{{scope.row.cccontact}}&nbsp;<i class="fa fa-phone fa-2x call-icon" @click="call_phone(scope.row)"></i></span>
+        <el-table-column prop="areaname" label="地区" min-width="120">
         </el-table-column>
-        <el-table-column prop="areaname" label="地区" min-width="150">
+        <el-table-column prop="catname" label="行业" min-width="120">
         </el-table-column>
-        <el-table-column prop="catname" label="行业" min-width="150">
-        </el-table-column>
-        <el-table-column prop="entername" label="录入人" width="80">
-        </el-table-column>
-        <el-table-column prop="username" label="所属商务" width="80">
+        <el-table-column prop="entername" label="录入人" width="70">
         </el-table-column>
         <el-table-column v-if="myKind==20" prop="traceName" label="跟踪人" width="80">
         </el-table-column>
-        <el-table-column v-if="myKind==30" prop="auditor_time" label="最后审核时间" width="100">
-          <span slot-scope="scope">{{scope.row.auditor_time | timeFormat}}</span>
-        </el-table-column>
-        <el-table-column prop="" label="最后跟进时间" width="100">
+         <el-table-column prop="" label="最后跟进时间" width="95">
           <span :class="scope.row.tip?'red':''" slot-scope="scope">
             {{scope.row.visittime | timeFormat}}
           </span>
         </el-table-column>
-        <el-table-column v-if="myKind==40" prop="auditor_time" label="最后降E时间" width="140">
+        <el-table-column v-if="myKind==30" prop="auditor_time" label="最后审核时间" width="95">
+          <span slot-scope="scope">{{scope.row.auditor_time | timeFormat}}</span>
+        </el-table-column>
+        <el-table-column v-if="myKind==40" prop="auditor_time" label="最后降E时间" width="95">
           <span slot-scope="scope">{{scope.row.jiangE | timeFormat}}</span>
         </el-table-column>
-        <el-table-column label="操作" width="100" align="center" fixed="right">
+        <el-table-column label="操作" width="80" align="center" fixed="right">
           <template slot-scope="scope">
             <el-dropdown :trigger="trigger">
               <el-button type="primary" class="xsbtn">

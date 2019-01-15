@@ -20,8 +20,15 @@
 
     <el-table stripe border :data="list" style="width: 100%;margin-top:10px;">
       <el-table-column prop="username" label="申请人" min-width="80">
+        <template slot-scope="scope">
+          <span>{{scope.row.username}}</span>
+          <span v-if="scope.row.bindName&&scope.row.bindName!==scope.row.username">{{'('+scope.row.bindName+')'}}</span>
+        </template>
       </el-table-column>
       <el-table-column prop="fullname" label="申请部门">
+      </el-table-column>
+      <el-table-column prop="insert_time" label="申请时间">
+        <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
       </el-table-column>
       <el-table-column prop="catname" label="合同类型">
       </el-table-column>
@@ -135,7 +142,7 @@ export default {
       let params = {
         'cat': this.conType.id,
         'fmt': this.conType.fmt,
-        'begin_pos': this.conType.begin_pos,
+        'begin_pos': this.stratNum,
         'len': this.conType.len,
         'num': this.contractCount
       }

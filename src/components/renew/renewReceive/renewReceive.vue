@@ -38,13 +38,14 @@
       </el-table-column>
       <el-table-column prop="username" label="提单人">
         <template slot-scope="scope">
-          <span>{{scope.row.username+((scope.row.true_name && scope.row.true_name!=scope.row.username)?('('+scope.row.true_name+')'):'')}}</span>
+          <span>{{scope.row.username}}</span>
+          <span v-if="scope.row.bindName">{{'('+scope.row.bindName+')'}}</span>
         </template>
       </el-table-column>
       <el-table-column prop="addtype" label="续费类型">
         <span slot-scope="scope">{{scope.row.addtype+'' | renewState('addType')}}</span>
       </el-table-column>
-      <el-table-column prop="code_desc" label="审核状态" width="120">
+      <el-table-column prop="code_desc" label="审核状态" width="130">
         <template slot-scope="scope">
           <el-button type="warning" plain class="xsbtn">{{scope.row.step == 300 ? scope.row.code_desc : scope.row.checkName+(scope.row.ckBindName?('('+scope.row.ckBindName+')') : ((scope.row.ckTrueName && scope.row.ckTrueName!=scope.row.checkName)?('('+scope.row.ckTrueName+')'):''))}}</el-button>
         </template>
@@ -65,7 +66,7 @@
     <page class="page" :url="myFollowUrl" :sendParams="sendParams" :isRememberStatus="false" @updateList="updateMyFollowList"></page>
 
     <!-- 查看弹窗 -->
-    <el-dialog :key="key_renew_detail" :modal-append-to-body="false" title="续费详情" :visible.sync="renewDetailDialog" width="1100px">
+    <el-dialog :key="key_renew_detail" :modal-append-to-body="false" title="续费详情" :visible.sync="renewDetailDialog" width="1100px" top="0" fullscreen>
       <renew-detail  :rowData="rowData" :toMark="'renewReceive'" :isPass="!!(stateRadio==100)" @closeRenewDetailDialog="closeRenewDetailDialog"></renew-detail>
     </el-dialog>
 

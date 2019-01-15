@@ -106,8 +106,15 @@
       </el-row>
       <el-row :gutter="20" v-if="!quotaDisable">
         <el-col :md="12" class="maxwidth">
-          <el-form-item label="是否允许打电话 :" label-width="150px">
-            <el-checkbox v-model="form.canCall" :disabled="repeatDisabled" label="允许打电话" border></el-checkbox>
+          <el-form-item label="是否允许打电话 :" label-width="135px">
+            <el-checkbox @change="canCallChange" v-model="form.canCall" :disabled="repeatDisabled" label="允许打电话" border></el-checkbox>
+            <el-button @click.native="getBaiduID" v-if="showBaiduisBtn" type="warning" size="mini">获取百度id</el-button>
+          </el-form-item>
+        </el-col>
+        <!-- 百度ID -->
+        <el-col :md="12" v-if="editDisable" class="maxwidth">
+          <el-form-item label="百度ID :" >
+            <el-input v-model="form.baiduID" disabled></el-input>
           </el-form-item>
         </el-col>
         <el-col :md="12" class="maxwidth">
@@ -117,8 +124,6 @@
             </el-select>
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row :gutter="20" v-if="!quotaDisable">
         <!-- 序列 -->
         <el-col :md="12" class="maxwidth">
           <el-form-item label="序列 :">
@@ -127,13 +132,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <!-- 百度ID -->
-        <el-col v-if="editDisable" :md="12" class="maxwidth">
-          <el-form-item label="百度ID :" >
-            <el-input v-model="form.baiduID" disabled></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :md="12" class="maxwidth">
+         <el-col :md="12" class="maxwidth">
           <el-form-item label="所属地区 :" prop="inArea">
             <el-select v-model="form.inArea"  :disabled="repeatDisabled" placeholder="所属地区" style="width: 100%;">
               <el-option v-for="item in form.inAreaList" :key="item.id" :value="item.id" :label="item.name"></el-option>
@@ -187,6 +186,7 @@ export default {
       echoDept: '',
       repeatDisabled: false,
       labelWidth: '90px',
+      showBaiduisBtn: false,
       form: {
         dept: '',
         accountName: '',
@@ -279,6 +279,24 @@ export default {
     this._getInAreaList()
   },
   methods: {
+    canCallChange(val) {
+      if (val) {
+        this.showBaiduisBtn = true
+      } else {
+        this.showBaiduisBtn = false
+      }
+    },
+    getBaiduID() {
+      let params = {
+        username: this.echoUserInfo.uname,
+        uid: this.echoUserInfo.uid
+      }
+      this.$post('/User.do?getBdcallId', params).then(res => {
+        if (res.data.success === true) {
+          this.form.baiduID = res.data.data
+        }
+      })
+    },
     _getInAreaList() {
       this.$get('/System/setQueryArea.do').then(res => {
         if (res.data.success) {

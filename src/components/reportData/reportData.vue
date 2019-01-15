@@ -26,13 +26,15 @@
           <select-trade :key="key_trade" v-if="item.where.type==='indu'" v-model="item.where.val" class="item item-width"></select-trade>
           <select-area :key="key_area" v-if="item.where.type==='area'" v-model="item.where.val" class="item item-width"></select-area>
           <auto-select
+            :valueKey="'type'"
+            :resetSelect="resetSelect"
             v-if="item.where.type==='dropdown'"
             v-model="item.where.val[0]"
             :title="item.as"
             :classMark="item.as"
             class="item item-width"
           >
-            <el-option v-for="(op,index) in item.where.options" :key="index" :label="op.text" :value="op.type"></el-option>
+            <el-option v-for="(op,index) in item.where.options" :key="index" :label="op.text" :value="op"></el-option>
           </auto-select>
           <select-department
             :resetDept="resetDept"
@@ -112,6 +114,7 @@ export default {
   data() {
     return {
       resetDept: false,
+      resetSelect: false,
       serverUrl: serverUrl,
       tk: cookie.get('token'),
       cols: [],
@@ -191,6 +194,7 @@ export default {
       this.key_area = new Date() + ''
       this.key_trade = new Date() + '1'
       this.resetDept = true
+      this.resetSelect = true
       this.searchCols.forEach(item => {
         if (item.where) {
           item.where.val = []

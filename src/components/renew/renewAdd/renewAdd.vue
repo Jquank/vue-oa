@@ -61,11 +61,11 @@
     <page class="page" :url="myFollowUrl" :sendParams="sendParams" :isRememberStatus="false" @updateList="updateMyFollowList"></page>
 
     <!-- 查看弹窗-renew -->
-    <el-dialog :key="key_renew_detail" :modal-append-to-body="false" title="续费详情" :visible.sync="renewDetailDialog" width="90%">
+    <el-dialog :key="key_renew_detail" :modal-append-to-body="false" title="续费详情" :visible.sync="renewDetailDialog" width="90%" top="0" fullscreen>
       <renew-detail :rowData="rowData" @closeRenewDetailDialog="closeRenewDetailDialog" :toMark="'renewAdd'"></renew-detail>
     </el-dialog>
     <!-- 查看弹窗-order -->
-    <el-dialog :key="key_order_detail" :modal-append-to-body="false" title="客户详情" :visible.sync="orderDetailDialog" width="90%">
+    <el-dialog :key="key_order_detail" :modal-append-to-body="false" title="客户详情" :visible.sync="orderDetailDialog" width="90%" top="0" fullscreen>
       <!-- 续费信息 -->
       <div>
         <div class="title">
@@ -288,6 +288,10 @@ export default {
     },
     // 查看
     view (data) {
+      this.total1 = 0
+      this.total2 = 0
+      this.total3 = 0
+      this.total4 = 0
       this.rowData = data
       if (data.odre === 'renew') {
         this.key_renew_detail = new Date() + ''

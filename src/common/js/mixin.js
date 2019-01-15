@@ -348,18 +348,19 @@ export const orderDeal = { // 订单处理
         })
         this.remark += '。 提单时间：' + timeFormat(this.billTime)
         if (this.pid_ka !== 'KA') {
+          console.log(this.payList)
           for (let i = 0; i < this.payList.length; i++) {
             let item = this.payList[i]
-            if (!item.producttype || item.count === undefined || item.count === null || item.count === '' || !item.receivetype || !item.receivetime || !this.billTime) {
+            if (!item.producttype || (!item.count && item.count !== 0) || (!item.receivetype && item.receivetype !== 0) || !item.receivetime || !this.billTime) {
               this.$message({
                 type: 'warning',
-                message: '请完善到款信息'
+                message: '请完善到款信息或提单时间'
               })
               return
             }
           }
         }
-        if (this.allReceive && this.totalReceive != this.orderInfo.amount_real.toFixed(2)) { //eslint-disable-line
+        if (this.pid !== 'WEBSITE'&&this.pid !== 'ZTC_WEBSITE'&&this.allReceive && this.totalReceive != this.orderInfo.amount_real.toFixed(2)) { //eslint-disable-line
           this.$message({
             type: 'warning',
             message: '请确保实际到账金额等于总到金额'
@@ -460,7 +461,7 @@ export const orderDeal = { // 订单处理
         next_uid: this.next_uid,
         nextname: this.next_name,
         from_val: this._getFromVal(),
-        baiduaccount: this.orderInfo.baiducount,
+        baiduaccount: this.orderInfo.baiduaccount,
         baiduid: this.orderInfo.baiduid,
         proxyid: this.orderInfo.proxyid,
         dscd: parseFloat(this.orderInfo.dscd || 0), // 大搜冲单金额
@@ -475,8 +476,6 @@ export const orderDeal = { // 订单处理
         receive: this.payList,
         ttype: this.invoiceInfo ? this.invoiceInfo.ttype : '' || '0',
         invoiceid: this.invoiceInfo ? this.invoiceInfo.id : '', // 发票信息id
-        receiveaccount: this.orderInfo.receiveaccount, // 对公账户开户行
-        receivebank: this.orderInfo.receivebank, // 对公账户开户行
         order_log: this.remark,
         billtime: this.billTime,
         newzoneinfo: this.newSpaceName,
@@ -484,7 +483,16 @@ export const orderDeal = { // 订单处理
         Designer: this.webOrderRemark,
         visitwebsite: this.browseAddr,
         quickwebsite: this.cdAddr,
-        websitetype: this.orderInfo.websitetype
+        websitetype: this.orderInfo.websitetype,
+
+        check_type: this.orderInfo.check_type,
+        store_type: this.orderInfo.store_type,
+        receiveaccount: this.orderInfo.receiveaccount, // 对公账户开户行
+        receivebank: this.orderInfo.receivebank, // 对公账户开户行
+        collectName: this.orderInfo.collect_name,
+        collectBank: this.orderInfo.collect_bank,
+        collectAccount: this.orderInfo.collect_account,
+        finalSite: this.orderInfo.final_site
       }
       if (this.orderInfo.con_id2) {
         params.contractid.push(this.orderInfo.con_id2)
@@ -495,7 +503,7 @@ export const orderDeal = { // 订单处理
       if (this.sn === 260) {
         let _params = {
           baiduid: this.orderInfo.baiduid,
-          baiduaccount: this.orderInfo.baiducount,
+          baiduaccount: this.orderInfo.baiduaccount,
           proxyid: this.orderInfo.proxyid,
           applytime: this.orderInfo.applytime
         }

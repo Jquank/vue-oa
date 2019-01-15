@@ -175,7 +175,7 @@
       </el-row>
       <el-row>
         <el-col :md="24" class="maxwidth">
-          <el-form-item label="产品类型 :" prop="selProList">
+          <el-form-item label="产品类型 :">
             <el-checkbox-group v-model="form.selProList">
               <el-checkbox  @change="(val)=>handleProChange(val,item)" v-for="item in form.productList" :key="item.id" :label="item.code_val">
                 {{item.code_desc}}</el-checkbox>
@@ -579,7 +579,7 @@ export default {
         this.$message.error('请填写所勾选产品的金额！')
         return
       }
-      if (this.receiveTotal && (this.receiveTotal.toFixed(2) !== this.addTotal1.toFixed(2))) {
+      if (this.form.selProList.length && this.receiveTotal && (this.receiveTotal.toFixed(2) !== this.addTotal1.toFixed(2))) {
         this.$message.error('下单金额与到款总金额不匹配！')
         return
       }

@@ -90,7 +90,7 @@
     </el-table>
     <page @updateList="updateList" :url="url" :sendParams="sendParams" class="page"></page>
     <!-- 编辑人员信息弹窗 -->
-    <el-dialog title="编辑人员信息" :visible.sync="userInfoDialog" width="800px">
+    <el-dialog v-drag-dialog title="编辑人员信息" :visible.sync="userInfoDialog" width="800px">
       <add-user @closeDialog="closeDialog" :key="key_add_user" :echoUserInfo="userInfo" :editDisable="true"></add-user>
     </el-dialog>
     <!-- 编辑配额弹窗 -->

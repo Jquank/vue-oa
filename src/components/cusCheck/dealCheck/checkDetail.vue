@@ -592,9 +592,9 @@ export default {
           throw new Error('ignore')
         }
       })
-      this.form.cusName = this.form.cusName
-        .replace((/\(/g, '（'))
-        .replace((/\)/g, '）'))
+
+      this.form.cusName = this.form.cusName.replace(/[(]/g, '（')
+      this.form.cusName = this.form.cusName.replace(/[)]/g, '）')
       let params = {
         cid: this.receiveData.id,
         cat: this.form.trade[1] || this.form.trade[0],
@@ -727,7 +727,6 @@ export default {
     margin-bottom: 5px;
   }
   .btns{
-    margin-top: -10px;
     text-align: center;
     .el-button{
       margin-top: 10px;

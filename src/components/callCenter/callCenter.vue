@@ -48,18 +48,20 @@
     </div>
 
     <el-table @selection-change="handleSelectionChange" stripe border :data="balckList" class="table-width"
-    max-height="600"
+    max-height="500"
     custom
+    size="mini"
     @sort-change="sortChange">
       <el-table-column type="selection" width="40">
       </el-table-column>
-      <el-table-column prop="bname" label="商务姓名" width="80">
+      <el-table-column prop="bname" label="商务姓名" width="75">
+        <span slot-scope="scope">{{scope.row.bname || scope.row.userName}}</span>
       </el-table-column>
       <el-table-column prop="companyname" label="公司名称" min-width="110">
       </el-table-column>
       <el-table-column prop="contactname" label="联系人" width="80">
       </el-table-column>
-      <el-table-column prop="" label="电话" width="140">
+      <el-table-column prop="" label="电话" width="130">
         <span slot-scope="scope">{{scope.row.telnum}}&nbsp;<i class="fa fa-phone fa-2x call-icon" @click="call_phone(scope.row)"></i></span>
       </el-table-column>
       <el-table-column prop="" label="最新状态" width="120">
@@ -81,7 +83,7 @@
       <el-table-column prop="last_opt_time" label="修改时间" width="98" sortable>
         <span slot-scope="scope">{{scope.row.last_opt_time | timeFormat}}</span>
       </el-table-column>
-      <el-table-column prop="" label="网站">
+      <el-table-column prop="" label="网站" width="120" show-overflow-tooltip>
         <template slot-scope="scope">
           <a :href="(scope.row.site.indexOf('http')>-1?'':'http://')+scope.row.site" target="_blank" class="clicked">{{scope.row.site}}</a>
         </template>

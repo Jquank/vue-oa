@@ -89,17 +89,17 @@
         class="table-width"
         max-height="550"
       >
-        <el-table-column prop="place_id" label="地区" width="60">
+        <el-table-column prop="place_id" label="地区" width="55">
           <span slot-scope="scope">{{scope.row.place_id | areaType}}</span>
         </el-table-column>
-        <el-table-column prop="ordernum" label="订单ID" min-width="155">
+        <el-table-column prop="ordernum" label="订单ID" min-width="130">
           <span slot-scope="scope" @click="viewOrder(scope.row)" class="click-cell">{{scope.row.ordernum}}</span>
         </el-table-column>
-        <el-table-column prop="cname" label="订单名称" min-width="150"></el-table-column>
+        <el-table-column prop="cname" label="订单名称" min-width="130"></el-table-column>
         <el-table-column prop label="提交时间" width="95">
           <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
         </el-table-column>
-        <el-table-column prop="username" label="下单人" min-width="80"></el-table-column>
+        <el-table-column prop="username" label="下单人" min-width="75"></el-table-column>
         <el-table-column prop label="类型" width="95">
           <template slot-scope="scope">
             <span v-if="scope.row.pid=='WEBSITE' && scope.row.websitetype==20">WAP</span>
@@ -128,26 +128,26 @@
             <span slot-scope="scope">{{scope.row.granttime | timeFormat1}}</span>
           </el-table-column>
         </template>
-        <el-table-column prop label="审核状态" min-width="150">
+        <el-table-column prop label="审核状态" min-width="140" align="center">
           <span slot-scope="scope" class="check-status">
-            <el-alert
+            <!-- <el-alert
               title
               type="warning"
               :closable="false"
               :description="(scope.row.currentname?scope.row.currentname:'订单完成')+
                     ((scope.row.checkBindName == '' && scope.row.ckName && scope.row.ckName != scope.row.currentname)?'('+scope.row.ckName+')':'')+
                     ((scope.row.checkBindName && scope.row.checkBindName != scope.row.currentname)?'('+scope.row.checkBindName+')':'')"
-            ></el-alert>
-            <!-- {{scope.row.currentname?scope.row.currentname:'订单完成'}}
-              {{(scope.row.checkBindName == '' && scope.row.ckName && scope.row.ckName != scope.row.currentname)?'('+scope.row.ckName+')':''}}
-            {{(scope.row.checkBindName && scope.row.checkBindName != scope.row.currentname)?'('+scope.row.checkBindName+')':''}}-->
+            ></el-alert> -->
+            <el-button type="warning" class="xsbtn" plain>{{scope.row.currentname?scope.row.currentname:'订单完成'}}</el-button>
+            <div v-if="scope.row.cpStatus!=300">{{(scope.row.checkBindName == '' && scope.row.ckName && scope.row.ckName != scope.row.currentname)?'('+scope.row.ckName+')':''}}</div>
+            <div v-if="scope.row.cpStatus!=300">{{(scope.row.checkBindName && scope.row.checkBindName != scope.row.currentname)?'('+scope.row.checkBindName+')':''}}</div>
           </span>
         </el-table-column>
-        <el-table-column prop label="订单状态" width="120">
+        <el-table-column prop label="订单状态" width="100">
           <span slot-scope="scope">{{scope.row.audittype === 0 ? "仅降E":"降E并提单"}}</span>
         </el-table-column>
-        <el-table-column prop label="最后操作时间" width="100">
-          <span slot-scope="scope">{{scope.row.opt_time | timeFormat}}</span>
+        <el-table-column prop label="最后操作时间" width="100" align="center">
+          <span slot-scope="scope">&nbsp;{{scope.row.opt_time | timeFormat}}</span>
         </el-table-column>
         <el-table-column prop="deptname" label="商务大区部门" min-width="110"></el-table-column>
         <el-table-column prop label="操作" width="210" align="center">
@@ -692,7 +692,7 @@ export default {
       }
     }
     .check-status {
-      color: #e6a23c;
+      color: #559eff;
     }
   }
   .click-cell{

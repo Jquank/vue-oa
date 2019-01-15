@@ -1,8 +1,3 @@
-// 对element-ui的select组件的再封装，用于带前置文字的select，slot="prefix"
-// 用法：<auto-select :title="'司龄'" v-model="workAge">
-//         <el-option label="3个月以上" value="3"></el-option>
-//         <el-option label="6个月以上" value="6"></el-option>
-//       </auto-select>
 <template>
   <el-select @change="change" v-model="sel" :value-key="valueKey" :filterable="isSearch" :self-class="classMark" class="auto-sel" :placeholder="placeholder">
     <span slot="prefix" class="prefix">{{title}}:</span>
@@ -36,6 +31,18 @@ export default {
     valueKey: {
       type: String,
       default: ''
+    },
+    resetSelect: {
+      type: Boolean,
+      default: false
+    }
+  },
+  watch: {
+    resetSelect() {
+      if (this.resetSelect) {
+        this.sel = {text: '全部', type: ''}
+        this.$emit('input', this.sel)
+      }
     }
   },
   data () {

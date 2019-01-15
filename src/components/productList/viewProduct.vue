@@ -85,7 +85,7 @@ export default {
       display: flex;
       justify-content: center;
       div{
-        max-width: 100%;
+        max-width: 90%;
         overflow: auto;
         padding-bottom: 10px;
       }

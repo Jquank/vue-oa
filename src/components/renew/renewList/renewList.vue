@@ -35,7 +35,7 @@
 
     <el-table @selection-change="handleSelectionChange" stripe border :data="list" max-height="550" class="table-width">
       <el-table-column type="selection" fixed width="45"></el-table-column>
-      <el-table-column prop="companyname" label="公司名称" min-width="160"></el-table-column>
+      <el-table-column prop="companyname" label="公司名称" min-width="130"></el-table-column>
       <el-table-column prop="baidu_account" label="百度账号"></el-table-column>
       <el-table-column prop label="到账金额" width="110">
         <span slot-scope="scope">{{scope.row.receiptmoney | currency1}}</span>
@@ -47,9 +47,10 @@
         <span slot-scope="scope">{{scope.row.inserttime | timeFormat}}</span>
       </el-table-column>
       <el-table-column prop label="提单人">
-        <span
-          slot-scope="scope"
-        >{{scope.row.username+((scope.row.true_name && scope.row.true_name!=scope.row.username)?('('+scope.row.true_name+')'):'')}}</span>
+        <template slot-scope="scope">
+          <span>{{scope.row.username}}</span>
+          <span v-if="scope.row.bindName">{{'('+scope.row.bindName+')'}}</span>
+        </template>
       </el-table-column>
       <el-table-column prop label="加款类型">
         <span slot-scope="scope">{{scope.row.addtype==10?'正常加款':scope.row.addtype==20?'提前加款':'返款加款'}}</span>
@@ -177,6 +178,8 @@
       title="续费详情"
       :visible.sync="renewDetailDialog"
       width="1000px"
+      top="0"
+      fullscreen
     >
       <renew-detail :rowData="rowData" @closeRenewDetailDialog="renewDetailDialog=false" :toMark="'renewList'"></renew-detail>
     </el-dialog>

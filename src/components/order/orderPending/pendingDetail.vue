@@ -148,6 +148,28 @@
                     </div>
                   </div>
                 </div>
+                <div v-if="scope.$index===4 && orderInfo.xinzi_check==10 && orderInfo.uid==uid">
+                  <div class="row-container">
+                    <div>
+                      <b>提成单量：</b>
+                      <span>{{orderInfo.commision_num}}</span>
+                    </div>
+                    <div>
+                      <b>提成合计：</b>
+                      <span>{{orderInfo.commision_count}}</span>
+                    </div>
+                  </div>
+                  <div class="mt10px row-container">
+                    <div>
+                      <b>发放日期：</b>
+                      <span>{{orderInfo.granttime  | timeFormat}}</span>
+                    </div>
+                    <div>
+                      <b>备注：</b>
+                      <span>{{orderInfo.remark}}</span>
+                    </div>
+                  </div>
+                </div>
               </template>
             </el-table-column>
           </el-table>
@@ -183,7 +205,7 @@
                   <div class="mt10px row-container">
                     <div>
                       <b>落地页：</b>
-                      <span>{{orderInfo.final_site}}</span>
+                      <span>{{orderInfo.final__site}}</span>
                     </div>
                   </div>
                   <div class="mt10px row-container">
@@ -290,6 +312,28 @@
                     <div>
                       <b>下单日期：</b>
                       <span>{{orderInfo.insert_time | timeFormat}}</span>
+                    </div>
+                  </div>
+                </div>
+                <div v-if="scope.$index===4 && orderInfo.xinzi_check==10 && orderInfo.uid==uid">
+                  <div class="row-container">
+                    <div>
+                      <b>提成单量：</b>
+                      <span>{{orderInfo.commision_num}}</span>
+                    </div>
+                    <div>
+                      <b>提成合计：</b>
+                      <span>{{orderInfo.commision_count}}</span>
+                    </div>
+                  </div>
+                  <div class="mt10px row-container">
+                    <div>
+                      <b>发放日期：</b>
+                      <span>{{orderInfo.granttime  | timeFormat}}</span>
+                    </div>
+                    <div>
+                      <b>备注：</b>
+                      <span>{{orderInfo.remark}}</span>
                     </div>
                   </div>
                 </div>
@@ -505,6 +549,28 @@
                     </div>
                   </div>
                 </div>
+                <div v-if="scope.$index===3 && orderInfo.xinzi_check==10 && orderInfo.uid==uid">
+                  <div class="row-container">
+                    <div>
+                      <b>提成单量：</b>
+                      <span>{{orderInfo.commision_num}}</span>
+                    </div>
+                    <div>
+                      <b>提成合计：</b>
+                      <span>{{orderInfo.commision_count}}</span>
+                    </div>
+                  </div>
+                  <div class="mt10px row-container">
+                    <div>
+                      <b>发放日期：</b>
+                      <span>{{orderInfo.granttime  | timeFormat}}</span>
+                    </div>
+                    <div>
+                      <b>备注：</b>
+                      <span>{{orderInfo.remark}}</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </el-table-column>
           </el-table>
@@ -518,7 +584,7 @@
                 <div class="invoice-header">
                   <span>详细信息</span>
                   <el-button
-                    v-if="permissions.indexOf('55') >-1&&invoiceInfo.cpmpanyname"
+                    v-if="permissions.indexOf('55') >-1&&invoiceInfo.companyname"
                     @click.native="editInvoiceDialog = true"
                     type="warning"
                     size="mini"
@@ -527,33 +593,71 @@
               </template>
               <template slot-scope="scope">
                 <div v-if="scope.$index===0">{{orderInfo.invoice_type+'' | invoiceState('needInvoice')}}</div>
-                <div v-if="scope.$index===1 && invoiceInfo.cpmpanyname">
+                <div v-if="scope.$index===1 && invoiceInfo.companyname">
                   <div class="invoice-wrapper">
                     <div class="invoice-item mr10px">
                       <h4>开票信息:</h4>
                       <el-form label-width="100px" class="invoice-basic-info">
-                        <el-form-item label="发票抬头:">{{invoiceInfo.companyname}}</el-form-item>
-                        <el-form-item label="纳税人识别号:">{{invoiceInfo.identinum}}</el-form-item>
-                        <el-form-item label="账号:">{{invoiceInfo.account}}</el-form-item>
-                        <el-form-item label="开户行:">{{invoiceInfo.bank}}</el-form-item>
-                        <el-form-item label="电话:">{{invoiceInfo.companyphone}}</el-form-item>
-                        <el-form-item label="地址:">{{invoiceInfo.companyaddr}}</el-form-item>
+                        <el-form-item label="发票抬头：">{{invoiceInfo.companyname}}</el-form-item>
+                        <el-form-item label="纳税人识别号：">{{invoiceInfo.identinum}}</el-form-item>
+                        <el-form-item label="账号：">{{invoiceInfo.account}}</el-form-item>
+                        <el-form-item label="开户行：">{{invoiceInfo.bank}}</el-form-item>
+                        <el-form-item label="电话：">{{invoiceInfo.companyphone}}</el-form-item>
+                        <el-form-item label="地址：">{{invoiceInfo.companyaddr}}</el-form-item>
                       </el-form>
                     </div>
                     <div class="invoice-item">
                       <h4>寄票信息:</h4>
                       <el-form label-width="100px" class="invoice-basic-info">
-                        <el-form-item label="收票公司名:">{{invoiceInfo.tcname}}</el-form-item>
-                        <el-form-item label="收票地址:">{{invoiceInfo.taddr}}</el-form-item>
-                        <el-form-item label="收票联系人:">{{invoiceInfo.tname}}</el-form-item>
-                        <el-form-item label="收票座机号:">{{invoiceInfo.tphone}}</el-form-item>
-                        <el-form-item label="收票手机号:">{{invoiceInfo.tmobile}}</el-form-item>
-                        <el-form-item label="备注:">{{invoiceInfo.remark}}</el-form-item>
+                        <el-form-item label="收票公司名：">{{invoiceInfo.tcname}}</el-form-item>
+                        <el-form-item label="收票地址：">{{invoiceInfo.taddr}}</el-form-item>
+                        <el-form-item label="收票联系人：">{{invoiceInfo.tname}}</el-form-item>
+                        <el-form-item label="收票座机号：">{{invoiceInfo.tphone}}</el-form-item>
+                        <el-form-item label="收票手机号：">{{invoiceInfo.tmobile}}</el-form-item>
+                        <el-form-item label="备注：">{{invoiceInfo.remark}}</el-form-item>
                       </el-form>
                     </div>
                   </div>
                 </div>
-                <div v-if="scope.$index===2 && invoiceList.length > 0"></div>
+                <div v-if="scope.$index===2 && invoiceList.length > 0">
+                  <el-table border stripe :data="invoiceList">
+                    <el-table-column label="发票六要素" min-width="100">
+                      <template slot-scope="cscope">
+                        <div><b>发票抬头：</b><span>{{cscope.row.companyname}}</span></div>
+                        <div><b>纳税人识别号：</b><span>{{cscope.row.identinum}}</span></div>
+                        <div><b>账号：</b><span>{{cscope.row.account}}</span></div>
+                        <div><b>开户行：</b><span>{{cscope.row.bank}}</span></div>
+                        <div><b>地址：</b><span>{{cscope.row.companyaddr}}</span></div>
+                        <div><b>电话：</b><span>{{cscope.row.companyphone}}</span></div>
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="发票信息">
+                      <template slot-scope="cscope">
+                        <div><b>货物名称：</b><span>{{cscope.row.chargetype+'' | invoiceState('invoiceMoneyType')}}</span></div>
+                        <div><b>发票金额：</b><span>{{cscope.row.tmoney}}</span></div>
+                        <div><b>单据号码：</b><span>{{cscope.row.tnumber}}</span></div>
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="收票信息" min-width="100">
+                      <template slot-scope="cscope">
+                        <div><b>收票公司名：</b><span>{{cscope.row.tcname}}</span></div>
+                        <div><b>收票联系人：</b><span>{{cscope.row.tname}}</span></div>
+                        <div><b>电话：</b><span>{{cscope.row.tphone}}</span></div>
+                        <div><b>手机：</b><span>{{cscope.row.tmobile}}</span></div>
+                        <div><b>收票地址：</b><span>{{cscope.row.taddr}}</span></div>
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="状态" width="100">
+                      <template slot-scope="cscope">
+                        <el-button v-if="cscope.row.step<300" :type="cscope.row.step==300?'success':(cscope.row.step===0?'danger':(cscope.row.step<=40?'infor':''))" plain class="xsbtn">{{cscope.row.step==300 ? '审核通过' : cscope.row.stepName}}</el-button>
+                        <el-button type="warning" v-if="cscope.row.step == 300 && cscope.row.hasinvoice == 0" plain class="xsbtn">待开</el-button>
+                        <el-button type="primary" v-if="cscope.row.hasinvoice == 1" plain class="xsbtn">正在开</el-button>
+                        <el-button type="success" v-if="cscope.row.hasinvoice == 10" plain class="xsbtn">已开</el-button>
+                        <el-button type="infor" v-if="cscope.row.hasinvoice == 20" plain class="xsbtn">寄出</el-button>
+                      </template>
+                    </el-table-column>
+                  </el-table>
+                </div>
               </template>
             </el-table-column>
           </el-table>
@@ -1565,7 +1669,7 @@
       </div>
     </el-dialog>
     <!-- 编辑发票信息弹窗 -->
-    <el-dialog title="编辑发票信息弹窗" width="800px" :visible.sync="editInvoiceDialog" :modal-append-to-body="false">
+    <el-dialog v-drag-dialog title="编辑发票信息弹窗" width="800px" :visible.sync="editInvoiceDialog" :modal-append-to-body="false">
       <el-form :model="editInvoiceInfo" label-width="110px">
         <div class="title">
           <el-button class="title-btn" type="warning">开票信息</el-button>
@@ -1573,36 +1677,36 @@
         </div>
         <el-row :gutter="20">
           <el-col :sm="12">
-            <el-form-item label="发票抬头" required>
+            <el-form-item label="发票抬头：">
               <el-input v-model="editInvoiceInfo.companyname"></el-input>
             </el-form-item>
           </el-col>
           <el-col :sm="12">
-            <el-form-item label="纳税人识别号" required>
+            <el-form-item label="纳税人识别号：">
               <el-input v-model="editInvoiceInfo.identinum"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :sm="12">
-            <el-form-item label="地址">
+            <el-form-item label="地址：">
               <el-input v-model="editInvoiceInfo.companyaddr" type="textarea"></el-input>
             </el-form-item>
           </el-col>
           <el-col :sm="12">
-            <el-form-item label="电话">
+            <el-form-item label="电话：">
               <el-input v-model="editInvoiceInfo.companyphone"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :sm="12">
-            <el-form-item label="开户行">
+            <el-form-item label="开户行：">
               <el-input v-model="editInvoiceInfo.bank"></el-input>
             </el-form-item>
           </el-col>
           <el-col :sm="12">
-            <el-form-item label="账号">
+            <el-form-item label="账号：">
               <el-input v-model="editInvoiceInfo.account"></el-input>
             </el-form-item>
           </el-col>
@@ -1613,43 +1717,43 @@
         </div>
         <el-row :gutter="20">
           <el-col :sm="12">
-            <el-form-item label="公司名称">
+            <el-form-item label="公司名称：">
               <el-input v-model="editInvoiceInfo.tcname"></el-input>
             </el-form-item>
           </el-col>
           <el-col :sm="12">
-            <el-form-item label="收票地址">
+            <el-form-item label="收票地址：">
               <el-input v-model="editInvoiceInfo.taddr" type="textarea"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :sm="12">
-            <el-form-item label="收票联系人">
+            <el-form-item label="收票联系人：">
               <el-input v-model="editInvoiceInfo.tname"></el-input>
             </el-form-item>
           </el-col>
           <el-col :sm="12">
-            <el-form-item label="收票电话">
+            <el-form-item label="收票电话：">
               <el-input v-model="editInvoiceInfo.tphone"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :sm="12">
-            <el-form-item label="收票手机号">
+            <el-form-item label="收票手机号：">
               <el-input v-model="editInvoiceInfo.tmobile"></el-input>
             </el-form-item>
           </el-col>
           <el-col :sm="12">
-            <el-form-item label="收票邮箱">
+            <el-form-item label="收票邮箱：">
               <el-input v-model="editInvoiceInfo.email"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :sm="24">
-            <el-form-item label="备注">
+            <el-form-item label="备注：">
               <el-input v-model="editInvoiceInfo.remark" type="textarea"></el-input>
             </el-form-item>
           </el-col>
@@ -1768,6 +1872,7 @@ export default {
   data() {
     return {
       permissions: cookie.getJSON('permissions'),
+      uid: cookie.get('userId'),
       receiveData: {},
       tableFirstColumWidth: '100',
       stepList: [],
@@ -1783,12 +1888,14 @@ export default {
         { type: '客户基本信息' },
         { type: '网建信息' },
         { type: '订单/金额' },
-        { type: '商务信息' }
+        { type: '商务信息' },
+        { type: '业绩信息' }
       ],
       kaBasicInfo: [
         { type: '客户基本信息' },
         { type: '订单/金额' },
-        { type: '商务信息' }
+        { type: '商务信息' },
+        { type: '业绩信息' }
       ],
       baituiExtendInfo: [
         { type: '百度订单信息' },
@@ -1804,7 +1911,8 @@ export default {
         { type: '客户基本信息' },
         { type: '信誉验证' },
         { type: '订单/金额' },
-        { type: '商务信息' }
+        { type: '商务信息' },
+        { type: '业绩信息' }
       ],
       ztcExtendInfo: [
         { type: '直通车订单信息' },
@@ -2185,7 +2293,7 @@ export default {
                     str += val.code_desc + ','
                   }
                 })
-                this.orderInfo.final_site = str
+                this.$set(this.orderInfo, 'final__site', str)
               }
             })
           }

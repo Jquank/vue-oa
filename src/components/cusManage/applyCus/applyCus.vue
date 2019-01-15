@@ -7,6 +7,7 @@
         <el-option label="30" value="30"></el-option>
         <el-option label="50" value="50"></el-option>
         <el-option label="100" value="100"></el-option>
+        <el-option label="200" value="200"></el-option>
       </auto-select>
       <el-button @click.native="apply" :loading="applyBtnLoading" type="primary" class="apply-item">申 领</el-button>
       <el-button class="apply-item" type="primary" plain>公共库总客户: {{count1}}</el-button>
@@ -37,27 +38,59 @@
         <el-button type="primary" @click.native="search">查 询</el-button>
         <el-button type="warning" @click.native="reset">重 置</el-button>
       </div>
+      <div class="apply-item export">
+        <el-dropdown>
+          <el-button type="success" size="small">
+            批量标记<i class="el-icon-arrow-down el-icon--right"></i>
+          </el-button>
+          <el-dropdown-menu slot="dropdown">
+            <!-- <el-dropdown-item>
+              <el-button @click.native="applyResult(20,200)" type="primary" class="xsbtn">跟进</el-button>
+            </el-dropdown-item> -->
+            <!-- <el-dropdown-item divided>
+              <el-button @click.native="applyResult(10,0)" type="primary" class="xsbtn">转跟踪</el-button>
+            </el-dropdown-item> -->
+            <el-dropdown-item divided>
+              <el-button @click.native="applyResult(-10,0)" type="warning" class="xsbtn">暂不联系</el-button>
+            </el-dropdown-item>
+            <el-dropdown-item divided>
+              <el-button @click.native="applyResult(-100,0)" type="danger" class="xsbtn">永久放弃</el-button>
+            </el-dropdown-item>
+            <el-dropdown-item divided>
+              <el-button @click.native="applyResult(-1,0)" type="danger" class="xsbtn">空号/错号</el-button>
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
     </div>
     <!-- 列表 -->
-    <el-table stripe border max-height="550" :data="applyList" class="table-width">
-      <el-table-column prop="companyname" label="客户名称" min-width="150">
+    <el-table @selection-change="handleSelectionChange" stripe border max-height="550" :data="applyList" class="table-width">
+      <el-table-column type="selection">
       </el-table-column>
-      <el-table-column prop="" label="客户类型" min-width="80">
+      <el-table-column prop="companyname" label="客户名称" min-width="130">
+      </el-table-column>
+      <el-table-column prop="" label="客户类型">
         <template slot-scope="scope">
           <span>{{scope.row.producttype | cusState('cusType')}}</span>
           <span>{{scope.row.producttype!==0?scope.row.productnumber:''}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="fm" label="客户来源" width="100">
+      <el-table-column prop="fm" label="客户来源">
       </el-table-column>
-      <el-table-column prop="username" label="申领商务" width="80">
+      <el-table-column prop="cccontact" label="联系人/电话" min-width="140">
+        <template slot-scope="scope">
+          <div>{{scope.row.ccname}}</div>
+          <div>{{scope.row.cccontact}}&nbsp;<i class="fa fa-phone fa-2x call-icon" @click="call_phone(scope.row)"></i></div>
+        </template>
+      </el-table-column>
+      <el-table-column prop="username" label="申领商务">
       </el-table-column>
       <el-table-column prop="fullname" label="所属部门">
       </el-table-column>
-      <el-table-column prop="" label="申领时间" width="150">
+      <el-table-column prop="" label="申领时间" width="95">
         <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
       </el-table-column>
-      <el-table-column prop="" label="最后跟进时间" width="150">
+      <el-table-column prop="" label="最后跟进时间" width="95">
         <span slot-scope="scope">{{scope.row.followtime | timeFormat}}</span>
       </el-table-column>
       <el-table-column prop="" label="状态">
@@ -114,7 +147,8 @@ export default {
       },
       inputName: '',
       source: '',
-      sourceList: []
+      sourceList: [],
+      mutilselection: []
     }
   },
   beforeRouteUpdate (to, from, next) {
@@ -128,7 +162,39 @@ export default {
     this._getSourceList()
   },
   methods: {
-    apply () {
+    call_phone(data) {
+      this.callPhone(data.cccontact, 10, data.companylogid)
+    },
+    applyResult (applytype, cat) {
+      let arr = this.mutilselection.map(val => {
+        return {
+          applyid: val.applyid,
+          cid: val.companyid,
+          companylogid: val.companylogid,
+          pid: val.pid
+        }
+      })
+      if (!arr.length) {
+        this.$message.error('请批量勾选！')
+        return
+      }
+      let params = {
+        idsArr: arr,
+        applytype: applytype,
+        remark: this.remark,
+        cat: cat
+      }
+      this.$post('/Apply.do?limit', params).then(res => {
+        if (res.data.success) {
+          this.$message.success('操作成功！')
+          this.search()
+        }
+      })
+    },
+    handleSelectionChange(val) {
+      this.mutilselection = val
+    },
+    apply() {
       this.applyBtnLoading = true
       this.$post('/Apply.do?company', {count: this.applyCount}).then(res => {
         if (res.data.success) {
@@ -232,6 +298,10 @@ export default {
     padding-top: 10px;
     display: flex;
     justify-content: flex-end;
+  }
+  .call-icon{
+    cursor: pointer;
+    color: green;
   }
 }
 </style>

@@ -14,6 +14,9 @@
           <span ref="secondTitle">{{secondTitle}}</span>
           <span v-show="thirdTitle">&nbsp;/&nbsp;</span>
           <span>{{thirdTitle}}</span>
+          <el-input v-model="phoneNum" size="mini" class="contact-phone ml10px" @keyup.enter.native="call_phone"></el-input>
+          <el-button class="xsbtn" circle type="success" icon="fa fa-phone" @click.native="call_phone"></el-button>
+          <el-button class="xsbtn" circle type="primary" icon="fa fa-envelope-o" @click.native="send_message"></el-button>
         </div>
       </div>
       <ul class="head-ul">
@@ -302,6 +305,7 @@ export default {
   display: flex;
   justify-content: space-between;
   .header-left {
+    flex: 1;
     display: flex;
     .m-bread {
       height: 50px;
@@ -312,9 +316,15 @@ export default {
       & > span:nth-child(2n-1) {
         cursor: pointer;
       }
+      & .el-button+.el-button{
+        margin-left: 2px;
+      }
+      .contact-phone{
+        width: 140px;
+      }
     }
     .logo-img {
-      width: 160px;
+      // width: 160px;
       height: 50px;
       // position: relative;
       // top: 0;
@@ -327,6 +337,7 @@ export default {
       background: @bg-nav !important;
       border-bottom: 1px solid #babdc2;
       margin-top: -1px;
+      margin-left: -20px;
       // box-shadow:2px 0px 30px 2px #b6cfe9 inset;
     }
   }
@@ -334,6 +345,7 @@ export default {
   ul {
     width: 100%;
     height: 50px;
+    flex: 1;
     display: flex;
     justify-content: flex-end;
     // align-items: center;
@@ -363,13 +375,6 @@ export default {
     }
   }
   #header-phone{
-    .el-button+.el-button{
-      margin-left: 2px;
-    }
-    .contact-phone{
-      width: 120px;
-    // width: calc(~"(100% - 80px)");
-  }
   }
 }
 </style>

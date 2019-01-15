@@ -89,7 +89,7 @@ export default {
       })
     },
     viewNews (data) {
-      if (data.vtext.indexOf('<table') > -1) {
+      if (data.vtext.indexOf('<table') > -1 && data.vtext.indexOf('border="1"') < 0) {
         data.vtext = data.vtext.split('<table')[0] + '<table' + ' border="1" cellspacing="0" cellpadding="0"' + data.vtext.split('<table')[1]
       }
       this.$router.push({

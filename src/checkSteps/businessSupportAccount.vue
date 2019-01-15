@@ -1,7 +1,9 @@
 <template>
   <div class="bs-account">
     <h3 class="check-title">{{title}}</h3>
-    <el-input v-model="orderInfo.baiduid" placeholder="百度账户名"></el-input>
+    <el-input v-model="orderInfo.baiduaccount" placeholder="百度账户名">
+      <span slot="prepend">百度账户名:</span>
+    </el-input>
     <el-card class="card-money mt10px mb10px">
       <p>
         <b>直通车订单金额：</b>{{moneyRecord.sum | currency1}}</p>

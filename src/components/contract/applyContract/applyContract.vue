@@ -22,15 +22,19 @@
 
     <el-table stripe border :data="list" style="width: 100%;margin-top:10px;">
       <el-table-column prop="username" label="申请人">
+         <template slot-scope="scope">
+          <span>{{scope.row.username}}</span>
+          <span v-if="scope.row.bindName&&scope.row.bindName!==scope.row.username">{{'('+scope.row.bindName+')'}}</span>
+        </template>
       </el-table-column>
-      <el-table-column prop="catname" label="合同类型" min-width="160">
+      <el-table-column prop="catname" label="合同类型" min-width="120">
       </el-table-column>
       <el-table-column prop="contractnumber" label="合同编号">
       </el-table-column>
-      <el-table-column prop="" label="申请时间" min-width="100">
+      <el-table-column prop="" label="申请时间">
         <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
       </el-table-column>
-      <el-table-column prop="" label="状态" min-width="80" align="center">
+      <el-table-column prop="" label="状态" align="center">
         <el-button slot-scope="scope" plain class="xsbtn"
         :type="scope.row.status==20?'warning':
         scope.row.status==10?'danger':'success'">{{scope.row.status | cusState('applyStatus')}}</el-button>

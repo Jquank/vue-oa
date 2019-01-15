@@ -108,8 +108,9 @@ export default {
       }
     },
     handleCurrentChange (val) {
-      if (val) { // 此事件偶尔有bug
+      if (val) {
         this.selectedId = val.id
+        this.selectedName = val.NAME
       }
     },
     confirmOut () {
@@ -125,6 +126,7 @@ export default {
         companylogid: this.rowData.logid,
         cpid: this.rowData.cpid,
         induuid: this.selectedId,
+        induuName: this.selectedName,
         serviceid: this.rowData.uid
       }
       this.$post('/Renew.do?rollOut', params).then(res => {

@@ -4,7 +4,7 @@
       <el-form ref="form" :model="form" :label-width="labelWidth" :label-position="labelPosition" size="small">
         <el-row>
           <el-col :md="24">
-            <el-form-item label="公司名称/法人 :" prop="cusName">
+            <el-form-item label="公司名称/法人 :" prop="cusName" required>
               <el-input v-model="form.cusName" placeholder="公司名称/法人" class="input-btn"></el-input>
               <el-button @click.native="$router.go(-1)" type="warning">返回</el-button>
             </el-form-item>

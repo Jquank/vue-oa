@@ -215,6 +215,8 @@ export function invoiceState(num, type) {
         return '品牌专区'
       case '4':
         return '网站建设'
+      case '5':
+        return '广告代理费'
     }
   }
 }

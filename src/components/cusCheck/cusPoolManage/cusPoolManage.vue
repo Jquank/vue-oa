@@ -35,12 +35,12 @@
     <el-table :key="statusRadio" @selection-change="handleSelectionChange" stripe border :data="poolList" class="table-width">
       <el-table-column fixed="left" type="selection" width="40">
         </el-table-column>
-      <el-table-column prop="cname" label="客户名称" min-width="220">
+      <el-table-column prop="cname" label="客户名称" min-width="210">
       </el-table-column>
-      <el-table-column prop="" label="公司状态" min-width="80">
+      <el-table-column prop="" label="公司状态" min-width="75">
         <span :class="scope.row.ctype==-10?'red':''" slot-scope="scope">{{scope.row.ctype | cusState('cusStatus')}}</span>
       </el-table-column>
-      <el-table-column prop="" label="客户类型" width="90">
+      <el-table-column prop="" label="客户类型" min-width="75">
         <span slot-scope="scope">
           {{scope.row.producttype | cusState('cusType')}}{{scope.row.producttype!==0?scope.row.productnumber:''}}
         </span>
@@ -54,16 +54,16 @@
       <el-table-column prop="pname" label="业务状态" min-width="100">
         <span slot-scope="scope">{{scope.row.cltype+''+scope.row.clstatus | businessStatus}}</span>
       </el-table-column>
-      <el-table-column prop="submiter" label="所属商务" min-width="80">
+      <el-table-column prop="submiter" label="所属商务" min-width="75">
       </el-table-column>
       <el-table-column prop="subDept" label="所属部门" min-width="120">
       </el-table-column>
-      <el-table-column prop="center" label="录入人" min-width="80">
+      <el-table-column prop="center" label="录入人" min-width="75">
       </el-table-column>
       <el-table-column prop="" label="降E时间" width="95">
         <span slot-scope="scope">{{scope.row.opt_time | timeFormat}}</span>
       </el-table-column>
-      <el-table-column prop="" label="操作" width="120px" align="center">
+      <el-table-column prop="" label="操作" width="120px" align="center" fixed="right">
         <template slot-scope="scope">
           <el-button @click.native="view(scope.row)" type="success" class="xsbtn">查看</el-button>
           <el-button @click.native="stopProtect(scope.row)" v-if="scope.row.cltype==20&&scope.row.clstatus==10&&scope.row.ctype==10&&scope.row.auditor_now_h!==null&&(scope.row.tb_field_name-scope.row.auditor_now_h>=0)" type="danger" class="xsbtn">终止</el-button>

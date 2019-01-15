@@ -64,6 +64,9 @@
       <el-input class="search-item" v-model="useUser">
         <template slot="prepend">使用用户:</template>
       </el-input>
+      <el-input class="search-item" v-model="useName">
+        <template slot="prepend">使用人:</template>
+      </el-input>
       <el-input class="search-item" v-model="remarkSearch">
         <template slot="prepend">摘要|备注:</template>
       </el-input>
@@ -104,7 +107,7 @@
       </div>
     </div>
     <!-- 列表 -->
-    <el-table :data="bankFlowList" border class="table-width" max-height="550" stripe :row-class-name="setRowClassName">
+    <el-table size="mini" :data="bankFlowList" border class="table-width" max-height="550" stripe :row-class-name="setRowClassName">
       <!-- <el-table-column type="selection" width="35"></el-table-column> -->
       <el-table-column :fixed="isFixed" label="银行类型" prop="code_desc" width="75">
         <template slot-scope="scope">
@@ -112,17 +115,17 @@
           <span v-else>{{scope.row.code_desc}}</span>
         </template>
       </el-table-column>
-      <el-table-column :fixed="isFixed" label="交易时间" prop="B_JYSJ" width="95">
-        <span slot-scope="scope">{{scope.row.tm | timeFormat}}</span>
+      <el-table-column :fixed="isFixed" label="交易时间" prop="B_JYSJ" width="100" align="center">
+        <span slot-scope="scope">&nbsp;{{scope.row.tm | timeFormat}}</span>
       </el-table-column>
-      <el-table-column :fixed="isFixed" label="参考号" prop="no" width="100"></el-table-column>
-      <el-table-column :fixed="isFixed" label="付款名" prop="fm_name" width="110"></el-table-column>
-      <el-table-column :fixed="isFixed" label="付款账号" prop="fm_account" width="100"></el-table-column>
-      <el-table-column :fixed="isFixed" label="现金收款人" prop="fm_uid" width="90"></el-table-column>
-      <el-table-column label="付款公司名" min-width="90" prop="company_name"></el-table-column>
+      <el-table-column :fixed="isFixed" label="参考号" prop="no" min-width="100"></el-table-column>
+      <el-table-column :fixed="isFixed" label="付款名" prop="fm_name" min-width="130"></el-table-column>
+      <el-table-column :fixed="isFixed" label="付款账号" prop="fm_account" min-width="100"></el-table-column>
+      <el-table-column :fixed="isFixed" label="现金收款人" prop="fm_uid" min-width="60"></el-table-column>
+      <el-table-column label="付款公司名" min-width="60" prop="company_name"></el-table-column>
       <el-table-column label="摘要|备注" min-width="100" prop="remark"></el-table-column>
-      <el-table-column label="百度账户" min-width="100" prop="baidu_account2"></el-table-column>
-      <el-table-column label="账户类型" prop="account_type"></el-table-column>
+      <el-table-column label="百度账户" min-width="80" prop="baidu_account2"></el-table-column>
+      <el-table-column label="账户类型" prop="account_type" min-width="80"></el-table-column>
       <el-table-column label="交易金额" min-width="120" prop>
         <template slot-scope="scope">
           <span v-if="scope.row._mark!=='total'">{{scope.row.amount | currency1}}</span>
@@ -177,7 +180,7 @@
             </el-table>
           </template>
         </el-table-column>
-        <el-table-column class-name="splited-col" label="公司名称" prop width="200">
+        <el-table-column class-name="splited-col" label="公司名称" prop width="150">
           <template slot-scope="scope">
             <el-table
              v-if="scope.row._mark!=='total'"
@@ -295,11 +298,11 @@
                         v-if="((permissions.indexOf( '6k')>-1&&selStatus===0)&&rid!=='12' && rid!=='2y'|| rid==='0') && cscope.row.isClaim == '1'"
                       >认领</el-button>
                     </el-dropdown-item>
-                    <el-dropdown-item divided v-if="permissions.indexOf('6l')>-1&&selStatus===0">
-                      <el-button @click.native.prevent="split(cscope.row)" size="mini" type="warning">拆账</el-button>
-                    </el-dropdown-item>
                     <el-dropdown-item divided v-if="permissions.indexOf( '6s')>-1&&selStatus===0">
                       <el-button @click.native.prevent="allot(cscope.row)" size="mini" type="primary">分配</el-button>
+                    </el-dropdown-item>
+                    <el-dropdown-item divided v-if="permissions.indexOf('6l')>-1&&selStatus===0">
+                      <el-button @click.native.prevent="split(cscope.row)" size="mini" type="warning">拆账</el-button>
                     </el-dropdown-item>
                     <el-dropdown-item divided v-if="permissions.indexOf( '6m')>-1&&selStatus ===10">
                       <el-button @click.native.prevent="goBack(cscope.row)" size="mini" type="warning">退回</el-button>
@@ -567,6 +570,7 @@ export default {
       bdAccount: '',
       ckNum: '',
       useUser: '',
+      useName: '',
       payCompany: '',
       reserveInfo: '',
       payAccount: '',
@@ -936,7 +940,7 @@ export default {
         remark: this.editForm.remark,
         companyid: this.comInfo.companyid,
         companylogid: this.comInfo.companylogid,
-        companyname: this.comInfo.companyname,
+        companyname: this.editForm.company,
         baidu_account: this.editForm.bdAccount,
         bill_time: this.editForm.subOrderDate,
         // useDetail: this.editForm.productMoneyList,
@@ -951,7 +955,6 @@ export default {
       if (
         !params.baidu_account ||
         !params.bill_time ||
-        !params.companyid ||
         !params.uid
       ) {
         this.$message({
@@ -1012,7 +1015,8 @@ export default {
         baidu_account2: this.bdAccount,
         no: this.ckNum, // 参考号
         company_name: this.payCompany,
-        baidu_account: this.useUser
+        baidu_account: this.useUser,
+        use_name: this.useName
 
       }
     },
@@ -1029,6 +1033,7 @@ export default {
       this.ckNum = ''
       this.payCompany = ''
       this.useUser = ''
+      this.useName = ''
       this.businessDate = []
       this.orderDate = []
     },
@@ -1079,7 +1084,7 @@ export default {
       display: flex;
       flex-wrap: wrap;
       .status-item {
-        margin-top: 10px;
+        margin-top: 5px;
         margin-left: 10px;
         width: 210px;
       }
@@ -1087,7 +1092,7 @@ export default {
     .btns {
       .btns-item {
         display: inline-block;
-        margin-top: 10px;
+        margin-top: 5px;
         margin-left: 10px;
       }
     }
@@ -1097,7 +1102,7 @@ export default {
     display: flex;
     flex-wrap: wrap;
     .search-item {
-      margin-top: 10px;
+      margin-top: 5px;
       margin-left: 10px;
       width: 310px;
     }

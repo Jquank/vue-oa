@@ -53,7 +53,7 @@
     <page class="page" :url="myFollowUrl" :sendParams="sendParams" @updateList="updateMyFollowList"></page>
 
     <!-- 查看弹窗 -->
-    <el-dialog :key="key_renew_detail" :modal-append-to-body="false" title="续费详情" :visible.sync="renewDetailDialog" width="1100px">
+    <el-dialog :key="key_renew_detail" :modal-append-to-body="false" title="续费详情" :visible.sync="renewDetailDialog" width="1100px" top="0" fullscreen>
       <renew-detail  :rowData="rowData" :toMark="'renewCheck'" @closeRenewDetailDialog="closeRenewDetailDialog"></renew-detail>
     </el-dialog>
   </div>

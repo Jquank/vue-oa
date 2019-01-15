@@ -4,12 +4,12 @@ import qs from 'querystring'
 import cookie from 'js-cookie'
 import {Loading, Message} from 'element-ui'
 // 打包用地址
-// export const uploadUrl = '/upload/c'
-// export const serverUrl = '/BaiJieOA'
+export const uploadUrl = '/upload/c'
+export const serverUrl = '/BaiJieOA'
 
-export const uploadUrl = 'http://172.16.11.84:8080/upload/c'
+// export const uploadUrl = 'http://172.16.11.84:8080/upload/c'
 // export const uploadUrl = 'http://bg.baijiegroup.com/upload/c'
-export const serverUrl = 'http://172.16.11.84:8080/BaiJieOA'
+// export const serverUrl = 'http://172.16.11.84:8080/BaiJieOA'
 // export const serverUrl = 'http://bg.baijiegroup.com/BaiJieOA'
 // export const serverUrl = 'http://hboa.baijiegroup.com:8087/BaiJieOA2'
 const instance = axios.create({

@@ -1,8 +1,8 @@
 
-import { serverUrl, $get } from 'api/http'
+import { $get } from 'api/http'
 export function loadCallIframe (id) {
   let baseUrl = '/gaiaopt/rest/interface/agent/agentBarInit4H5'
-  let callInitUrl = serverUrl + '/bdurl.do?init'
+  let callInitUrl = '/bdurl.do?init'
   let data
   window.agentbar.init(id)
   $get(callInitUrl, {url: baseUrl}).then(res => {
@@ -19,7 +19,7 @@ function makeSelfRecord(phone, type, cpid, cat) {
     cat: cat,
     phone: phone
   }
-  $get(serverUrl + '/wf.do?tellog', params).then(res => {})
+  $get('/wf.do?tellog', params).then(res => {})
 }
 export function callPhone (phone, type, cpid, cat = 10000) {
   if (!phone) {
