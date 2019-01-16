@@ -104,7 +104,6 @@ const ProductManage = () => import('components/productList/productManage')
 const ViewProduct = () => import('components/productList/viewProduct')
 const AddClassify = () => import('components/productList/addClassify')
 const ProductShow = () => import('components/productList/productShow')
-// const ProductList = () => import('components/productList/productList')
 // 反馈流程
 const ProcessManage = () => import('components/feedBack/processManage')
 const ProcessShow = () => import('components/feedBack/processShow')
@@ -743,71 +742,14 @@ const router = new Router({
           ]
         },
         {
-          path: 'productManage?menu=no',
-          name: 'productManage1',
-          meta: { text: '产品管理' },
-          component: ProductManage,
-          children: [
-            {
-              path: 'add',
-              meta: { text: '产品管理/新增' },
-              component: TextEditor
-            },
-            {
-              path: 'edit',
-              meta: { text: '产品管理/编辑' },
-              component: TextEditor
-            },
-            {
-              path: 'view',
-              meta: { text: '产品管理/详情' },
-              component: ViewProduct
-            }
-          ]
-        },
-        {
           path: 'productShow',
           name: 'productShow',
           meta: { text: '产品分类' },
           component: ProductShow
         },
         {
-          path: 'productShow?menu=no',
-          name: 'productShow1',
-          meta: { text: '产品分类' },
-          component: ProductShow
-        },
-        {
           path: 'addClassify',
           name: 'addClassify',
-          meta: { text: '产品查询' },
-          component: AddClassify,
-          children: [
-            {
-              path: 'add',
-              meta: { text: '产品查询/新增' },
-              component: TextEditor
-            },
-            {
-              path: 'edit',
-              meta: { text: '产品查询/编辑' },
-              component: TextEditor
-            },
-            {
-              path: 'view/:id',
-              meta: { text: '产品查询/详情' },
-              component: ViewProduct
-            }
-            // {
-            //   path: 'list/:id',
-            //   meta: { text: '产品查询' },
-            //   component: ProductList
-            // }
-          ]
-        },
-        {
-          path: 'addClassify?menu=no',
-          name: 'addClassify1',
           meta: { text: '产品查询' },
           component: AddClassify,
           children: [
@@ -853,37 +795,8 @@ const router = new Router({
           ]
         },
         {
-          path: 'processManage?menu=no',
-          name: 'processManage1',
-          meta: { text: '流程管理' },
-          component: ProcessManage,
-          children: [
-            {
-              path: 'add',
-              meta: { text: '流程管理/新增' },
-              component: TextEditor
-            },
-            {
-              path: 'edit',
-              meta: { text: '流程管理/编辑' },
-              component: TextEditor
-            },
-            {
-              path: 'view',
-              meta: { text: '流程管理/详情' },
-              component: ViewProduct
-            }
-          ]
-        },
-        {
           path: 'processShow',
           name: 'processShow',
-          meta: { text: '流程分类' },
-          component: ProcessShow
-        },
-        {
-          path: 'processShow?menu=no',
-          name: 'processShow1',
           meta: { text: '流程分类' },
           component: ProcessShow
         },
@@ -909,30 +822,7 @@ const router = new Router({
               component: ViewProduct
             }
           ]
-        },
-        {
-          path: 'processClassify?menu=no',
-          name: 'processClassify1',
-          meta: { text: '流程归类' },
-          component: ProcessClassify,
-          children: [
-            {
-              path: 'add',
-              meta: { text: '流程归类/新增' },
-              component: TextEditor
-            },
-            {
-              path: 'edit',
-              meta: { text: '流程归类/编辑' },
-              component: TextEditor
-            },
-            {
-              path: 'view/:id',
-              meta: { text: '流程归类/详情' },
-              component: ViewProduct
-            }
-          ]
-        },
+        }
       ]
     }
   ],

@@ -315,7 +315,7 @@
         <el-table-column prop="alloc_remark" label="备注">
         </el-table-column>
       </el-table>
-      <page :simpleLayout="'total, prev, next, jumper'" class="page" :url="selFlowUrl" :sendParams="selFlowParams" @updateList="getFlowList"></page>
+      <page :simpleLayout="'total, sizes, prev, next, jumper'" class="page" :url="selFlowUrl" :sendParams="selFlowParams" @updateList="getFlowList"></page>
       <div class="text-right mt10px">
         <el-button @click.native="confirmSelFlowDialog" type="primary">确定</el-button>
       </div>

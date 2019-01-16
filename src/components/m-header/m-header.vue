@@ -14,9 +14,11 @@
           <span ref="secondTitle">{{secondTitle}}</span>
           <span v-show="thirdTitle">&nbsp;/&nbsp;</span>
           <span>{{thirdTitle}}</span>
-          <el-input v-model="phoneNum" size="mini" class="contact-phone ml10px" @keyup.enter.native="call_phone"></el-input>
-          <el-button class="xsbtn" circle type="success" icon="fa fa-phone" @click.native="call_phone"></el-button>
-          <!-- <el-button class="xsbtn" circle type="primary" icon="fa fa-envelope-o" @click.native="send_message"></el-button> -->
+          <template v-if="isShow">
+            <el-input v-model="phoneNum" size="mini" class="contact-phone ml10px" @keyup.enter.native="call_phone"></el-input>
+            <el-button class="xsbtn" circle type="success" icon="fa fa-phone" @click.native="call_phone"></el-button>
+            <!-- <el-button class="xsbtn" circle type="primary" icon="fa fa-envelope-o" @click.native="send_message"></el-button> -->
+          </template>
         </div>
       </div>
       <ul class="head-ul">
@@ -108,6 +110,9 @@ import ErrorCollect from 'base/errorCollect/errorCollect'
 // const phoneReg = /^((13[0-9])|(14([0-3]|[5-9]))|(15([0-3]|[5-9]))|(16[0-9])|(17[0-9])|(18[0-9])|(19[0-9]))\d{8}$/
 export default {
   computed: {
+    isShow () {
+      return cookie.get('allowBar') === '9999'
+    },
     uName() {
       return cookie.get('userName')
     },
@@ -351,8 +356,8 @@ export default {
   ul {
     width: 100%;
     height: 50px;
-    flex: 0 0 260px;
-    width: 260px;
+    flex: 0 0 320px;
+    width: 320px;
     display: flex;
     justify-content: flex-end;
     // align-items: center;

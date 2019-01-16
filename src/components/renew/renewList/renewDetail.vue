@@ -101,9 +101,9 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :md="8">
-            <el-form-item label="SF账号 :">
-              <div>{{baseInfo.proxy_id}}</div>
+          <el-col :md="8" class="maxwidth">
+            <el-form-item label="百度账号 :">
+              <div>{{baseInfo.baidu_account}}</div>
             </el-form-item>
           </el-col>
           <el-col :md="5" class="maxwidth">
@@ -118,14 +118,14 @@
           </el-col>
           <el-col :md="7" class="maxwidth">
             <el-form-item label="值班加款 :">
-              <div>{{baseInfo.holiday==0?'无':(baseInfo.holiday==10?'值班加款':'')}}</div>
+              <div :class="{'red':baseInfo.holiday==10}">{{baseInfo.holiday==0?'无':(baseInfo.holiday==10?'值班加款':'')}}</div>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
-          <el-col :md="8" class="maxwidth">
-            <el-form-item label="百度账号 :">
-              <div>{{baseInfo.baidu_account}}</div>
+          <el-col :md="8">
+            <el-form-item label="SF账号 :">
+              <div>{{baseInfo.proxy_id}}</div>
             </el-form-item>
           </el-col>
           <el-col :md="5">

@@ -96,10 +96,11 @@
         <el-table-column prop="ordernum" label="订单ID" min-width="90">
           <span slot-scope="scope" @click="viewOrder(scope.row)" class="click-cell">{{scope.row.ordernum}}</span>
         </el-table-column>
-        <el-table-column prop="cname" label="订单名称" min-width="130"></el-table-column>
+        <el-table-column prop="cname" label="客户名称" min-width="130"></el-table-column>
         <el-table-column prop label="提交时间" width="95">
           <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
         </el-table-column>
+        <el-table-column prop="baiducount" label="用户名" min-width="80"></el-table-column>
         <el-table-column prop="username" label="下单人" min-width="75"></el-table-column>
         <el-table-column prop label="类型" width="95">
           <template slot-scope="scope">

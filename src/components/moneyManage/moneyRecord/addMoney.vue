@@ -177,7 +177,7 @@
         <el-table-column prop="allocRemark" label="预留信息">
         </el-table-column>
       </el-table>
-      <page :simpleLayout="'total, prev, next, jumper'" class="page" :url="url" :sendParams="sendParams" @updateList="getFlowList"></page>
+      <page :simpleLayout="'total, sizes, prev, next, jumper'" class="page" :url="url" :sendParams="sendParams" @updateList="getFlowList"></page>
       <div style="text-align:right;margin-top:10px;">
         <el-button @click.native="selFlowDialog = false" type="primary">确定</el-button>
       </div>
