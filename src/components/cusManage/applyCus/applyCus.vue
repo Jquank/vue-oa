@@ -94,14 +94,15 @@
         <span slot-scope="scope">{{scope.row.followtime | timeFormat}}</span>
       </el-table-column>
       <el-table-column prop="" label="状态">
-        <span slot-scope="scope">{{
-          scope.row.applytype===-100?'永久放弃':
-          scope.row.applytype===-10?'暂不跟进':
-          scope.row.applytype===-1?'空号错号':
-          scope.row.applytype===10?'转跟踪':
-          scope.row.applytype===20?'跟进':
-          scope.row.applytype===100?'完成':'未标记'
-          }}</span>
+        <template slot-scope="scope">
+          <el-button v-if="scope.row.applytype===-100" type="danger" class="xsbtn" plain>永久放弃</el-button>
+          <el-button v-else-if="scope.row.applytype===-10" type="infor" class="xsbtn" plain>暂不跟进</el-button>
+          <el-button v-else-if="scope.row.applytype===-1" type="danger" class="xsbtn" plain>空号错号</el-button>
+          <el-button v-else-if="scope.row.applytype===10" type="warning" class="xsbtn" plain>转跟踪</el-button>
+          <el-button v-else-if="scope.row.applytype===20" type="primary" class="xsbtn" plain>跟进</el-button>
+          <el-button v-else-if="scope.row.applytype===100" type="success" class="xsbtn" plain>完成</el-button>
+          <el-button v-else type="infor">未标记</el-button>
+        </template>
       </el-table-column>
       <el-table-column label="操作" width="60" align="center">
         <template slot-scope="scope">

@@ -77,7 +77,7 @@
         <el-button class="title-btn" type="warning">续费信息</el-button>
         <div class="line"></div>
       </div>
-      <el-form :model="baseInfo" label-width="100px" class="weight-label">
+      <el-form :model="baseInfo" label-width="100px" :label-position="labelPosition" class="weight-label">
         <el-row>
           <el-col :md="8">
             <el-form-item label="公司名称 :">
@@ -129,7 +129,7 @@
             </el-form-item>
           </el-col>
           <el-col :md="5">
-            <el-form-item label="是否需要发票 :" label-width="120px">
+            <el-form-item label="是否需要发票 :">
               <div>{{baseInfo.invoice+'' | invoiceState('needInvoice')}}</div>
             </el-form-item>
           </el-col>
@@ -141,6 +141,24 @@
           <el-col :md="7" class="maxwidth">
             <el-form-item label="预计还款时间 :">
               <div>{{baseInfo.offset_time | timeFormat}}</div>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :md="8" class="maxwidth">
+            <el-form-item label="提交时间 :">
+              <span>{{baseInfo.inserttime | timeFormat}}</span>
+            </el-form-item>
+          </el-col>
+          <el-col :md="5" class="maxwidth">
+            <el-form-item label="提交人 :">
+              <span>{{rowData.username}}</span>
+              <span v-if="rowData.bindName">{{'('+rowData.bindName+')'}}</span>
+            </el-form-item>
+          </el-col>
+          <el-col :md="11" class="maxwidth">
+            <el-form-item label="提交备注 :">
+              <span>{{baseInfo.remark}}</span>
             </el-form-item>
           </el-col>
         </el-row>
@@ -167,24 +185,6 @@
               </el-form-item>
             </el-col>
           </template>
-        </el-row>
-        <el-row>
-          <el-col :md="8" class="maxwidth">
-            <el-form-item label="提交时间 :">
-              <span>{{baseInfo.inserttime | timeFormat}}</span>
-            </el-form-item>
-          </el-col>
-          <el-col :md="5" class="maxwidth">
-            <el-form-item label="提交人 :">
-              <span>{{rowData.username}}</span>
-              <span v-if="rowData.bindName">{{'('+rowData.bindName+')'}}</span>
-            </el-form-item>
-          </el-col>
-          <el-col :md="11" class="maxwidth">
-            <el-form-item label="提交备注 :">
-              <span>{{baseInfo.remark}}</span>
-            </el-form-item>
-          </el-col>
         </el-row>
       </el-form>
     </div>
@@ -668,6 +668,7 @@ export default {
   },
   data() {
     return {
+      labelPosition: 'left',
       rid: cookie.get('rid'),
       permissions: cookie.getJSON('permissions'),
       timeFormat1: timeFormat1,

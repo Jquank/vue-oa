@@ -22,7 +22,7 @@
         <el-input v-model="orderInfo.baiduid" placeholder="百度账户ID"></el-input>
       </el-col>
       <el-col :md="6">
-        <el-input v-model="orderInfo.baiducount" placeholder="百度账户名"></el-input>
+        <el-input v-model="orderInfo.baiduaccount" placeholder="百度账户名"></el-input>
       </el-col>
       <el-col :md="6">
         <el-input v-model="orderInfo.proxyid" placeholder="代理账号"></el-input>

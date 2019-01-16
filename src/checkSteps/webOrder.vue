@@ -98,6 +98,7 @@ export default {
   mounted () {
     this._getUrl()
     this._getDispatchRole(this.sn, this.pid)
+    this._getBackNode(this.sn, this.templateInfo.cpid)
   },
   methods: {},
   components: {

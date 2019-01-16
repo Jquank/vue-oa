@@ -104,6 +104,7 @@ const ProductManage = () => import('components/productList/productManage')
 const ViewProduct = () => import('components/productList/viewProduct')
 const AddClassify = () => import('components/productList/addClassify')
 const ProductShow = () => import('components/productList/productShow')
+// const ProductList = () => import('components/productList/productList')
 // 反馈流程
 const ProcessManage = () => import('components/feedBack/processManage')
 const ProcessShow = () => import('components/feedBack/processShow')
@@ -797,6 +798,11 @@ const router = new Router({
               meta: { text: '产品查询/详情' },
               component: ViewProduct
             }
+            // {
+            //   path: 'list/:id',
+            //   meta: { text: '产品查询' },
+            //   component: ProductList
+            // }
           ]
         },
         {

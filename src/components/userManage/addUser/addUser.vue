@@ -124,6 +124,8 @@
             </el-select>
           </el-form-item>
         </el-col>
+      </el-row>
+      <el-row :gutter="20" v-if="!quotaDisable">
         <!-- 序列 -->
         <el-col :md="12" class="maxwidth">
           <el-form-item label="序列 :">

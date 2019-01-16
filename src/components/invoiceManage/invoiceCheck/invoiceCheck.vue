@@ -39,7 +39,7 @@
         <el-table-column prop="applyusername" label="申请人" width="100">
           <template slot-scope="scope">
             <span>{{scope.row.applyusername}}</span>
-            <span>{{scope.row.true_name != scope.row.applyusername?'('+scope.row.true_name+')':''}}</span>
+            <span v-if="scope.row.bindName">{{scope.row.bindName != scope.row.applyusername?'('+scope.row.bindName+')':''}}</span>
           </template>
         </el-table-column>
         <el-table-column prop="tnumber" label="单据号码" width="110">

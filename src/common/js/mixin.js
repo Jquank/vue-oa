@@ -251,7 +251,7 @@ export const orderDeal = { // 订单处理
         {
           return {
             baiduid: this.orderInfo.baiduid || undefined,
-            baiducount: this.orderInfo.baiducount || undefined,
+            baiduaccount: this.orderInfo.baiduaccount || undefined,
             applytime: this.orderInfo.applytime || undefined,
             proxyid: this.orderInfo.proxyid || undefined
           }
@@ -260,7 +260,7 @@ export const orderDeal = { // 订单处理
         {
           return {
             baiduid: this.orderInfo.baiduid || undefined,
-            baiducount: this.orderInfo.baiducount || undefined,
+            baiduaccount: this.orderInfo.baiduaccount || undefined,
             preDeposit: this.preDeposit || undefined,
             applytime: this.orderInfo.applytime || undefined,
             proxyid: this.orderInfo.proxyid || undefined
@@ -405,7 +405,7 @@ export const orderDeal = { // 订单处理
       } else {
         if (this.sn === 260 || this.sn === 170) {
           if (this.pid !== 'PZ') {
-            if (!this.orderInfo.baiduid || !this.orderInfo.baiducount || !this.orderInfo.proxyid || !this.orderInfo.applytime) {
+            if (!this.orderInfo.baiduid || !this.orderInfo.baiduaccount || !this.orderInfo.proxyid || !this.orderInfo.applytime) {
               this.$message({
                 type: 'warning',
                 message: '请填写账户信息！'
@@ -414,7 +414,7 @@ export const orderDeal = { // 订单处理
             }
           }
           this.remark = '账户ID：' + this.orderInfo.baiduid +
-              '；账户名：' + this.orderInfo.baiducount +
+              '；账户名：' + this.orderInfo.baiduaccount +
               '；代理账号：' + this.orderInfo.proxyid +
               '。申请加款时间：' + this.orderInfo.applytime + '。'
           this.payList.forEach(val => {

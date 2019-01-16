@@ -80,6 +80,7 @@ export default {
   },
   mounted () {
     this._getUrl()
+    this._getBackNode(this.sn, this.templateInfo.cpid)
   },
   methods: {
   }

@@ -16,7 +16,7 @@
           <span>{{thirdTitle}}</span>
           <el-input v-model="phoneNum" size="mini" class="contact-phone ml10px" @keyup.enter.native="call_phone"></el-input>
           <el-button class="xsbtn" circle type="success" icon="fa fa-phone" @click.native="call_phone"></el-button>
-          <el-button class="xsbtn" circle type="primary" icon="fa fa-envelope-o" @click.native="send_message"></el-button>
+          <!-- <el-button class="xsbtn" circle type="primary" icon="fa fa-envelope-o" @click.native="send_message"></el-button> -->
         </div>
       </div>
       <ul class="head-ul">
@@ -105,6 +105,7 @@ import storage from 'good-storage'
 import { mapGetters, mapMutations } from 'vuex'
 import { autoHeight, appMark } from 'common/js/utils'
 import ErrorCollect from 'base/errorCollect/errorCollect'
+// const phoneReg = /^((13[0-9])|(14([0-3]|[5-9]))|(15([0-3]|[5-9]))|(16[0-9])|(17[0-9])|(18[0-9])|(19[0-9]))\d{8}$/
 export default {
   computed: {
     uName() {
@@ -130,8 +131,7 @@ export default {
       lastRoutePath: '',
       errorDialog: false,
 
-      phoneNum: '',
-      phone_num: ''
+      phoneNum: ''
     }
   },
   watch: {
@@ -173,15 +173,21 @@ export default {
   },
   methods: {
     call_phone() {
-      if (this.phoneNum) {
-        this.phone_num = this.phoneNum.match(/[-\d]/g).join('')
-      }
-      this.phoneNum = this.phone_num
-      // let reg = /^((13[0-9])|(14([0-3]|[5-9]))|(15([0-3]|[5-9]))|(16[0-9])|(17[0-9])|(18[0-9])|(19[0-9]))\d{8}$/
-      this.callPhone(this.phone_num, 100)
+      this.phoneNum = this._regPhone(this.phoneNum)
+      this.callPhone(this.phoneNum, 100)
     },
     send_message() {
-
+      this.phoneNum = this._regPhone(this.phoneNum)
+      this.$post('/cc.do?callSMS', {phone: this.phoneNum}).then(res => {
+        if (res.data.success) {
+          this.$message.success('短信已发送')
+        }
+      })
+    },
+    _regPhone(num) {
+      if (num) {
+        return num.match(/[-\d]/g).join('')
+      }
     },
     errorHistory () {
       this.errorDialog = true
@@ -324,7 +330,7 @@ export default {
       }
     }
     .logo-img {
-      // width: 160px;
+      width: 160px;
       height: 50px;
       // position: relative;
       // top: 0;
@@ -337,7 +343,7 @@ export default {
       background: @bg-nav !important;
       border-bottom: 1px solid #babdc2;
       margin-top: -1px;
-      margin-left: -20px;
+      // margin-left: -20px;
       // box-shadow:2px 0px 30px 2px #b6cfe9 inset;
     }
   }
@@ -345,7 +351,8 @@ export default {
   ul {
     width: 100%;
     height: 50px;
-    flex: 1;
+    flex: 0 0 260px;
+    width: 260px;
     display: flex;
     justify-content: flex-end;
     // align-items: center;

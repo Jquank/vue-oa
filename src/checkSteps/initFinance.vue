@@ -376,6 +376,7 @@ export default {
   },
   mounted() {
     this._getUrl()
+    this._getBackNode(this.sn, this.templateInfo.cpid)
     this.billTime = timeFormat1(this.orderInfo.bill_time || '')
     this.common = this.orderInfo.receivekind == 0 ? true : false // eslint-disable-line
   },

@@ -40,7 +40,7 @@
       </div>
       <!-- 列表 -->
       <el-table :key="tabStatus" size="mini" v-if="permissions.indexOf('5q')<0&&permissions.indexOf('6n')<0" :data="pendingList" class="table-width" stripe border max-height="550">
-        <el-table-column prop="ordernum" label="订单ID" min-width="155">
+        <el-table-column prop="ordernum" label="订单ID" min-width="100">
           <span slot-scope="scope" @click="viewOrder(scope.row)" class="click-cell">{{scope.row.ordernum}}</span>
         </el-table-column>
         <el-table-column prop="cname" label="订单名称" min-width="150">
@@ -57,12 +57,12 @@
             <span v-if="scope.row.pid!='WEBSITE'">{{scope.row.pname}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="" label="审核状态" min-width="155">
+        <el-table-column prop="" label="审核状态" min-width="150">
           <span slot-scope="scope">
             <el-button type="warning" class="xsbtn" plain>{{scope.row.currentname?scope.row.currentname:'订单完成'}}</el-button>
           </span>
         </el-table-column>
-        <el-table-column prop="" label="订单状态" width="120">
+        <el-table-column prop="" label="订单状态" width="95">
           <span slot-scope="scope">
             {{scope.row.audittype === 0 ? "仅降E":"降E并提单"}}
           </span>
@@ -81,7 +81,7 @@
       </el-table>
 
       <!-- 转户出纳列表 -->
-      <el-table v-if="permissions.indexOf('5q') > -1" :data="pendingList" border stripe class="table-width" max-height="550">
+      <el-table v-if="permissions.indexOf('5q') > -1" :data="pendingList" border stripe class="table-width" max-height="500">
         <el-table-column prop="" label="加款时间" width="150">
           <span slot-scope="scope">{{scope.row.addMoneyTime | timeFormat}}</span>
         </el-table-column>
@@ -116,7 +116,7 @@
       </el-table>
 
       <!-- 客服看到的列表 -->
-      <el-table v-if="permissions.indexOf('6n') > -1" :data="pendingList" border stripe class="table-width" max-height="550">
+      <el-table v-if="permissions.indexOf('6n') > -1" :data="pendingList" border stripe class="table-width" max-height="500">
         <el-table-column prop="ordernum" label="订单ID" min-width="150">
         </el-table-column>
         <el-table-column prop="cname" label="订单名称" min-width="150">

@@ -22,7 +22,8 @@
         <el-button type="warning" @click.native="reset">重 置</el-button>
       </div>
     </div>
-    <el-table stripe border :data="myFollowList" class="table-width" max-height="500">
+
+    <el-table stripe border :data="myFollowList" class="table-width" max-height="550">
       <el-table-column prop="companyname" label="公司名称" min-width="160">
       </el-table-column>
       <el-table-column prop="baidu_account" label="百度账号">
@@ -45,18 +46,18 @@
       <el-table-column prop="addtype" label="续费类型">
         <span slot-scope="scope">{{scope.row.addtype+'' | renewState('addType')}}</span>
       </el-table-column>
-      <el-table-column prop="code_desc" label="审核状态" width="130">
+      <el-table-column prop="code_desc" label="审核状态" min-width="135">
         <template slot-scope="scope">
           <el-button type="warning" plain class="xsbtn">{{scope.row.step == 300 ? scope.row.code_desc : scope.row.checkName+(scope.row.ckBindName?('('+scope.row.ckBindName+')') : ((scope.row.ckTrueName && scope.row.ckTrueName!=scope.row.checkName)?('('+scope.row.ckTrueName+')'):''))}}</el-button>
         </template>
       </el-table-column>
-      <el-table-column prop="checktime" label="审核时间" v-if="stateRadio==300">
+      <el-table-column prop="checktime" label="审核时间" width="95" v-if="stateRadio==300">
         <span slot-scope="scope">{{scope.row.checktime | timeFormat}}</span>
       </el-table-column>
-      <el-table-column prop="invoice" label="发票状态" width="80">
+      <el-table-column prop="invoice" label="发票状态" min-width="80">
         <span slot-scope="scope">{{scope.row.invoice==10?'已开':'未开'}}</span>
       </el-table-column>
-      <el-table-column prop="" label="操作" width="140" align="center">
+      <el-table-column prop="" label="操作" width="130" align="center">
         <template slot-scope="scope">
           <el-button @click.native="view(scope.row)" type="success" class="xsbtn">查 看</el-button>
           <el-button v-if="permissions.indexOf('7n') > -1&&scope.row.step!=400" @click.native="stop(scope.row)" type="danger" class="xsbtn">终 止</el-button>

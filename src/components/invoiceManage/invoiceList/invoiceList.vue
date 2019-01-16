@@ -105,7 +105,7 @@
         <el-table-column prop="applyusername" label="申请人" width="130">
           <template slot-scope="scope">
             <span>{{scope.row.applyusername}}</span>
-            <span v-if="scope.row.true_name != scope.row.applyusername">{{'('+scope.row.true_name+')'}}</span>
+            <span v-if="scope.row.bindName">{{scope.row.bindName != scope.row.applyusername?'('+scope.row.bindName+')':''}}</span>
           </template>
         </el-table-column>
         <el-table-column prop="taddr" label="收货地址" min-width="150">
@@ -174,7 +174,7 @@
         <el-table-column prop="applyusername" label="申请人" width="90">
           <template slot-scope="scope">
             <span>{{scope.row.applyusername}}</span>
-            <span v-if="scope.row.true_name != scope.row.applyusername">{{'('+scope.row.true_name+')'}}</span>
+            <span v-if="scope.row.bindName">{{scope.row.bindName != scope.row.applyusername?'('+scope.row.bindName+')':''}}</span>
           </template>
         </el-table-column>
         <template v-if="mark==='handled'&&permissions.indexOf('7c') < 0">
