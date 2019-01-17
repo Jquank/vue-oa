@@ -107,7 +107,15 @@
       </div>
     </div>
     <!-- 列表 -->
-    <el-table size="mini" :data="bankFlowList" border class="table-width" max-height="550" stripe :row-class-name="setRowClassName">
+    <el-table
+      size="mini"
+      :data="bankFlowList"
+      border
+      class="table-width"
+      max-height="550"
+      stripe
+      :row-class-name="setRowClassName"
+    >
       <!-- <el-table-column type="selection" width="35"></el-table-column> -->
       <el-table-column :fixed="isFixed" label="银行类型" prop="code_desc" width="75">
         <template slot-scope="scope">
@@ -136,7 +144,7 @@
       <el-table-column class-name="splited-col" label="拆分后金额" prop width="110">
         <template slot-scope="scope">
           <el-table
-          v-if="scope.row._mark!=='total'"
+            v-if="scope.row._mark!=='total'"
             :data="scope.row.split"
             :row-class-name="scope.row.split.length>1?'add-border':''"
             :show-header="false"
@@ -153,7 +161,7 @@
         <el-table-column class-name="splited-col" label="预留信息" prop width="120">
           <template slot-scope="scope">
             <el-table
-             v-if="scope.row._mark!=='total'"
+              v-if="scope.row._mark!=='total'"
               :data="scope.row.split"
               :row-class-name="scope.row.split.length>1?'add-border':''"
               :show-header="false"
@@ -168,7 +176,7 @@
         <el-table-column class-name="splited-col" label="使用人" prop width="100">
           <template slot-scope="scope">
             <el-table
-             v-if="scope.row._mark!=='total'"
+              v-if="scope.row._mark!=='total'"
               :data="scope.row.split"
               :row-class-name="scope.row.split.length>1?'add-border':''"
               :show-header="false"
@@ -183,7 +191,7 @@
         <el-table-column class-name="splited-col" label="公司名称" prop width="150">
           <template slot-scope="scope">
             <el-table
-             v-if="scope.row._mark!=='total'"
+              v-if="scope.row._mark!=='total'"
               :data="scope.row.split"
               :row-class-name="scope.row.split.length>1?'add-border':''"
               :show-header="false"
@@ -200,7 +208,7 @@
         <el-table-column class-name="splited-col" label="用户名" prop width="160">
           <template slot-scope="scope">
             <el-table
-             v-if="scope.row._mark!=='total'"
+              v-if="scope.row._mark!=='total'"
               :data="scope.row.split"
               :row-class-name="scope.row.split.length>1?'add-border':''"
               :show-header="false"
@@ -215,7 +223,7 @@
         <el-table-column class-name="splited-col" label="提单金额" prop width="120">
           <template slot-scope="scope">
             <el-table
-            v-if="scope.row._mark!=='total'"
+              v-if="scope.row._mark!=='total'"
               :data="scope.row.split"
               :row-class-name="scope.row.split.length>1?'add-border':''"
               :show-header="false"
@@ -233,7 +241,7 @@
         <el-table-column class-name="splited-col" label="提单时间" prop width="95">
           <template slot-scope="scope">
             <el-table
-             v-if="scope.row._mark!=='total'"
+              v-if="scope.row._mark!=='total'"
               :data="scope.row.split"
               :row-class-name="scope.row.split.length>1?'add-border':''"
               :show-header="false"
@@ -251,7 +259,7 @@
       <el-table-column class-name="splited-col" label="余额" prop v-if="selStatus==100" width="120">
         <template slot-scope="scope">
           <el-table
-           v-if="scope.row._mark!=='total'"
+            v-if="scope.row._mark!=='total'"
             :data="scope.row.split"
             :row-class-name="scope.row.split.length>1?'add-border':''"
             :show-header="false"
@@ -266,7 +274,15 @@
           <div v-else class="pl2px">{{totalData.yueAmount | currency}}</div>
         </template>
       </el-table-column>
-      <el-table-column class-name="splited-col" label="操作" prop v-if="selStatus!=20" width="90" fixed="right" align="center">
+      <el-table-column
+        class-name="splited-col"
+        label="操作"
+        prop
+        v-if="selStatus!=20"
+        width="90"
+        fixed="right"
+        align="center"
+      >
         <template slot-scope="scope" v-if="scope.row._mark!=='total'">
           <el-table
             :data="scope.row.split"
@@ -288,7 +304,9 @@
                         @click.native.prevent="claim(cscope.row)"
                         size="mini"
                         type="success"
-                        v-if="(permissions.indexOf( '6k')>-1&&selStatus===0 && (scope.row.bkid!='c5b2159eb53c11e7a1f900e066be4002' && scope.row.bkid!='14721bbfba6f11e8929700e066be4061')) && (rid==='12' || rid==='2y') && cscope.row.isClaim == '1'"
+                        v-if="(permissions.indexOf('6k')>-1&&selStatus===0) && (rid==='12' || rid==='2y') && cscope.row.isClaim == '1'&&
+                        ( ((scope.row.bkid!='c5b2159eb53c11e7a1f900e066be4002' && scope.row.bkid!='14721bbfba6f11e8929700e066be4061')&&scope.row.place_id==='HUB027')
+                        || scope.row.place_id!=='HUB027')"
                       >认领</el-button>
                       <!-- 财务和admin看到的认领 -->
                       <el-button
@@ -952,11 +970,7 @@ export default {
         cpid: this.editForm.cpid
       }
       console.log(params)
-      if (
-        !params.baidu_account ||
-        !params.bill_time ||
-        !params.uid
-      ) {
+      if (!params.baidu_account || !params.bill_time || !params.uid) {
         this.$message({
           type: 'warning',
           message: '请完善必填信息！'
@@ -1017,7 +1031,6 @@ export default {
         company_name: this.payCompany,
         baidu_account: this.useUser,
         use_name: this.useName
-
       }
     },
     reset() {
@@ -1141,7 +1154,7 @@ export default {
   .contact-phone {
     width: calc(~'(100% - 35px)');
   }
-  .pl2px{
+  .pl2px {
     padding-left: 4px;
   }
 }

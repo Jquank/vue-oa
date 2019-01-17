@@ -108,6 +108,7 @@ export default {
     $route(to, from) {
       if (to.name !== from.name) {
         this.otherParams = {}
+        this.firstRequest = ''
       }
     }
   },
@@ -174,12 +175,7 @@ export default {
     search() {
       this.searchCols.forEach(item => {
         if (item.as === '客户区域' || item.as === '所属行业') {
-          item.where.val = item.where.val.map(li => {
-            return {
-              id: li
-            }
-          })
-          item.where.val = this.arrSort(item.where.val)
+          item.where.val = [{id: item.where.val[item.where.val.length - 1]}]
         }
       })
       this.otherParams = {

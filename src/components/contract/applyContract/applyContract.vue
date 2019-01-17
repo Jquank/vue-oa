@@ -20,7 +20,7 @@
       </div>
     </div>
 
-    <el-table stripe border :data="list" style="width: 100%;margin-top:10px;">
+    <el-table stripe border :data="list" class="table-width">
       <el-table-column prop="username" label="申请人">
          <template slot-scope="scope">
           <span>{{scope.row.username}}</span>
@@ -149,7 +149,7 @@ export default {
       margin-top: 10px;
     }
     .item-width {
-      width: 250px;
+      width: 260px;
     }
   }
 }

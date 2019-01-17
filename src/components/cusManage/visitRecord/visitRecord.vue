@@ -17,30 +17,30 @@
     </div>
 
     <!-- 列表 -->
-      <el-table stripe border :data="myVisitList" style="width: 100%;margin-top:10px;">
-        <el-table-column prop="cname" label="客户名称" min-width="180">
+      <el-table stripe border :data="myVisitList" class="table-width">
+        <el-table-column prop="cname" label="客户名称" min-width="150">
         </el-table-column>
-        <el-table-column prop="pname" label="业务类型" width="80">
+        <el-table-column prop="pname" label="业务类型" min-width="80">
         </el-table-column>
-        <el-table-column prop="" label="出访类型" width="80">
+        <el-table-column prop="" label="出访类型" min-width="75">
           <span slot-scope="scope">{{scope.row.cat == 110? '首访': '二访'}}</span>
         </el-table-column>
-        <el-table-column prop="" label="客户意向" width="80">
+        <el-table-column prop="" label="客户意向" min-width="80">
           <span slot-scope="scope">{{scope.row.result+'%'}}</span>
         </el-table-column>
-        <el-table-column prop="ccname" label="拜访人" width="70">
+        <el-table-column prop="ccname" label="拜访人" min-width="70">
         </el-table-column>
-        <el-table-column prop="uname" label="出访人" width="70">
+        <el-table-column prop="uname" label="出访人" min-width="70">
         </el-table-column>
-        <el-table-column prop="accompanyname" label="陪访人" width="70">
+        <el-table-column prop="accompanyname" label="陪访人" min-width="70">
         </el-table-column>
-        <el-table-column prop="" label="出访时间" width="150">
+        <el-table-column prop="" label="出访时间" min-width="150">
           <span slot-scope="scope">{{scope.row.begin_time | timeFormat}}</span>
         </el-table-column>
-        <el-table-column prop="" label="拜访结束时间" width="150">
+        <el-table-column prop="" label="拜访结束时间" min-width="150">
           <span slot-scope="scope">{{scope.row.end_time | timeFormat}}</span>
         </el-table-column>
-        <el-table-column prop="remark" label="出访结果" min-width="130">
+        <el-table-column prop="remark" label="出访结果" min-width="100">
         </el-table-column>
         <el-table-column label="操作" width="120" align="center">
           <template slot-scope="scope">

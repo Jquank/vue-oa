@@ -33,8 +33,8 @@
       </div>
     </div>
 
-    <el-table stripe border :data="list" class="table-width">
-      <el-table-column prop="number" label="合同号" width="140">
+    <el-table stripe border :data="list" class="table-width" max-height="550">
+      <el-table-column prop="number" label="合同号" min-width="120">
       </el-table-column>
       <el-table-column prop="username" label="领用人">
         <template slot-scope="scope">
@@ -42,9 +42,9 @@
           <span v-if="scope.row.bindName&&scope.row.bindName!==scope.row.username">{{'('+scope.row.bindName+')'}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="catname" label="合同类型" width="160">
+      <el-table-column prop="catname" label="合同类型" min-width="140">
       </el-table-column>
-      <el-table-column prop="companyname" label="公司名称" min-width="150">
+      <el-table-column prop="companyname" label="公司名称" min-width="120">
       </el-table-column>
       <el-table-column prop="" label="领用时间" width="150">
         <span slot-scope="scope">{{scope.row.apply_dt | timeFormat}}</span>
@@ -57,13 +57,13 @@
         scope.row.status==40?'danger':
         scope.row.status==10?'info':'success'">{{scope.row.status | cusState('contractStatus')}}</el-button>
       </el-table-column>
-      <el-table-column prop="" label="转出/接收合同" min-width="120">
+      <el-table-column prop="" label="转出/接收合同" min-width="100">
         <template slot-scope="scope">
           <el-button @click.native="switchContract(scope.row)" v-if="scope.row.status==20 && scope.row.uid == userId" type="warning" class="xsbtn">转出合同</el-button>
           <el-button @click.native="receiveContract(scope.row)" v-if="scope.row.status==20 && scope.row.switchuid ==userId" type="success" class="xsbtn">接收合同</el-button>
         </template>
       </el-table-column>
-      <el-table-column v-if="permissions.indexOf('76') > -1" prop="" label="操作" width="60px" align="center" fixed="right">
+      <el-table-column v-if="permissions.indexOf('76') > -1" prop="" label="操作" width="60px" align="center">
         <template slot-scope="scope">
           <el-button @click.native="edit(scope.row)" type="warning" class="xsbtn">编辑</el-button>
         </template>

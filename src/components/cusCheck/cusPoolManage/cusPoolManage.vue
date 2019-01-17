@@ -33,7 +33,7 @@
     </div>
 
     <el-table :key="statusRadio" @selection-change="handleSelectionChange" stripe border :data="poolList" class="table-width">
-      <el-table-column fixed="left" type="selection" width="40">
+      <el-table-column :fixed="selectFixed" type="selection" width="40">
         </el-table-column>
       <el-table-column prop="cname" label="客户名称" min-width="210">
       </el-table-column>
@@ -63,7 +63,7 @@
       <el-table-column prop="" label="降E时间" width="95">
         <span slot-scope="scope">{{scope.row.opt_time | timeFormat}}</span>
       </el-table-column>
-      <el-table-column prop="" label="操作" width="120px" align="center" fixed="right">
+      <el-table-column prop="" label="操作" width="120px" align="center" :fixed="actionFixed">
         <template slot-scope="scope">
           <el-button @click.native="view(scope.row)" type="success" class="xsbtn">查看</el-button>
           <el-button @click.native="stopProtect(scope.row)" v-if="scope.row.cltype==20&&scope.row.clstatus==10&&scope.row.ctype==10&&scope.row.auditor_now_h!==null&&(scope.row.tb_field_name-scope.row.auditor_now_h>=0)" type="danger" class="xsbtn">终止</el-button>
@@ -86,9 +86,12 @@ import AutoSelect from 'base/autoSelect/autoSelect'
 import SelectDepartment from 'base/selectDepartment/selectDepartment'
 import cookie from 'js-cookie'
 import SelectUser from 'base/selectUser/selectUser'
+import { appMark } from 'common/js/utils'
 export default {
   data () {
     return {
+      selectFixed: 'left',
+      actionFixed: 'right',
       permissions: cookie.getJSON('permissions'),
       statusRadio: '',
       poolStatus: '100',
@@ -115,6 +118,12 @@ export default {
       this.search()
     }
     next()
+  },
+  created() {
+    if (appMark()) {
+      this.selectFixed = false
+      this.actionFixed = false
+    }
   },
   methods: {
     // 甩单按钮

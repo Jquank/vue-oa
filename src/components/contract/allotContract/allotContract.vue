@@ -62,10 +62,10 @@
     <!-- 分配合同弹窗 -->
     <el-dialog :modal-append-to-body="false" title="分配合同" :visible.sync="allotDialog" width="600px">
       <div>
-        <el-input v-model="contractNum" placeholder="搜索合同编号" style="max-width:350px;"></el-input>
+        <el-input v-model="contractNum" placeholder="搜索合同编号" class="input-btn"></el-input>
         <el-button @click.native="searchContractNum" type="primary">查询</el-button>
       </div>
-      <el-table @selection-change="handleSelectionChange" stripe border :data="allotList" style="width: 100%;margin-top:10px;">
+      <el-table @selection-change="handleSelectionChange" stripe border :data="allotList" class="table-width">
         <el-table-column type="selection" width="45">
         </el-table-column>
         <el-table-column prop="contractnumber" label="合同编号">

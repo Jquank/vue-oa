@@ -7,7 +7,7 @@
           <el-button @click.native="backRouter" class="back" type="warning">返回</el-button>
         </div>
         <div class="line" style="max-width:980px;"></div>
-        <el-form ref="form" :model="form" label-width="90px">
+        <el-form ref="form" :model="form" label-width="90px" :label-position="labelPosition">
           <el-row :gutter="20">
             <el-col :md="12" class="maxwidth">
               <el-form-item label="客户名称 :">
@@ -205,9 +205,11 @@ import SelectArea from 'base/selectArea/selectArea'
 import SelectTrade from 'base/selectTrade/selectTrade'
 import { getByCode } from 'api/getOptions'
 import { timeFormat } from 'common/js/filters'
+import { appMark } from 'common/js/utils'
 export default {
   data () {
     return {
+      labelPosition: 'left',
       userId: cookie.get('userId'),
       form: {
         cusName: '',
@@ -241,6 +243,9 @@ export default {
     }
   },
   created () {
+    if (appMark()) {
+      this.labelPosition = 'top'
+    }
     this.realDelcontact = []
     console.log(this.$route.query.data)
     this.receiveData = this.$route.query.data

@@ -3,7 +3,7 @@
     <div class="detail-main">
       <div class="cus-info">
         <div class="check-search">
-          <el-input placeholder="请输入电话或公司名进行搜索" v-model="searchWords" style="max-width: 450px;"></el-input>
+          <el-input placeholder="请输入电话或公司名进行搜索" v-model="searchWords" class="input-btn"></el-input>
           <el-button type="primary" @click.native="checkSearch">搜 索</el-button>
         </div>
         <div class="title">
@@ -534,6 +534,9 @@ export default {
     .title-btn {
       border-top-right-radius: 15px;
     }
+  }
+  .input-btn{
+    max-width: 450px;
   }
 }
 </style>

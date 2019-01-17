@@ -40,7 +40,7 @@
 
       <!-- 列表 -->
       <el-table :key="myKind" @selection-change="handleSelectionChange" stripe border :data="myCusList" max-height="550" style="width: 100%" size="mini">
-        <el-table-column fixed type="selection" width="40">
+        <el-table-column :fixed="selectFixed" type="selection" width="40">
         </el-table-column>
         <el-table-column prop="companyname" label="客户名称" min-width="130">
         </el-table-column>
@@ -89,7 +89,7 @@
         <el-table-column v-if="myKind==40" prop="auditor_time" label="最后降E时间" width="95">
           <span slot-scope="scope">{{scope.row.jiangE | timeFormat}}</span>
         </el-table-column>
-        <el-table-column label="操作" width="80" align="center" fixed="right">
+        <el-table-column label="操作" width="80" align="center" :fixed="actionFixed">
           <template slot-scope="scope">
             <el-dropdown :trigger="trigger">
               <el-button type="primary" class="xsbtn">
@@ -209,6 +209,8 @@ import { appMark } from 'common/js/utils'
 export default {
   data () {
     return {
+      selectFixed: 'left',
+      actionFixed: 'right',
       trigger: 'hover',
       permissions: cookie.getJSON('permissions'),
       USER_ID: cookie.get('userId'),
@@ -259,6 +261,8 @@ export default {
   created() {
     if (appMark()) {
       this.trigger = 'click'
+      this.selectFixed = false
+      this.actionFixed = false
     }
   },
   methods: {

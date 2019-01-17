@@ -187,7 +187,7 @@ export default {
       axios.get(serverUrl + '/User.do?getVirtualList').then(res => {
         if (res.data.success) {
           this.regUserList = res.data.data
-          if (this.regUserList.findIndex(val => val.name === loginName) > 0) {
+          if (this.regUserList.findIndex(val => val.name === loginName) > -1) {
             this.showBindRealName = true
           } else {
             this.showBindRealName = false
