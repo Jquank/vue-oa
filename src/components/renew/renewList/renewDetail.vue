@@ -243,7 +243,7 @@
         <el-table :data="renewFlowList" max-height="550" class="table-width" border>
           <!-- <el-table-column type="selection" width="35"></el-table-column> -->
           <el-table-column label="银行类型" prop="code_desc" width="80"></el-table-column>
-          <el-table-column label="交易时间" prop="B_JYSJ" width="100">
+          <el-table-column label="交易时间"  width="95" prop="B_JYSJ">
             <span slot-scope="scope">{{scope.row.tm | timeFormat}}</span>
           </el-table-column>
           <el-table-column label="参考号" prop="no" width="90"></el-table-column>

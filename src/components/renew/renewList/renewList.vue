@@ -55,13 +55,10 @@
       <el-table-column prop label="加款类型">
         <span slot-scope="scope">{{scope.row.addtype==10?'正常加款':scope.row.addtype==20?'提前加款':'返款加款'}}</span>
       </el-table-column>
-      <el-table-column prop label="审核状态" width="120">
+      <el-table-column prop label="审核状态" width="120" align="center">
         <template slot-scope="scope">
-          <el-button
-            plain
-            type="warning"
-            class="xsbtn"
-          >{{scope.row.step >= 100 && scope.row.checkName ? (scope.row.checkBindName?(scope.row.checkBindName): ((scope.row.checkTrueName && scope.row.checkTrueName!=scope.row.checkName)?(scope.row.checkTrueName):scope.row.checkName)) : scope.row.code_desc}}</el-button>
+          <el-button plain type="warning" class="xsbtn">{{scope.row.code_desc}}</el-button>
+          <div v-if="300>scope.row.step&&scope.row.step>= 100&&scope.row.bindName">{{'('+scope.row.bindName+')'}}</div>
         </template>
       </el-table-column>
       <el-table-column prop label="导入" width="50">

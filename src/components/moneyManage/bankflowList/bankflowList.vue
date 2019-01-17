@@ -123,8 +123,8 @@
           <span v-else>{{scope.row.code_desc}}</span>
         </template>
       </el-table-column>
-      <el-table-column :fixed="isFixed" label="交易时间" prop="B_JYSJ" width="100" align="center">
-        <span slot-scope="scope">&nbsp;{{scope.row.tm | timeFormat}}</span>
+      <el-table-column :fixed="isFixed" label="交易时间" width="95" prop="B_JYSJ" align="center">
+        <span slot-scope="scope">{{scope.row.tm | timeFormat}}</span>
       </el-table-column>
       <el-table-column :fixed="isFixed" label="参考号" prop="no" min-width="100"></el-table-column>
       <el-table-column :fixed="isFixed" label="付款名" prop="fm_name" min-width="130"></el-table-column>
@@ -280,7 +280,7 @@
         prop
         v-if="selStatus!=20"
         width="90"
-        fixed="right"
+        :fixed="actionFiexed"
         align="center"
       >
         <template slot-scope="scope" v-if="scope.row._mark!=='total'">
@@ -414,7 +414,7 @@
       width="800px"
       v-drag-dialog
     >
-      <el-form :model="editForm" label-width="140px">
+      <el-form :model="editForm" label-width="140px" :label-position="labelPosition">
         <el-form-item label required>
           <template slot="label">
             <el-button @click.native.prevent="selUser('user')" type="primary">选择使用人</el-button>
@@ -557,13 +557,15 @@ import { appMark } from 'common/js/utils'
 export default {
   data() {
     return {
+      labelPosition: 'left',
+      actionFiexed: 'right',
+      isFixed: 'left',
       trigger: 'hover',
       serverUrl: serverUrl,
       rid: cookie.get('rid'),
       permissions: cookie.getJSON('permissions'),
       tk: cookie.get('token'),
       userId: cookie.get('userId'),
-      isFixed: true,
       expandTest: [{ name: 'ddd', age: 18 }, { name: 'ccc', age: 19 }],
       bankFlowList: [],
       bankUrl: '/receipt.do?showbankreceipt',
@@ -664,10 +666,9 @@ export default {
   },
   created() {
     if (appMark()) {
-      this.isFixed = false
+      this.isFixed = this.actionFiexed = false
       this.trigger = 'click'
-    } else {
-      this.isFixed = true
+      this.labelPosition = 'top'
     }
     this.params = {
       alloctype: -10,

@@ -976,30 +976,32 @@
         </el-tab-pane>
         <!-- 审核记录 -->
         <el-tab-pane label="审核记录">
-          <el-steps :active="isChecked" space="14%" finish-status="success" align-center>
-            <el-step v-for="step in stepList.slice(0,8)" :key="step.id" :title="step.name"
-              :status="step.status===100?'process':(step.status==300?'success':'')" style="margin-top:15px">
-              <span v-if="step.opt_time" slot="description">{{step.opt_time | timeFormat}}</span>
-            </el-step>
-          </el-steps>
-          <el-steps :active="isNextChecked" space="12.5%" finish-status="success" align-center>
-            <el-step
-              :status="step.status===100?'process':(step.status==300?'success':'')"
-              v-for="(step,index) in stepList.slice(8)"
-              :key="step.id"
-              :title="step.name"
-              style="margin-top:15px"
-            >
-              <span slot="icon">{{9+index}}</span>
-              <span v-if="step.status>0" slot="description">{{step.opt_time | timeFormat}}</span>
-            </el-step>
-          </el-steps>
+          <template v-if="!appMark">
+            <el-steps :active="isChecked" space="14%" finish-status="success" align-center>
+              <el-step v-for="step in stepList.slice(0,8)" :key="step.id" :title="step.name"
+                :status="step.status===100?'process':(step.status==300?'success':'')" style="margin-top:15px">
+                <span v-if="step.opt_time" slot="description">{{step.opt_time | timeFormat}}</span>
+              </el-step>
+            </el-steps>
+            <el-steps :active="isNextChecked" space="12.5%" finish-status="success" align-center>
+              <el-step
+                :status="step.status===100?'process':(step.status==300?'success':'')"
+                v-for="(step,index) in stepList.slice(8)"
+                :key="step.id"
+                :title="step.name"
+                style="margin-top:15px"
+              >
+                <span slot="icon">{{9+index}}</span>
+                <span v-if="step.status>0" slot="description">{{step.opt_time | timeFormat}}</span>
+              </el-step>
+            </el-steps>
+          </template>
           <el-table :data="checkRecord" stripe class="table-width">
-            <el-table-column prop label="时间" width="160">
+            <el-table-column prop label="时间" :width="appMark?90:150">
               <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
             </el-table-column>
             <el-table-column prop="username" label="操作人" width="100"></el-table-column>
-            <el-table-column prop="remark" label="审核内容"></el-table-column>
+            <el-table-column prop="remark" label="审核内容" min-width="350"></el-table-column>
           </el-table>
         </el-tab-pane>
         <!-- 订单处理 -->
@@ -1773,6 +1775,7 @@ import Page from 'base/page/page'
 import cookie from 'js-cookie'
 import UpFile from 'base/upLoad/upFile'
 import { getByCode } from 'api/getOptions'
+import { appMark } from 'common/js/utils'
 const OrderKeeper = resolve => {
   import('checkSteps/orderKeeper').then(module => {
     resolve(module)
@@ -1871,6 +1874,7 @@ const WebMake = resolve => {
 export default {
   data() {
     return {
+      appMark: appMark(),
       permissions: cookie.getJSON('permissions'),
       uid: cookie.get('userId'),
       receiveData: {},
@@ -2011,8 +2015,7 @@ export default {
     if (this.pid === 'GD' || this.pid === 'PZ' || this.pid === 'KP') {
       this.pid_ka = 'KA'
     }
-    let viewWidth = document.documentElement.clientWidth
-    if (viewWidth < 768) {
+    if (appMark()) {
       this.tableFirstColumWidth = '50'
     }
   },
