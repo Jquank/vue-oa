@@ -292,7 +292,7 @@ export function wjStyle(num) {
   }
 }
 const reg = /[\u4E00-\u9FA5]{1,}/
-export function timeFormat(num, bool = true) {
+export function timeFormat(num, isWordBreak = false) {
   if (num === '.') {
     return '.'
   }
@@ -313,7 +313,7 @@ export function timeFormat(num, bool = true) {
   let hours = time.getHours()
   let minutes = time.getMinutes()
   let seconds = time.getSeconds()
-  return year + '-' + add0(month) + '-' + add0(date) + ' ' + add0(hours) + ':' + add0(minutes) + ':' + add0(seconds)
+  return year + '-' + add0(month) + '-' + add0(date) + (isWordBreak ? '<br/>' : ' ') + add0(hours) + ':' + add0(minutes) + ':' + add0(seconds)
 }
 export function timeFormat1(num, bool = true) {
   if (num === '.') {

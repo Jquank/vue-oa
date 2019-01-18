@@ -27,22 +27,22 @@
     </div>
 
     <el-table id="money-chart-table" :span-method="arraySpanMethod" stripe border :data="invoiceList" class="table-width" max-height="550" :row-class-name="setLastRowStyle">
-      <el-table-column prop="billtime" label="记账日期" fixed width="100">
+      <el-table-column prop="billtime" label="记账日期" :fixed="isFixed" width="100">
         <span slot-scope="scope">{{scope.row.billtime | timeFormat1}}</span>
       </el-table-column>
-      <el-table-column prop="fullname" label="部门" fixed width="100">
+      <el-table-column prop="fullname" label="部门" :fixed="isFixed" width="100">
       </el-table-column>
-      <el-table-column prop="username" label="提单员" fixed width="80">
+      <el-table-column prop="username" label="提单员" :fixed="isFixed" width="80">
         <template slot-scope="scope">
           <span>{{scope.row.username}}</span><span>{{scope.row.bindName?('('+scope.row.bindName+')'): ((scope.row.true_name && scope.row.true_name!=scope.row.username)?('('+scope.row.true_name+')'):'')}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="typename" label="类型" fixed width="120">
+      <el-table-column prop="typename" label="类型" :fixed="isFixed" width="120">
         <span slot-scope="scope">{{(scope.row.typename+''+(scope.row.addtype||'')) || ''}}</span>
       </el-table-column>
-      <el-table-column prop="companyname" label="公司名称" fixed min-width="130">
+      <el-table-column prop="companyname" label="公司名称" :fixed="isFixed" min-width="130">
       </el-table-column>
-      <el-table-column prop="baiducount" label="用户名" fixed width="100">
+      <el-table-column prop="baiducount" label="用户名" :fixed="isFixed" width="100">
         <span slot-scope="scope">{{scope.row.addtype != '新开' ? scope.row.baiducount : ''}}</span>
       </el-table-column>
 
@@ -200,6 +200,17 @@
           <span slot-scope="scope">{{scope.row.JHTIME | timeFormat1}}</span>
         </el-table-column>
       </el-table-column>
+      <el-table-column label="通联" align="center">
+        <el-table-column prop="TL" label="金额" width="120" align="center">
+          <template slot-scope="scope">
+            <span v-if="!scope.row.mark">{{scope.row.TL | currency}}</span>
+            <span v-else>{{scope.row.TL_count | currency1}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="TLTIME" label="时间" width="95" align="center">
+          <span slot-scope="scope">{{scope.row.TLTIME | timeFormat1}}</span>
+        </el-table-column>
+      </el-table-column>
       <el-table-column prop="sum" label="合计" width="120">
         <template slot-scope="scope">
           <span v-if="!scope.row.mark">{{scope.row.sum | currency}}</span>
@@ -292,7 +303,7 @@
 
     <!-- 新增，编辑弹窗 -->
     <el-dialog :title="'新增'" :visible.sync="editDialog" width="900px">
-      <el-form ref="echo" :model="echo" :label-width="labelWidth">
+      <el-form ref="echo" :model="echo" :label-width="labelWidth" :label-position="labelPosition">
         <el-row :gutter="10">
           <el-col :md="12" class="maxwidth">
             <el-form-item label="记账日期 :">
@@ -511,6 +522,8 @@ import {appMark} from 'common/js/utils'
 export default {
   data () {
     return {
+      labelPosition: 'right',
+      isFixed: 'left',
       labelWidth: '130px',
       invoiceList: [],
       invoiceUrl: '/wf.do?moneydetail',
@@ -545,7 +558,8 @@ export default {
   },
   created () {
     if (appMark()) {
-      this.labelWidth = '50px'
+      this.labelPosition = 'top'
+      this.isFixed = false
     }
   },
   mounted () {

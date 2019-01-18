@@ -64,7 +64,7 @@
     </div>
 
     <!-- 列表 -->
-    <el-table stripe border :data="list" max-height="550" class="table-width">
+    <el-table stripe border :data="list" max-height="550" class="table-width" size="mini">
       <template v-for="(item, index) in myList">
         <el-table-column :key="index" prop :label="item.as" :width="getWidth(item)">
           <span slot-scope="scope">

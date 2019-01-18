@@ -62,6 +62,7 @@ export default {
     handleNodeClick (data) {
       this.department = data.fullname
       this.$emit('upDeptId', data.code)
+      this.defaultExpanded = [data.code]
       this.$refs.tree.$el.style.display = 'none'
     },
     showDepartment () {

@@ -58,7 +58,7 @@
       <el-table-column prop label="审核状态" width="120" align="center">
         <template slot-scope="scope">
           <el-button plain type="warning" class="xsbtn">{{scope.row.code_desc}}</el-button>
-          <div v-if="300>scope.row.step&&scope.row.step>= 100&&scope.row.bindName">{{'('+scope.row.bindName+')'}}</div>
+          <div v-if="300>scope.row.step&&scope.row.step>= 100&&scope.row.checkBindName">{{'('+scope.row.checkBindName+')'}}</div>
         </template>
       </el-table-column>
       <el-table-column prop label="导入" width="50">

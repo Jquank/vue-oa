@@ -124,7 +124,7 @@
         </template>
       </el-table-column>
       <el-table-column :fixed="isFixed" label="交易时间" width="95" prop="B_JYSJ" align="center">
-        <span slot-scope="scope">{{scope.row.tm | timeFormat}}</span>
+        <span slot-scope="scope" v-html="timeFormat(scope.row.tm,true)"></span>
       </el-table-column>
       <el-table-column :fixed="isFixed" label="参考号" prop="no" min-width="100"></el-table-column>
       <el-table-column :fixed="isFixed" label="付款名" prop="fm_name" min-width="130"></el-table-column>

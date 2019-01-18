@@ -35,7 +35,7 @@
     </div>
 
     <el-table stripe border :data="invoiceList" :row-class-name="setLastRowStyle" class="table-width" max-height="500">
-      <el-table-column prop="comName" label="代付账号" min-width="150">
+      <el-table-column prop="comName" label="代付账号" min-width="130">
         <template slot-scope="scope">
           <span v-if="scope.row.mark!=='lastRow'">{{scope.row.comName}}</span>
           <span v-else>合计</span>
@@ -47,7 +47,7 @@
       </el-table-column>
       <el-table-column prop="addtype" label="加款类型" min-width="80">
       </el-table-column>
-      <el-table-column prop="tm" label="到款时间" width="150">
+      <el-table-column prop="tm" label="到款时间" width="95">
       </el-table-column>
       <el-table-column prop="split_amount" label="到款金额" width="130">
         <template slot-scope="scope">
@@ -55,7 +55,7 @@
           <span v-else>{{scope.row.sumSplitAmount | currency}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="addtime" label="加款时间" width="150">
+      <el-table-column prop="addtime" label="加款时间" width="95">
       </el-table-column>
       <el-table-column prop="addmoney" label="加款金额" width="130">
         <template slot-scope="scope">

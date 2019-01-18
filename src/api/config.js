@@ -42,6 +42,11 @@ export const navList = [
       cid: '6y',
       to: '/indexPage/activity',
       text: '活动/产品类型'
+    },
+    {
+      cid: '7h',
+      to: '/indexPage/invoiceSetting',
+      text: '发票编码设置'
     }
     ]
   },

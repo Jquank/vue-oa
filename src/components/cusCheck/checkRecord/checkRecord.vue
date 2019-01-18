@@ -6,8 +6,8 @@
       </el-input>
       <auto-select title="审核状态" v-model="checkStatus" :key="key_auto_select" class="record-item item-width">
         <el-option label="全部" value=""></el-option>
-        <el-option label="审核通过" :value="10"></el-option>
-        <el-option label="审核不通过" :value="0"></el-option>
+        <el-option label="审核通过" :value="30"></el-option>
+        <el-option label="审核不通过" :value="10"></el-option>
       </auto-select>
       <select-department @upDeptId="upDeptId" title="提交部门" :key="key_dept" class="record-item item-width"></select-department>
       <el-date-picker v-model="subDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" type="datetimerange" range-separator="至" start-placeholder="审核开始日期" end-placeholder="审核结束日期" class="record-item  item-width"></el-date-picker>
