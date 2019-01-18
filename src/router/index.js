@@ -18,6 +18,7 @@ const News = () => import('components/systemSetting/news/news')
 const Activity = () => import('components/systemSetting/activity/activity')
 const Editor = () => import('components/systemSetting/news/editor')
 const ViewNews = () => import('components/systemSetting/news/viewNews')
+const InvoiceSetting = () => import('components/systemSetting/invoiceSetting/invoiceSetting')
 // 人员管理
 const AddUser = () => import('components/userManage/addUser/addUser')
 const UserList = () => import('components/userManage/userList/userList')
@@ -223,6 +224,12 @@ const router = new Router({
           name: 'activity',
           meta: { text: '活动/产品类型' },
           component: Activity
+        },
+        {
+          path: 'invoiceSetting',
+          name: 'invoiceSetting',
+          meta: { text: '发票编码设置' },
+          component: InvoiceSetting
         },
         // 人员管理
         {
