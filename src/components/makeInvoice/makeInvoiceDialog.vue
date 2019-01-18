@@ -7,6 +7,7 @@
       :status-icon="true"
       :validate-on-rule-change="false"
       :label-width="labelWidth"
+      :label-position="labelPosition"
     >
       <div class="title">
         <el-button class="title-btn" type="warning">开票信息</el-button>
@@ -348,6 +349,7 @@ export default {
   },
   data() {
     return {
+      labelPosition: 'right',
       labelWidth: '115px',
       key_sel_pro: '1',
       key_sel_invoice: '',
@@ -442,7 +444,7 @@ export default {
       this.form.productList = res.data.data
     })
     if (appMark()) {
-      this.labelWidth = '60px'
+      this.labelPosition = 'top'
     }
   },
   mounted() {

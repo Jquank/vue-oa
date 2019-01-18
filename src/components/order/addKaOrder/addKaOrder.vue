@@ -1,7 +1,7 @@
 <template>
   <div class="addbaidu-order component-container media-padding">
     <div class="order-content">
-      <el-form ref="form" :model="form" :label-width="labelWidth">
+      <el-form ref="form" :model="form" :label-width="labelWidth" :label-position="labelPosition">
         <el-row>
           <el-col :md="24" class="maxwidth">
             <el-form-item label="公司名称:" required>
@@ -184,7 +184,6 @@ import Page from 'base/page/page'
 import { getByCode } from 'api/getOptions' //eslint-disable-line
 import cookie from 'js-cookie'
 import { orderMixin, mobileFit } from 'common/js/mixin'
-
 const ORDER_TYPE = 'KA'
 
 export default {
@@ -217,6 +216,7 @@ export default {
   },
   data () {
     return {
+      labelPosition: 'right',
       subDisabled: false,
       labelWidth: '110px',
       record_detail: [], // 回显到款记录

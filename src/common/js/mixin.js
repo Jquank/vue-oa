@@ -1,17 +1,7 @@
-import {
-  getByCode,
-  getMyContract
-} from 'api/getOptions'
-import {
-  groupBy
-} from 'common/js/utils'
-import {
-  timeFormat
-} from 'common/js/filters'
-import {
-  productType,
-  currency
-} from './filters'
+import { getByCode, getMyContract } from 'api/getOptions'
+import { groupBy } from 'common/js/utils'
+import { timeFormat } from 'common/js/filters'
+import { productType, currency } from './filters'
 import Viewer from 'viewerjs'
 export const mobileFit = { // 移动端适配
   methods: {
@@ -20,6 +10,7 @@ export const mobileFit = { // 移动端适配
       let viewWidth = document.documentElement.clientWidth
       if (viewWidth && viewWidth < 768) {
         this.labelWidth = num + 'px'
+        this.labelPosition = 'top'
         if (this.mobileMark === false) {
           this.mobileMark = true
         }

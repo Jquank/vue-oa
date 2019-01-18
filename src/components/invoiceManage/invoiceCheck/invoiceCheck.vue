@@ -24,7 +24,7 @@
 
       <!-- 列表 -->
       <el-table @selection-change="handleSelectionChange" stripe border :data="makeInvoiceList" max-height="550" style="width: 100%;">
-        <el-table-column fixed type="selection" width="45">
+        <el-table-column :fixed="selectFixed" type="selection" width="45">
         </el-table-column>
         <el-table-column prop="" label="审核" min-width="90">
           <template slot-scope="scope">
@@ -101,9 +101,11 @@ import InvoiceInfoDialog from 'components/invoiceManage/invoiceList/invoiceInfoD
 import Page from '@/base/page/page'
 import AutoSelect from 'base/autoSelect/autoSelect'
 import SelectUser from 'base/selectUser/selectUser'
+import {appMark} from 'common/js/utils'
 export default {
   data () {
     return {
+      selectFixed: 'left',
       checkStep: 100,
       comName: '',
       sendParams: {
@@ -118,6 +120,11 @@ export default {
       form: {},
       invoiceLogs: [],
       key_invoice_dialog: '100'
+    }
+  },
+  created() {
+    if (appMark()) {
+      this.selectFixed = false
     }
   },
   methods: {

@@ -8,6 +8,7 @@
       :status-icon="true"
       :validate-on-rule-change="false"
       label-width="115px"
+      :label-position="labelPosition"
     >
       <!-- 开票信息 -->
       <div>
@@ -222,7 +223,7 @@
       <el-table-column prop="insert_time" label="审核时间" width="150">
         <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
       </el-table-column>
-      <el-table-column prop="remark" label="审核备注"></el-table-column>
+      <el-table-column prop="remark" label="审核备注" min-width="300"></el-table-column>
     </el-table>
   </div>
 </template>
@@ -234,6 +235,7 @@ import elDragDialog from '@/directive/el-dragDialog' // eslint-disable-line
 import Page from 'base/page/page'
 import cookie from 'js-cookie'
 import Viewer from 'viewerjs'
+import { appMark } from 'common/js/utils'
 export default {
   props: {
     form: {
@@ -265,6 +267,7 @@ export default {
   },
   data() {
     return {
+      labelPosition: 'right',
       permissions: cookie.getJSON('permissions'),
       chargeMoney: 0,
       chargeTime: '',
@@ -314,6 +317,11 @@ export default {
           { required: true, message: '请输入必填项内容', trigger: 'blur' }
         ]
       }
+    }
+  },
+  created() {
+    if (appMark()) {
+      this.labelPosition = 'top'
     }
   },
   mounted() {

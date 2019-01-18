@@ -310,7 +310,7 @@ export default {
         })
         return
       }
-      if (this.form.receiveMoneyTotal.toFixed(2) !== this.proMoneyTotal.toFixed(2)) {
+      if (this.businessType !== 'KA' && this.form.receiveMoneyTotal.toFixed(2) !== this.proMoneyTotal.toFixed(2)) {
         this.$message({
           type: 'warning',
           message: '请保持产品总金额与到款金额一致！'

@@ -229,7 +229,7 @@
         </el-table-column>
         <el-table-column label="操作" width="110" align="center">
           <template slot-scope="scope" v-if="scope.$index!==invoiceList.length-1">
-            <el-dropdown trigger="hover">
+            <el-dropdown :trigger="trigger">
               <el-button type="primary" size="mini">
                 操作<i class="el-icon-arrow-down el-icon--right"></i>
               </el-button>
@@ -375,7 +375,7 @@ import SelectUser from 'base/selectUser/selectUser'
 import elDragDialog from '@/directive/el-dragDialog' // eslint-disable-line
 import UpFile from 'base/upLoad/upFile'
 import Page from 'base/page/page'
-import { rowSpan } from 'common/js/utils'
+import { rowSpan, appMark } from 'common/js/utils'
 import cookie from 'js-cookie'
 import { serverUrl } from 'api/http'
 import { timeFormat } from 'common/js/filters'
@@ -393,6 +393,7 @@ export default {
   },
   data () {
     return {
+      trigger: 'hover',
       serverUrl: serverUrl,
       tk: cookie.get('token'),
       permissions: cookie.getJSON('permissions'),
@@ -470,6 +471,12 @@ export default {
       offset: '',
       isShowBtn: false,
       invoiceSame: ''
+    }
+  },
+  created() {
+    if (appMark()) {
+      this.fixed = false
+      this.trigger = 'click'
     }
   },
   methods: {

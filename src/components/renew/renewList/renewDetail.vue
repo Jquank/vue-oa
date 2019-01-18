@@ -5,7 +5,7 @@
         <el-button class="title-btn" type="warning">发票信息</el-button>
         <div class="line"></div>
       </div>
-      <el-form :model="rowData" label-width="90px" class="weight-label">
+      <el-form :model="rowData" label-width="90px" :label-position="labelPosition" class="weight-label">
         <el-row>
           <el-col :md="8">
             <el-form-item label="客户名称 :">
@@ -635,7 +635,7 @@ import { getByCode } from 'api/getOptions'
 import { timeFormat1, productType } from 'common/js/filters' // eslint-disable-line
 import cookie from 'js-cookie'
 import Viewer from 'viewerjs'
-import { groupBy } from 'common/js/utils'
+import { groupBy, appMark } from 'common/js/utils'
 export default {
   props: {
     rowData: {
@@ -701,6 +701,9 @@ export default {
     }
   },
   created() {
+    if (appMark()) {
+      this.labelPosition = 'right'
+    }
     this._getRenewBaseInfo()
     this._getProductList()
   },

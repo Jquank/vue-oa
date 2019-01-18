@@ -34,7 +34,7 @@
     </div>
 
     <el-table @selection-change="handleSelectionChange" stripe border :data="list" max-height="550" class="table-width">
-      <el-table-column type="selection" fixed width="45"></el-table-column>
+      <el-table-column type="selection" :fixed="selectFixed" width="45"></el-table-column>
       <el-table-column prop="companyname" label="公司名称" min-width="130"></el-table-column>
       <el-table-column prop="baidu_account" label="百度账号"></el-table-column>
       <el-table-column prop label="到账金额" width="110">
@@ -73,7 +73,7 @@
             type="warning"
             class="xsbtn"
           >申请发票</el-button>
-          <el-dropdown trigger="hover">
+          <el-dropdown :trigger="trigger">
             <el-button type="primary" size="mini">
               更多<i class="el-icon-arrow-down el-icon--right"></i>
             </el-button>
@@ -232,9 +232,12 @@ import MakeInvoiceDialog from 'components/makeInvoice/makeInvoiceDialog'
 import RenewDetail from 'components/renew/renewList/renewDetail'
 import { getByCode } from 'api/getOptions'
 import RenewApply from 'components/renew/renewApply/renewApply'
+import { appMark } from 'common/js/utils'
 export default {
   data() {
     return {
+      trigger: 'hover',
+      selectFixed: 'left',
       userId: cookie.get('userId'),
       permissions: cookie.getJSON('permissions'),
       cus_name: '',
@@ -293,6 +296,10 @@ export default {
     }
   },
   created() {
+    if (appMark()) {
+      this.trigger = 'click'
+      this.selectFixed = false
+    }
     getByCode(54).then(res => {
       this.renewStatusList = res.data.data
     })

@@ -1,6 +1,6 @@
 <template>
   <div class="renew-apply component-container media-padding">
-    <el-form :model="form" ref="form" :rules="rules" :label-width="leftLabelWidth">
+    <el-form :model="form" ref="form" :rules="rules" :label-width="leftLabelWidth" :label-position="labelPosition">
       <el-row>
         <el-col :md="24" class="maxwidth">
           <el-form-item label="公司名称 :" prop="comName">
@@ -359,6 +359,7 @@ import { getByCode, getMyContract } from 'api/getOptions'
 import cookie from 'js-cookie'
 import UpFile from 'base/upLoad/upFile'
 import { productType, timeFormat } from 'common/js/filters' //eslint-disable-line
+import { appMark } from 'common/js/utils'
 export default {
   computed: {
     receiveTotal () {
@@ -402,6 +403,7 @@ export default {
   },
   data () {
     return {
+      labelPosition: 'right',
       USER_ID: cookie.get('userId'),
       rid: cookie.get('rid'),
       leftLabelWidth: '130px',
@@ -492,9 +494,9 @@ export default {
       this.rules[key].push({ required: true, message: '请填写必填项', trigger: 'blur' })
     }
     this.rules = Object.assign({}, this.rules, specialRules)
-    let viewWidth = document.documentElement.clientWidth
-    if (viewWidth && viewWidth < 768) {
+    if (appMark()) {
       this.leftLabelWidth = '50px'
+      this.labelPosition = 'top'
     }
     this._getProducList()
   },

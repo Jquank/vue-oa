@@ -15,7 +15,7 @@
       </el-row>
       <el-row :gutter="20">
         <el-col :md="12" class="maxwidth">
-          <el-form-item label="工号 :"  prop="userNum">
+          <el-form-item label="工号 :">
             <el-input v-model="form.userNum" :disabled="quotaDisable" placeholder="工号"></el-input>
           </el-form-item>
         </el-col>
@@ -30,7 +30,7 @@
       </el-row>
       <el-row :gutter="20" v-if="!quotaDisable">
         <el-col :md="12" class="maxwidth">
-          <el-form-item label="身份证号 :"  prop="idCardNum">
+          <el-form-item label="身份证号 :">
             <el-input v-model="form.idCardNum" :disabled="repeatDisabled" placeholder="身份证号"></el-input>
           </el-form-item>
         </el-col>

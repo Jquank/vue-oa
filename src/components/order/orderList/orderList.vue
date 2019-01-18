@@ -152,10 +152,10 @@
           <span slot-scope="scope">&nbsp;{{scope.row.opt_time | timeFormat}}</span>
         </el-table-column>
         <el-table-column prop="deptname" label="商务大区部门" min-width="110"></el-table-column>
-        <el-table-column prop label="操作" width="170" align="center" fixed="right">
+        <el-table-column prop label="操作" width="170" align="center" :fixed="actionFixed">
           <template slot-scope="scope">
             <el-dropdown v-if="orderKind==500" split-button type="success" @click.native="viewOrder(scope.row)">查看
-              <el-dropdown-menu slot="dropdown" class="text-center">
+              <el-dropdown-menu slot="dropdown" class="text-center" :trigger="trigger">
                 <template v-if="orderKind==500">
                   <el-dropdown-item
                     divided
@@ -351,9 +351,12 @@ import AutoSelect from 'base/autoSelect/autoSelect'
 import cookie from 'js-cookie'
 import SelectUser from 'base/selectUser/selectUser'
 import SelectDepartment from 'base/selectDepartment/selectDepartment'
+import { appMark } from 'common/js/utils'
 export default {
   data() {
     return {
+      actionFixed: 'right',
+      trigger: 'hover',
       permissions: cookie.getJSON('permissions'),
       orderKind: '500',
       tabStatus: '0',
@@ -443,6 +446,12 @@ export default {
   watch: {
     productType() {
       this._getCheckStateList()
+    }
+  },
+  created() {
+    if (appMark()) {
+      this.trigger = 'click'
+      this.actionFixed = false
     }
   },
   mounted() {

@@ -364,7 +364,7 @@ export default {
         })
         return
       }
-      if (this.receiveMoneyTotal !== this.proMoneyTotal) {
+      if (this.businessType !== 'GD' && this.businessType !== 'PZ' && this.businessType !== 'KP' && this.receiveMoneyTotal !== this.proMoneyTotal) {
         this.$message({
           type: 'warning',
           message: '请保持产品总金额与到款金额一致！'

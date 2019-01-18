@@ -1,7 +1,7 @@
 <template>
   <div class="addbaidu-order component-container media-padding">
     <div class="order-content">
-      <el-form ref="form" :model="form" :label-width="labelWidth">
+      <el-form ref="form" :model="form" :label-width="labelWidth" :label-position="labelPosition">
         <el-row>
           <el-col :md="24" class="maxwidth">
             <el-form-item label="公司名称:" required>
@@ -308,6 +308,7 @@ export default {
   },
   data () {
     return {
+      labelPosition: 'right',
       subDisabled: false,
       showQualify_add: [],
       qualifyUploaded_add: [],
