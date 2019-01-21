@@ -392,6 +392,7 @@ export default {
     },
     // 发票开错冲红
     errInvoice(data) {
+      this.rowData = data
       this.key_dialog = new Date() + ''
       this._getInvoiceData(data, data.id)
       this.makeInvoiceTitle = '发票冲红'

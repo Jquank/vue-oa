@@ -124,7 +124,7 @@
         </template>
       </el-table-column>
       <el-table-column :fixed="isFixed" label="交易时间" width="95" prop="B_JYSJ" align="center">
-        <span slot-scope="scope" v-html="timeFormat(scope.row.tm,true)"></span>
+        <span slot-scope="scope" v-html="$timeFormat(scope.row.tm,true)"></span>
       </el-table-column>
       <el-table-column :fixed="isFixed" label="参考号" prop="no" min-width="100"></el-table-column>
       <el-table-column :fixed="isFixed" label="付款名" prop="fm_name" min-width="130"></el-table-column>
@@ -154,7 +154,7 @@
               <span slot-scope="scope">{{scope.row.split_amount | currency1}}</span>
             </el-table-column>
           </el-table>
-          <div v-else class="pl2px">{{totalData.billAmount | currency}}</div>
+          <div v-else class="pl2px">{{totalData.sumSplitAmount | currency}}</div>
         </template>
       </el-table-column>
       <template v-if="selStatus!=0">
@@ -235,7 +235,7 @@
                 >{{(scope.row.wfndStatus===300||scope.row.reckStatus===300)?scope.row.split_amount:'' | currency1}}</span>
               </el-table-column>
             </el-table>
-            <div v-else class="pl2px">{{totalData.sumSplitAmount | currency}}</div>
+            <div v-else class="pl2px">{{totalData.billAmount | currency}}</div>
           </template>
         </el-table-column>
         <el-table-column class-name="splited-col" label="提单时间" prop width="95">
@@ -279,7 +279,7 @@
         label="操作"
         prop
         v-if="selStatus!=20"
-        width="90"
+        width="85"
         :fixed="actionFiexed"
         align="center"
       >

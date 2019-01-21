@@ -257,7 +257,7 @@
       <el-row>
         <el-col :md="24" class="maxwidth" style="text-align:right">
           <el-form-item>
-            <el-button type="primary" @click.native="subApply('form')">提 交</el-button>
+            <el-button type="primary" @click.native="subApply('form')" :disabled="subDisabled">提 交</el-button>
           </el-form-item>
         </el-col>
       </el-row>
@@ -403,6 +403,7 @@ export default {
   },
   data () {
     return {
+      subDisabled: false,
       labelPosition: 'right',
       USER_ID: cookie.get('userId'),
       rid: cookie.get('rid'),
@@ -570,6 +571,10 @@ export default {
       this.checkRecords = res.data[0].data
     },
     subApply (formName) {
+      this.subDisabled = true
+      setTimeout(() => {
+        this.subDisabled = false
+      }, 2000)
       if (this.form.addType === '10' && this.flows.length === 0) {
         this.$message.error('请选择流水！')
         return

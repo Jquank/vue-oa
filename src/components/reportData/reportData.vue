@@ -175,7 +175,9 @@ export default {
     search() {
       this.searchCols.forEach(item => {
         if (item.as === '客户区域' || item.as === '所属行业') {
-          item.where.val = [{id: item.where.val[item.where.val.length - 1]}]
+          if (item.where.val.length) {
+            item.where.val = [{id: item.where.val[item.where.val.length - 1]}]
+          }
         }
       })
       this.otherParams = {

@@ -244,7 +244,7 @@
           <!-- <el-table-column type="selection" width="35"></el-table-column> -->
           <el-table-column label="银行类型" prop="code_desc" width="80"></el-table-column>
           <el-table-column label="交易时间"  width="95" prop="B_JYSJ">
-            <span slot-scope="scope" v-html="timeFormat(scope.row.tm,true)"></span>
+            <span slot-scope="scope" v-html="$timeFormat(scope.row.tm,true)"></span>
           </el-table-column>
           <el-table-column label="参考号" prop="no" width="90"></el-table-column>
           <el-table-column label="付款名" prop="fm_name" width="100"></el-table-column>

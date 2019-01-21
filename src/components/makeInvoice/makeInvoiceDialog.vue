@@ -182,8 +182,8 @@
         </el-col>
       </el-row>
       <el-row v-for="item in form.productMoneyList" :key="item.code_val">
-        <el-col :md="12" class="maxwidth">
-          <el-form-item :label="item.code_desc+' :'" label-width="120px">
+        <el-col :md="14" class="maxwidth">
+          <el-form-item :label="item.code_desc+' :'" label-width="250px">
             <el-input v-model="item.value" :placeholder="item.code_desc">
               <span slot="prepend">¥</span>
             </el-input>
@@ -544,6 +544,8 @@ export default {
         prove_img: this.fileUrl
       }
       params = Object.assign({}, this.form, params)
+      console.log(params)
+      return
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.$post('/Invoice.do?apply', params).then(res => {
