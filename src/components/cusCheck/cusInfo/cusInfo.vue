@@ -8,7 +8,7 @@
         <el-option label="待处理" value="0"></el-option>
         <el-option label="已处理" value="10"></el-option>
       </auto-select>
-      <select-department :key="key_dept" title="提交部门" class="edit-item item-width"></select-department>
+      <select-department :key="key_dept" title="提交部门" class="edit-item item-width" @upDeptId="upDeptId"></select-department>
       <el-date-picker v-model="subDate" value-format="yyyy/MM/dd HH:mm" format="yyyy/MM/dd HH:mm" type="datetimerange" range-separator="至" start-placeholder="提交开始日期" :unlink-panels="true" end-placeholder="提交结束日期" class="edit-item" style="width:300px;"></el-date-picker>
       <div class="edit-item">
         <el-button @click.native="search" type="primary">查 询</el-button>

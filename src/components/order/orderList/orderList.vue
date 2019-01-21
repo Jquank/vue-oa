@@ -182,12 +182,12 @@
                     divided
                     v-if="scope.row.hasinvoice && scope.row.hasinvoice >= 10 && permissions.indexOf('7d')>-1"
                   >
-                    <el-button @click.native="applyInvoice(scope.row)" type="primary" class="xsbtn">发票开错冲红</el-button>
+                    <el-button @click.native="applyInvoice(scope.row, 'error')" type="primary" class="xsbtn">发票开错冲红</el-button>
                   </el-dropdown-item>
                 </template>
               </el-dropdown-menu>
             </el-dropdown>
-            <el-button v-if="(scope.row.invoice_type==0 ||scope.row.invoiceTmoney<scope.row.amount_real)&&permissions.indexOf('6g') > -1 && scope.row.amount_real > 0" @click.native="applyInvoice(scope.row)" type="warning" class="xsbtn">申请发票</el-button>
+            <el-button v-if="(scope.row.invoice_type==0 ||scope.row.invoiceTmoney<scope.row.amount_real)&&permissions.indexOf('6g') > -1 && scope.row.amount_real > 0" @click.native="applyInvoice(scope.row, 'apply')" type="warning" class="xsbtn">申请发票</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -265,13 +265,13 @@
             <template v-if="orderKind==500">
               <el-button
                 v-if="scope.row.invoice==0&&permissions.indexOf('6g') > -1"
-                @click.native="applyInvoice(scope.row)"
+                @click.native="applyInvoice(scope.row, 'apply')"
                 type="primary"
                 class="xsbtn"
               >申请发票</el-button>
               <el-button
                 v-if="scope.row.hasinvoice && scope.row.hasinvoice >= 10 && permissions.indexOf('7d')>-1"
-                @click.native="applyInvoice(scope.row)"
+                @click.native="applyInvoice(scope.row, 'error')"
                 type="primary"
                 class="xsbtn"
               >发票开错冲红</el-button>
@@ -524,13 +524,13 @@ export default {
       })
     },
     // 申请发票
-    applyInvoice(data) {
+    applyInvoice(data, type) {
       this.rowData = data
       this.key_dialog = new Date() + ''
       this._getInvoiceData(data, data.id)
       this.makeInvoiceTitle = '申请发票'
       this.makeInvoiceStatus = 10
-      this.offset = 0
+      this.offset = (type === 'error' ? 10 : 0)
       setTimeout(() => {
         this.makeInvoiceDialog = true
       }, 100)

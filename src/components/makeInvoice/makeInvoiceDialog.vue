@@ -544,8 +544,6 @@ export default {
         prove_img: this.fileUrl
       }
       params = Object.assign({}, this.form, params)
-      console.log(params)
-      return
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.$post('/Invoice.do?apply', params).then(res => {
