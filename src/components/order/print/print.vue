@@ -234,7 +234,7 @@
             <td class=xl67981 style='border-top:none;border-left:none'>代理账号</td>
             <td colspan=2 class=xl68981 style='border-right:.5pt solid black;border-left:none'>{{printData.proxyid}}</td>
           </tr>
-          <tr height=30 style='mso-height-source:userset;height:22.5pt'>
+          <!-- <tr height=30 style='mso-height-source:userset;height:22.5pt'>
             <td height=30 class=xl65981 style='height:22.5pt'></td>
             <td class=xl65981></td>
             <td class=xl65981></td>
@@ -313,7 +313,7 @@
             <td class=xl65981></td>
             <td class=xl65981></td>
             <td class=xl65981></td>
-          </tr>
+          </tr> -->
           <!-- <![if supportMisalignedColumns]>
           <tr height=0 style='display:none'>
             <td width=70 style='width:53pt'></td>
@@ -357,6 +357,7 @@ export default {
     this.$nextTick(() => {
       let orderList = document.getElementsByClassName('order-list')[0]
       orderList.style.position = 'static'
+      orderList.style.height = '100px'
       setTimeout(() => {
         if (this.printData.producttype === 0) {
           this.$refs.newCus.checked = true

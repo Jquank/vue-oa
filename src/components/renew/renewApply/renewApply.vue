@@ -298,7 +298,7 @@
     </el-dialog>
 
     <!-- 选择流水弹窗 -->
-    <el-dialog :modal-append-to-body="false" title="选择流水" :visible.sync="selFlowDialog" width="700px">
+    <el-dialog v-drag-dialog :modal-append-to-body="false" title="选择流水" :visible.sync="selFlowDialog" width="700px">
       <el-table @selection-change="handleSelectionChange" stripe border :data="selFlowList" max-height="500">
         <el-table-column type="selection" width="55">
         </el-table-column>
@@ -312,7 +312,7 @@
         <el-table-column prop="" label="金额" width="100">
           <span slot-scope="scope">{{scope.row.split_amount | currency}}</span>
         </el-table-column>
-        <el-table-column prop="alloc_remark" label="备注">
+        <el-table-column prop="allocRemark" label="备注">
         </el-table-column>
       </el-table>
       <page :simpleLayout="'total, sizes, prev, next, jumper'" class="page" :url="selFlowUrl" :sendParams="selFlowParams" @updateList="getFlowList"></page>
@@ -605,7 +605,7 @@ export default {
         companyid: this.rowData.companyid || this.detail.companyid, // 公司id
         prove_img: this.fileUrl,
         comName: this.form.comName,
-        claim: this.flowArr, // 流水id
+        claim: this.flows, // 流水
         invoiceIds: this.invoiceIdArr, // 发票id
         addtype: this.form.addType, // 续费类型
         servicemoney: this.form.serviceMoney, // 服务费

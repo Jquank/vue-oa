@@ -31,7 +31,7 @@
   }
   .media-padding {
     padding: 5px 2px !important;
-    height: calc((100% - 93px));
+    height: calc((100% - 103px));
   }
   .el-dialog {
     width: 99% !important;

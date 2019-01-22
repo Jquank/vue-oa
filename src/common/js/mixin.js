@@ -395,7 +395,7 @@ export const orderDeal = { // 订单处理
         }
       } else {
         if (this.sn === 260 || this.sn === 170) {
-          if (this.pid !== 'PZ') {
+          if (this.pid !== 'PZ' && this.pid !== 'KP') {
             if (!this.orderInfo.baiduid || !this.orderInfo.baiduaccount || !this.orderInfo.proxyid || !this.orderInfo.applytime) {
               this.$message({
                 type: 'warning',

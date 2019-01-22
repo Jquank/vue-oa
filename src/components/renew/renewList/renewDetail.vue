@@ -870,7 +870,7 @@ export default {
         renewreceive: this.productMoneyList,
         receiveAttr: this.moneyDetail.slice(0, this.moneyDetail.length - 1),
         refundArr: refundArr,
-        step: this.rowData.step
+        step: this.isPass ? this.rowData.step : 110
       }
       this.$post('/Renew.do?checkrenew', params).then(res => {
         if (res.data.success) {

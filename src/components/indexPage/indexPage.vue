@@ -98,6 +98,9 @@ export default {
   methods: {
     _initScroll() {
       let callCenter = document.getElementById('call-center')
+      if (!callCenter) {
+        return
+      }
       this.$nextTick(() => {
         let scroll = new BScroll(callCenter, { //eslint-disable-line
           click: true,
