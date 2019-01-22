@@ -1,6 +1,6 @@
 <template>
   <div class="add-user component-container media-padding">
-    <scroll class="scroll-wrap">
+    <!-- <scroll class="scroll-wrap"> -->
       <el-form ref="form" :model="form" :rules="rules" label-width="90px">
         <el-row :gutter="20">
           <el-col :md="12" class="maxwidth">
@@ -159,7 +159,7 @@
           <el-button type="primary" @click.native="submit('form')" :disabled="repeatDisabled">提 交</el-button>
         </div>
       </el-form>
-    </scroll>
+    <!-- </scroll> -->
   </div>
 </template>
 
@@ -167,7 +167,7 @@
 import SelectDepartment from 'base/selectDepartment/selectDepartment'
 import { getRoles, getByCode } from 'api/getOptions'
 import { timeFormat1 } from 'common/js/filters'
-import Scroll from 'base/scroll/scroll'
+// import Scroll from 'base/scroll/scroll'
 export default {
   props: {
     editDisable: { // 编辑人员信息
@@ -441,7 +441,7 @@ export default {
       })
     }
   },
-  components: { SelectDepartment, Scroll }
+  components: { SelectDepartment }
 }
 </script>
 
