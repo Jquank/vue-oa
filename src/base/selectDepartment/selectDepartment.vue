@@ -100,6 +100,8 @@ export default {
     // left:51px;
     // width:calc(~"(100% - 52px)");
     width:100%;
+    max-height: 350px;
+    overflow: auto;
     background: #F6F7FB;
     z-index: 10;
   }

@@ -151,7 +151,7 @@
 
                   <show-qualify v-if="showQualify_add.length" :showQualify="showQualify_add" @getQualifyList="getQualifyList"></show-qualify>
 
-                  <el-row  v-if="showEditBD" class="mt10px" :gutter="10">
+                  <el-row class="mt10px" :gutter="10">
                     <el-col :md="16">
                       <el-input placeholder="对公账户" v-model="form.receiveAccount" style="width:100%">
                         <template slot="prepend">对公账户 :</template>

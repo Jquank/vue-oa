@@ -109,7 +109,7 @@
           <el-col :md="12" class="maxwidth">
             <el-form-item label="是否允许打电话 :" label-width="135px">
               <el-checkbox @change="canCallChange" v-model="form.canCall" :disabled="repeatDisabled" label="允许打电话" border></el-checkbox>
-              <el-button @click.native="getBaiduID" v-if="showBaiduisBtn" type="warning" size="mini">获取百度id</el-button>
+              <el-button @click.native="getBaiduID" v-if="showBaiduisBtn&&editDisable" type="warning" size="mini">获取百度id</el-button>
             </el-form-item>
           </el-col>
           <!-- 百度ID -->
