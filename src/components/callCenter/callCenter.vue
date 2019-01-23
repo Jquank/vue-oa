@@ -83,7 +83,7 @@
       <el-table-column prop="last_opt_time" label="修改时间" width="98" sortable>
         <span slot-scope="scope">{{scope.row.last_opt_time | timeFormat}}</span>
       </el-table-column>
-      <el-table-column prop="" label="网站" width="120" show-overflow-tooltip>
+      <el-table-column prop="" label="网站" width="140" show-overflow-tooltip>
         <template slot-scope="scope">
           <a :href="(scope.row.site.indexOf('http')>-1?'':'http://')+scope.row.site" target="_blank" class="clicked">{{scope.row.site}}</a>
         </template>

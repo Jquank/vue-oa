@@ -5,19 +5,17 @@
         <el-tab-pane :label="item.title" :name="index===0?'first':item.id" :key="item.id">
           <div class="text-center author">
             <h3 class="title">{{item.title}}</h3>
-            <!-- <div class="back-btn">
-              <el-button type="warning" @click.native="$router.go(-1)" class="xsbtn">返回</el-button>
-            </div> -->
+            <div v-show="item.img">
+              <download-enclosure :data="item"></download-enclosure>
+            </div>
           </div>
           <div class="article">
             <div v-html="item.vtext"></div>
           </div>
-          <div v-show="item.img">
-            <download-enclosure :data="item"></download-enclosure>
-          </div>
         </el-tab-pane>
       </template>
     </el-tabs>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -39,10 +37,10 @@ export default {
       this.$post('/res.do?get', { type: TYPE }).then(res => {
         if (res.data.success) {
           this.newsList = res.data.data
-          console.log(this.newsList)
-          this.newsList.sort((a, b) => {
-            return a.insert_time - b.insert_time
-          })
+          // console.log(this.newsList)
+          // this.newsList.sort((a, b) => {
+          //   return a.insert_time - b.insert_time
+          // })
         }
       })
     }
@@ -53,9 +51,11 @@ export default {
 
 <style lang="less" scoped>
 .product-show {
+  position: relative;
   .author {
     .title {
       display: inline-block;
+      margin: 5px 0;
     }
     .back-btn {
       display: inline-block;

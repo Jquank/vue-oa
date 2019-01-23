@@ -31,7 +31,7 @@
     </div>
     <!-- 列表 -->
     <el-table ref="multipleTable" :data="tableData" class="table-width" border stripe @selection-change="handleSelectionChange">
-      <el-table-column fixed type="selection" width="45">
+      <el-table-column type="selection" width="45">
       </el-table-column>
       <el-table-column prop="uname" label="账户名">
       </el-table-column>

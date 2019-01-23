@@ -12,9 +12,9 @@
         <el-table-column label="发布时间">
           <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
         </el-table-column>
-        <el-table-column prop="" label="操作" width="240" align="center">
+        <el-table-column prop="" label="操作" align="center">
           <template slot-scope="scope">
-            <el-button type="success" class="xsbtn" @click.native="viewNews(scope.row)">查看</el-button>
+            <!-- <el-button type="success" class="xsbtn" @click.native="viewNews(scope.row)">查看</el-button> -->
             <el-button type="warning" class="xsbtn" icon="fa fa-pencil" @click.native="editNews(scope.row)"> 编辑</el-button>
             <el-button type="danger" class="xsbtn" icon="fa fa-trash-o" @click.native="delNews(scope.row)"> 删除</el-button>
           </template>
@@ -49,7 +49,7 @@ export default {
       let queryParams = {
         id: undefined,
         type: TYPE,
-        _status: 'add'
+        _status: 'manage_add'
       }
       this.$router.push({
         path: `${PAGE_ROUTER}/add`,
@@ -82,7 +82,7 @@ export default {
         })
     },
     editNews (data) {
-      data._status = 'edit'
+      data._status = 'manage_edit'
       this.$router.push({
         path: `${PAGE_ROUTER}/edit`,
         query: {data: data}

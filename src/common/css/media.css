@@ -30,8 +30,9 @@
     width: 0;
   }
   .media-padding {
-    padding: 5px 2px !important;
-    height: calc((100% - 103px));
+    padding: 5px 5px !important;
+    width: calc((100% - 10px)) !important;
+    min-height: calc((100% - 10px)) !important;
   }
   .el-dialog {
     width: 99% !important;

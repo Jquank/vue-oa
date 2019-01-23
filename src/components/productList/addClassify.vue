@@ -6,7 +6,7 @@
           <h3 class="title">产品查询</h3>
           <el-button v-if="permissions.indexOf('8m') > -1" @click.native="addArticleByNode" class="btn" icon="fa fa-plus" type="primary" size="mini">添加文章</el-button>
         </div>
-        <div class="tree-content">
+        <div class="tree-content" ref="treeContent">
           <el-tree
             :data="data"
             :highlight-current="true"
@@ -18,7 +18,7 @@
             <span
               slot-scope="{ node, data }"
               class="custom-tree-node"
-              @mouseenter="handleClick(node)"
+              @mouseenter.stop="handleClick(node)"
               @mouseleave="flod(node)"
             >
               <span>{{ node.label }}</span>
@@ -41,120 +41,59 @@
       </div>
       <div class="drag-tree" draggable="true" @dragstart="dragstart" @drag="drag"></div>
       <div class="article-list">
-        <div class="search-article">
-          <el-input placeholder="搜索文章名称" v-model="articleName">
-            <template slot="prepend">文章名称:</template>
-          </el-input>
-          <span>
-            <el-button @click.native="search" type="primary" icon="fa fa-search" size="mini">搜索</el-button>
-          </span>
-        </div>
-        <div class="flex-table">
-          <el-row :gutter="20">
-            <el-col :xl="12" class="mt10px">
-              <div class="pro-title">产品资料</div>
-              <el-table :data="articleList21" max-height="550" border class="mt10px">
-                <el-table-column type="index" width="40"></el-table-column>
-                <el-table-column prop="insert_time" label="发布时间" width="150">
-                  <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
-                </el-table-column>
-                <el-table-column prop="title" label="文章名称" min-width="80">
-                  <span slot-scope="scope" @click="viewArticle(scope.row)" class="clikc-title">{{scope.row.title}}</span>
-                </el-table-column>
-                <template v-if="permissions.indexOf('8m') > -1">
-                  <el-table-column prop="id" label="链接" show-overflow-tooltip>
-                  <template slot-scope="scope">
-                    <el-input v-model="scope.row.alink">
-                      <el-button
-                        :ref="'copybtn'+scope.$index"
-                        slot="append"
-                        @click.native="copyUrl(scope.row.alink,$event)"
-                      >copy</el-button>
-                    </el-input>
-                    <!-- <a :href="scope.row.alink">123</a> -->
-                  </template>
-                </el-table-column>
-                <el-table-column label="操作" width="110" align="center">
-                  <template slot-scope="scope">
-                      <el-button @click.native="editArticle(scope.row)" icon="fa fa-pencil" type="warning" class="xsbtn"></el-button>
-                    <el-button @click.native="delArticle(scope.row)" icon="fa fa-trash-o" type="danger" class="xsbtn"></el-button>
-                  </template>
-                </el-table-column>
-                </template>
-              </el-table>
-            </el-col>
-            <el-col :xl="12" class="mt10px">
-              <div class="pro-title">产品Q&A</div>
-              <el-table :data="articleList22" max-height="550" border class="mt10px">
-                <el-table-column type="index" width="40"></el-table-column>
-                <el-table-column prop="insert_time" label="发布时间" width="150">
-                  <span slot-scope="scope">{{scope.row.insert_time | timeFormat}}</span>
-                </el-table-column>
-                <el-table-column prop="title" label="文章名称" min-width="80">
-                  <span slot-scope="scope" @click="viewArticle(scope.row)" class="clikc-title">{{scope.row.title}}</span>
-                </el-table-column>
-                <template v-if="permissions.indexOf('8m') > -1">
-                 <el-table-column prop="id" label="链接" show-overflow-tooltip>
-                  <template slot-scope="scope">
-                    <el-input v-model="scope.row.alink">
-                      <el-button
-                        :ref="'copybtn'+scope.$index"
-                        slot="append"
-                        @click.native="copyUrl(scope.row.alink,$event)"
-                      >copy</el-button>
-                    </el-input>
-                  </template>
-                </el-table-column>
-                <el-table-column label="操作" width="140" align="center">
-                  <template slot-scope="scope">
-                      <el-button @click.native="editArticle(scope.row)" icon="fa fa-pencil" type="warning" class="xsbtn"></el-button>
-                      <el-button @click.native="delArticle(scope.row)" icon="fa fa-trash-o" type="danger" class="xsbtn"></el-button>
-                  </template>
-                </el-table-column>
-                </template>
-              </el-table>
-            </el-col>
-          </el-row>
-        </div>
+        <product-list v-if="getProductListData._status==='list'" :articleList21="articleList21"  :articleList22="articleList22" :tableMaxHeight="tableMaxHeight/2" @refresh="refreshList"></product-list>
+        <view-product v-if="getProductListData._status==='view'" :data="getProductListData"></view-product>
+      </div>
+      <div class="text-editor" v-if="getProductListData._status==='edit'">
+        <text-editor :data="getProductListData"></text-editor>
       </div>
     </div>
-    <router-view></router-view>
   </div>
 </template>
 
 <script>
 import cookie from 'js-cookie'
-import Clipboard from 'clipboard'
-const PAGE_ROUTER = 'addClassify'
+import ProductList from './productList'
+import ViewProduct from './viewProduct'
+import TextEditor from 'components/textEditor/textEditor'
+import { mapGetters, mapMutations } from 'vuex'
+// const PAGE_ROUTER = 'addClassify'
 const TYPE = 20
 const TYPE_ZL = 21
 const TYPE_QA = 22
 export default {
+  computed: {
+    ...mapGetters([
+      'getProductListData'
+    ])
+  },
   data() {
     return {
       permissions: cookie.getJSON('permissions'),
-      jumpBaseUrl: '',
       data: [],
       articleList21: [],
       articleList22: [],
       currentNode: {},
       articleName: '',
-      clipboard: null
+      clipboard: null,
+      tableMaxHeight: 550
       // defaultExpanded: ['0001', '0002', '0003', '0004']
     }
   },
-  beforeRouteUpdate(to, from, next) {
-    if (to.query.data === 'fromDetail') {
-      this._getArticleList(to.query.queryParams.cat, '', to.query.queryParams.type)
+  watch: {
+    getProductListData(newVal) {
+      if (newVal._mark === 'sub') {
+        console.log(newVal)
+        this._getArticleList(newVal.cat, '', newVal.type)
+      }
     }
-    next()
   },
   created() {
+    this._getJumpBaseUrl(window.location.href)
     this._getTreeData()
-    this.jumpBaseUrl = window.location.href
-    if (this.jumpBaseUrl.indexOf('?menu=no') > -1) {
-      this.jumpBaseUrl = this.jumpBaseUrl.split('?menu=no')[0].toString()
-    }
+  },
+  mounted() {
+    this.tableMaxHeight = this.$refs.treeContent.clientHeight
   },
   methods: {
     // 节点拖拽
@@ -180,31 +119,9 @@ export default {
     //   return
     //   this.$post('res.do?catSet', params).then(res => {})
     // },
-    copyUrl(url, e) {
-      let that = this
-      if (this.clipboard) {
-        this.clipboard.destroy()
-      }
-      this.clipboard = new Clipboard(e.target, {
-        text: () => url
-      })
-      this.clipboard.on('success', function(e) {
-        that.$message.success('已复制')
-        that.clipboard.off('error')
-        that.clipboard.off('success')
-        that.clipboard.destroy()
-      })
-      this.clipboard.on('error', function(e) {
-        that.$message.success('复制失败 ')
-        that.clipboard.off('error')
-        that.clipboard.off('success')
-        that.clipboard.destroy()
-      })
-      this.clipboard.onClick(e)
-    },
-    search() {
-      this._getArticleList('', this.articleName.trim(), TYPE_ZL)
-      this._getArticleList('', this.articleName.trim(), TYPE_QA)
+    _getJumpBaseUrl(url) {
+      let index = url.lastIndexOf('/')
+      this.jumpBaseUrl = url.substr(0, index)
     },
     _getArticleList(nodeId, title, type) {
       let params = {
@@ -216,10 +133,13 @@ export default {
         if (res.data.success) {
           this['articleList' + type] = res.data.data
           this['articleList' + type].forEach(val => {
-            val.alink = `${this.jumpBaseUrl}/view/${val.id}@${type}`
+            val.alink = `${this.jumpBaseUrl}/productShow/view/${val.id}@${type}`
           })
         }
       })
+    },
+    refreshList(data) {
+      this._getArticleList(data.cat, data.title, data.type)
     },
     _setTreeData(data) {
       let params = {
@@ -243,51 +163,12 @@ export default {
       let queryParams = {
         id: undefined,
         cat: this.currentNode.id,
-        _mark: 'addClassify',
-        _status: 'add'
+        _mark: 'add',
+        _status: 'edit'
       }
-      console.log(queryParams)
-      this.$router.push({
-        path: `${PAGE_ROUTER}/add`,
-        query: { data: queryParams }
-      })
-    },
-    viewArticle(data) {
-      this.$router.push({
-        path: `${PAGE_ROUTER}/view/${data.id}`,
-        query: { data: data }
-      })
-    },
-    editArticle(data) {
-      data._status = 'edit'
-      data._mark = 'addClassify'
-      this.$router.push({
-        path: `${PAGE_ROUTER}/edit`,
-        query: { data: data }
-      })
-    },
-    delArticle(data) {
-      this.$confirm('确定删除吗?', '', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
-        .then(() => {
-          this.$post('/res.do?delete', { id: data.id, status: -1 }).then(
-            res => {
-              if (res.data.success) {
-                this._getArticleList(data.cat, '', TYPE_ZL)
-                this._getArticleList(data.cat, '', TYPE_QA)
-              }
-            }
-          )
-        })
-        .catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消'
-          })
-        })
+      this.setProductListData(queryParams)
+      this._getArticleList(this.currentNode.id, '', TYPE_ZL)
+      this._getArticleList(this.currentNode.id, '', TYPE_QA)
     },
     append(data, node) {
       console.log(node)
@@ -358,6 +239,8 @@ export default {
       this._getArticleList(data.id, '', TYPE_ZL)
       this._getArticleList(data.id, '', TYPE_QA)
       this.currentNode = data
+      data._status = 'list'
+      this.setProductListData(data)
     },
     _getMaxId(data) {
       if (data.children && data.children.length) {
@@ -390,9 +273,12 @@ export default {
       this.dragX = this.endClientX - this.startClientX
       let width = this.startTreeWidth + this.dragX + 'px'
       this.$refs.tree.style.flex = `0 0 ${width}`
-    }
+    },
+    ...mapMutations({
+      setProductListData: 'GET_PRODUCTLIST_DATA'
+    })
   },
-  components: {}
+  components: {ProductList, ViewProduct, TextEditor}
 }
 </script>
 
@@ -410,7 +296,7 @@ export default {
 </style>
 
 <style lang="less" scoped>
-@max-height: 600px;
+@max-height: calc(~"(100vh - 232px)");
 .add-classify {
   position: relative;
   .add-title {
@@ -435,7 +321,7 @@ export default {
       width: 360px;
       .tree-content {
         display: -webkit-box;
-        max-height: @max-height;
+        height: @max-height;
         overflow: auto;
         background: #EBEEF5;
         .el-tree{
@@ -475,41 +361,29 @@ export default {
       }
     }
     .drag-tree{
-      max-height: @max-height;
+      height: @max-height;
       margin-top: 42px;
       border: 3px solid #EBEEF5;
+      box-sizing: border-box;
       cursor: e-resize;
     }
     .article-list {
       flex: 1;
       position: relative;
       margin-left: 20px;
-      overflow: hidden;
+      overflow: auto;
       &::after{
         display: block;
       }
-      .search-article {
-        width: 100%;
-        text-align: center;
-        .el-input {
-          max-width: 320px;
-        }
-      }
-      .flex-table {
-        // flex布局下el-table宽度不能自适应
-        position: relative;
-        width: 100%;
-        .pro-title{
-          font-size: 15px;
-          font-weight: 600;
-          text-align: center;
-          color: #409eff;
-        }
-        .clikc-title{
-          cursor: pointer;
-        }
-      }
     }
+  }
+  .text-editor{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2000;
   }
 }
 </style>

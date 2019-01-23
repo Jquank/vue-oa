@@ -1,6 +1,8 @@
 
 const state = {
   collapseCount: 0,
-  permissions: []
+  permissions: [],
+  productListData: {},
+  processListData: {}
 }
 export default state

@@ -6,6 +6,7 @@
 
 <script>
 import BScroll from 'better-scroll'
+import {appMark} from 'common/js/utils'
 export default {
   props: {
     probeType: {
@@ -36,15 +37,24 @@ export default {
   },
   watch: {
     data() {
+      if (!appMark()) {
+        return
+      }
       setTimeout(() => {
         this.refresh()
       }, this.refreshDelay)
     }
   },
   mounted() {
-    setTimeout(() => {
-      this._initScroll()
-    }, this.initDelay)
+    if (!appMark()) {
+      this.$refs.wrapper.style.overflow = 'auto'
+      return
+    }
+    this.$nextTick(() => {
+      setTimeout(() => {
+        this._initScroll()
+      }, this.initDelay)
+    })
   },
   methods: {
     _initScroll() {

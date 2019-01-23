@@ -58,8 +58,7 @@
       </auto-select>
       <el-date-picker v-model="applyDate" format="yyyy/MM/dd" value-format="yyyy/MM/dd" :unlink-panels="true" type="datetimerange" range-separator="至" start-placeholder="申请时间" end-placeholder="申请时间" class="visit-item item-width"></el-date-picker>
       <el-date-picker v-model="invoiceDate" format="yyyy/MM/dd" value-format="yyyy/MM/dd" :unlink-panels="true" type="datetimerange" range-separator="至" start-placeholder="开票时间" end-placeholder="开票时间" class="visit-item item-width"></el-date-picker>
-      <el-select v-model="invoiceSame" class="visit-item item-width">
-        <el-option value="" label="保A公司名和发票抬头"></el-option>
+      <el-select v-model="invoiceSame" placeholder="保A公司名和发票抬头" class="visit-item item-width">
         <el-option :value="100" label="全部"></el-option>
         <el-option :value="10" label="不一致"></el-option>
         <el-option :value="20" label="一致"></el-option>

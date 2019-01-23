@@ -107,6 +107,7 @@ const AddClassify = () => import('components/productList/addClassify')
 const ProductShow = () => import('components/productList/productShow')
 // 反馈流程
 const ProcessManage = () => import('components/feedBack/processManage')
+const ViewProcess = () => import('components/feedBack/viewProcess')
 const ProcessShow = () => import('components/feedBack/processShow')
 const ProcessClassify = () => import('components/feedBack/processClassify')
 // import Test from 'components/login/test'
@@ -752,30 +753,20 @@ const router = new Router({
           path: 'productShow',
           name: 'productShow',
           meta: { text: '产品分类' },
-          component: ProductShow
+          component: ProductShow,
+          children: [
+            {
+              path: 'view/:id',
+              meta: { text: '产品分类/详情' },
+              component: ViewProduct
+            }
+          ]
         },
         {
           path: 'addClassify',
           name: 'addClassify',
           meta: { text: '产品查询' },
           component: AddClassify,
-          children: [
-            {
-              path: 'add',
-              meta: { text: '产品查询/新增' },
-              component: TextEditor
-            },
-            {
-              path: 'edit',
-              meta: { text: '产品查询/编辑' },
-              component: TextEditor
-            },
-            {
-              path: 'view/:id',
-              meta: { text: '产品查询/详情' },
-              component: ViewProduct
-            }
-          ]
         },
         // 反馈流程
         {
@@ -797,7 +788,7 @@ const router = new Router({
             {
               path: 'view',
               meta: { text: '流程管理/详情' },
-              component: ViewProduct
+              component: ViewProcess
             }
           ]
         },
@@ -805,30 +796,20 @@ const router = new Router({
           path: 'processShow',
           name: 'processShow',
           meta: { text: '流程分类' },
-          component: ProcessShow
+          component: ProcessShow,
+          children: [
+            {
+              path: 'view/:id',
+              meta: { text: '流程分类/详情' },
+              component: ViewProcess
+            }
+          ]
         },
         {
           path: 'processClassify',
           name: 'processClassify',
           meta: { text: '流程归类' },
           component: ProcessClassify,
-          children: [
-            {
-              path: 'add',
-              meta: { text: '流程归类/新增' },
-              component: TextEditor
-            },
-            {
-              path: 'edit',
-              meta: { text: '流程归类/编辑' },
-              component: TextEditor
-            },
-            {
-              path: 'view/:id',
-              meta: { text: '流程归类/详情' },
-              component: ViewProduct
-            }
-          ]
         }
       ]
     }

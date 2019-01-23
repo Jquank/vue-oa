@@ -1,5 +1,5 @@
 <template>
-  <div class="view-product">
+  <div class="view-process">
     <h2 class="text-center title">{{v.title}}</h2>
     <div v-show="v.img">
       <download-enclosure :data="v"></download-enclosure>
@@ -86,7 +86,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-  .view-product{
+  .view-process{
     position: absolute;
     top: 0;
     left: 0;

@@ -18,7 +18,7 @@
             <div ref="editor" class="editor"></div>
           </el-col>
         </el-form-item>
-        <el-form-item label="分类" required v-if="mark==='addClassify'">
+        <el-form-item label="分类" required v-if="mark==='add'">
           <el-col :md=24>
             <el-select v-model="form.type" placeholder="请选择产品类型">
               <el-option :value="21" label="产品资料"></el-option>
@@ -38,7 +38,16 @@
 import E from 'wangeditor'
 import UpFile from 'base/upLoad/upFile'
 import {uploadUrl} from 'api/http'
+import { mapMutations } from 'vuex'
 export default {
+  props: {
+    data: {
+      type: Object,
+      default: function () {
+        return {}
+      }
+    }
+  },
   data () {
     return {
       editor: null,
@@ -54,13 +63,14 @@ export default {
     }
   },
   created () {
-    this.receiveData = this.$route.query.data
+    this.receiveData = this.$route.query.data || this.data
     this.mark = this.receiveData._mark
-    if (this.receiveData._status !== 'add' && !this.receiveData.id) {
-      this.$router.go(-1)
-      return
-    }
+    // if (this.receiveData._status !== 'add' && !this.receiveData.id) {
+    //   this.$router.go(-1)
+    //   return
+    // }
     this.form = Object.assign({}, this.form, this.receiveData)
+    console.log(this.form)
   },
   methods: {
     getFileUrl(file) {
@@ -68,7 +78,12 @@ export default {
       this.form.img = file.response.url
     },
     back () {
-      this.$router.go(-1)
+      if (this.receiveData._status === 'manage_edit' || this.receiveData._status === 'manage_add') {
+        this.$router.go(-1)
+      } else if (this.receiveData._status === 'edit') {
+        this.setProductListData({_status: 'list'})
+        this.setProcessListData({_status: 'list'})
+      }
     },
     sub () {
       let params = {
@@ -84,44 +99,36 @@ export default {
         this.$message.error('请填写或选择带*项！')
         return
       }
-      if (this.mark === 'addClassify' && !params.type) {
-        this.$message.error('请填写或选择带*项！')
+      if (this.mark === 'add' && !params.type) {
+        this.$message.error('请选择分类！')
         return
       }
       this.$post(url, params).then(res => {
         if (res.data.success) {
           this.$message.success('发布成功！')
-          if (this.form.type === 10) {
+          if (this.receiveData._status === 'manage_add' && this.receiveData.type === 10) {
             this.$router.push({
               path: '/indexPage/productManage',
               query: {data: 'fromDetail'}
             })
-          } else if (this.form.type === 30) {
+          } else if (this.receiveData._status === 'manage_add' && this.receiveData.type === 30) {
             this.$router.push({
               path: '/indexPage/processManage',
               query: {data: 'fromDetail'}
             })
-          } else if (this.form.type === 40) {
-            let queryParams = {
-              cat: this.form.cat
-            }
-            this.$router.push({
-              path: '/indexPage/processClassify',
-              query: {data: 'fromDetail', queryParams: queryParams}
-            })
-          } else {
-            let queryParams = {
-              cat: this.form.cat,
-              type: this.form.type
-            }
-            this.$router.push({
-              path: '/indexPage/addClassify',
-              query: {data: 'fromDetail', queryParams: queryParams}
-            })
+          } else if (this.receiveData._status === 'manage_edit') {
+            this.$router.go(-1)
+          } else if (this.receiveData._status === 'edit') {
+            this.setProductListData({_status: 'list', _mark: 'sub', type: this.form.type, cat: this.form.cat})
+            this.setProcessListData({_status: 'list', _mark: 'sub', type: this.form.type, cat: this.form.cat})
           }
         }
       })
-    }
+    },
+    ...mapMutations({
+      setProductListData: 'GET_PRODUCTLIST_DATA',
+      setProcessListData: 'GET_PROCESSLIST_DATA'
+    })
   },
   mounted () {
     this.editor = new E(this.$refs.editor)
@@ -133,6 +140,7 @@ export default {
     this.editor.customConfig.uploadImgMaxSize = 5 * 1024 * 1024
     this.editor.customConfig.uploadImgHooks = {
       customInsert: function (insertImg, result, editor) {
+        console.log(result)
         var url = result.url
         insertImg(url)
       }
