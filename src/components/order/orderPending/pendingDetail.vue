@@ -862,7 +862,7 @@
                   <div class="row-container">
                     <div style="width:250px;">
                       <div v-if="productInfo[0].websitetype != 10">
-                        <b>网站站模板编号：</b>
+                        <b>网站模板编号：</b>
                         <span>{{productInfo[0].modelnumber}}</span>
                       </div>
                       <div v-if="productInfo[0].websitetype == 10">

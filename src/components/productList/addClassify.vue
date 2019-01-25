@@ -317,8 +317,8 @@ export default {
     display: flex;
     flex-wrap: wrap;
     .tree {
-      flex: 0 0 360px;
-      width: 360px;
+      flex: 0 0 300px;
+      width: 300px;
       .tree-content {
         display: -webkit-box;
         height: @max-height;

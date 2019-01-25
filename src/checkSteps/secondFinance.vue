@@ -28,7 +28,7 @@
       <el-table-column prop="code_desc" label="银行类型" width="100">
       </el-table-column>
       <el-table-column prop="" label="银行订单时间" width="95">
-        <span slot-scope="scope">{{scope.row.tm | timeFormat}}</span>
+        <span slot-scope="scope" v-html="$timeFormat(scope.row.tm,true)"></span>
       </el-table-column>
       <el-table-column prop="no" label="交易订单号" width="160">
       </el-table-column>

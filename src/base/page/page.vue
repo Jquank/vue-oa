@@ -13,7 +13,7 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="currentPage"
-      :page-sizes="[10,30,50,100,500]"
+      :page-sizes="[10,30,50,100,200,500]"
       :page-size="pageval"
       :layout="layout"
       :total="pageCount"

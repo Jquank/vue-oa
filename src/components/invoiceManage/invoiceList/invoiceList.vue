@@ -59,9 +59,9 @@
       <el-date-picker v-model="applyDate" format="yyyy/MM/dd" value-format="yyyy/MM/dd" :unlink-panels="true" type="datetimerange" range-separator="至" start-placeholder="申请时间" end-placeholder="申请时间" class="visit-item item-width"></el-date-picker>
       <el-date-picker v-model="invoiceDate" format="yyyy/MM/dd" value-format="yyyy/MM/dd" :unlink-panels="true" type="datetimerange" range-separator="至" start-placeholder="开票时间" end-placeholder="开票时间" class="visit-item item-width"></el-date-picker>
       <el-select v-model="invoiceSame" placeholder="保A公司名和发票抬头" class="visit-item item-width">
-        <el-option :value="100" label="全部"></el-option>
-        <el-option :value="10" label="不一致"></el-option>
-        <el-option :value="20" label="一致"></el-option>
+        <el-option :value="null" label="全部"></el-option>
+        <el-option :value="-10" label="不一致"></el-option>
+        <el-option :value="10" label="一致"></el-option>
       </el-select>
       <div class="visit-item">
         <el-button @click.native="search" type="primary">查 询</el-button>
@@ -141,7 +141,7 @@
     </div>
     <!-- 公用列表 -->
     <div v-if="mark==='list' || mark==='pending' || (mark==='handled'&&permissions.indexOf('7c') < 0)">
-      <el-table :key="key_table" border :data="invoiceList" class="table-width" id="invoice-list-table" max-height="500" :row-class-name="setRowClassName">
+      <el-table :key="key_table" border :data="invoiceList" class="table-width" id="invoice-list-table" max-height="500" :row-class-name="setRowClassName" @selection-change="handleSelectionChange" :cell-class-name="setCellClassName">
         <el-table-column prop="banktype" :fixed="fixed" label="银行类型" width="80">
           <template slot-scope="scope">
             <span v-if="scope.row.mark==='total'">合计</span>
@@ -161,10 +161,7 @@
         <el-table-column prop="pid" label="" :fixed="fixed" width="1" show-overflow-tooltip class-name="hidden-cell">
         </el-table-column>
         <!-- 此处dom有合并，但数据并没有合并，故用不了table的selection -->
-        <el-table-column prop="id" label="选择" width="50"  :fixed="fixed" align="center">
-          <template slot-scope="scope" v-if="scope.$index!==invoiceList.length-1">
-            <el-checkbox @change="((val,$event)=>singleCheck(val,$event,scope.row))" :true-label="scope.row.id"></el-checkbox>
-          </template>
+        <el-table-column type="selection" width="55" align="center">
         </el-table-column>
         <el-table-column prop="invoiceid" label="" :fixed="fixed" width="1" show-overflow-tooltip class-name="hidden-cell">
         </el-table-column>
@@ -392,6 +389,7 @@ export default {
   },
   data () {
     return {
+      checkAll: false,
       trigger: 'hover',
       serverUrl: serverUrl,
       tk: cookie.get('token'),
@@ -469,7 +467,7 @@ export default {
       makeInvoiceStatus: '',
       offset: '',
       isShowBtn: false,
-      invoiceSame: ''
+      invoiceSame: null
     }
   },
   created() {
@@ -482,6 +480,11 @@ export default {
     setRowClassName({ row, rowIndex }) {
       if (row.mark === 'total') {
         return 'red'
+      }
+    },
+    setCellClassName({row, column, rowIndex, columnIndex}) {
+      if (row.mark === 'total' && column.type === 'selection') {
+        return 'disno'
       }
     },
     search () {
@@ -793,12 +796,13 @@ export default {
         }
       })
     },
-    singleCheck (val, e, data) {
-      if (e.target.checked) {
-        this.multipleSelection.push(data)
-      } else {
-        this.multipleSelection = this.multipleSelection.filter(val => val.id !== data.id)
-      }
+    handleSelectionChange(arr) {
+      arr.forEach(val => {
+        let id = val.invoiceid
+        if (id) {
+          this.multipleSelection.push(id)
+        }
+      })
     },
     handleFlowSelectionChange (val) {
       this.flowSelectArr = val
@@ -834,14 +838,14 @@ export default {
     },
     // 待开导出
     exportTxt () {
-      let ids = this.multipleSelection.map(val => val.invoiceid)
+      let ids = [...this.multipleSelection]
       let obj = {
         invoiceIds: ids.toString()
       }
       this.$export('/Invoice.do?export', this.params[this.mark + 'Params'], obj)
     },
     exportExcell () {
-      let ids = this.multipleSelection.map(val => val.invoiceid)
+      let ids = [...this.multipleSelection]
       let obj = {
         invoiceIds: ids.toString(),
         hasinvoice: 0
@@ -930,6 +934,11 @@ export default {
   .hidden-cell{
     overflow: hidden;
     border-right: none !important;
+  }
+  .disno{
+    label{
+      display: none !important;
+    }
   }
 </style>
 <style lang="less" scoped>

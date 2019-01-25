@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div ref="nested" class="nested" id="nested">
-      <a @click="nested" class="fa" :class="collapseIcon"></a>
+    <div @click="nested" ref="nested" class="nested" id="nested">
+      <i class="fa" :class="collapseIcon"></i>
     </div>
     <div class="m-header">
       <div class="header-left">
@@ -22,11 +22,6 @@
         </div>
       </div>
       <ul class="head-ul">
-        <!-- <li id="header-phone">
-          <el-input v-model="phoneNum" size="mini" class="contact-phone" @keyup.enter.native="call_phone"></el-input>
-          <el-button class="xsbtn" circle type="success" icon="fa fa-phone" @click.native="call_phone"></el-button>
-          <el-button class="xsbtn" circle type="primary" icon="fa fa-envelope-o" @click.native="send_message"></el-button>
-        </li> -->
         <!-- <li id="down-client">
           <a href="http://bg.baijiegroup.com/BaiJieOA/bj_crm_oa.zip" title="下载客户端">
             <span class="fa fa-download"></span>
@@ -39,12 +34,15 @@
         </li>
         <li>
           <a href="javascript:void (0)" title="刷新" @click="refresh">
-            <span class="fa fa-refresh"></span>
+            <span class="fa fa-refresh">
+            </span>
           </a>
         </li>
         <li>
           <a href="javascript:void (0)" title="未读消息">
-            <span class="fa fa-bell"></span>
+            <span class="fa fa-bell alert-tip-icon">
+              <div class="alert-tip"></div>
+            </span>
           </a>
         </li>
         <li id="full-screen">
@@ -304,13 +302,19 @@ export default {
 <style scoped lang="less">
 .nested {
   width: 25px;
+  height: 25px;
   font-size: 16px;
+  line-height: 25px;
   z-index: 1000;
   position: fixed;
-  top: 14px;
+  top: 12px;
   left: 170px;
   transition: all 0.5s;
   cursor: pointer;
+  a{
+    width: 100%;
+    height: 100%;
+  }
 }
 .m-header {
   display: flex;
@@ -371,6 +375,19 @@ export default {
         display: inline-block;
         padding: 0 5px;
         text-align: center;
+        .alert-tip-icon{
+          position: relative;
+          .alert-tip{
+          width: 6px;
+          height: 6px;
+          background: red;
+          font-size: 9px;
+          position: absolute;
+          top: -2px;
+          right: 0;
+          border-radius: 50%;
+        }
+        }
       }
       & > a:hover {
         background: #eeeeee;
