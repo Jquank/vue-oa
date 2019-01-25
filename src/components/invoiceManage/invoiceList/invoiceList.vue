@@ -3,7 +3,11 @@
     <div class="visit-search mt-10px">
       <up-file v-if="(permissions.indexOf('53') > -1 && (mark==='list' || mark==='handled'))||(permissions.indexOf('7i')>-1&&mark==='send')" :title="'导入'" :upIcon="'fa fa-cloud-download'" :uploadUrl="'/Invoice.do?import'"  :isHiddenFileList="true" :otherParams="{'code': mark==='send'?'75' :'50', 'tk': tk}" class="visit-item"></up-file>
 
-      <el-button @click.native="exportExcellHandled" v-if="mark==='handled'" icon="fa fa-cloud-upload" type="info" class="visit-item"> 导出Excell</el-button>
+      <!-- <el-button @click.native="exportExcellHandled" v-if="mark==='handled'" icon="fa fa-cloud-upload" type="info" class="visit-item"> 导出Excell</el-button> -->
+
+      <el-button @click.native="exportExcellHandled" v-if="mark==='handled' && permissions.indexOf('53') > -1" icon="fa fa-cloud-upload" type="info" class="visit-item"> 已开导出Excell</el-button>
+
+      <el-button @click.native="exportExcellHandled2" v-if="mark==='handled' && permissions.indexOf('7c') > -1" icon="fa fa-cloud-upload" type="info" class="visit-item"> 待寄导出Excell</el-button>
 
       <el-button @click.native="exportExcellSend" v-if="permissions.indexOf('7i') > -1 && mark==='send'" type="warning" icon="fa fa-cloud-upload" class="visit-item"> 寄发票导出Excell</el-button>
 
@@ -58,7 +62,12 @@
       </auto-select>
       <el-date-picker v-model="applyDate" format="yyyy/MM/dd" value-format="yyyy/MM/dd" :unlink-panels="true" type="datetimerange" range-separator="至" start-placeholder="申请时间" end-placeholder="申请时间" class="visit-item item-width"></el-date-picker>
       <el-date-picker v-model="invoiceDate" format="yyyy/MM/dd" value-format="yyyy/MM/dd" :unlink-panels="true" type="datetimerange" range-separator="至" start-placeholder="开票时间" end-placeholder="开票时间" class="visit-item item-width"></el-date-picker>
-      <el-select v-model="invoiceSame" placeholder="保A公司名和发票抬头" class="visit-item item-width">
+      <el-select v-model="invoiceSame" placeholder="发票一致" class="visit-item item-width">
+        <el-option :value="100" label="全部"></el-option>
+        <el-option :value="10" label="不一致"></el-option>
+        <el-option :value="20" label="一致"></el-option>
+      </el-select>
+      <el-select v-model="comSame" placeholder="保A公司名和发票抬头" class="visit-item item-width">
         <el-option :value="null" label="全部"></el-option>
         <el-option :value="-10" label="不一致"></el-option>
         <el-option :value="10" label="一致"></el-option>
@@ -160,11 +169,9 @@
         </el-table-column>
         <el-table-column prop="pid" label="" :fixed="fixed" width="1" show-overflow-tooltip class-name="hidden-cell">
         </el-table-column>
-        <!-- 此处dom有合并，但数据并没有合并，故用不了table的selection -->
-        <el-table-column type="selection" width="55" align="center">
-        </el-table-column>
         <el-table-column prop="invoiceid" label="" :fixed="fixed" width="1" show-overflow-tooltip class-name="hidden-cell">
         </el-table-column>
+        <el-table-column type="selection" width="55" align="center"></el-table-column>
         <el-table-column prop="tnumber" label="单据号码" width="110">
         </el-table-column>
         <el-table-column prop="applyusername" label="申请人" width="90">
@@ -467,7 +474,8 @@ export default {
       makeInvoiceStatus: '',
       offset: '',
       isShowBtn: false,
-      invoiceSame: null
+      invoiceSame: '',
+      comSame: ''
     }
   },
   created() {
@@ -503,7 +511,8 @@ export default {
         endtime: this.applyDate[1],
         invoice_starttime: this.invoiceDate[0],
         invoice_endtime: this.invoiceDate[1],
-        identical: this.invoiceSame
+        identical: this.invoiceSame,
+        comName_invociceName: this.comSame
       }
     },
     reset () {
@@ -522,6 +531,8 @@ export default {
       this.key_invoice_state = new Date() + '3'
       this.key_tnumber_state = new Date() + '4'
       this.applyDate = []
+      this.invoiceSame = ''
+      this.comSame = ''
     },
     // 查看
     view (data) {
@@ -856,6 +867,13 @@ export default {
     // 已开导出
     exportExcellHandled () {
       let obj = {
+        code: 72,
+        hasinvoice: 10
+      }
+      this.$export('/Invoice.do?exportexcel', this.params[this.mark + 'Params'], obj)
+    },
+    exportExcellHandled2 () {
+      let obj = {
         code: 74,
         hasinvoice: 10
       }
@@ -896,22 +914,22 @@ export default {
             )
             fixedTable.setAttribute('id', 'fixedtb')
             if (this.mark === 'handled' && this.permissions.indexOf('7c') < 0) {
-              rowSpan('tb', 0, [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25], 7)
-              rowSpan('fixedtb', 0, [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25], 7)
+              rowSpan('tb', 0, [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25], 6)
+              rowSpan('fixedtb', 0, [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25], 6)
               setTimeout(() => {
                 rowSpan('tb', 0, [0, 1, 2, 3, 4, 5], 5)
                 rowSpan('fixedtb', 0, [0, 1, 2, 3, 4, 5], 5)
               }, 800)
             } else {
-              rowSpan('tb', 0, [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], 7)
-              rowSpan('fixedtb', 0, [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], 7)
+              rowSpan('tb', 0, [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], 6)
+              rowSpan('fixedtb', 0, [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], 6)
               setTimeout(() => {
                 rowSpan('tb', 0, [0, 1, 2, 3, 4, 5], 5)
                 rowSpan('fixedtb', 0, [0, 1, 2, 3, 4, 5], 5)
               }, 800)
             }
           } else {
-            rowSpan('tb', 0, [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], 7)
+            rowSpan('tb', 0, [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], 6)
             setTimeout(() => {
               rowSpan('tb', 0, [0, 1, 2, 3, 4, 5], 5)
             }, 800)
