@@ -150,7 +150,7 @@
             </el-form-item>
           </el-col>
           <el-col :md="12" class="maxwidth">
-            <el-form-item label="中银卡号 :" >
+            <el-form-item label="中行卡号 :" >
               <el-input v-model="form.EX_ZGYHYHK" :disabled="repeatDisabled" placeholder="中银卡号"></el-input>
             </el-form-item>
           </el-col>

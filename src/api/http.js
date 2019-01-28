@@ -2,14 +2,14 @@ import axios from 'axios'
 import router from '@/router'
 import qs from 'querystring'
 import cookie from 'js-cookie'
-import {Loading, Message} from 'element-ui'
+import { Loading, Message } from 'element-ui'
 // 打包用地址
-export const uploadUrl = '/upload/c'
-export const serverUrl = '/BaiJieOA2'
+// export const uploadUrl = '/upload/c'
+// export const serverUrl = '/BaiJieOA'
 
-// export const uploadUrl = 'http://172.16.11.84:8080/upload/c'
+export const uploadUrl = 'http://172.16.11.84:8080/upload/c'
 // export const uploadUrl = 'http://bg.baijiegroup.com/upload/c'
-// export const serverUrl = 'http://172.16.11.84:8080/BaiJieOA'
+export const serverUrl = 'http://172.16.11.84:8080/BaiJieOA'
 // export const serverUrl = 'http://bg.baijiegroup.com/BaiJieOA'
 // export const serverUrl = 'http://hboa.baijiegroup.com:8087/BaiJieOA2'
 const instance = axios.create({
@@ -86,7 +86,7 @@ instance.interceptors.response.use( // 响应拦截
     return Promise.reject(err)
   }
 )
-export function $post(url, params = {}) {
+export function $post (url, params = {}) {
   let tk = cookie.get('token')
   let isQuestionMark = url.indexOf('?') > -1
   let mark = isQuestionMark ? '&' : '?'
@@ -102,7 +102,7 @@ export function $post(url, params = {}) {
       })
   })
 }
-export function $get(url, _params = {}) {
+export function $get (url, _params = {}) {
   let tk = cookie.get('token')
   let isQuestionMark = url.indexOf('?') > -1
   let mark = isQuestionMark ? '&' : '?'
@@ -120,7 +120,7 @@ export function $get(url, _params = {}) {
   })
 }
 
-export function $export(url, params = {}, otherParams = {}) {
+export function $export (url, params = {}, otherParams = {}) {
   let tk = cookie.get('token')
   let isQuestionMark = url.indexOf('?') > -1
   let mark = isQuestionMark ? '&' : '?'

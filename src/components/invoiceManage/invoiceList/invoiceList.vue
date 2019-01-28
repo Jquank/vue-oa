@@ -808,6 +808,7 @@ export default {
       })
     },
     handleSelectionChange(arr) {
+      this.multipleSelection = []
       arr.forEach(val => {
         let id = val.invoiceid
         if (id) {

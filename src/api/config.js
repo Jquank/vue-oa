@@ -264,7 +264,8 @@ export const navList = [
       { cid: '7u', to: '/indexPage/REP_BUSINESS_RENEW', text: '续费统计' },
       { cid: '8e', to: '/indexPage/REP_ORDER_RENEW', text: '开户统计' },
       { cid: '7v', to: '/indexPage/REP_BUSINESS_ACHIEVEMENT', text: '商务业绩查看' },
-      { cid: '81', to: '/indexPage/branchAdd', text: '分公司加款' }
+      { cid: '81', to: '/indexPage/branchAdd', text: '分公司加款' },
+      { cid: '8s', to: '/indexPage/REP_WEBSITE_DETAIL', text: '网建明细' }
     ]
   },
   {

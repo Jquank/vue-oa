@@ -20,7 +20,13 @@
         <el-option value label="全部"></el-option>
         <el-option v-for="(item,index) in renewStatusList" :key="index" :value="item.code_val" :label="item.code_desc"></el-option>
       </auto-select>
-      <auto-select :key="key_add_important" v-model="addImportant" :defaultValue="addImportant" title="值班加款" class="list-item item-width">
+      <auto-select
+        :key="key_add_important"
+        v-model="addImportant"
+        :defaultValue="addImportant"
+        title="值班加款"
+        class="list-item item-width"
+      >
         <el-option value="100" label="全部"></el-option>
         <el-option value="10000" label="是"></el-option>
         <el-option value="0" label="否"></el-option>
@@ -35,13 +41,18 @@
 
     <el-table @selection-change="handleSelectionChange" stripe border :data="list" max-height="550" class="table-width">
       <el-table-column type="selection" :fixed="selectFixed" width="45"></el-table-column>
+      <el-table-column prop="place_id" label="地区" width="55">
+        <span slot-scope="scope">{{scope.row.place_id | areaType}}</span>
+      </el-table-column>
       <el-table-column prop="companyname" label="公司名称" min-width="130"></el-table-column>
       <el-table-column prop="baidu_account" label="百度账号"></el-table-column>
       <el-table-column prop label="到账金额" width="110">
         <span slot-scope="scope">{{scope.row.receiptmoney | currency1}}</span>
       </el-table-column>
       <el-table-column prop label="提单金额" width="110">
-        <span slot-scope="scope">{{scope.row.tgbonus+scope.row.ggbonus+scope.row.ysdltg+scope.row.servicemoney | currency1}}</span>
+        <span
+          slot-scope="scope"
+        >{{scope.row.tgbonus+scope.row.ggbonus+scope.row.ysdltg+scope.row.servicemoney | currency1}}</span>
       </el-table-column>
       <el-table-column prop label="申请时间" width="95">
         <span slot-scope="scope" v-html="$timeFormat(scope.row.inserttime,true)"></span>
@@ -58,7 +69,9 @@
       <el-table-column prop label="审核状态" width="120" align="center">
         <template slot-scope="scope">
           <el-button plain type="warning" class="xsbtn">{{scope.row.code_desc}}</el-button>
-          <div v-if="300>scope.row.step&&scope.row.step>= 100&&scope.row.checkBindName">{{'('+scope.row.checkBindName+')'}}</div>
+          <div
+            v-if="300>scope.row.step&&scope.row.step>= 100&&scope.row.checkBindName"
+          >{{'('+scope.row.checkBindName+')'}}</div>
         </template>
       </el-table-column>
       <el-table-column prop label="导入" width="50">
@@ -68,39 +81,28 @@
         <template slot-scope="scope">
           <el-button @click.native="view(scope.row)" type="success" class="xsbtn">查看</el-button>
           <el-button
-          v-if="( (scope.row.invoice=='0' || scope.row.invoice=='10' || (scope.row.invoice=='-1' && scope.row.invoiceCha =='1') ) && scope.row.receiptmoney > 0 && scope.row.invoiceTmoney < scope.row.receiptmoney)"
+            v-if="( (scope.row.invoice=='0' || scope.row.invoice=='10' || (scope.row.invoice=='-1' && scope.row.invoiceCha =='1') ) && scope.row.receiptmoney > 0 && scope.row.invoiceTmoney < scope.row.receiptmoney)"
             @click.native="applyInvoice(scope.row)"
             type="warning"
             class="xsbtn"
           >申请发票</el-button>
           <el-dropdown :trigger="trigger">
             <el-button type="primary" size="mini">
-              更多<i class="el-icon-arrow-down el-icon--right"></i>
+              更多
+              <i class="el-icon-arrow-down el-icon--right"></i>
             </el-button>
             <el-dropdown-menu slot="dropdown" class="text-center">
               <el-dropdown-item divided v-if="scope.row.step<100">
                 <el-button @click.native="editRenew(scope.row)" type="warning" class="xsbtn">编辑</el-button>
               </el-dropdown-item>
               <el-dropdown-item divided v-if="scope.row.receiptmoney<scope.row.usemoney&&permissions.indexOf('6u')>-1">
-                <el-button
-                  @click.native="chargeOff(scope.row)"
-                  type="danger"
-                  class="xsbtn"
-                >销账</el-button>
+                <el-button @click.native="chargeOff(scope.row)" type="danger" class="xsbtn">销账</el-button>
               </el-dropdown-item>
               <el-dropdown-item divided v-if="permissions.indexOf('7n') > -1&&scope.row.step!=400">
-                <el-button
-                  @click.native="stop(scope.row)"
-                  type="danger"
-                  class="xsbtn"
-                >终止</el-button>
+                <el-button @click.native="stop(scope.row)" type="danger" class="xsbtn">终止</el-button>
               </el-dropdown-item>
               <el-dropdown-item divided v-if="scope.row.hasinvoice >= 10 && permissions.indexOf('7d')>-1">
-                <el-button
-                  @click.native="errInvoice(scope.row)"
-                  type="primary"
-                  class="xsbtn"
-                >发票开错冲红</el-button>
+                <el-button @click.native="errInvoice(scope.row)" type="primary" class="xsbtn">发票开错冲红</el-button>
               </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
@@ -569,7 +571,7 @@ export default {
       margin: 1px 0 0 2px;
     }
   }
-  .el-dropdown .el-button{
+  .el-dropdown .el-button {
     padding: 5px 10px;
   }
 }

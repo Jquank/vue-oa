@@ -670,6 +670,12 @@ const router = new Router({
           meta: { text: '分公司加款' },
           component: BranchAdd
         },
+        {
+          path: 'REP_WEBSITE_DETAIL',
+          name: 'REP_WEBSITE_DETAIL',
+          meta: { text: '网建明细' },
+          component: ReportData
+        },
         // 呼叫中心
         {
           path: 'phoneChange',

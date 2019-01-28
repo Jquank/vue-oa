@@ -20,7 +20,7 @@
           <el-col class="maxwidth">
             <el-form-item label="发票类型 :">
               <el-radio v-model="form.ttype" label="11">电子普票</el-radio>
-              <el-radio v-model="form.ttype" label="10">纸质普票</el-radio>
+              <el-radio v-model="form.ttype" label="10" disabled>纸质普票</el-radio>
               <el-radio v-model="form.ttype" label="20">专票</el-radio>
             </el-form-item>
           </el-col>
@@ -114,12 +114,7 @@
           </el-col>
           <el-col :md="12" class="maxwidth">
             <el-form-item label="销账时间 :">
-              <el-date-picker
-                v-model="chargeTime"
-                type="datetime"
-                value-format="yyyy/MM/dd HH:mm"
-                placeholder="选择日期时间">
-              </el-date-picker>
+              <el-date-picker v-model="chargeTime" type="datetime" value-format="yyyy/MM/dd HH:mm" placeholder="选择日期时间"></el-date-picker>
             </el-form-item>
           </el-col>
         </el-row>

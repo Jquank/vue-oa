@@ -142,7 +142,7 @@
         <el-col :md="12" class="maxwidth">
           <el-form-item label="发票类型 :" prop="ttype" class="invoice-kind-radio">
             <el-radio v-model="form.ttype" label="11">电子普票(免邮寄，随用随打印)</el-radio>
-            <el-radio v-model="form.ttype" label="10">纸质普票</el-radio>
+            <el-radio v-model="form.ttype" label="10" disabled>纸质普票</el-radio>
             <el-radio v-model="form.ttype" label="20">专票</el-radio>
           </el-form-item>
         </el-col>
@@ -261,7 +261,14 @@
       :visible.sync="mixinInvoiceDialog"
       width="850px"
     >
-      <el-table :data="mixinInvoiceList" border stripe class="table-width" @selection-change="handleSelectionChange" max-height="500">
+      <el-table
+        :data="mixinInvoiceList"
+        border
+        stripe
+        class="table-width"
+        @selection-change="handleSelectionChange"
+        max-height="500"
+      >
         <el-table-column type="selection" width="45" fixed></el-table-column>
         <el-table-column prop="companyname" label="公司名称" min-width="130"></el-table-column>
         <el-table-column prop="baidu_account" label="百度账号" width="100"></el-table-column>
